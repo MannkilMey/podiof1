@@ -17,6 +17,7 @@ import ResetPassword from './pages/Auth/ResetPassword';
 // Main Pages
 import Dashboard from './pages/Dashboard/Dashboard';
 import PredictionPage from './pages/Predictions/PredictionPage';
+import GroupDetail from './pages/Groups/GroupDetail';
 
 // Admin Pages
 import ImportResults from './pages/Admin/ImportResults';
@@ -115,14 +116,6 @@ export default function App() {
               </PublicRoute>
             } 
           />
-          <Route
-            path="/super-admin"
-            element={
-              <ProtectedRoute>
-                <SuperAdminPanel />
-              </ProtectedRoute>
-            }
-          />
 
           {/* Join Group via Invite Link */}
           <Route path="/join/:inviteCode" element={<JoinGroup />} />
@@ -169,6 +162,16 @@ export default function App() {
             } 
           />
 
+          {/* Super Admin Panel */}
+          <Route
+            path="/super-admin"
+            element={
+              <ProtectedRoute>
+                <SuperAdminPanel />
+              </ProtectedRoute>
+            }
+          />
+
           {/* Admin Routes */}
           <Route
             path="/admin/import-results"
@@ -187,7 +190,19 @@ export default function App() {
             } 
           />
 
-          {/* Race Routes - ESPECÍFICAS PRIMERO */}
+          {/* Group Routes - ESPECÍFICAS PRIMERO */}
+          
+          {/* Group Details - Ver Miembros */}
+          <Route 
+            path="/group/:groupId/details" 
+            element={
+              <ProtectedRoute>
+                <GroupDetail />
+              </ProtectedRoute>
+            } 
+          />
+
+          {/* Race Routes */}
           <Route 
             path="/group/:groupId/race/:raceId" 
             element={
