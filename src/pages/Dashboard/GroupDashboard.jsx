@@ -443,6 +443,17 @@ function HeroBanner({ group, nextRace, navigate, groupId }) {
             🏁 Ver Carreras
           </button>
           
+          <button 
+            className="btn-admin"
+            onClick={() => navigate(`/group/${groupId}/details`)}
+            style={{ 
+              background: 'linear-gradient(135deg, #00D4A0, #00A67E)', 
+              marginBottom: 0 
+            }}
+          >
+            👥 Ver Miembros
+          </button>
+          
           {group.isAdmin && (
             <>
               <button 
@@ -457,7 +468,8 @@ function HeroBanner({ group, nextRace, navigate, groupId }) {
                 className="btn-admin"
                 onClick={handleShareGroup}
                 style={{ 
-                  background: 'linear-gradient(135deg, #00D4A0, #00A67E)', 
+                  background: 'var(--bg4)', 
+                  border: '1px solid var(--border2)',
                   marginBottom: 0 
                 }}
               >
@@ -521,6 +533,17 @@ function HeroBanner({ group, nextRace, navigate, groupId }) {
           🏁 Ver Todas las Carreras
         </button>
         
+        <button 
+          className="btn-admin"
+          onClick={() => navigate(`/group/${groupId}/details`)}
+          style={{ 
+            background: 'linear-gradient(135deg, #00D4A0, #00A67E)', 
+            marginBottom: 0 
+          }}
+        >
+          👥 Ver Miembros del Grupo
+        </button>
+        
         {group.isAdmin && (
           <>
             <button 
@@ -535,7 +558,8 @@ function HeroBanner({ group, nextRace, navigate, groupId }) {
               className="btn-admin"
               onClick={handleShareGroup}
               style={{ 
-                background: 'linear-gradient(135deg, #00D4A0, #00A67E)', 
+                background: 'var(--bg4)', 
+                border: '1px solid var(--border2)',
                 marginBottom: 0 
               }}
             >
