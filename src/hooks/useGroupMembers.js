@@ -39,23 +39,18 @@ export function useGroupMembers(groupId) {
       // Transformar datos y obtener puntos
       const transformedMembers = await Promise.all(
         (data || []).map(async (member) => {
-          // Obtener puntos del usuario en este grupo
+          // Obtener puntos y exactos del usuario en este grupo
           const { data: scores } = await supabase
             .from('scores')
-            .select('puntos')
+            .select('puntos, aciertos_exactos')
             .eq('grupo_id', groupId)
             .eq('usuario_id', member.usuario_id);
 
+          // Sumar puntos totales
           const totalPoints = scores?.reduce((sum, s) => sum + parseFloat(s.puntos || 0), 0) || 0;
-
-          // Contar exactos (predictions con puntos por posición exacta)
-          const { data: predictions } = await supabase
-            .from('predictions')
-            .select('puntos_posicion')
-            .eq('grupo_id', groupId)
-            .eq('usuario_id', member.usuario_id);
-
-          const exactos = predictions?.filter(p => p.puntos_posicion > 0).length || 0;
+          
+          // Sumar aciertos exactos de todas las carreras
+          const totalExactos = scores?.reduce((sum, s) => sum + parseInt(s.aciertos_exactos || 0), 0) || 0;
 
           return {
             id: member.id,
@@ -68,7 +63,7 @@ export function useGroupMembers(groupId) {
             email: member.users.email,
             fullName: `${member.users.nombre} ${member.users.apellido}`.trim(),
             puntos: Math.round(totalPoints),
-            exactos: exactos
+            exactos: totalExactos
           };
         })
       );
