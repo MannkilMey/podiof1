@@ -23,7 +23,7 @@ export function useGroupMembers(groupId) {
           usuario_id,
           es_admin,
           estado,
-          created_at,
+          joined_at,
           users!inner(
             id,
             nombre,
@@ -32,22 +32,46 @@ export function useGroupMembers(groupId) {
           )
         `)
         .eq('grupo_id', groupId)
-        .order('created_at', { ascending: true });
+        .order('joined_at', { ascending: true });
 
       if (fetchError) throw fetchError;
 
-      // Transformar datos
-      const transformedMembers = data.map(member => ({
-        id: member.id,
-        userId: member.usuario_id,
-        isAdmin: member.es_admin,
-        status: member.estado,
-        joinedAt: member.created_at,
-        name: member.users.nombre,
-        lastName: member.users.apellido,
-        email: member.users.email,
-        fullName: `${member.users.nombre} ${member.users.apellido}`.trim()
-      }));
+      // Transformar datos y obtener puntos
+      const transformedMembers = await Promise.all(
+        (data || []).map(async (member) => {
+          // Obtener puntos del usuario en este grupo
+          const { data: scores } = await supabase
+            .from('scores')
+            .select('puntos')
+            .eq('grupo_id', groupId)
+            .eq('usuario_id', member.usuario_id);
+
+          const totalPoints = scores?.reduce((sum, s) => sum + parseFloat(s.puntos || 0), 0) || 0;
+
+          // Contar exactos (predictions con puntos por posición exacta)
+          const { data: predictions } = await supabase
+            .from('predictions')
+            .select('puntos_posicion')
+            .eq('grupo_id', groupId)
+            .eq('usuario_id', member.usuario_id);
+
+          const exactos = predictions?.filter(p => p.puntos_posicion > 0).length || 0;
+
+          return {
+            id: member.id,
+            userId: member.usuario_id,
+            isAdmin: member.es_admin,
+            status: member.estado,
+            joinedAt: member.joined_at,
+            name: member.users.nombre,
+            lastName: member.users.apellido,
+            email: member.users.email,
+            fullName: `${member.users.nombre} ${member.users.apellido}`.trim(),
+            puntos: Math.round(totalPoints),
+            exactos: exactos
+          };
+        })
+      );
 
       setMembers(transformedMembers);
     } catch (err) {

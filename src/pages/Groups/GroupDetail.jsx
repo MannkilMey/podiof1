@@ -194,6 +194,8 @@ const CSS = `
   align-items: center;
   justify-content: space-between;
   transition: all 0.2s ease;
+  gap: 16px;
+  flex-wrap: wrap;
 }
 
 .member-card:hover {
@@ -245,6 +247,7 @@ const CSS = `
   display: flex;
   gap: 8px;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .badge {
@@ -264,6 +267,35 @@ const CSS = `
 .badge-you {
   background: rgba(0, 212, 160, 0.15);
   color: var(--green);
+}
+
+.member-stats {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-right: 16px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 60px;
+}
+
+.stat-value {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--white);
+}
+
+.stat-label {
+  font-size: 10px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
 }
 
 .member-actions {
@@ -378,6 +410,19 @@ const CSS = `
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
+  }
+
+  .member-stats {
+    width: 100%;
+    justify-content: space-around;
+    padding: 12px 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    margin: 0;
+  }
+
+  .member-badges {
+    width: 100%;
   }
 
   .member-actions {
@@ -648,6 +693,17 @@ export default function GroupDetail() {
                       <div className="member-details">
                         <div className="member-name">{member.fullName}</div>
                         <div className="member-email">{member.email}</div>
+                      </div>
+                    </div>
+
+                    <div className="member-stats">
+                      <div className="stat-item">
+                        <div className="stat-value">{member.puntos || 0}</div>
+                        <div className="stat-label">Puntos</div>
+                      </div>
+                      <div className="stat-item">
+                        <div className="stat-value">{member.exactos || 0}</div>
+                        <div className="stat-label">Exactos</div>
                       </div>
                     </div>
 
