@@ -1313,13 +1313,7 @@ export default function Dashboard() {
               </div>
             </div>
             <div className="icon-btn" title="Notificaciones">🔔</div>
-            <div 
-              className="icon-btn" 
-              title="Importar Resultados"
-              onClick={() => navigate('/admin/import-results')}
-            >
-              ⬇️
-            </div>
+            
 
             {/* USER MENU */}
             <div className="user-menu" ref={userMenuRef}>
