@@ -1,0 +1,26 @@
+# robots.txt para PodioF1
+
+# Permitir todo a Google y otros buscadores
+User-agent: *
+Allow: /
+Allow: /landing
+Allow: /login
+Allow: /register
+
+# Bloquear rutas privadas
+Disallow: /group/
+Disallow: /admin/
+Disallow: /profile/
+Disallow: /settings/
+Disallow: /predict/
+Disallow: /super-admin
+
+# Bloquear archivos temporales
+Disallow: /*.json$
+Disallow: /api/
+
+# Sitemap
+Sitemap: https://podiof1.com/sitemap.xml
+
+# Crawl-delay (evitar sobrecarga)
+Crawl-delay: 1

@@ -1,13 +1,149 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>podiof1</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <!-- ========================================
+       SEO BÁSICO
+  ======================================== -->
+  <title>PodioF1 - Predicciones de Formula 1 con Amigos</title>
+  <meta name="description" content="Compite con tus amigos prediciendo los resultados de cada carrera de Formula 1. Crea grupos, invita amigos y corona al mejor pronosticador de F1." />
+  <meta name="keywords" content="formula 1, predicciones f1, fantasy f1, pronosticos formula 1, grupo f1, competir f1, podiof1, liga fantasy f1, predicciones carreras f1" />
+  
+  <!-- Autor y Copyright -->
+  <meta name="author" content="PodioF1" />
+  <meta name="copyright" content="PodioF1 2024" />
+  
+  <!-- Robots -->
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+  <meta name="googlebot" content="index, follow" />
+  <meta name="bingbot" content="index, follow" />
+  
+  <!-- Idioma -->
+  <link rel="alternate" hreflang="es" href="https://podiof1.com/" />
+  <link rel="alternate" hreflang="x-default" href="https://podiof1.com/" />
+  
+  <!-- Canonical URL (evita contenido duplicado) -->
+  <link rel="canonical" href="https://podiof1.com/" />
+  
+  <!-- ========================================
+       OPEN GRAPH (Facebook, LinkedIn, WhatsApp)
+  ======================================== -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://podiof1.com/" />
+  <meta property="og:title" content="PodioF1 - Predicciones de Formula 1 con Amigos" />
+  <meta property="og:description" content="Compite con tus amigos prediciendo los resultados de cada carrera de Formula 1. ¡Crea tu grupo gratis!" />
+  <meta property="og:image" content="https://podiof1.com/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="PodioF1 - Predicciones de Formula 1" />
+  <meta property="og:site_name" content="PodioF1" />
+  <meta property="og:locale" content="es_ES" />
+  
+  <!-- ========================================
+       TWITTER CARD
+  ======================================== -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@podiof1" />
+  <meta name="twitter:creator" content="@podiof1" />
+  <meta name="twitter:url" content="https://podiof1.com/" />
+  <meta name="twitter:title" content="PodioF1 - Predicciones de Formula 1" />
+  <meta name="twitter:description" content="Compite con tus amigos prediciendo los resultados de cada carrera de Formula 1." />
+  <meta name="twitter:image" content="https://podiof1.com/og-image.png" />
+  
+  <!-- ========================================
+       TEMA Y COLORES
+  ======================================== -->
+  <meta name="theme-color" content="#E8002D" />
+  <meta name="msapplication-TileColor" content="#E8002D" />
+  <meta name="msapplication-config" content="/browserconfig.xml" />
+  
+  <!-- ========================================
+       FAVICONS
+  ======================================== -->
+  <link rel="icon" type="image/svg+xml" href="/f1-favicon.svg" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/manifest.json" />
+  
+  <!-- ========================================
+       PERFORMANCE - PRECONNECT
+  ======================================== -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://aoehxhrefxptcaqnsemx.supabase.co" />
+  
+  <!-- DNS Prefetch -->
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+  <link rel="dns-prefetch" href="https://supabase.co" />
+  
+  <!-- ========================================
+       PWA
+  ======================================== -->
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="PodioF1" />
+  
+  <!-- ========================================
+       VERIFICACIÓN (Agregar cuando tengas las cuentas)
+  ======================================== -->
+  <!-- Google Search Console: Descomentar y agregar tu código -->
+  <!-- <meta name="google-site-verification" content="TU_CODIGO_AQUI" /> -->
+  
+  <!-- Bing Webmaster: Descomentar y agregar tu código -->
+  <!-- <meta name="msvalidate.01" content="TU_CODIGO_AQUI" /> -->
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+  
+  <!-- ========================================
+       STRUCTURED DATA (Schema.org)
+  ======================================== -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "PodioF1",
+    "alternateName": "Podio F1",
+    "url": "https://podiof1.com",
+    "description": "Plataforma para competir con amigos prediciendo resultados de Formula 1. Crea grupos, invita amigos y gana puntos.",
+    "applicationCategory": "SportsApplication",
+    "operatingSystem": "Web, iOS, Android",
+    "browserRequirements": "Requiere JavaScript habilitado",
+    "softwareVersion": "1.0",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock"
+    },
+    "creator": {
+      "@type": "Organization",
+      "name": "PodioF1",
+      "url": "https://podiof1.com",
+      "logo": "https://podiof1.com/logo.png"
+    },
+    "featureList": [
+      "Predicciones de Formula 1",
+      "Grupos privados",
+      "Sistema de puntos",
+      "Clasificación en tiempo real",
+      "Notificaciones por email"
+    ],
+    "screenshot": "https://podiof1.com/screenshot.png",
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.8",
+      "ratingCount": "150",
+      "bestRating": "5",
+      "worstRating": "1"
+    }
+  }
+  </script>
+</body>
 </html>

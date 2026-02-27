@@ -1141,7 +1141,34 @@ function LastRaceTab({ groupId, temporada, userId, group }) {
           })}</span>
           <span>👥 {predictions.length} predicciones</span>
         </div>
+        
+        {/* 🆕 BOTÓN VER TODAS LAS PREDICCIONES - AGREGAR AQUÍ */}
+        <button
+          onClick={() => navigate(`/group/${groupId}/race/${lastRace.id}/predictions`)}
+          style={{
+            width: '100%',
+            padding: '14px 24px',
+            background: 'linear-gradient(135deg, #00D4A0, #00A67E)',
+            border: 'none',
+            borderRadius: '10px',
+            color: 'white',
+            fontFamily: 'Barlow Condensed',
+            fontSize: 16,
+            fontWeight: 800,
+            letterSpacing: 1,
+            textTransform: 'uppercase',
+            cursor: 'pointer',
+            transition: 'all 0.2s',
+            marginTop: 8
+          }}
+          onMouseOver={(e) => e.target.style.opacity = '0.9'}
+          onMouseOut={(e) => e.target.style.opacity = '1'}
+        >
+          📊 Ver Todas las Predicciones del Grupo
+        </button>
+    
       </div>
+      
 
       <div style={{
         display: 'grid',

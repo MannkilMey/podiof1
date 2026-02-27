@@ -143,6 +143,7 @@ body {
   display: flex;
   gap: 12px;
   margin-top: 24px;
+  flex-wrap: wrap;
 }
 
 .btn-predict {
@@ -404,6 +405,15 @@ body {
   .race-info-grid {
     grid-template-columns: 1fr;
   }
+  
+  .race-actions {
+    flex-direction: column;
+  }
+  
+  .btn-predict,
+  .btn-edit {
+    width: 100%;
+  }
 }
 `;
 
@@ -444,7 +454,7 @@ export default function RaceDetailPage() {
       setRace(raceData);
 
       const { data: driversData } = await supabase
-        .from('drivers')
+        .from('pilotos')
         .select('*');
 
       const driversMap = {};
@@ -524,7 +534,8 @@ export default function RaceDetailPage() {
     return {
       canPredict: !hasPrediction && isBeforeDeadline,
       canEdit: hasPrediction && isBeforeDeadline && isBeforeRace,
-      isCompleted: race.estado === 'finalizada'
+      isCompleted: race.estado === 'finalizada',
+      isLocked: now >= deadline
     };
   };
 
@@ -616,14 +627,14 @@ export default function RaceDetailPage() {
               </div>
             </div>
 
-            {(status.canPredict || status.canEdit) && (
+            {(status.canPredict || status.canEdit || (status.isLocked && !status.canEdit)) && (
               <div className="race-actions">
                 {status.canPredict && (
                   <button 
                     className="btn-predict"
                     onClick={() => navigate(`/group/${groupId}/predict/${raceId}`)}
                   >
-                    Hacer Predicción
+                    🎯 Hacer Predicción
                   </button>
                 )}
                 {status.canEdit && (
@@ -631,7 +642,19 @@ export default function RaceDetailPage() {
                     className="btn-edit"
                     onClick={() => navigate(`/group/${groupId}/predict/${raceId}?edit=true`)}
                   >
-                    Editar Predicción
+                    ✏️ Editar Predicción
+                  </button>
+                )}
+                {status.isLocked && !status.canEdit && (
+                  <button 
+                    className="btn-predict"
+                    onClick={() => navigate(`/group/${groupId}/race/${raceId}/predictions`)}
+                    style={{
+                      background: 'linear-gradient(135deg, #00D4A0, #00A67E)',
+                      border: 'none'
+                    }}
+                  >
+                    📊 Ver Todas las Predicciones
                   </button>
                 )}
               </div>
@@ -675,7 +698,7 @@ export default function RaceDetailPage() {
                           >
                             <div className="result-position">{idx + 1}°</div>
                             <div className="result-driver">
-                              {driver ? `${driver.nombre} ${driver.apellido}` : 'Desconocido'}
+                              {driver ? driver.nombre_completo || `${driver.nombre} ${driver.apellido}` : 'Desconocido'}
                             </div>
                             <div className="result-points">{result.puntos_f1} pts</div>
                             {predictedCorrectly && <span className="result-check">✓</span>}
@@ -700,7 +723,7 @@ export default function RaceDetailPage() {
                           >
                             <div className="result-position">{idx + 1}°</div>
                             <div className="result-driver">
-                              {driver ? `${driver.nombre} ${driver.apellido}` : 'Desconocido'}
+                              {driver ? driver.nombre_completo || `${driver.nombre} ${driver.apellido}` : 'Desconocido'}
                             </div>
                             <div className="result-points">
                               {realPosition ? `${realPosition.posicion_final}° real` : 'DNF'}

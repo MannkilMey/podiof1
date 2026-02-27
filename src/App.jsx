@@ -27,6 +27,8 @@ import Settings from './pages/Settings/Settings';
 import RacesPage from './pages/Races/RacesPage';
 import RaceDetailPage from './pages/Races/RaceDetailPage';
 import SuperAdminPanel from './pages/Admin/SuperAdminPanel';
+import RacePredictionsComparison from './pages/Predictions/RacePredictionsComparison';
+
 
 
 // Protected route wrapper
@@ -188,6 +190,10 @@ export default function App() {
                 <GroupAdminPanel />
               </ProtectedRoute>
             } 
+          />
+          <Route
+            path="/group/:groupId/race/:raceId/predictions"
+            element={<ProtectedRoute><RacePredictionsComparison /></ProtectedRoute>}
           />
 
           {/* Group Routes - ESPECÍFICAS PRIMERO */}
