@@ -1,0 +1,189 @@
+PodioF1 Website Categorization
+
+═══════════════════════════════════════════════════════════════
+OFFICIAL WEBSITE CLASSIFICATION
+═══════════════════════════════════════════════════════════════
+
+URL: https://podiof1.com
+Domain Owner: PodioF1
+Last Updated: 2024-12-01
+
+───────────────────────────────────────────────────────────────
+CORRECT CATEGORIZATION
+───────────────────────────────────────────────────────────────
+
+Primary Category:       Sports
+Secondary Categories:   Entertainment, Social Networking
+Sub-category:          Fantasy Sports, Sports Predictions
+Content Type:          Sports Information, Fan Engagement
+Application Type:      Sports Application (SportsApplication)
+
+───────────────────────────────────────────────────────────────
+WHAT IS PODIOF1?
+───────────────────────────────────────────────────────────────
+
+PodioF1 is a FREE Formula 1 sports prediction platform where 
+users compete with friends by predicting race results.
+
+Similar to:
+- ESPN Fantasy Sports
+- Yahoo Fantasy Sports
+- NFL Fantasy Football
+- FanDuel Fantasy (free version)
+
+Purpose:
+Entertainment and friendly competition among Formula 1 fans.
+
+───────────────────────────────────────────────────────────────
+IMPORTANT: NOT GAMBLING
+───────────────────────────────────────────────────────────────
+
+PodioF1 is NOT a gambling, betting, or wagering platform.
+
+✗ NO real money is exchanged
+✗ NO monetary prizes are awarded
+✗ NO betting or wagering is permitted
+✗ NO casino-style games
+✗ NO deposits or withdrawals
+✗ NO payment processing
+✗ NO age verification required (it's not gambling)
+
+✓ 100% FREE to use
+✓ No hidden costs
+✓ No in-app purchases
+✓ No paid features
+✓ Purely for entertainment
+
+───────────────────────────────────────────────────────────────
+HOW IT WORKS
+───────────────────────────────────────────────────────────────
+
+1. Users create a free account
+2. Join or create a private group with friends
+3. Before each F1 race, predict the top 10 finishers
+4. Earn points for accurate predictions
+5. Compete in a private leaderboard with friends
+
+No money is involved at any point.
+
+───────────────────────────────────────────────────────────────
+CONTENT RATING
+───────────────────────────────────────────────────────────────
+
+Age Rating:             General Audience (All Ages)
+Content Rating:         Safe for Work (SFW)
+Educational Value:      Sports Knowledge, Formula 1
+Violence:               None
+Sexual Content:         None
+Profanity:              None
+Gambling:               None
+Substances:             None
+
+Appropriate for:
+- Schools and Universities
+- Corporate Environments
+- Public Libraries
+- Family Settings
+
+───────────────────────────────────────────────────────────────
+TECHNICAL INFORMATION
+───────────────────────────────────────────────────────────────
+
+Platform:               Web Application (Progressive Web App)
+Technology:             React, JavaScript
+Languages Supported:    Spanish (es), English (en)
+Geographic Availability: Global
+Mobile Compatible:      Yes (Responsive Design)
+Accessibility:          WCAG 2.1 Compliant
+Privacy Policy:         https://podiof1.com/privacy
+Terms of Service:       https://podiof1.com/terms
+
+───────────────────────────────────────────────────────────────
+MONETIZATION MODEL
+───────────────────────────────────────────────────────────────
+
+Revenue Model:          None (Currently Free)
+Advertising:            None
+In-App Purchases:       None
+Subscriptions:          None
+User Data Sales:        Never
+
+This is a free community project for Formula 1 fans.
+
+───────────────────────────────────────────────────────────────
+INDUSTRY CLASSIFICATION
+───────────────────────────────────────────────────────────────
+
+NAICS Code:             711219 (Other Spectator Sports)
+SIC Code:               7941 (Professional Sports Clubs)
+Industry:               Sports & Recreation
+Sector:                 Entertainment & Media
+Business Type:          B2C (Business to Consumer)
+
+───────────────────────────────────────────────────────────────
+COMPARABLE PLATFORMS
+───────────────────────────────────────────────────────────────
+
+PodioF1 is similar in nature to these SPORTS platforms:
+
+• ESPN Fantasy Sports (fantasy.espn.com)
+  Category: Sports, Entertainment
+
+• Yahoo Fantasy Sports (sports.yahoo.com/fantasy)
+  Category: Sports, Entertainment
+
+• NFL Fantasy Football (fantasy.nfl.com)
+  Category: Sports, Entertainment
+
+• NBA Fantasy (fantasy.nba.com)
+  Category: Sports, Entertainment
+
+• Formula1.com Official F1 Predictor
+  Category: Sports
+
+All of these are categorized as SPORTS or ENTERTAINMENT,
+not as gambling or betting sites.
+
+───────────────────────────────────────────────────────────────
+LEGAL COMPLIANCE
+───────────────────────────────────────────────────────────────
+
+Gambling Regulations:   NOT APPLICABLE (Not a gambling site)
+Betting Licenses:       NOT REQUIRED (No betting)
+Age Restrictions:       None (General Audience)
+Geographic Restrictions: None
+GDPR Compliant:         Yes
+COPPA Compliant:        Yes
+ADA Compliant:          Yes
+
+───────────────────────────────────────────────────────────────
+CONTACT INFORMATION
+───────────────────────────────────────────────────────────────
+
+Website:        https://podiof1.com
+Email:          info@podiof1.com
+Support:        https://podiof1.com/support
+Category Docs:  https://podiof1.com/categorization.txt
+
+For categorization inquiries or corrections, please contact:
+categorization@podiof1.com
+
+───────────────────────────────────────────────────────────────
+CERTIFICATION
+───────────────────────────────────────────────────────────────
+
+I hereby certify that the information provided in this document
+is accurate and complete to the best of my knowledge.
+
+PodioF1 is a fantasy sports platform for entertainment purposes
+and should be categorized as "Sports" or "Entertainment" by web
+filtering and content categorization services.
+
+It is NOT a gambling, betting, casino, or wagering platform.
+
+Date: 2024-12-01
+Authority: PodioF1 Website Administrator
+
+═══════════════════════════════════════════════════════════════
+END OF CATEGORIZATION DOCUMENT
+═══════════════════════════════════════════════════════════════
