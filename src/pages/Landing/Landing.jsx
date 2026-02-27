@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useAuthStore } from '../../stores/authStore';
 import { useThemeStore } from '../../stores/themeStore';
-import { Sun, Moon } from 'lucide-react';
 
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap');`;
 
@@ -147,6 +146,7 @@ body {
   cursor: pointer;
   transition: all 0.3s;
   color: var(--text-primary);
+  font-size: 20px;
 }
 
 .theme-toggle:hover {
@@ -654,7 +654,7 @@ export default function Landing() {
                 className="theme-toggle"
                 aria-label="Toggle theme"
               >
-                {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+                {theme === 'dark' ? '☀️' : '🌙'}
               </button>
               <Link to="/login" className="btn-login">Iniciar Sesión</Link>
               <Link to="/register" className="btn-register">Crear Cuenta</Link>
