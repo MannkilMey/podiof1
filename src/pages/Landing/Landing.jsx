@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useAuthStore } from '../../stores/authStore';
 import { useThemeStore } from '../../stores/themeStore';
+import DisclaimerBanner from '../../components/DisclaimerBanner';
 
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap');`;
 
@@ -481,6 +482,103 @@ body {
   font-size: 15px;
 }
 
+/* SEO Content Section */
+.seo-section {
+  max-width: 1000px;
+  margin: 80px auto;
+  padding: 0 32px;
+}
+
+.seo-section h2 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 40px;
+  font-weight: 900;
+  color: var(--text-primary);
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.seo-section h3 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 40px 0 16px 0;
+}
+
+.seo-section p {
+  font-size: 16px;
+  line-height: 1.8;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+}
+
+.seo-section strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.seo-list {
+  list-style: none;
+  padding: 0;
+  margin: 24px 0;
+}
+
+.seo-list li {
+  padding: 16px 0 16px 32px;
+  position: relative;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  border-left: 3px solid rgba(232, 0, 45, 0.2);
+  margin-bottom: 12px;
+}
+
+.seo-list li::before {
+  content: '🏎️';
+  position: absolute;
+  left: 8px;
+  top: 16px;
+}
+
+.seo-list li strong {
+  color: var(--text-primary);
+}
+
+/* FAQ Section */
+.faq-section {
+  max-width: 1000px;
+  margin: 80px auto;
+  padding: 0 32px;
+}
+
+.faq-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 32px;
+  margin-bottom: 20px;
+  transition: all 0.3s;
+}
+
+.faq-item:hover {
+  border-color: rgba(232, 0, 45, 0.3);
+}
+
+.faq-question {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+
+.faq-answer {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
 /* CTA Section */
 .cta-section {
   max-width: 800px;
@@ -539,6 +637,8 @@ body {
 .footer-text {
   color: var(--text-muted);
   font-size: 14px;
+  line-height: 1.8;
+  margin-bottom: 8px;
 }
 
 .footer-link {
@@ -622,6 +722,14 @@ body {
   .cta-title {
     font-size: 32px;
   }
+
+  .seo-section h2 {
+    font-size: 32px;
+  }
+
+  .seo-section h3 {
+    font-size: 24px;
+  }
 }
 `;
 
@@ -661,19 +769,20 @@ export default function Landing() {
             </div>
           </nav>
 
-          {/* Hero Section */}
+          {/* Hero Section - Optimizado para SEO */}
           <section className="hero">
             <div className="hero-badge">
               <span>🏁</span>
-              Temporada 2026 · Predicciones en Vivo
+              100% Gratis · Predicciones en Vivo
             </div>
             <h1 className="hero-title">
-              Compite con tus amigos<br/>
-              en cada carrera de F1
+              Predicciones de Formula 1<br/>
+              Gratis con Amigos
             </h1>
             <p className="hero-subtitle">
-              Crea grupos privados, predice los resultados de cada Gran Premio y 
-              compite en tiempo real con tus amigos en la temporada 2026 de Fórmula 1.
+              Crea tu grupo de predicciones F1, invita a tus amigos y compite 
+              prediciendo los resultados de cada Gran Premio. Sistema de puntos 
+              personalizable, clasificación en tiempo real, y 100% gratuito.
             </p>
             <div className="hero-cta">
               <Link to="/register" className="btn-hero-primary">
@@ -684,6 +793,9 @@ export default function Landing() {
               </Link>
             </div>
           </section>
+
+          {/* Disclaimer Anti-Gambling */}
+          <DisclaimerBanner variant="compact" />
 
           {/* Stats Section */}
           <section className="stats-section">
@@ -709,24 +821,24 @@ export default function Landing() {
                 <div className="step-number">1</div>
                 <h3 className="step-title">Crea tu Grupo</h3>
                 <p className="step-description">
-                  Regístrate gratis y crea un grupo privado. Personaliza el 
-                  sistema de puntos y las reglas según tus preferencias.
+                  Regístrate gratis y crea un grupo privado de predicciones F1. 
+                  Personaliza el sistema de puntos y las reglas según tus preferencias.
                 </p>
               </div>
               <div className="step-card">
                 <div className="step-number">2</div>
                 <h3 className="step-title">Invita a tus Amigos</h3>
                 <p className="step-description">
-                  Comparte el código de invitación con tus amigos. Ellos 
-                  se registran e ingresan automáticamente al grupo.
+                  Comparte el código de invitación con tus amigos fanáticos de 
+                  Formula 1. Ellos se registran e ingresan automáticamente al grupo.
                 </p>
               </div>
               <div className="step-card">
                 <div className="step-number">3</div>
                 <h3 className="step-title">Predice y Compite</h3>
                 <p className="step-description">
-                  Haz tu predicción antes de cada carrera. Los puntos se 
-                  calculan automáticamente y la tabla se actualiza al instante.
+                  Haz tu predicción antes de cada carrera. Los puntos se calculan 
+                  automáticamente y la clasificación se actualiza en tiempo real.
                 </p>
               </div>
             </div>
@@ -740,7 +852,7 @@ export default function Landing() {
                 <div className="feature-icon">👥</div>
                 <h3 className="feature-title">Grupos Privados</h3>
                 <p className="feature-description">
-                  Crea tu propio grupo de predicciones con amigos, familia o colegas. 
+                  Crea tu propio grupo de predicciones F1 con amigos, familia o colegas. 
                   Configura reglas personalizadas y sistemas de puntuación.
                 </p>
               </div>
@@ -792,11 +904,159 @@ export default function Landing() {
             </div>
           </section>
 
+          {/* SEO Content Section */}
+          <section className="seo-section">
+            <h2>¿Qué es PodioF1?</h2>
+            <p>
+              <strong>PodioF1 es la mejor plataforma gratuita de predicciones deportivas 
+              de Formula 1</strong> donde puedes competir con tus amigos prediciendo los 
+              resultados de cada carrera. Similar a apps de fantasy sports como ESPN Fantasy 
+              o Yahoo Fantasy, pero enfocado exclusivamente en Formula 1.
+            </p>
+            <p>
+              A diferencia de otras plataformas de fantasy F1, en PodioF1 puedes crear 
+              <strong> grupos privados completamente gratis</strong>, personalizar tu sistema 
+              de puntos, y competir únicamente con tus amigos o compañeros de trabajo. No hay 
+              apuestas de dinero real, no hay premios monetarios, solo diversión y competencia 
+              amistosa entre fanáticos de la F1.
+            </p>
+
+            <h3>¿Por Qué Elegir PodioF1?</h3>
+            <p>
+              Muchas apps de fantasy F1 requieren pago o tienen funciones bloqueadas detrás 
+              de suscripciones. <strong>PodioF1 es 100% gratuito sin restricciones</strong>. 
+              Todas las funciones están disponibles para todos los usuarios sin excepción.
+            </p>
+            <p>
+              No competirás contra miles de desconocidos. En PodioF1, creas tu grupo privado 
+              y compites solo con las personas que conoces. Esto hace la competencia más 
+              personal, divertida y emocionante durante toda la temporada de Formula 1.
+            </p>
+
+            <h3>Características Principales</h3>
+            <ul className="seo-list">
+              <li>
+                <strong>100% Gratuito:</strong> Sin costos ocultos, sin compras dentro de la app, 
+                sin suscripciones. Todo es gratis para siempre.
+              </li>
+              <li>
+                <strong>Grupos Privados:</strong> Compite solo con las personas que invites. 
+                Tu grupo es privado y solo tus invitados pueden unirse.
+              </li>
+              <li>
+                <strong>Sistema de Puntos Personalizable:</strong> Elige entre 3 sistemas de 
+                puntuación diferentes o crea el tuyo propio.
+              </li>
+              <li>
+                <strong>Clasificación en Tiempo Real:</strong> Ve cómo vas en el ranking después 
+                de cada carrera. Estadísticas detalladas de cada participante.
+              </li>
+              <li>
+                <strong>Notificaciones por Email:</strong> Recibe recordatorios antes de cada 
+                carrera para no olvidar hacer tu predicción de Formula 1.
+              </li>
+              <li>
+                <strong>Sin Límite de Grupos:</strong> Crea o únete a tantos grupos como quieras. 
+                Compite en múltiples ligas de predicciones F1 simultáneamente.
+              </li>
+              <li>
+                <strong>Responsive Design:</strong> Funciona perfecto en celular, tablet y 
+                computadora. Haz tus predicciones desde cualquier dispositivo.
+              </li>
+              <li>
+                <strong>Sin Apuestas:</strong> No hay dinero real involucrado. Es pura diversión 
+                deportiva entre amigos.
+              </li>
+            </ul>
+          </section>
+
+          {/* FAQ Section */}
+          <section className="faq-section">
+            <h2 className="section-title">Preguntas Frecuentes</h2>
+
+            <div className="faq-item">
+              <h3 className="faq-question">¿Es realmente gratis?</h3>
+              <p className="faq-answer">
+                Sí, PodioF1 es completamente gratuito. No hay costos ocultos, no hay compras 
+                dentro de la aplicación, y no hay suscripciones. Todo es gratis para siempre.
+              </p>
+            </div>
+
+            <div className="faq-item">
+              <h3 className="faq-question">¿Cómo creo un grupo de predicciones F1?</h3>
+              <p className="faq-answer">
+                Después de registrarte, haz click en "Crear Grupo", dale un nombre a tu liga 
+                de predicciones F1, personaliza el sistema de puntos si quieres, y listo. 
+                Recibirás un código de invitación para compartir con tus amigos.
+              </p>
+            </div>
+
+            <div className="faq-item">
+              <h3 className="faq-question">¿Cuántas personas pueden unirse a mi grupo?</h3>
+              <p className="faq-answer">
+                No hay límite. Puedes invitar a tantos amigos como quieras a tu grupo de 
+                predicciones de Formula 1.
+              </p>
+            </div>
+
+            <div className="faq-item">
+              <h3 className="faq-question">¿Puedo estar en varios grupos al mismo tiempo?</h3>
+              <p className="faq-answer">
+                Sí, puedes crear múltiples grupos o unirte a varios grupos creados por otros. 
+                Por ejemplo, puedes tener un grupo con amigos, otro con compañeros de trabajo, 
+                y otro con tu familia.
+              </p>
+            </div>
+
+            <div className="faq-item">
+              <h3 className="faq-question">¿Hasta cuándo puedo hacer mi predicción?</h3>
+              <p className="faq-answer">
+                Por defecto, las predicciones se cierran 2 horas antes de cada carrera de 
+                Formula 1. El administrador del grupo puede modificar este tiempo.
+              </p>
+            </div>
+
+            <div className="faq-item">
+              <h3 className="faq-question">¿Cómo se calculan los puntos en PodioF1?</h3>
+              <p className="faq-answer">
+                Hay tres sistemas de puntos disponibles: Exactitud (más puntos por posiciones 
+                exactas), Balanceado (mezcla de exactitud y aciertos de piloto), y Liberal 
+                (más indulgente). El administrador elige cuál usar para el grupo.
+              </p>
+            </div>
+
+            <div className="faq-item">
+              <h3 className="faq-question">¿Qué pasa si no hago predicción para una carrera?</h3>
+              <p className="faq-answer">
+                No recibes puntos para esa carrera, pero sigues en la competencia. Puedes 
+                hacer predicciones para las siguientes carreras normalmente.
+              </p>
+            </div>
+
+            <div className="faq-item">
+              <h3 className="faq-question">¿Funciona en celular?</h3>
+              <p className="faq-answer">
+                Sí, PodioF1 está optimizado para funcionar perfectamente en cualquier 
+                dispositivo: celular (iPhone y Android), tablet, y computadora.
+              </p>
+            </div>
+
+            <div className="faq-item">
+              <h3 className="faq-question">¿Esto es apuestas o gambling?</h3>
+              <p className="faq-answer">
+                <strong>NO.</strong> PodioF1 no es un sitio de apuestas ni gambling. No hay 
+                dinero real involucrado en ningún momento. Es una plataforma de predicciones 
+                deportivas gratuita solo para diversión entre amigos. Similar a ESPN Fantasy 
+                Sports o NFL Fantasy.
+              </p>
+            </div>
+          </section>
+
           {/* CTA Section */}
           <section className="cta-section">
             <h2 className="cta-title">¿Listo para subir al podio?</h2>
             <p className="cta-subtitle">
-              Únete gratis y empieza a competir en la próxima carrera de F1
+              Únete gratis y empieza a competir con tus amigos en la próxima carrera de Formula 1
             </p>
             <Link to="/register" className="btn-cta">
               Crear mi Cuenta Gratis →
@@ -806,6 +1066,14 @@ export default function Landing() {
           {/* Footer */}
           <footer className="footer">
             <p className="footer-text">
+              <strong>PodioF1</strong> - Predicciones Deportivas de Formula 1 • 
+              Fantasy F1 Gratis • Grupos Privados • Sin Apuestas
+            </p>
+            <p className="footer-text">
+              © 2024 PodioF1. Plataforma gratuita de predicciones deportivas. 
+              No es un sitio de apuestas o gambling.
+            </p>
+            <p className="footer-text" style={{ marginTop: 16 }}>
               Hecho con ❤️ para los fanáticos de F1 · <Link to="/register" className="footer-link">Crear cuenta gratis</Link>
             </p>
           </footer>

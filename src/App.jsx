@@ -7,6 +7,7 @@ import ToastContainer from './components/Toast';
 // Public Pages
 import Landing from './pages/Landing/Landing';
 import JoinGroup from './pages/Groups/JoinGroup';
+import HowItWorks from './pages/HowItWorks/HowItWorks';
 
 // Auth Pages
 import Login from './pages/Auth/Login';
@@ -118,6 +119,8 @@ export default function App() {
               </PublicRoute>
             } 
           />
+          <Route path="/como-funciona" element={<HowItWorks />} />
+
 
           {/* Join Group via Invite Link */}
           <Route path="/join/:inviteCode" element={<JoinGroup />} />
