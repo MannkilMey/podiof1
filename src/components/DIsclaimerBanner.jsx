@@ -139,7 +139,7 @@ export default function DisclaimerBanner({ variant = 'full' }) {
         </div>
         <div className="disclaimer-content">
           <p style={{ marginBottom: 12, fontWeight: 600 }}>
-            PodioF1 es una plataforma <strong>100% GRATUITA</strong> de predicciones deportivas de la Formula 1 para competir con amigos.
+            PodioF1 es una plataforma <strong>100% GRATUITA</strong> de predicciones deportivas de Formula 1 para competir con amigos.
           </p>
           
           <div className="disclaimer-grid">
