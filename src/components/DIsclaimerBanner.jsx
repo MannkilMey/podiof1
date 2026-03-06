@@ -113,8 +113,8 @@ const CSS = `
 `;
 
 /**
- * Disclaimer anti-gambling
- * Muestra claramente que NO es un sitio de apuestas
+ * 
+ 
  */
 export default function DisclaimerBanner({ variant = 'full' }) {
   const theme = useThemeStore((state) => state.theme);
