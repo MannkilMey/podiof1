@@ -917,7 +917,7 @@ export default function Landing() {
               A diferencia de otras plataformas de fantasy F1, en PodioF1 puedes crear 
               <strong> grupos privados completamente gratis</strong>, personalizar tu sistema 
               de puntos, y competir únicamente con tus amigos o compañeros de trabajo. No hay 
-              apuestas de dinero real, no hay premios monetarios, solo diversión y competencia 
+              riesgo de dinero real, no hay premios monetarios, solo diversión y competencia 
               amistosa entre fanáticos de la F1.
             </p>
 
@@ -964,7 +964,7 @@ export default function Landing() {
                 computadora. Haz tus predicciones desde cualquier dispositivo.
               </li>
               <li>
-                <strong>Sin Apuestas:</strong> No hay dinero real involucrado. Es pura diversión 
+                <strong>Sin Riesgo:</strong> No hay dinero real involucrado. Es pura diversión 
                 deportiva entre amigos.
               </li>
             </ul>
@@ -1041,15 +1041,7 @@ export default function Landing() {
               </p>
             </div>
 
-            <div className="faq-item">
-              <h3 className="faq-question">¿Esto es apuestas o gambling?</h3>
-              <p className="faq-answer">
-                <strong>NO.</strong> PodioF1 no es un sitio de apuestas ni gambling. No hay 
-                dinero real involucrado en ningún momento. Es una plataforma de predicciones 
-                deportivas gratuita solo para diversión entre amigos. Similar a ESPN Fantasy 
-                Sports o NFL Fantasy.
-              </p>
-            </div>
+            
           </section>
 
           {/* CTA Section */}
@@ -1067,11 +1059,11 @@ export default function Landing() {
           <footer className="footer">
             <p className="footer-text">
               <strong>PodioF1</strong> - Predicciones Deportivas de Formula 1 • 
-              Fantasy F1 Gratis • Grupos Privados • Sin Apuestas
+              Fantasy F1 Gratis • Grupos Privados 
             </p>
             <p className="footer-text">
               © 2024 PodioF1. Plataforma gratuita de predicciones deportivas. 
-              No es un sitio de apuestas o gambling.
+              
             </p>
             <p className="footer-text" style={{ marginTop: 16 }}>
               Hecho con ❤️ para los fanáticos de F1 · <Link to="/register" className="footer-link">Crear cuenta gratis</Link>

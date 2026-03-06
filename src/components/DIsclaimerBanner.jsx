@@ -124,7 +124,7 @@ export default function DisclaimerBanner({ variant = 'full' }) {
       <>
         <style>{CSS}</style>
         <div data-theme={theme} className="disclaimer-compact">
-          ⚠️ <strong>PodioF1 es GRATIS</strong> • Sin apuestas • Sin dinero real • Solo diversión deportiva entre amigos
+          ⚠️ <strong>PodioF1 es GRATIS</strong>  Solo diversión deportiva entre amigos
         </div>
       </>
     );
@@ -135,7 +135,7 @@ export default function DisclaimerBanner({ variant = 'full' }) {
       <style>{CSS}</style>
       <div data-theme={theme} className="disclaimer-banner">
         <div className="disclaimer-title">
-          ⚠️ Aviso Importante: PodioF1 NO es un Sitio de Apuestas
+          ⚠️ Aviso Importante: PodioF1 es un sitio para Diversión entre amigos
         </div>
         <div className="disclaimer-content">
           <p style={{ marginBottom: 12, fontWeight: 600 }}>
@@ -144,7 +144,7 @@ export default function DisclaimerBanner({ variant = 'full' }) {
           
           <div className="disclaimer-grid">
             <div className="disclaimer-item no">
-              ❌ NO hay apuestas de dinero
+              ❌ NO hay dinero
             </div>
             <div className="disclaimer-item no">
               ❌ NO hay premios en efectivo
