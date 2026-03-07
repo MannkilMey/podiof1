@@ -6,6 +6,7 @@ import { useToastStore } from '../../stores/toastStore';
 import { useGroupMembers } from '../../hooks/useGroupMembers';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
 import { supabase } from '../../lib/supabase';
+import { canPredictRace } from '../../utils/canPreditcRace';
 
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap');`;
 
@@ -26,11 +27,21 @@ const CSS = `
   --gold: #9C6F10; --green: #007F5F;
 }
 
+/* ✅ Background global */
+html, body { 
+  background: var(--bg); 
+  color: var(--white); 
+}
+
+#root {
+  background: var(--bg);
+}
+
 .group-detail {
+  background: var(--bg);  /* ✅ NUEVO */
   padding: 24px 28px;
   max-width: 1200px;
   margin: 0 auto;
-  background: var(--bg);
   min-height: calc(100vh - 120px);
 }
 
@@ -381,6 +392,170 @@ const CSS = `
   margin-bottom: 24px;
 }
 
+/* ✅ MODAL PREDICCIONES */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modal-content {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px;
+  width: 100%;
+  max-width: 700px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.modal-header {
+  margin-bottom: 24px;
+}
+
+.modal-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--white);
+  margin-bottom: 8px;
+}
+
+.modal-subtitle {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.races-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.race-item {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.race-item.past {
+  opacity: 0.5;
+}
+
+.race-item-info {
+  flex: 1;
+}
+
+.race-item-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 4px;
+}
+
+.race-item-date {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.race-item-status {
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.race-item-status.open {
+  background: rgba(0, 212, 160, 0.15);
+  color: var(--green);
+}
+
+.race-item-status.closed {
+  background: rgba(255, 184, 0, 0.15);
+  color: #FFB800;
+}
+
+.race-item-status.forced {
+  background: var(--red-dim);
+  color: var(--red);
+}
+
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 52px;
+  height: 28px;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--bg4);
+  border: 1px solid var(--border2);
+  transition: 0.3s;
+  border-radius: 28px;
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 3px;
+  bottom: 3px;
+  background-color: var(--white);
+  transition: 0.3s;
+  border-radius: 50%;
+}
+
+input:checked + .toggle-slider {
+  background: var(--red);
+  border-color: var(--red);
+}
+
+input:checked + .toggle-slider:before {
+  transform: translateX(24px);
+}
+
+input:disabled + .toggle-slider {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
 @media (max-width: 768px) {
   .group-detail {
     padding: 16px;
@@ -429,6 +604,16 @@ const CSS = `
     width: 100%;
     justify-content: flex-end;
   }
+
+  .modal-content {
+    padding: 24px;
+    max-width: 100%;
+  }
+
+  .race-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 `;
 
@@ -449,6 +634,11 @@ export default function GroupDetail() {
   const [confirmRemove, setConfirmRemove] = useState({ show: false, member: null });
   const [confirmLeave, setConfirmLeave] = useState(false);
   const [confirmToggleAdmin, setConfirmToggleAdmin] = useState({ show: false, member: null });
+  
+  // ✅ NUEVO: Modal de predicciones
+  const [showPredictionsModal, setShowPredictionsModal] = useState(false);
+  const [races, setRaces] = useState([]);
+  const [racesLoading, setRacesLoading] = useState(false);
 
   // Cargar información del grupo
   useEffect(() => {
@@ -488,7 +678,57 @@ export default function GroupDetail() {
     }
   }, [groupId, user]);
 
-  // Handlers
+  // ✅ NUEVO: Cargar carreras para modal
+  const loadRaces = async () => {
+    try {
+      setRacesLoading(true);
+      const { data, error } = await supabase
+        .from('races')
+        .select('*')
+        .eq('temporada', group.temporada)
+        .order('fecha_programada', { ascending: true });
+
+      if (error) throw error;
+      setRaces(data || []);
+    } catch (err) {
+      console.error('Error loading races:', err);
+      toast.error('Error al cargar carreras');
+    } finally {
+      setRacesLoading(false);
+    }
+  };
+
+  // ✅ NUEVO: Toggle predicciones forzadas
+const handleToggleForcedPredictions = async (raceId, currentValue) => {
+  try {
+    const newValue = !currentValue;
+    
+    const { error } = await supabase
+      .from('races')
+      .update({ predicciones_forzadas_abiertas: newValue })
+      .eq('id', raceId);
+
+    if (error) throw error;
+
+    // Actualizar estado local inmediatamente
+    setRaces(prevRaces => 
+      prevRaces.map(race => 
+        race.id === raceId 
+          ? { ...race, predicciones_forzadas_abiertas: newValue }
+          : race
+      )
+    );
+
+    toast.success(newValue ? 'Predicciones habilitadas' : 'Predicciones cerradas');
+  } catch (err) {
+    console.error('Error toggling predictions:', err);
+    toast.error('Error al cambiar estado');
+    // Recargar en caso de error
+    loadRaces();
+  }
+};
+
+  // Handlers existentes
   const handleRemoveMember = async () => {
     const result = await removeMember(confirmRemove.member.id);
     if (result.success) {
@@ -497,6 +737,7 @@ export default function GroupDetail() {
     } else {
       toast.error('Error al eliminar el miembro');
     }
+    setConfirmRemove({ show: false, member: null });
   };
 
   const handleLeaveGroup = async () => {
@@ -521,6 +762,7 @@ export default function GroupDetail() {
     } else {
       toast.error('Error al cambiar permisos');
     }
+    setConfirmToggleAdmin({ show: false, member: null });
   };
 
   const handleShareGroup = () => {
@@ -529,8 +771,25 @@ export default function GroupDetail() {
     toast.success('¡Link de invitación copiado! 📋');
   };
 
+  // ✅ NUEVO: Abrir modal de predicciones
+  const handleManagePredictions = () => {
+    setShowPredictionsModal(true);
+    loadRaces();
+  };
+
   const getInitials = (name, lastName) => {
     return `${name?.[0] || ''}${lastName?.[0] || ''}`.toUpperCase() || '?';
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('es', {
+      weekday: 'short',
+      day: 'numeric',
+      month: 'short',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
   };
 
   if (groupLoading || membersLoading) {
@@ -593,7 +852,7 @@ export default function GroupDetail() {
             </div>
             <div className="group-info-item">
               <span>🎯</span>
-              <span>{group.sistema_puntos === 'podio' ? 'Podio' : group.sistema_puntos === 'exactos' ? 'Exactos' : 'Mixto'}</span>
+              <span>Top {group.cantidad_posiciones || 10}</span>
             </div>
             {isAdmin && (
               <div className="group-info-item">
@@ -612,12 +871,20 @@ export default function GroupDetail() {
             </button>
             
             {isAdmin && (
-              <button 
-                className="btn btn-secondary"
-                onClick={() => navigate(`/admin/group/${groupId}`)}
-              >
-                ⚙️ Configuración
-              </button>
+              <>
+                <button 
+                  className="btn btn-secondary"
+                  onClick={handleManagePredictions}
+                >
+                  ⏰ Gestionar Predicciones
+                </button>
+                <button 
+                  className="btn btn-secondary"
+                  onClick={() => navigate(`/admin/group/${groupId}`)}
+                >
+                  ⚙️ Configuración
+                </button>
+              </>
             )}
             
             <button 
@@ -633,11 +900,7 @@ export default function GroupDetail() {
         <div className="info-grid">
           <div className="info-card">
             <div className="info-label">Sistema de Puntos</div>
-            <div className="info-value">
-              {group.sistema_puntos === 'podio' && 'Podio'}
-              {group.sistema_puntos === 'exactos' && 'Exactos'}
-              {group.sistema_puntos === 'mixto' && 'Mixto'}
-            </div>
+            <div className="info-value">F1 Oficial</div>
           </div>
 
           <div className="info-card">
@@ -647,7 +910,7 @@ export default function GroupDetail() {
 
           <div className="info-card">
             <div className="info-label">Cierre de Predicciones</div>
-            <div className="info-value">{group.horas_cierre_prediccion || 2}h antes</div>
+            <div className="info-value">{group.horas_cierre_prediccion || 24}h antes</div>
           </div>
 
           <div className="info-card">
@@ -744,6 +1007,94 @@ export default function GroupDetail() {
             </div>
           )}
         </div>
+
+        {/* ✅ NUEVO: Modal Gestionar Predicciones */}
+        {showPredictionsModal && (
+          <div className="modal-overlay" onClick={() => setShowPredictionsModal(false)}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-header">
+                <h2 className="modal-title">⏰ Gestionar Predicciones</h2>
+                <p className="modal-subtitle">
+                  Habilita predicciones hasta el inicio de la carrera
+                </p>
+              </div>
+
+              {racesLoading ? (
+                <div className="loading-container">
+                  <div className="loading-spinner"></div>
+                  <div className="loading-text">Cargando carreras...</div>
+                </div>
+              ) : (
+                <div className="races-list">
+                  {races.map(race => {
+                    const now = new Date();
+                    const raceStart = new Date(race.fecha_programada);
+                    const isPast = now >= raceStart;
+                    const status = canPredictRace(race, group);
+
+                    return (
+                      <div 
+                        key={race.id} 
+                        className={`race-item ${isPast ? 'past' : ''}`}
+                      >
+                        <div className="race-item-info">
+                          <div className="race-item-name">
+                            {race.nombre}
+                          </div>
+                          <div className="race-item-date">
+                            {formatDate(race.fecha_programada)}
+                          </div>
+                          {isPast && (
+                            <div className="race-item-status closed">
+                              ✓ Finalizada
+                            </div>
+                          )}
+                          {!isPast && race.predicciones_forzadas_abiertas && (
+                            <div className="race-item-status forced">
+                              🔓 Abierto hasta inicio
+                            </div>
+                          )}
+                          {!isPast && !race.predicciones_forzadas_abiertas && status.canPredict && (
+                            <div className="race-item-status open">
+                              ✓ Normal
+                            </div>
+                          )}
+                          {!isPast && !race.predicciones_forzadas_abiertas && !status.canPredict && (
+                            <div className="race-item-status closed">
+                              🔒 Cerrado
+                            </div>
+                          )}
+                        </div>
+
+                        <label className="toggle-switch">
+                          <input
+                            type="checkbox"
+                            checked={race.predicciones_forzadas_abiertas || false}
+                            disabled={isPast}
+                            onChange={() => handleToggleForcedPredictions(
+                              race.id,
+                              race.predicciones_forzadas_abiertas
+                            )}
+                          />
+                          <span className="toggle-slider"></span>
+                        </label>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              <div className="modal-footer">
+                <button 
+                  className="btn btn-secondary"
+                  onClick={() => setShowPredictionsModal(false)}
+                >
+                  Cerrar
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Confirm Modals */}
         <ConfirmModal

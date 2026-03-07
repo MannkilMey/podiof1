@@ -794,7 +794,7 @@ export default function Landing() {
             </div>
           </section>
 
-          {/* Disclaimer Anti-Gambling */}
+          {/* Disclaimer Anti */}
           <DisclaimerBanner variant="compact" />
 
           {/* Stats Section */}

@@ -5,6 +5,7 @@ import { useThemeStore } from '../../stores/themeStore';
 import { useToastStore } from '../../stores/toastStore';
 import { supabase } from '../../lib/supabase';
 import { subHours } from 'date-fns';
+import SharePredictionCard from '../../components/SharePredictionCard/SharePredictionCard';
 
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap');`;
 
@@ -177,6 +178,12 @@ const CSS = `
 
 .prediction-card.worst {
   opacity: 0.7;
+}
+
+/* 🆕 Highlight para usuario actual */
+.prediction-card.current-user {
+  border-color: var(--green);
+  background: linear-gradient(135deg, var(--bg2), rgba(0,212,160,0.03));
 }
 
 @keyframes fadeInUp {
@@ -354,6 +361,33 @@ const CSS = `
   font-size: 14px;
 }
 
+/* 🆕 Botón de compartir */
+.share-result-btn {
+  margin-top: 16px;
+  width: 100%;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, var(--red), #FF3355);
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.share-result-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
 .empty-state {
   text-align: center;
   padding: 60px 20px;
@@ -470,11 +504,16 @@ export default function RacePredictionsComparison() {
   const toast = useToastStore();
 
   const [race, setRace] = useState(null);
+  const [group, setGroup] = useState(null);
   const [officialResult, setOfficialResult] = useState([]);
   const [predictions, setPredictions] = useState([]);
   const [drivers, setDrivers] = useState({});
   const [loading, setLoading] = useState(true);
   const [isLocked, setIsLocked] = useState(false);
+
+  // 🆕 Estado para modal de compartir
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [shareData, setShareData] = useState(null);
 
   useEffect(() => {
     loadData();
@@ -483,6 +522,14 @@ export default function RacePredictionsComparison() {
   const loadData = async () => {
     try {
       setLoading(true);
+
+      // Cargar grupo
+      const { data: groupData } = await supabase
+        .from('groups')
+        .select('*')
+        .eq('id', groupId)
+        .single();
+      setGroup(groupData);
 
       // Cargar información de la carrera
       const { data: raceData, error: raceError } = await supabase
@@ -506,14 +553,14 @@ export default function RacePredictionsComparison() {
         return;
       }
 
-      // Cargar pilotos
+      // Cargar pilotos (usar tabla 'drivers')
       const { data: driversData } = await supabase
-        .from('pilotos')
+        .from('drivers')
         .select('*');
 
       const driversMap = {};
       driversData?.forEach(d => {
-        driversMap[d.id] = d.nombre_completo || `${d.nombre} ${d.apellido}`;
+        driversMap[d.id] = d.nombre_completo;
       });
       setDrivers(driversMap);
 
@@ -539,7 +586,8 @@ export default function RacePredictionsComparison() {
           ),
           scores!inner (
             puntos,
-            aciertos_exactos
+            aciertos_exactos,
+            aciertos_piloto
           )
         `)
         .eq('grupo_id', groupId)
@@ -552,7 +600,8 @@ export default function RacePredictionsComparison() {
           userName: `${pred.users.nombre} ${pred.users.apellido}`.trim(),
           userEmail: pred.users.email,
           puntos: pred.scores?.[0]?.puntos || 0,
-          aciertos_exactos: pred.scores?.[0]?.aciertos_exactos || 0
+          aciertos_exactos: pred.scores?.[0]?.aciertos_exactos || 0,
+          aciertos_piloto: pred.scores?.[0]?.aciertos_piloto || 0
         }))
         .sort((a, b) => b.puntos - a.puntos) || [];
 
@@ -574,17 +623,35 @@ export default function RacePredictionsComparison() {
     if (!positions || !officialResult.length) return 0;
     
     let correct = 0;
-    positions.slice(0, 10).forEach((pilotoId, idx) => {
+    const maxPositions = group?.cantidad_posiciones || 10;
+    positions.slice(0, maxPositions).forEach((pilotoId, idx) => {
       if (officialResult[idx]?.piloto_id === pilotoId) {
         correct++;
       }
     });
     
-    return (correct / 10) * 100;
+    return (correct / maxPositions) * 100;
   };
 
   const isPredictionCorrect = (predictedPilotoId, position) => {
     return officialResult[position]?.piloto_id === predictedPilotoId;
+  };
+
+  // 🆕 Handler para abrir modal de compartir
+  const handleShareResult = (prediction, positionInRanking) => {
+    const accuracy = calculateAccuracy(prediction.posiciones);
+    const maxPositions = group?.cantidad_posiciones || 10;
+
+    setShareData({
+      points: prediction.puntos,
+      exactHits: prediction.aciertos_exactos,
+      totalDrivers: maxPositions,
+      position: positionInRanking,
+      totalParticipants: predictions.length,
+      accuracy: accuracy
+    });
+    
+    setShowShareModal(true);
   };
 
   if (loading) {
@@ -625,6 +692,8 @@ export default function RacePredictionsComparison() {
   const avgPoints = predictions.length > 0
     ? predictions.reduce((sum, p) => sum + p.puntos, 0) / predictions.length
     : 0;
+  
+  const maxPositions = group?.cantidad_posiciones || 10;
 
   return (
     <>
@@ -668,7 +737,7 @@ export default function RacePredictionsComparison() {
           <div className="official-result">
             <h2 className="section-title">🏆 Resultado Oficial</h2>
             <div className="result-grid">
-              {officialResult.slice(0, 10).map((result, idx) => (
+              {officialResult.slice(0, maxPositions).map((result, idx) => (
                 <div key={result.id} className="position-card">
                   <div className="position-number">{idx + 1}°</div>
                   <div className="driver-name">{drivers[result.piloto_id] || 'Desconocido'}</div>
@@ -702,7 +771,7 @@ export default function RacePredictionsComparison() {
                 return (
                   <div 
                     key={prediction.id} 
-                    className={`prediction-card ${isBest ? 'best' : ''}`}
+                    className={`prediction-card ${isBest ? 'best' : ''} ${isCurrentUser ? 'current-user' : ''}`}
                   >
                     <div className="prediction-header">
                       <div className="user-info">
@@ -746,11 +815,11 @@ export default function RacePredictionsComparison() {
                       gap: 16
                     }}>
                       <span>✓ {prediction.aciertos_exactos} exactos</span>
-                      <span>🎯 {prediction.scores?.[0]?.aciertos_piloto || 0} pilotos correctos</span>
+                      <span>🎯 {prediction.aciertos_piloto || 0} pilotos correctos</span>
                     </div>
 
                     <div className="prediction-positions">
-                      {prediction.posiciones?.slice(0, 10).map((pilotoId, position) => {
+                      {prediction.posiciones?.slice(0, maxPositions).map((pilotoId, position) => {
                         const isCorrect = isPredictionCorrect(pilotoId, position);
                         
                         return (
@@ -771,6 +840,16 @@ export default function RacePredictionsComparison() {
                         );
                       })}
                     </div>
+
+                    {/* 🆕 BOTÓN COMPARTIR - Solo para usuario actual */}
+                    {isCurrentUser && (
+                      <button 
+                        className="share-result-btn"
+                        onClick={() => handleShareResult(prediction, idx + 1)}
+                      >
+                        📸 Compartir mi Resultado
+                      </button>
+                    )}
                   </div>
                 );
               })}
@@ -778,6 +857,17 @@ export default function RacePredictionsComparison() {
           )}
         </div>
       </div>
+
+      {/* 🆕 MODAL DE COMPARTIR */}
+      {showShareModal && shareData && (
+        <SharePredictionCard
+          type="result"
+          data={shareData}
+          raceName={race.nombre}
+          user={user}
+          onClose={() => setShowShareModal(false)}
+        />
+      )}
     </>
   );
 }

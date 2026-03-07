@@ -24,13 +24,18 @@ const CSS = `
   --gold: #9C6F10; --green: #007F5F;
 }
 
-body {
+/* ✅ NUEVO - Forzar background global igual que Dashboard */
+html, body { 
+  background: var(--bg); 
+  color: var(--white); 
+}
+
+#root {
   background: var(--bg);
-  color: var(--white);
-  font-family: 'Barlow', sans-serif;
 }
 
 .race-detail-container {
+  background: var(--bg);  /* ✅ NUEVO */
   padding: 24px 28px;
   max-width: 1400px;
   margin: 0 auto;
@@ -454,7 +459,7 @@ export default function RaceDetailPage() {
       setRace(raceData);
 
       const { data: driversData } = await supabase
-        .from('pilotos')
+        .from('drivers')
         .select('*');
 
       const driversMap = {};

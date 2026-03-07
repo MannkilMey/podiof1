@@ -5,6 +5,7 @@ import { useThemeStore } from '../../stores/themeStore';
 import { useToastStore } from '../../stores/toastStore';
 import { usePrediction } from '../../hooks/usePrediction';
 import { supabase } from '../../lib/supabase';
+import SharePredictionCard from '../../components/SharePredictionCard/SharePredictionCard';
 import {
   DndContext,
   closestCenter,
@@ -395,6 +396,109 @@ const CSS_STYLES = `
   opacity: 0.3;
 }
 
+/* 🆕 MODAL DE ÉXITO */
+.success-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9998;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.success-modal {
+  background: var(--bg2);
+  border: 2px solid var(--green);
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 500px;
+  width: 90%;
+  text-align: center;
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.success-icon {
+  font-size: 64px;
+  margin-bottom: 16px;
+}
+
+.success-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--white);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.success-message {
+  font-size: 16px;
+  color: var(--muted);
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.success-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.success-btn {
+  padding: 14px 24px;
+  border: none;
+  border-radius: 10px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.success-btn-share {
+  background: linear-gradient(135deg, var(--red), #FF3355);
+  color: white;
+}
+
+.success-btn-share:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+.success-btn-dashboard {
+  background: linear-gradient(135deg, var(--green), #00A67E);
+  color: white;
+}
+
+.success-btn-dashboard:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
 @media (max-width: 900px) {
   .prediction-page { padding: 16px; }
   .bonus-grid { grid-template-columns: 1fr; }
@@ -467,6 +571,10 @@ export default function PredictionPage() {
   const [fastestLapTeam, setFastestLapTeam] = useState('');
   const [activeId, setActiveId] = useState(null);
   const [saving, setSaving] = useState(false);
+
+  // 🆕 Estados para modal de compartir
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -596,9 +704,8 @@ export default function PredictionPage() {
         toast.success('¡Predicción guardada exitosamente! 🏁');
       }
 
-      setTimeout(() => {
-        navigate(`/group/${groupId}`);
-      }, 1500);
+      // 🆕 Mostrar modal de éxito en lugar de navegar inmediatamente
+      setShowSuccessModal(true);
 
     } catch (err) {
       console.error('Error saving prediction:', err);
@@ -609,6 +716,22 @@ export default function PredictionPage() {
   };
 
   const handleCancel = () => {
+    navigate(`/group/${groupId}`);
+  };
+
+  // 🆕 Handlers para modales
+  const handleGoToDashboard = () => {
+    navigate(`/group/${groupId}`);
+  };
+
+  const handleOpenShareModal = () => {
+    setShowSuccessModal(false);
+    setShowShareModal(true);
+  };
+
+  const handleCloseShareModal = () => {
+    setShowShareModal(false);
+    // Opcional: navegar al dashboard después de cerrar compartir
     navigate(`/group/${groupId}`);
   };
 
@@ -867,6 +990,47 @@ export default function PredictionPage() {
           </div>
         )}
       </div>
+
+      {/* 🆕 MODAL DE ÉXITO */}
+      {showSuccessModal && (
+        <div className="success-modal-overlay">
+          <div className="success-modal">
+            <div className="success-icon">✅</div>
+            <h2 className="success-title">¡Predicción Guardada!</h2>
+            <p className="success-message">
+              Tu predicción para {race.nombre} ha sido guardada exitosamente. 
+              Puedes compartirla con tus amigos o volver al dashboard.
+            </p>
+            <div className="success-actions">
+              <button 
+                className="success-btn success-btn-share"
+                onClick={handleOpenShareModal}
+              >
+                📸 Compartir mi Predicción
+              </button>
+              <button 
+                className="success-btn success-btn-dashboard"
+                onClick={handleGoToDashboard}
+              >
+                🏁 Ir al Dashboard
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 🆕 MODAL DE COMPARTIR */}
+      {showShareModal && (
+        <SharePredictionCard
+          type="prediction"
+          data={{
+            drivers: selectedDrivers.map(d => ({ name: d.nombre }))
+          }}
+          raceName={race.nombre}
+          user={user}
+          onClose={handleCloseShareModal}
+        />
+      )}
     </>
   );
 }

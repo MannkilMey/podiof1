@@ -24,13 +24,18 @@ const CSS = `
   --gold: #9C6F10; --green: #007F5F;
 }
 
-body {
+/* ✅ Background global */
+html, body { 
+  background: var(--bg); 
+  color: var(--white); 
+}
+
+#root {
   background: var(--bg);
-  color: var(--white);
-  font-family: 'Barlow', sans-serif;
 }
 
 .admin-container {
+  background: var(--bg);  /* ✅ NUEVO */
   padding: 24px 28px;
   max-width: 1200px;
   margin: 0 auto;
