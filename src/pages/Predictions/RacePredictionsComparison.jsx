@@ -4,7 +4,7 @@ import { useAuthStore } from '../../stores/authStore';
 import { useThemeStore } from '../../stores/themeStore';
 import { useToastStore } from '../../stores/toastStore';
 import { supabase } from '../../lib/supabase';
-import { subHours } from 'date-fns';
+import { canPredictRace } from '../../utils/canPredictRace';
 import SharePredictionCard from '../../components/SharePredictionCard/SharePredictionCard';
 
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap');`;
@@ -26,11 +26,20 @@ const CSS = `
   --gold: #9C6F10; --green: #007F5F; --green-dim: rgba(0,127,95,0.15);
 }
 
+html, body {
+  background: var(--bg);
+  color: var(--white);
+}
+
+#root {
+  background: var(--bg);
+}
+
 .predictions-comparison {
+  background: var(--bg);
   padding: 24px 28px;
   max-width: 1400px;
   margin: 0 auto;
-  background: var(--bg);
   min-height: calc(100vh - 120px);
 }
 
@@ -176,11 +185,6 @@ const CSS = `
   background: linear-gradient(135deg, var(--bg2), rgba(201,168,76,0.05));
 }
 
-.prediction-card.worst {
-  opacity: 0.7;
-}
-
-/* 🆕 Highlight para usuario actual */
 .prediction-card.current-user {
   border-color: var(--green);
   background: linear-gradient(135deg, var(--bg2), rgba(0,212,160,0.03));
@@ -361,7 +365,6 @@ const CSS = `
   font-size: 14px;
 }
 
-/* 🆕 Botón de compartir */
 .share-result-btn {
   margin-top: 16px;
   width: 100%;
@@ -509,9 +512,8 @@ export default function RacePredictionsComparison() {
   const [predictions, setPredictions] = useState([]);
   const [drivers, setDrivers] = useState({});
   const [loading, setLoading] = useState(true);
-  const [isLocked, setIsLocked] = useState(false);
+  const [showPredictions, setShowPredictions] = useState(false);
 
-  // 🆕 Estado para modal de compartir
   const [showShareModal, setShowShareModal] = useState(false);
   const [shareData, setShareData] = useState(null);
 
@@ -524,11 +526,13 @@ export default function RacePredictionsComparison() {
       setLoading(true);
 
       // Cargar grupo
-      const { data: groupData } = await supabase
+      const { data: groupData, error: groupError } = await supabase
         .from('groups')
         .select('*')
         .eq('id', groupId)
         .single();
+
+      if (groupError) throw groupError;
       setGroup(groupData);
 
       // Cargar información de la carrera
@@ -541,19 +545,12 @@ export default function RacePredictionsComparison() {
       if (raceError) throw raceError;
       setRace(raceData);
 
-      // Verificar si las predicciones están cerradas
-      const raceDate = new Date(raceData.fecha_programada);
-      const deadlineDate = subHours(raceDate, raceData.horas_cierre_prediccion || 2);
-      const now = new Date();
-      const locked = now >= deadlineDate;
-      setIsLocked(locked);
+      // ✅ Verificar si mostrar predicciones
+      const predictionStatus = canPredictRace(raceData, groupData);
+      const canStillPredict = predictionStatus.canPredict;
+      setShowPredictions(!canStillPredict);
 
-      if (!locked) {
-        toast.error('Las predicciones aún están abiertas');
-        return;
-      }
-
-      // Cargar pilotos (usar tabla 'drivers')
+      // Cargar pilotos
       const { data: driversData } = await supabase
         .from('drivers')
         .select('*');
@@ -573,8 +570,8 @@ export default function RacePredictionsComparison() {
 
       setOfficialResult(resultsData || []);
 
-      // Cargar todas las predicciones del grupo
-      const { data: predictionsData } = await supabase
+      // ✅ NUEVA QUERY - Sin scores embedded
+      const { data: predictionsData, error: predictionsError } = await supabase
         .from('predictions')
         .select(`
           *,
@@ -583,26 +580,43 @@ export default function RacePredictionsComparison() {
             nombre,
             apellido,
             email
-          ),
-          scores!inner (
-            puntos,
-            aciertos_exactos,
-            aciertos_piloto
           )
         `)
         .eq('grupo_id', groupId)
         .eq('carrera_id', raceId);
 
-      // Transformar y ordenar predicciones por puntos
+      if (predictionsError) {
+        console.error('Error loading predictions:', predictionsError);
+        throw predictionsError;
+      }
+
+      // ✅ Cargar scores por separado
+      const { data: scoresData } = await supabase
+        .from('scores')
+        .select('*')
+        .eq('grupo_id', groupId)
+        .eq('carrera_id', raceId);
+
+      // ✅ Crear mapa de scores por usuario_id
+      const scoresMap = {};
+      scoresData?.forEach(score => {
+        scoresMap[score.usuario_id] = score;
+      });
+
+      // ✅ Combinar predictions con scores
       const transformedPredictions = predictionsData
-        ?.map(pred => ({
-          ...pred,
-          userName: `${pred.users.nombre} ${pred.users.apellido}`.trim(),
-          userEmail: pred.users.email,
-          puntos: pred.scores?.[0]?.puntos || 0,
-          aciertos_exactos: pred.scores?.[0]?.aciertos_exactos || 0,
-          aciertos_piloto: pred.scores?.[0]?.aciertos_piloto || 0
-        }))
+        ?.map(pred => {
+          const userScore = scoresMap[pred.usuario_id];
+          
+          return {
+            ...pred,
+            userName: `${pred.users?.nombre || ''} ${pred.users?.apellido || ''}`.trim() || pred.users?.email || 'Usuario',
+            userEmail: pred.users?.email || '',
+            puntos: userScore?.puntos || 0,
+            aciertos_exactos: userScore?.aciertos_exactos || 0,
+            aciertos_piloto: userScore?.aciertos_piloto || 0
+          };
+        })
         .sort((a, b) => b.puntos - a.puntos) || [];
 
       setPredictions(transformedPredictions);
@@ -637,7 +651,6 @@ export default function RacePredictionsComparison() {
     return officialResult[position]?.piloto_id === predictedPilotoId;
   };
 
-  // 🆕 Handler para abrir modal de compartir
   const handleShareResult = (prediction, positionInRanking) => {
     const accuracy = calculateAccuracy(prediction.posiciones);
     const maxPositions = group?.cantidad_posiciones || 10;
@@ -668,7 +681,7 @@ export default function RacePredictionsComparison() {
     );
   }
 
-  if (!race || !isLocked) {
+  if (!race || !showPredictions) {
     return (
       <>
         <style>{FONTS + CSS}</style>
@@ -680,7 +693,10 @@ export default function RacePredictionsComparison() {
             <div className="empty-icon">🔒</div>
             <div className="empty-title">Predicciones no disponibles</div>
             <div className="empty-message">
-              Las predicciones se podrán ver después del cierre del deadline
+              Las predicciones se podrán ver después del cierre. 
+              {race?.predicciones_forzadas_abiertas && (
+                <><br/>El administrador mantiene las predicciones abiertas.</>
+              )}
             </div>
           </div>
         </div>
@@ -703,16 +719,14 @@ export default function RacePredictionsComparison() {
           ← Volver a Carreras
         </button>
 
-        {/* Race Header */}
         <div className="race-header">
           <h1 className="race-title">{race.nombre}</h1>
           <p className="race-subtitle">📍 {race.circuito} • 📅 {new Date(race.fecha_programada).toLocaleDateString('es')}</p>
-          <span className={`race-status ${isLocked ? 'locked' : ''}`}>
-            {isLocked ? '🔒 Predicciones cerradas' : '✓ Abiertas'}
+          <span className="race-status locked">
+            🔒 Predicciones cerradas - Comparación disponible
           </span>
         </div>
 
-        {/* Stats Grid */}
         <div className="stats-grid">
           <div className="stat-box">
             <div className="stat-value">{predictions.length}</div>
@@ -732,7 +746,6 @@ export default function RacePredictionsComparison() {
           </div>
         </div>
 
-        {/* Official Result */}
         {officialResult.length > 0 && (
           <div className="official-result">
             <h2 className="section-title">🏆 Resultado Oficial</h2>
@@ -747,7 +760,6 @@ export default function RacePredictionsComparison() {
           </div>
         )}
 
-        {/* Predictions */}
         <div className="predictions-section">
           <h2 className="section-title">
             📊 Predicciones del Grupo ({predictions.length})
@@ -776,7 +788,7 @@ export default function RacePredictionsComparison() {
                     <div className="prediction-header">
                       <div className="user-info">
                         <div className="user-avatar">
-                          {getInitials(prediction.users.nombre, prediction.users.apellido)}
+                          {getInitials(prediction.users?.nombre, prediction.users?.apellido)}
                         </div>
                         <div>
                           <div className="user-name">{prediction.userName}</div>
@@ -841,7 +853,6 @@ export default function RacePredictionsComparison() {
                       })}
                     </div>
 
-                    {/* 🆕 BOTÓN COMPARTIR - Solo para usuario actual */}
                     {isCurrentUser && (
                       <button 
                         className="share-result-btn"
@@ -858,7 +869,6 @@ export default function RacePredictionsComparison() {
         </div>
       </div>
 
-      {/* 🆕 MODAL DE COMPARTIR */}
       {showShareModal && shareData && (
         <SharePredictionCard
           type="result"
