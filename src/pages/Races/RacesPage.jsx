@@ -4,6 +4,7 @@ import { useAuthStore } from '../../stores/authStore';
 import { useThemeStore } from '../../stores/themeStore';
 import { supabase } from '../../lib/supabase';
 import { subHours } from 'date-fns';
+import { canPredictRace } from '../../utils/canPredictRace';  // ✅ NUEVO
 
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap');`;
 
@@ -493,15 +494,13 @@ export default function RacesPage() {
     }
   };
 
+  // ✅ FUNCIÓN ACTUALIZADA - Respeta predicciones_forzadas_abiertas
   const getRaceStatus = (race) => {
-    const now = new Date();
-    const raceDate = new Date(race.fecha_programada);
-    const deadlineHours = group.horas_cierre_prediccion || 2;
-    const deadline = subHours(raceDate, deadlineHours);
-
     const hasPrediction = !!predictions[race.id];
-    const isBeforeDeadline = now < deadline;
-    const isBeforeRace = now < raceDate;
+    
+    // ✅ Usar helper que respeta predicciones_forzadas_abiertas
+    const predictionStatus = canPredictRace(race, group);
+    const isOpen = predictionStatus.canPredict;
 
     if (race.estado === 'finalizada') {
       return {
@@ -514,9 +513,9 @@ export default function RacesPage() {
 
     if (!hasPrediction) {
       return {
-        label: isBeforeDeadline ? 'Sin predecir' : 'Bloqueada',
-        badge: isBeforeDeadline ? null : 'locked',
-        canPredict: isBeforeDeadline,
+        label: isOpen ? 'Sin predecir' : 'Bloqueada',
+        badge: isOpen ? null : 'locked',
+        canPredict: isOpen,
         canEdit: false
       };
     }
@@ -525,7 +524,7 @@ export default function RacesPage() {
       label: 'Predicción enviada',
       badge: 'predicted',
       canPredict: false,
-      canEdit: isBeforeDeadline && isBeforeRace
+      canEdit: isOpen  // ✅ Permite editar si predicciones están abiertas
     };
   };
 
@@ -549,12 +548,19 @@ export default function RacesPage() {
     });
   };
 
+  // ✅ FUNCIÓN MEJORADA - Muestra deadline correcto
   const getDeadlineText = (race) => {
-    const raceDate = new Date(race.fecha_programada);
-    const deadlineHours = group.horas_cierre_prediccion || 2;
-    const deadline = subHours(raceDate, deadlineHours);
+    const predictionStatus = canPredictRace(race, group);
     
-    return `Cierra ${deadline.toLocaleDateString('es', {
+    if (!predictionStatus.deadline) {
+      return 'Cerrado';
+    }
+
+    // ✅ Mostrar si es deadline forzado o normal
+    const isForcedOpen = race.predicciones_forzadas_abiertas;
+    const prefix = isForcedOpen ? '🔓 Abierto hasta inicio:' : '⏰ Cierra:';
+    
+    return `${prefix} ${predictionStatus.deadline.toLocaleDateString('es', {
       month: 'short',
       day: 'numeric',
       hour: '2-digit',
@@ -654,7 +660,7 @@ export default function RacesPage() {
                       </div>
                       {status.canPredict && (
                         <div className="countdown-small">
-                          ⏰ {getDeadlineText(race)}
+                          {getDeadlineText(race)}
                         </div>
                       )}
                     </div>

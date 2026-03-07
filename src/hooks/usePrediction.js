@@ -36,9 +36,17 @@ export function usePrediction(groupId, raceId, userId) {
 
         if (raceError) throw raceError;
 
-        // ✅ 3. Usar canPredictRace helper (respeta predicciones_forzadas_abiertas)
+        console.log('🔍 DIAGNÓSTICO usePrediction:');
+        console.log('Race completo:', race);
+        console.log('predicciones_forzadas_abiertas:', race.predicciones_forzadas_abiertas);
+        console.log('Group:', group);
+
         const predictionStatus = canPredictRace(race, group);
+        console.log('Resultado canPredictRace:', predictionStatus);
+        console.log('canPredict final:', predictionStatus.canPredict);
+
         const canPredict = predictionStatus.canPredict;
+
 
         // 4. Obtener pilotos de la temporada (con JOIN a drivers y teams)
         const { data: driversData, error: driversError } = await supabase
