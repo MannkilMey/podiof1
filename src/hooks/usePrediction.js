@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
+import {canPredictRace} from '../utils/canPredictRace';
 
 export function usePrediction(groupId, raceId, userId) {
   const [data, setData] = useState({
@@ -35,12 +36,9 @@ export function usePrediction(groupId, raceId, userId) {
 
         if (raceError) throw raceError;
 
-        // 3. Verificar si puede predecir
-        const now = new Date();
-        const raceDate = new Date(race.fecha_programada);
-        const deadlineDate = new Date(raceDate.getTime() - (group.horas_cierre_prediccion * 60 * 60 * 1000));
-        
-        const canPredict = now < deadlineDate && now < raceDate;
+        // ✅ 3. Usar canPredictRace helper (respeta predicciones_forzadas_abiertas)
+        const predictionStatus = canPredictRace(race, group);
+        const canPredict = predictionStatus.canPredict;
 
         // 4. Obtener pilotos de la temporada (con JOIN a drivers y teams)
         const { data: driversData, error: driversError } = await supabase
