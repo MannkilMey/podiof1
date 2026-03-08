@@ -6,6 +6,7 @@ import { useToastStore } from '../../stores/toastStore';
 import { supabase } from '../../lib/supabase';
 import { canPredictRace } from '../../utils/canPredictRace';
 import SharePredictionCard from '../../components/SharePredictionCard/SharePredictionCard';
+import * as XLSX from 'xlsx';
 
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap');`;
 
@@ -102,9 +103,47 @@ html, body {
   color: var(--red);
 }
 
-.official-result {
+.action-buttons {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  padding: 12px 24px;
+  border: 2px solid var(--border2);
+  border-radius: 12px;
   background: var(--bg2);
-  border: 2px solid var(--gold);
+  color: var(--white);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.action-btn:hover {
+  background: var(--bg3);
+  transform: translateY(-2px);
+}
+
+.action-btn.primary {
+  background: linear-gradient(135deg, var(--red), #FF3355);
+  border-color: var(--red);
+  color: white;
+}
+
+.action-btn.primary:hover {
+  opacity: 0.9;
+}
+
+.most-voted-section {
+  background: linear-gradient(135deg, var(--bg2), rgba(0,212,160,0.03));
+  border: 2px solid var(--green);
   border-radius: 16px;
   padding: 24px;
   margin-bottom: 24px;
@@ -119,6 +158,153 @@ html, body {
   display: flex;
   align-items: center;
   gap: 10px;
+}
+
+.voted-positions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.voted-position-card {
+  background: var(--bg3);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  transition: all 0.2s;
+}
+
+.voted-position-card:hover {
+  background: var(--bg4);
+  border-color: var(--green);
+  transform: translateY(-2px);
+}
+
+.position-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.voted-driver-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--white);
+  margin-bottom: 8px;
+}
+
+.vote-stats {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.vote-count {
+  font-weight: 700;
+  color: var(--green);
+}
+
+.vote-percentage {
+  padding: 4px 8px;
+  background: var(--green-dim);
+  border-radius: 8px;
+  color: var(--green);
+  font-weight: 700;
+}
+
+.users-ranking-section {
+  background: var(--bg2);
+  border: 2px solid var(--gold);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.ranking-list {
+  display: grid;
+  gap: 12px;
+}
+
+.ranking-item {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: all 0.2s;
+}
+
+.ranking-item:hover {
+  background: var(--bg4);
+  transform: translateX(4px);
+}
+
+.ranking-item.current-user {
+  border-color: var(--green);
+  background: linear-gradient(135deg, var(--bg3), rgba(0,212,160,0.05));
+}
+
+.ranking-position {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 28px;
+  font-weight: 900;
+  min-width: 50px;
+  text-align: center;
+}
+
+.ranking-position.first { color: #FFD700; }
+.ranking-position.second { color: #C0C0C0; }
+.ranking-position.third { color: #CD7F32; }
+.ranking-position.other { color: var(--muted); }
+
+.ranking-user-info {
+  flex: 1;
+}
+
+.ranking-user-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 4px;
+}
+
+.ranking-user-stats {
+  font-size: 12px;
+  color: var(--muted);
+  display: flex;
+  gap: 12px;
+}
+
+.ranking-points {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 32px;
+  font-weight: 900;
+  color: var(--white);
+  text-align: right;
+}
+
+.ranking-points-label {
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.official-result {
+  background: var(--bg2);
+  border: 2px solid var(--gold);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 24px;
 }
 
 .result-grid {
@@ -155,6 +341,11 @@ html, body {
   font-size: 14px;
   font-weight: 600;
   color: var(--white);
+}
+
+.fastest-lap-icon {
+  margin-left: auto;
+  font-size: 16px;
 }
 
 .predictions-section {
@@ -442,36 +633,6 @@ html, body {
   font-size: 14px;
 }
 
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
-  margin-bottom: 24px;
-}
-
-.stat-box {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 20px;
-  text-align: center;
-}
-
-.stat-value {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 32px;
-  font-weight: 900;
-  color: var(--white);
-}
-
-.stat-label {
-  font-size: 12px;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-top: 4px;
-}
-
 @media (max-width: 768px) {
   .predictions-comparison {
     padding: 16px;
@@ -493,7 +654,7 @@ html, body {
     grid-template-columns: 1fr;
   }
 
-  .stats-grid {
+  .voted-positions-grid {
     grid-template-columns: 1fr;
   }
 }
@@ -511,6 +672,8 @@ export default function RacePredictionsComparison() {
   const [officialResult, setOfficialResult] = useState([]);
   const [predictions, setPredictions] = useState([]);
   const [drivers, setDrivers] = useState({});
+  const [mostVotedByPosition, setMostVotedByPosition] = useState([]);
+  const [userRanking, setUserRanking] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showPredictions, setShowPredictions] = useState(false);
 
@@ -545,7 +708,7 @@ export default function RacePredictionsComparison() {
       if (raceError) throw raceError;
       setRace(raceData);
 
-      // ✅ Verificar si mostrar predicciones
+      // Verificar si mostrar predicciones
       const predictionStatus = canPredictRace(raceData, groupData);
       const canStillPredict = predictionStatus.canPredict;
       setShowPredictions(!canStillPredict);
@@ -570,7 +733,20 @@ export default function RacePredictionsComparison() {
 
       setOfficialResult(resultsData || []);
 
-      // ✅ NUEVA QUERY - Sin scores embedded
+      // Cargar pilotos más votados por posición
+      const { data: mostVotedData, error: votedError } = await supabase
+        .rpc('obtener_pilotos_mas_votados_por_posicion', {
+          p_grupo_id: groupId,
+          p_carrera_id: raceId
+        });
+
+      if (votedError) {
+        console.error('Error loading most voted:', votedError);
+      } else {
+        setMostVotedByPosition(mostVotedData || []);
+      }
+
+      // Cargar predicciones
       const { data: predictionsData, error: predictionsError } = await supabase
         .from('predictions')
         .select(`
@@ -590,20 +766,20 @@ export default function RacePredictionsComparison() {
         throw predictionsError;
       }
 
-      // ✅ Cargar scores por separado
+      // Cargar scores por separado
       const { data: scoresData } = await supabase
         .from('scores')
         .select('*')
         .eq('grupo_id', groupId)
         .eq('carrera_id', raceId);
 
-      // ✅ Crear mapa de scores por usuario_id
+      // Crear mapa de scores por usuario_id
       const scoresMap = {};
       scoresData?.forEach(score => {
         scoresMap[score.usuario_id] = score;
       });
 
-      // ✅ Combinar predictions con scores
+      // Combinar predictions con scores
       const transformedPredictions = predictionsData
         ?.map(pred => {
           const userScore = scoresMap[pred.usuario_id];
@@ -617,9 +793,27 @@ export default function RacePredictionsComparison() {
             aciertos_piloto: userScore?.aciertos_piloto || 0
           };
         })
-        .sort((a, b) => b.puntos - a.puntos) || [];
+        .sort((a, b) => {
+          // Ordenar por puntos DESC, luego exactos DESC, luego piloto DESC
+          if (b.puntos !== a.puntos) return b.puntos - a.puntos;
+          if (b.aciertos_exactos !== a.aciertos_exactos) return b.aciertos_exactos - a.aciertos_exactos;
+          return b.aciertos_piloto - a.aciertos_piloto;
+        }) || [];
 
       setPredictions(transformedPredictions);
+
+      // Crear ranking de usuarios
+      const ranking = transformedPredictions.map((pred, idx) => ({
+        position: idx + 1,
+        userId: pred.usuario_id,
+        userName: pred.userName,
+        puntos: pred.puntos,
+        aciertos_exactos: pred.aciertos_exactos,
+        aciertos_piloto: pred.aciertos_piloto,
+        isCurrentUser: pred.usuario_id === user.id
+      }));
+
+      setUserRanking(ranking);
 
     } catch (err) {
       console.error('Error loading data:', err);
@@ -627,6 +821,67 @@ export default function RacePredictionsComparison() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const exportToExcel = () => {
+    try {
+      const wb = XLSX.utils.book_new();
+
+      // Hoja 1: Resultado Oficial
+      const officialSheet = officialResult.slice(0, group?.cantidad_posiciones || 10).map((result, idx) => ({
+        'Posición': idx + 1,
+        'Piloto': drivers[result.piloto_id] || 'Desconocido',
+        'Puntos F1': result.puntos_f1,
+        'Vuelta Rápida': result.vuelta_rapida ? 'Sí' : 'No'
+      }));
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(officialSheet), 'Resultado Oficial');
+
+      // Hoja 2: Ranking Usuarios
+      const rankingSheet = userRanking.map(user => ({
+        'Posición': user.position,
+        'Usuario': user.userName,
+        'Puntos': user.puntos,
+        'Aciertos Exactos': user.aciertos_exactos,
+        'Piloto Correcto': user.aciertos_piloto
+      }));
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rankingSheet), 'Ranking Usuarios');
+
+      // Hoja 3: Votos por Posición
+      const votesSheet = mostVotedByPosition.map(vote => ({
+        'Posición': `P${vote.posicion}`,
+        'Piloto': vote.piloto_nombre,
+        'Total Votos': vote.total_votos,
+        'Porcentaje': `${vote.porcentaje}%`
+      }));
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(votesSheet), 'Votos por Posición');
+
+      // Descargar archivo
+      const fileName = `Resultados_${race.nombre.replace(/\s+/g, '_')}.xlsx`;
+      XLSX.writeFile(wb, fileName);
+
+      toast.success('Excel exportado correctamente');
+    } catch (error) {
+      console.error('Error exporting to Excel:', error);
+      toast.error('Error al exportar Excel');
+    }
+  };
+
+  const handleShareGeneralResults = () => {
+    const topUser = userRanking[0];
+    const avgPoints = userRanking.length > 0
+      ? userRanking.reduce((sum, u) => sum + u.puntos, 0) / userRanking.length
+      : 0;
+
+    setShareData({
+      type: 'general',
+      topUser: topUser?.userName || 'N/A',
+      topPoints: topUser?.puntos || 0,
+      totalParticipants: userRanking.length,
+      avgPoints: Math.round(avgPoints),
+      mostVoted: mostVotedByPosition.slice(0, 3)
+    });
+    
+    setShowShareModal(true);
   };
 
   const getInitials = (name, lastName) => {
@@ -656,6 +911,7 @@ export default function RacePredictionsComparison() {
     const maxPositions = group?.cantidad_posiciones || 10;
 
     setShareData({
+      type: 'individual',
       points: prediction.puntos,
       exactHits: prediction.aciertos_exactos,
       totalDrivers: maxPositions,
@@ -665,6 +921,20 @@ export default function RacePredictionsComparison() {
     });
     
     setShowShareModal(true);
+  };
+
+  const getRankingPositionClass = (position) => {
+    if (position === 1) return 'first';
+    if (position === 2) return 'second';
+    if (position === 3) return 'third';
+    return 'other';
+  };
+
+  const getRankingEmoji = (position) => {
+    if (position === 1) return '🥇';
+    if (position === 2) return '🥈';
+    if (position === 3) return '🥉';
+    return `${position}°`;
   };
 
   if (loading) {
@@ -704,11 +974,6 @@ export default function RacePredictionsComparison() {
     );
   }
 
-  const bestPrediction = predictions[0];
-  const avgPoints = predictions.length > 0
-    ? predictions.reduce((sum, p) => sum + p.puntos, 0) / predictions.length
-    : 0;
-  
   const maxPositions = group?.cantidad_posiciones || 10;
 
   return (
@@ -723,46 +988,91 @@ export default function RacePredictionsComparison() {
           <h1 className="race-title">{race.nombre}</h1>
           <p className="race-subtitle">📍 {race.circuito} • 📅 {new Date(race.fecha_programada).toLocaleDateString('es')}</p>
           <span className="race-status locked">
-            🔒 Predicciones cerradas - Comparación disponible
+            🔒 Predicciones cerradas - Resultados disponibles
           </span>
         </div>
 
-        <div className="stats-grid">
-          <div className="stat-box">
-            <div className="stat-value">{predictions.length}</div>
-            <div className="stat-label">Predicciones</div>
-          </div>
-          <div className="stat-box">
-            <div className="stat-value">{Math.round(avgPoints)}</div>
-            <div className="stat-label">Puntos Promedio</div>
-          </div>
-          <div className="stat-box">
-            <div className="stat-value">{Math.round(bestPrediction?.puntos || 0)}</div>
-            <div className="stat-label">Mejor Puntuación</div>
-          </div>
-          <div className="stat-box">
-            <div className="stat-value">{bestPrediction?.aciertos_exactos || 0}</div>
-            <div className="stat-label">Máximo Exactos</div>
-          </div>
+        <div className="action-buttons">
+          <button className="action-btn primary" onClick={exportToExcel}>
+            📥 Exportar a Excel
+          </button>
+          <button className="action-btn" onClick={handleShareGeneralResults}>
+            🔗 Compartir Resultados
+          </button>
         </div>
 
-        {officialResult.length > 0 && (
-          <div className="official-result">
-            <h2 className="section-title">🏆 Resultado Oficial</h2>
-            <div className="result-grid">
-              {officialResult.slice(0, maxPositions).map((result, idx) => (
-                <div key={result.id} className="position-card">
-                  <div className="position-number">{idx + 1}°</div>
-                  <div className="driver-name">{drivers[result.piloto_id] || 'Desconocido'}</div>
+        {/* SECCIÓN 1: PILOTO MÁS VOTADO POR POSICIÓN */}
+        {mostVotedByPosition.length > 0 && (
+          <div className="most-voted-section">
+            <h2 className="section-title">🎯 Piloto Más Votado por Posición</h2>
+            <div className="voted-positions-grid">
+              {mostVotedByPosition.map((vote) => (
+                <div key={vote.posicion} className="voted-position-card">
+                  <div className="position-label">P{vote.posicion}</div>
+                  <div className="voted-driver-name">{vote.piloto_nombre}</div>
+                  <div className="vote-stats">
+                    <span className="vote-count">{vote.total_votos} votos</span>
+                    <span className="vote-percentage">{vote.porcentaje}%</span>
+                  </div>
                 </div>
               ))}
             </div>
           </div>
         )}
 
+        {/* SECCIÓN 2: RANKING DE USUARIOS */}
+        {userRanking.length > 0 && (
+          <div className="users-ranking-section">
+            <h2 className="section-title">🏆 Ranking de Usuarios</h2>
+            <div className="ranking-list">
+              {userRanking.map((rankUser) => (
+                <div 
+                  key={rankUser.userId} 
+                  className={`ranking-item ${rankUser.isCurrentUser ? 'current-user' : ''}`}
+                >
+                  <div className={`ranking-position ${getRankingPositionClass(rankUser.position)}`}>
+                    {getRankingEmoji(rankUser.position)}
+                  </div>
+                  <div className="ranking-user-info">
+                    <div className="ranking-user-name">
+                      {rankUser.userName}
+                      {rankUser.isCurrentUser && <span style={{marginLeft: 8, fontSize: 12, color: 'var(--green)'}}>✓ Tú</span>}
+                    </div>
+                    <div className="ranking-user-stats">
+                      <span>✓ {rankUser.aciertos_exactos} exactos</span>
+                      <span>🎯 {rankUser.aciertos_piloto} pilotos correctos</span>
+                    </div>
+                  </div>
+                  <div className="ranking-points">
+                    <div>{Math.round(rankUser.puntos)}</div>
+                    <div className="ranking-points-label">pts</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* SECCIÓN 3: RESULTADO OFICIAL */}
+        {officialResult.length > 0 && (
+          <div className="official-result">
+            <h2 className="section-title">🏁 Resultado Oficial F1</h2>
+            <div className="result-grid">
+              {officialResult.slice(0, maxPositions).map((result, idx) => (
+                <div key={result.id} className="position-card">
+                  <div className="position-number">{idx + 1}°</div>
+                  <div className="driver-name">{drivers[result.piloto_id] || 'Desconocido'}</div>
+                  {result.vuelta_rapida && <span className="fastest-lap-icon">🏎️</span>}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* SECCIÓN 4: PREDICCIONES DETALLADAS */}
         <div className="predictions-section">
           <h2 className="section-title">
-            📊 Predicciones del Grupo ({predictions.length})
+            📝 Predicciones Detalladas ({predictions.length})
           </h2>
 
           {predictions.length === 0 ? (
@@ -871,7 +1181,7 @@ export default function RacePredictionsComparison() {
 
       {showShareModal && shareData && (
         <SharePredictionCard
-          type="result"
+          type={shareData.type || "result"}
           data={shareData}
           raceName={race.nombre}
           user={user}

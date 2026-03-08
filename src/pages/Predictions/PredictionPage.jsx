@@ -403,7 +403,7 @@ const CSS_STYLES = `
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.85);
+  background: rgba(0, 0, 0, 0.95) !important;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -412,8 +412,8 @@ const CSS_STYLES = `
 }
 
 .success-modal {
-  background: var(--bg2);
-  border: 2px solid var(--green);
+  background: var(--bg2) !important;
+  border: 2px solid var(--green) !important;
   border-radius: 16px;
   padding: 32px;
   max-width: 500px;
@@ -993,7 +993,7 @@ export default function PredictionPage() {
 
       {/* 🆕 MODAL DE ÉXITO */}
       {showSuccessModal && (
-        <div className="success-modal-overlay">
+          <div data-theme={theme} className="success-modal-overlay">
           <div className="success-modal">
             <div className="success-icon">✅</div>
             <h2 className="success-title">¡Predicción Guardada!</h2>
