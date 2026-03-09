@@ -19,9 +19,9 @@ export function useUserRaceDetails(groupId, userId) {
 
       const { data: races } = await supabase
         .from('races')
-        .select('id, nombre, numero_ronda, fecha_programada, estado')
+        .select('id, nombre, ronda, fecha_programada, estado')
         .eq('temporada', group.temporada)
-        .order('numero_ronda', { ascending: true });
+        .order('ronda', { ascending: true });
 
       // Obtener scores del usuario
       const { data: scores } = await supabase
@@ -48,7 +48,7 @@ export function useUserRaceDetails(groupId, userId) {
       const raceDetails = races?.map(race => ({
         carrera_id: race.id,
         nombre: race.nombre,
-        ronda: race.numero_ronda,
+        ronda: race.ronda,
         fecha: race.fecha_programada,
         estado: race.estado,
         puntos: scoresMap[race.id] || 0,
