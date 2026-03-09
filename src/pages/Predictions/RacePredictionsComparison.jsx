@@ -679,6 +679,9 @@ export default function RacePredictionsComparison() {
 
   const [showShareModal, setShowShareModal] = useState(false);
   const [shareData, setShareData] = useState(null);
+  
+  // 🆕 Estado para modal de sistema de puntos
+  const [showScoringModal, setShowScoringModal] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -999,6 +1002,9 @@ export default function RacePredictionsComparison() {
           <button className="action-btn" onClick={handleShareGeneralResults}>
             🔗 Compartir Resultados
           </button>
+          <button className="action-btn" onClick={() => setShowScoringModal(true)}>
+            ℹ️ Sistema de Puntos
+          </button>
         </div>
 
         {/* SECCIÓN 1: PILOTO MÁS VOTADO POR POSICIÓN */}
@@ -1065,6 +1071,51 @@ export default function RacePredictionsComparison() {
                   {result.vuelta_rapida && <span className="fastest-lap-icon">🏎️</span>}
                 </div>
               ))}
+            </div>
+          </div>
+        )}
+
+        {/* SECCIÓN 3B: VUELTA RÁPIDA */}
+        {officialResult.length > 0 && (
+          <div className="official-result" style={{marginTop: 16}}>
+            <h3 className="section-title" style={{fontSize: 18, marginBottom: 12}}>
+              🏎️ Vuelta Más Rápida
+            </h3>
+            <div style={{display: 'flex', gap: 16, flexWrap: 'wrap'}}>
+              {(() => {
+                const fastestDriver = officialResult.find(r => r.vuelta_rapida);
+                return fastestDriver ? (
+                  <div className="position-card" style={{flex: 1, minWidth: 200}}>
+                    <div style={{fontSize: 24}}>🏎️</div>
+                    <div>
+                      <div style={{fontSize: 12, color: 'var(--muted)', marginBottom: 4}}>
+                        PILOTO
+                      </div>
+                      <div className="driver-name">
+                        {drivers[fastestDriver.piloto_id] || 'Desconocido'}
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div style={{color: 'var(--muted)', fontSize: 14}}>
+                    No hay información de vuelta rápida
+                  </div>
+                );
+              })()}
+              
+              {group?.bonus_vuelta_rapida_piloto && (
+                <div style={{
+                  padding: 12,
+                  background: 'var(--green-dim)',
+                  border: '1px solid var(--green)',
+                  borderRadius: 10,
+                  fontSize: 13,
+                  color: 'var(--green)',
+                  fontWeight: 600
+                }}>
+                  +{group.puntos_vuelta_rapida_piloto} puntos bonus por acertar
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -1140,6 +1191,150 @@ export default function RacePredictionsComparison() {
                       <span>🎯 {prediction.aciertos_piloto || 0} pilotos correctos</span>
                     </div>
 
+                    {/* 🆕 DESGLOSE DE PUNTOS */}
+                    <div style={{
+                      background: 'var(--bg3)',
+                      border: '1px solid var(--border)',
+                      borderRadius: 10,
+                      padding: 12,
+                      marginBottom: 12,
+                      fontSize: 13
+                    }}>
+                      <div style={{
+                        fontWeight: 700,
+                        color: 'var(--white)',
+                        marginBottom: 8,
+                        fontSize: 12,
+                        textTransform: 'uppercase',
+                        letterSpacing: 1
+                      }}>
+                        📊 Desglose de Puntos
+                      </div>
+                      <div style={{display: 'flex', flexDirection: 'column', gap: 6}}>
+                        {/* Puntos por posiciones */}
+                        <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                          <span style={{color: 'var(--muted)'}}>
+                            Posiciones ({prediction.aciertos_exactos} exactos, {prediction.aciertos_piloto - prediction.aciertos_exactos} correctos)
+                          </span>
+                          <span style={{color: 'var(--white)', fontWeight: 700}}>
+                            {(() => {
+                              // Calcular puntos de posiciones (sin vuelta rápida)
+                              const totalPuntos = prediction.puntos || 0;
+                              const bonusVueltaRapida = (() => {
+                                if (!group?.bonus_vuelta_rapida_piloto) return 0;
+                                const fastestDriver = officialResult.find(r => r.vuelta_rapida);
+                                if (!fastestDriver) return 0;
+                                return prediction.vuelta_rapida_piloto_id === fastestDriver.piloto_id 
+                                  ? (group.puntos_vuelta_rapida_piloto || 0)
+                                  : 0;
+                              })();
+                              return Math.round(totalPuntos - bonusVueltaRapida);
+                            })()}
+                          </span>
+                        </div>
+
+                        {/* Bonus vuelta rápida */}
+                        {group?.bonus_vuelta_rapida_piloto && (() => {
+                          const fastestDriver = officialResult.find(r => r.vuelta_rapida);
+                          const acerto = fastestDriver && prediction.vuelta_rapida_piloto_id === fastestDriver.piloto_id;
+                          return (
+                            <div style={{
+                              display: 'flex',
+                              justifyContent: 'space-between',
+                              color: acerto ? 'var(--green)' : 'var(--muted)'
+                            }}>
+                              <span>
+                                {acerto ? '✓' : '✗'} Vuelta rápida piloto
+                              </span>
+                              <span style={{fontWeight: 700}}>
+                                {acerto ? `+${group.puntos_vuelta_rapida_piloto}` : '0'}
+                              </span>
+                            </div>
+                          );
+                        })()}
+
+                        {/* Línea divisoria */}
+                        <div style={{
+                          height: 1,
+                          background: 'var(--border)',
+                          margin: '4px 0'
+                        }}></div>
+
+                        {/* Total */}
+                        <div style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          fontWeight: 700,
+                          color: 'var(--white)',
+                          fontSize: 15
+                        }}>
+                          <span>TOTAL</span>
+                          <span>{Math.round(prediction.puntos || 0)}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* 🆕 PREDICCIÓN VUELTA RÁPIDA */}
+                    {group?.bonus_vuelta_rapida_piloto && prediction.vuelta_rapida_piloto_id && (
+                      <div style={{
+                        background: 'var(--bg3)',
+                        border: '1px solid var(--border)',
+                        borderRadius: 10,
+                        padding: 12,
+                        marginBottom: 12,
+                        fontSize: 13
+                      }}>
+                        <div style={{
+                          fontWeight: 700,
+                          color: 'var(--white)',
+                          marginBottom: 8,
+                          fontSize: 12,
+                          textTransform: 'uppercase',
+                          letterSpacing: 1
+                        }}>
+                          🏎️ Predicción Vuelta Rápida
+                        </div>
+                        <div style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between'
+                        }}>
+                          <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 8
+                          }}>
+                            <span style={{
+                              fontSize: 20
+                            }}>🏎️</span>
+                            <span style={{
+                              color: 'var(--white)',
+                              fontWeight: 600
+                            }}>
+                              {drivers[prediction.vuelta_rapida_piloto_id] || 'Desconocido'}
+                            </span>
+                          </div>
+                          {(() => {
+                            const fastestDriver = officialResult.find(r => r.vuelta_rapida);
+                            const acerto = fastestDriver && prediction.vuelta_rapida_piloto_id === fastestDriver.piloto_id;
+                            return (
+                              <span style={{
+                                padding: '4px 12px',
+                                background: acerto ? 'var(--green-dim)' : 'var(--red-dim)',
+                                border: `1px solid ${acerto ? 'var(--green)' : 'var(--red)'}`,
+                                borderRadius: 8,
+                                color: acerto ? 'var(--green)' : 'var(--red)',
+                                fontWeight: 700,
+                                fontSize: 12
+                              }}>
+                                {acerto ? '✓ ACERTÓ' : '✗ FALLÓ'}
+                              </span>
+                            );
+                          })()}
+                        </div>
+                      </div>
+                    )}
+
                     <div className="prediction-positions">
                       {prediction.posiciones?.slice(0, maxPositions).map((pilotoId, position) => {
                         const isCorrect = isPredictionCorrect(pilotoId, position);
@@ -1178,6 +1373,173 @@ export default function RacePredictionsComparison() {
           )}
         </div>
       </div>
+
+      {/* 🆕 MODAL SISTEMA DE PUNTOS */}
+      {showScoringModal && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0,0,0,0.9)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 9999,
+          padding: 20
+        }} onClick={() => setShowScoringModal(false)}>
+          <div data-theme={theme} style={{
+            background: 'var(--bg2)',
+            border: '2px solid var(--border2)',
+            borderRadius: 16,
+            padding: 32,
+            maxWidth: 600,
+            width: '100%',
+            maxHeight: '80vh',
+            overflowY: 'auto'
+          }} onClick={(e) => e.stopPropagation()}>
+            <h2 style={{
+              fontFamily: 'Barlow Condensed',
+              fontSize: 28,
+              fontWeight: 900,
+              color: 'var(--white)',
+              marginBottom: 20
+            }}>
+              📊 Sistema de Puntos - {group?.nombre}
+            </h2>
+
+            {/* Sistema base */}
+            <div style={{marginBottom: 20}}>
+              <h3 style={{
+                fontSize: 16,
+                fontWeight: 700,
+                color: 'var(--white)',
+                marginBottom: 12
+              }}>
+                🏆 Puntos por Posición
+              </h3>
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(80px, 1fr))',
+                gap: 8
+              }}>
+                {Object.entries(group?.sistema_puntos || {}).map(([pos, pts]) => (
+                  <div key={pos} style={{
+                    background: 'var(--bg3)',
+                    border: '1px solid var(--border)',
+                    borderRadius: 8,
+                    padding: 10,
+                    textAlign: 'center'
+                  }}>
+                    <div style={{fontSize: 12, color: 'var(--muted)', marginBottom: 4}}>
+                      P{pos}
+                    </div>
+                    <div style={{fontSize: 20, fontWeight: 900, color: 'var(--gold)'}}>
+                      {pts}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Bonus exacto */}
+            <div style={{marginBottom: 20}}>
+              <h3 style={{fontSize: 16, fontWeight: 700, color: 'var(--white)', marginBottom: 8}}>
+                🎯 Bonus Posición Exacta
+              </h3>
+              <div style={{
+                background: 'var(--green-dim)',
+                border: '1px solid var(--green)',
+                borderRadius: 10,
+                padding: 12,
+                color: 'var(--green)',
+                fontWeight: 600
+              }}>
+                +{group?.bonus_posicion_exacta || 0} puntos adicionales por acertar posición exacta
+              </div>
+            </div>
+
+            {/* Piloto correcto */}
+            {group?.usa_sistema_dual && (
+              <div style={{marginBottom: 20}}>
+                <h3 style={{fontSize: 16, fontWeight: 700, color: 'var(--white)', marginBottom: 8}}>
+                  ✓ Piloto Correcto (sin posición exacta)
+                </h3>
+                <div style={{
+                  background: 'var(--bg3)',
+                  border: '1px solid var(--border)',
+                  borderRadius: 10,
+                  padding: 12,
+                  color: 'var(--muted)'
+                }}>
+                  +{group?.puntos_piloto_correcto || 0} puntos si el piloto termina en top {group?.cantidad_posiciones}
+                </div>
+              </div>
+            )}
+
+            {/* Vuelta rápida */}
+            {group?.bonus_vuelta_rapida_piloto && (
+              <div style={{marginBottom: 20}}>
+                <h3 style={{fontSize: 16, fontWeight: 700, color: 'var(--white)', marginBottom: 8}}>
+                  🏎️ Bonus Vuelta Rápida
+                </h3>
+                <div style={{
+                  background: 'var(--bg3)',
+                  border: '1px solid var(--border)',
+                  borderRadius: 10,
+                  padding: 12,
+                  color: 'var(--muted)'
+                }}>
+                  +{group?.puntos_vuelta_rapida_piloto || 0} puntos por acertar el piloto con vuelta más rápida
+                </div>
+              </div>
+            )}
+
+            {/* Ejemplo */}
+            <div style={{
+              background: 'var(--bg4)',
+              border: '1px solid var(--border)',
+              borderRadius: 10,
+              padding: 16,
+              marginBottom: 20
+            }}>
+              <h3 style={{
+                fontSize: 14,
+                fontWeight: 700,
+                color: 'var(--white)',
+                marginBottom: 8,
+                textTransform: 'uppercase',
+                letterSpacing: 1
+              }}>
+                📝 Ejemplo de Cálculo
+              </h3>
+              <div style={{fontSize: 13, color: 'var(--muted)', lineHeight: 1.6}}>
+                • Aciertas P1 exacto: {group?.sistema_puntos?.['1'] || 0} + {group?.bonus_posicion_exacta || 0} = {(group?.sistema_puntos?.['1'] || 0) + (group?.bonus_posicion_exacta || 0)} pts<br/>
+                • Aciertas piloto en P2 pero termina P4: {group?.puntos_piloto_correcto || 0} pts<br/>
+                • Aciertas vuelta rápida: +{group?.puntos_vuelta_rapida_piloto || 0} pts
+              </div>
+            </div>
+
+            {/* Botón cerrar */}
+            <button style={{
+              width: '100%',
+              padding: 14,
+              background: 'linear-gradient(135deg, var(--red), #FF3355)',
+              border: 'none',
+              borderRadius: 10,
+              color: 'white',
+              fontFamily: 'Barlow Condensed',
+              fontSize: 16,
+              fontWeight: 800,
+              cursor: 'pointer',
+              marginTop: 20
+            }} onClick={() => setShowScoringModal(false)}>
+              CERRAR
+            </button>
+          </div>
+        </div>
+      )}
 
       {showShareModal && shareData && (
         <SharePredictionCard

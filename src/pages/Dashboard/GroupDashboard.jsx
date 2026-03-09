@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../stores/authStore';
 import { useThemeStore } from '../../stores/themeStore';
@@ -10,6 +10,7 @@ import { useTeamStandings } from '../../hooks/useTeamStandings';
 import { useLastRace } from '../../hooks/useLastRace';
 import { useUserRaceDetails } from '../../hooks/useUserRaceDetails';
 import { SkeletonTable, SkeletonStats } from '../../components/SkeletonLoader';
+import ScoringSystemModal from '../../components/ScoringSystemModal';
 import { supabase } from '../../lib/supabase';
 import { subHours } from 'date-fns';
 
@@ -21,7 +22,7 @@ const CSS = `
   --border: rgba(255,255,255,0.07); --border2: rgba(255,255,255,0.13);
   --red: #E8002D; --red-dim: rgba(232,0,45,0.13);
   --white: #F0F0F0; --muted: rgba(240,240,240,0.40);
-  --gold: #C9A84C; --green: #00D4A0;
+  --gold: #C9A84C; --green: #00D4A0; --green-dim: rgba(0,212,160,0.15);
 }
 
 [data-theme="light"] {
@@ -29,7 +30,7 @@ const CSS = `
   --border: rgba(0,0,0,0.10); --border2: rgba(0,0,0,0.18);
   --red: #D40029; --red-dim: rgba(212,0,41,0.08);
   --white: #1A1B1E; --muted: rgba(26,27,30,0.55);
-  --gold: #9C6F10; --green: #007F5F;
+  --gold: #9C6F10; --green: #007F5F; --green-dim: rgba(0,127,95,0.15);
 }
 
 .group-dashboard {
@@ -407,7 +408,7 @@ const CSS = `
 }
 `;
 
-function HeroBanner({ group, nextRace, navigate, groupId }) {
+function HeroBanner({ group, nextRace, navigate, groupId, onShowScoringModal }) {
   const toast = useToastStore();
   const raceDate = nextRace ? new Date(nextRace.fecha_programada) : new Date();
   const deadlineDate = nextRace ? subHours(raceDate, nextRace.deadlineHours || 2) : new Date();
@@ -428,7 +429,40 @@ function HeroBanner({ group, nextRace, navigate, groupId }) {
       <div className="hero-banner">
         <div className="hero-header">
           <div>
-            <h1 className="hero-title">{group.nombre}</h1>
+            <div style={{display: 'flex', alignItems: 'center', gap: 16, marginBottom: 8}}>
+              <h1 className="hero-title" style={{marginBottom: 0}}>{group.nombre}</h1>
+              
+              {/* 🆕 BOTÓN SISTEMA DE PUNTOS */}
+              <button 
+                onClick={onShowScoringModal}
+                style={{
+                  padding: '8px 16px',
+                  background: 'var(--bg3)',
+                  border: '2px solid var(--border)',
+                  borderRadius: 10,
+                  color: 'var(--white)',
+                  cursor: 'pointer',
+                  fontSize: 14,
+                  fontWeight: 600,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 6,
+                  transition: 'all 0.2s',
+                  fontFamily: 'Barlow, sans-serif'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'var(--bg4)';
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'var(--bg3)';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                }}
+              >
+                <span>ℹ️</span>
+                <span>Reglas y Puntos</span>
+              </button>
+            </div>
             <p className="next-race">No hay carreras programadas</p>
           </div>
           {group.isAdmin && <span className="admin-badge">Admin</span>}
@@ -486,7 +520,40 @@ function HeroBanner({ group, nextRace, navigate, groupId }) {
     <div className="hero-banner">
       <div className="hero-header">
         <div>
-          <h1 className="hero-title">{group.nombre}</h1>
+          <div style={{display: 'flex', alignItems: 'center', gap: 16, marginBottom: 8, flexWrap: 'wrap'}}>
+            <h1 className="hero-title" style={{marginBottom: 0}}>{group.nombre}</h1>
+            
+            {/* 🆕 BOTÓN SISTEMA DE PUNTOS */}
+            <button 
+              onClick={onShowScoringModal}
+              style={{
+                padding: '8px 16px',
+                background: 'var(--bg3)',
+                border: '2px solid var(--border)',
+                borderRadius: 10,
+                color: 'var(--white)',
+                cursor: 'pointer',
+                fontSize: 14,
+                fontWeight: 600,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 6,
+                transition: 'all 0.2s',
+                fontFamily: 'Barlow, sans-serif'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'var(--bg4)';
+                e.currentTarget.style.transform = 'translateY(-2px)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'var(--bg3)';
+                e.currentTarget.style.transform = 'translateY(0)';
+              }}
+            >
+              <span>ℹ️</span>
+              <span>Reglas y Puntos</span>
+            </button>
+          </div>
           <p className="next-race">
             🏁 Próxima carrera: {nextRace.nombre} · {nextRace.circuito}
           </p>
@@ -781,9 +848,8 @@ function LeaderboardTab({ leaderboard, userId, groupId }) {
             const isExpanded = expandedUser === user.userId;
             
             return (
-              <>
+              <React.Fragment key={user.userId}>
                 <tr 
-                  key={user.userId} 
                   className={user.userId === userId ? 'current-user' : ''}
                   style={{ cursor: 'pointer' }}
                   onClick={() => handleToggleExpand(user)}
@@ -903,7 +969,7 @@ function LeaderboardTab({ leaderboard, userId, groupId }) {
                     </td>
                   </tr>
                 )}
-              </>
+              </React.Fragment>
             );
           })}
         </tbody>
@@ -1060,7 +1126,7 @@ function TeamsStandingsTab({ standings, loading }) {
   );
 }
 
-function LastRaceTab({ groupId, temporada, userId, group }) {
+function LastRaceTab({ groupId, temporada, userId, group, navigate }) {
   const { lastRace, results, predictions, drivers, loading } = useLastRace(groupId, temporada);
 
   if (loading) {
@@ -1142,7 +1208,7 @@ function LastRaceTab({ groupId, temporada, userId, group }) {
           <span>👥 {predictions.length} predicciones</span>
         </div>
         
-        {/* 🆕 BOTÓN VER TODAS LAS PREDICCIONES - AGREGAR AQUÍ */}
+        {/* BOTÓN VER TODAS LAS PREDICCIONES */}
         <button
           onClick={() => navigate(`/group/${groupId}/race/${lastRace.id}/predictions`)}
           style={{
@@ -1159,16 +1225,14 @@ function LastRaceTab({ groupId, temporada, userId, group }) {
             textTransform: 'uppercase',
             cursor: 'pointer',
             transition: 'all 0.2s',
-            marginTop: 8
+            marginTop: 16
           }}
           onMouseOver={(e) => e.target.style.opacity = '0.9'}
           onMouseOut={(e) => e.target.style.opacity = '1'}
         >
           📊 Ver Todas las Predicciones del Grupo
         </button>
-    
       </div>
-      
 
       <div style={{
         display: 'grid',
@@ -1351,6 +1415,9 @@ export default function GroupDashboard() {
   const theme = useThemeStore((state) => state.theme);
   const [activeTab, setActiveTab] = useState('general');
   
+  // 🆕 Estado para modal de sistema de puntos
+  const [showScoringModal, setShowScoringModal] = useState(false);
+  
   const { group, nextRace, leaderboard, loading, error } = useGroupDashboard(groupId, user?.id);
   const { standings: driverStandings, loading: standingsLoading } = useDriverStandings(group?.temporada);
   const { standings: teamStandings, loading: teamsLoading } = useTeamStandings(group?.temporada);
@@ -1406,6 +1473,7 @@ export default function GroupDashboard() {
           nextRace={nextRace} 
           navigate={navigate} 
           groupId={groupId}
+          onShowScoringModal={() => setShowScoringModal(true)}
         />
         
         <StatsCards leaderboard={leaderboard} userId={user.id} />
@@ -1453,10 +1521,19 @@ export default function GroupDashboard() {
                 temporada={group.temporada} 
                 userId={user.id}
                 group={group}
+                navigate={navigate}
               />
             )}
           </div>
         </div>
+
+        {/* 🆕 MODAL SISTEMA DE PUNTOS */}
+        {showScoringModal && group && (
+          <ScoringSystemModal
+            group={group}
+            onClose={() => setShowScoringModal(false)}
+          />
+        )}
       </div>
     </>
   );

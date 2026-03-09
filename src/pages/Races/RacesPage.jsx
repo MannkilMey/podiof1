@@ -639,8 +639,7 @@ export default function RacesPage() {
                   {/* Header */}
                   <div className="race-card-header">
                     <div className="race-info">
-                      <div className="race-round">Ronda {race.numero_ronda}</div>
-                      <div className="race-name">{race.nombre}</div>
+                      <div className="race-round">Ronda {race.ronda || '?'}</div>                      <div className="race-name">{race.nombre}</div>
                       <div className="race-details">
                         <div className="race-detail-item">
                           <span>📍</span>
@@ -724,7 +723,7 @@ export default function RacesPage() {
                                 >
                                   <div className="result-position">{idx + 1}°</div>
                                   <div className="result-driver">
-                                    {driver ? `${driver.nombre} ${driver.apellido}` : 'Desconocido'}
+                                    {driver?.nombre_completo || 'Desconocido'}
                                   </div>
                                   {predictedCorrectly && <span className="result-check">✓</span>}
                                 </div>
@@ -749,7 +748,7 @@ export default function RacesPage() {
                                 >
                                   <div className="result-position">{idx + 1}°</div>
                                   <div className="result-driver">
-                                    {driver ? `${driver.nombre} ${driver.apellido}` : 'Desconocido'}
+                                    {driver?.nombre_completo || 'Desconocido'}
                                   </div>
                                   <span className="result-check">{isCorrect ? '✓' : '✗'}</span>
                                 </div>

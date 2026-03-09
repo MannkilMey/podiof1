@@ -6,7 +6,7 @@ import { useToastStore } from '../../stores/toastStore';
 import { useGroupMembers } from '../../hooks/useGroupMembers';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
 import { supabase } from '../../lib/supabase';
-import { canPredictRace } from '../../utils/canPredictRace';
+import { canPredictRace, canPredictRaceSync} from '../../utils/canPredictRace';
 
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap');`;
 
@@ -680,33 +680,68 @@ export default function GroupDetail() {
 
   // ✅ NUEVO: Cargar carreras para modal
   const loadRaces = async () => {
-    try {
-      setRacesLoading(true);
-      const { data, error } = await supabase
-        .from('races')
-        .select('*')
-        .eq('temporada', group.temporada)
-        .order('fecha_programada', { ascending: true });
+  try {
+    setRacesLoading(true);
+    
+    // 1. Obtener todas las carreras de la temporada
+    const { data: racesData, error: racesError } = await supabase
+      .from('races')
+      .select('*')
+      .eq('temporada', group.temporada)
+      .order('fecha_programada', { ascending: true });
 
-      if (error) throw error;
-      setRaces(data || []);
-    } catch (err) {
-      console.error('Error loading races:', err);
-      toast.error('Error al cargar carreras');
-    } finally {
-      setRacesLoading(false);
+    if (racesError) throw racesError;
+
+    // 2. 🆕 Obtener configuraciones específicas de ESTE grupo
+    const { data: groupRacesData, error: groupRacesError } = await supabase
+      .from('group_races')
+      .select('carrera_id, predicciones_forzadas_abiertas')
+      .eq('grupo_id', groupId);
+
+    if (groupRacesError && groupRacesError.code !== 'PGRST116') {
+      throw groupRacesError;
     }
-  };
+
+    // 3. Crear lookup de configuraciones por carrera
+    const configMap = {};
+    (groupRacesData || []).forEach(config => {
+      configMap[config.carrera_id] = config.predicciones_forzadas_abiertas;
+    });
+
+    // 4. Combinar carreras con configuración específica del grupo
+    const racesWithConfig = (racesData || []).map(race => ({
+      ...race,
+      // Si hay config específica del grupo, usarla; sino usar la global
+      predicciones_forzadas_abiertas: 
+        configMap[race.id] !== undefined 
+          ? configMap[race.id] 
+          : race.predicciones_forzadas_abiertas
+    }));
+
+    setRaces(racesWithConfig);
+  } catch (err) {
+    console.error('Error loading races:', err);
+    toast.error('Error al cargar carreras');
+  } finally {
+    setRacesLoading(false);
+  }
+};
 
   // ✅ NUEVO: Toggle predicciones forzadas
 const handleToggleForcedPredictions = async (raceId, currentValue) => {
   try {
     const newValue = !currentValue;
     
+    // 🆕 UPSERT en group_races (específico del grupo)
     const { error } = await supabase
-      .from('races')
-      .update({ predicciones_forzadas_abiertas: newValue })
-      .eq('id', raceId);
+      .from('group_races')
+      .upsert({
+        grupo_id: groupId,
+        carrera_id: raceId,
+        predicciones_forzadas_abiertas: newValue
+      }, {
+        onConflict: 'grupo_id,carrera_id'
+      });
 
     if (error) throw error;
 
@@ -719,7 +754,11 @@ const handleToggleForcedPredictions = async (raceId, currentValue) => {
       )
     );
 
-    toast.success(newValue ? 'Predicciones habilitadas' : 'Predicciones cerradas');
+    toast.success(
+      newValue 
+        ? '✅ Predicciones abiertas para ESTE grupo' 
+        : '🔒 Predicciones cerradas para ESTE grupo'
+    );
   } catch (err) {
     console.error('Error toggling predictions:', err);
     toast.error('Error al cambiar estado');
@@ -1030,7 +1069,7 @@ const handleToggleForcedPredictions = async (raceId, currentValue) => {
                     const now = new Date();
                     const raceStart = new Date(race.fecha_programada);
                     const isPast = now >= raceStart;
-                    const status = canPredictRace(race, group);
+                     const status = canPredictRaceSync(race, group);
 
                     return (
                       <div 

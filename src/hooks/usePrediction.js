@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-import {canPredictRace} from '../utils/canPredictRace';
+import { canPredictRace } from '../utils/canPredictRace';
 
 export function usePrediction(groupId, raceId, userId) {
   const [data, setData] = useState({
@@ -41,7 +41,8 @@ export function usePrediction(groupId, raceId, userId) {
         console.log('predicciones_forzadas_abiertas:', race.predicciones_forzadas_abiertas);
         console.log('Group:', group);
 
-        const predictionStatus = canPredictRace(race, group);
+        // 🆕 canPredictRace ahora es async y acepta groupId
+        const predictionStatus = await canPredictRace(race, group, groupId);
         console.log('Resultado canPredictRace:', predictionStatus);
         console.log('canPredict final:', predictionStatus.canPredict);
 
