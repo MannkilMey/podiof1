@@ -4,7 +4,7 @@ import { useAuthStore } from '../../stores/authStore';
 import { useThemeStore } from '../../stores/themeStore';
 import { supabase } from '../../lib/supabase';
 import { subHours } from 'date-fns';
-import { canPredictRace } from '../../utils/canPredictRace';  // ✅ NUEVO
+import { canPredictRaceSync } from '../../utils/canPredictRace';  
 
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap');`;
 
@@ -499,7 +499,7 @@ export default function RacesPage() {
     const hasPrediction = !!predictions[race.id];
     
     // ✅ Usar helper que respeta predicciones_forzadas_abiertas
-    const predictionStatus = canPredictRace(race, group);
+    const predictionStatus = canPredictRaceSync(race, group);
     const isOpen = predictionStatus.canPredict;
 
     if (race.estado === 'finalizada') {
@@ -550,7 +550,7 @@ export default function RacesPage() {
 
   // ✅ FUNCIÓN MEJORADA - Muestra deadline correcto
   const getDeadlineText = (race) => {
-    const predictionStatus = canPredictRace(race, group);
+    const predictionStatus = canPredictRaceSync(race, group);
     
     if (!predictionStatus.deadline) {
       return 'Cerrado';
