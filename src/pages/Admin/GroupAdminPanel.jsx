@@ -24,7 +24,6 @@ const CSS = `
   --gold: #9C6F10; --green: #007F5F;
 }
 
-/* ✅ Background global */
 html, body { 
   background: var(--bg); 
   color: var(--white); 
@@ -35,7 +34,7 @@ html, body {
 }
 
 .admin-container {
-  background: var(--bg);  /* ✅ NUEVO */
+  background: var(--bg);
   padding: 24px 28px;
   max-width: 1200px;
   margin: 0 auto;
@@ -295,7 +294,6 @@ html, body {
   color: white;
 }
 
-/* Modal */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -371,6 +369,138 @@ html, body {
   border-color: var(--border2);
   background: var(--bg3);
 }
+
+/* 🆕 Fastest Lap Section */
+.fastest-lap-section {
+  margin-top: 24px;
+}
+
+.race-fastest-card {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.race-fastest-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.race-fastest-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--white);
+}
+
+.race-fastest-date {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.fastest-lap-controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.fastest-lap-select {
+  flex: 1;
+  padding: 10px 14px;
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  color: var(--white);
+  font-size: 14px;
+  font-family: 'Barlow', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.fastest-lap-select:hover {
+  border-color: var(--red);
+}
+
+.fastest-lap-select:focus {
+  outline: none;
+  border-color: var(--red);
+  box-shadow: 0 0 0 3px rgba(232, 0, 45, 0.1);
+}
+
+.fastest-lap-select option {
+  background: var(--bg2);
+  color: var(--white);
+}
+
+.btn-save-fastest {
+  padding: 10px 20px;
+  background: linear-gradient(135deg, var(--green), #00A67E);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  min-width: 100px;
+}
+
+.btn-save-fastest:hover {
+  opacity: 0.9;
+}
+
+.btn-save-fastest:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-clear-fastest {
+  padding: 10px 16px;
+  background: transparent;
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  color: var(--muted);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-clear-fastest:hover {
+  border-color: var(--red);
+  color: var(--red);
+}
+
+.current-fastest {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: rgba(0, 212, 160, 0.1);
+  border: 1px solid rgba(0, 212, 160, 0.3);
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+.current-fastest-icon {
+  font-size: 16px;
+}
+
+.current-fastest-text {
+  color: var(--green);
+  font-weight: 700;
+}
 `;
 
 export default function GroupAdminPanel() {
@@ -384,6 +514,12 @@ export default function GroupAdminPanel() {
   const [pendingMembers, setPendingMembers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [confirmModal, setConfirmModal] = useState(null);
+  
+  // 🆕 Estados para vuelta rápida
+  const [finishedRaces, setFinishedRaces] = useState([]);
+  const [raceResults, setRaceResults] = useState({});
+  const [fastestLaps, setFastestLaps] = useState({});
+  const [savingFastestLap, setSavingFastestLap] = useState(null);
 
   useEffect(() => {
     loadGroupData();
@@ -409,7 +545,7 @@ export default function GroupAdminPanel() {
         .eq('usuario_id', user.id)
         .single();
 
-      if (!memberCheck?.es_admin) {
+      if (!memberCheck?.es_admin && groupData.creador_id !== user.id) {
         toast.error('No tienes permisos de administrador');
         navigate(`/group/${groupId}`);
         return;
@@ -432,7 +568,7 @@ export default function GroupAdminPanel() {
         `)
         .eq('grupo_id', groupId)
         .eq('estado', 'aprobado')
-        .order('joined_at', { ascending: true });  // ← AGREGAR ESTA LÍNEA
+        .order('joined_at', { ascending: true });
 
       if (membersError) throw membersError;
       setMembers(membersData || []);
@@ -453,16 +589,81 @@ export default function GroupAdminPanel() {
         `)
         .eq('grupo_id', groupId)
         .eq('estado', 'pendiente')
-       .order('joined_at', { ascending: true });  // ← AGREGAR ESTA LÍNEA
+        .order('joined_at', { ascending: true });
 
       if (pendingError) throw pendingError;
       setPendingMembers(pendingData || []);
+
+      // 🆕 Cargar datos de vuelta rápida
+      await loadFastestLapsData(groupData);
 
     } catch (err) {
       console.error('Error loading group data:', err);
       toast.error('Error al cargar datos del grupo');
     } finally {
       setLoading(false);
+    }
+  };
+
+  // 🆕 Función para cargar datos de vuelta rápida
+  const loadFastestLapsData = async (groupData) => {
+    try {
+      const currentGroup = groupData || group;
+      if (!currentGroup) return;
+
+      // Cargar carreras finalizadas de la temporada
+      const { data: racesData, error: racesError } = await supabase
+        .from('races')
+        .select('*')
+        .eq('temporada', currentGroup.temporada)
+        .eq('estado', 'finalizada')
+        .order('fecha_programada', { ascending: false });
+
+      if (racesError) throw racesError;
+      setFinishedRaces(racesData || []);
+
+      if (!racesData || racesData.length === 0) return;
+
+      const raceIds = racesData.map(r => r.id);
+
+      // Cargar resultados de cada carrera
+      const { data: resultsData, error: resultsError } = await supabase
+        .from('race_results')
+        .select(`
+          *,
+          drivers:piloto_id (
+            id,
+            nombre_completo,
+            acronimo,
+            numero
+          )
+        `)
+        .in('carrera_id', raceIds)
+        .order('posicion_final', { ascending: true });
+
+      if (resultsError) throw resultsError;
+
+      // Organizar por carrera
+      const resultsByRace = {};
+      const fastestByRace = {};
+      
+      resultsData?.forEach(result => {
+        if (!resultsByRace[result.carrera_id]) {
+          resultsByRace[result.carrera_id] = [];
+        }
+        resultsByRace[result.carrera_id].push(result);
+        
+        // Guardar quién tiene vuelta rápida
+        if (result.vuelta_rapida) {
+          fastestByRace[result.carrera_id] = result.piloto_id;
+        }
+      });
+
+      setRaceResults(resultsByRace);
+      setFastestLaps(fastestByRace);
+
+    } catch (err) {
+      console.error('Error loading fastest laps data:', err);
     }
   };
 
@@ -554,6 +755,71 @@ export default function GroupAdminPanel() {
     navigator.clipboard.writeText(group.codigo_invitacion);
     toast.success('Código copiado al portapapeles');
   };
+
+  // 🆕 Función para guardar vuelta rápida
+  const handleSaveFastestLap = async (raceId, pilotoId) => {
+  setSavingFastestLap(raceId);
+  try {
+    // 1. Limpiar vuelta_rapida anterior de esta carrera
+    const { error: clearError } = await supabase
+      .from('race_results')
+      .update({ vuelta_rapida: false })
+      .eq('carrera_id', raceId);
+
+    if (clearError) throw clearError;
+
+    // 2. Establecer nuevo piloto con vuelta rápida
+    if (pilotoId) {
+      const { error: setError } = await supabase
+        .from('race_results')
+        .update({ vuelta_rapida: true })
+        .eq('carrera_id', raceId)
+        .eq('piloto_id', pilotoId);
+
+      if (setError) throw setError;
+    }
+
+    // 3. Actualizar estado local
+    setFastestLaps(prev => ({
+      ...prev,
+      [raceId]: pilotoId || null
+    }));
+
+    // 4. ✅ Recalcular puntos llamando a la función SQL directamente
+    console.log('Recalculando puntos para carrera:', raceId);
+    
+    const { data: recalcData, error: recalcError } = await supabase
+      .rpc('calcular_puntos_carrera', {
+        p_carrera_id: raceId
+      });
+
+    if (recalcError) {
+      console.error('Error recalculando puntos:', recalcError);
+      toast.warning(
+        pilotoId 
+          ? '⚠️ Vuelta rápida guardada pero no se pudieron recalcular puntos automáticamente' 
+          : '🗑️ Vuelta rápida eliminada'
+      );
+    } else {
+      console.log('✅ Puntos recalculados:', recalcData);
+      toast.success(
+        pilotoId 
+          ? `✅ Vuelta rápida guardada y puntos recalculados (${recalcData?.[0]?.predicciones_calculadas || 0} predicciones)` 
+          : '🗑️ Vuelta rápida eliminada y puntos recalculados'
+      );
+    }
+
+  } catch (err) {
+    console.error('Error saving fastest lap:', err);
+    toast.error('Error al guardar vuelta rápida');
+  } finally {
+    setSavingFastestLap(null);
+  }
+};
+
+const handleClearFastestLap = async (raceId) => {
+  await handleSaveFastestLap(raceId, null);
+};
 
   if (loading) {
     return (
@@ -696,6 +962,82 @@ export default function GroupAdminPanel() {
             })}
           </div>
         </div>
+
+        {/* 🆕 Vuelta Rápida */}
+        {group?.bonus_vuelta_rapida_piloto && finishedRaces.length > 0 && (
+          <div className="admin-section fastest-lap-section">
+            <h2 className="section-title">
+              🏁 Vuelta Rápida ({finishedRaces.length} {finishedRaces.length === 1 ? 'carrera finalizada' : 'carreras finalizadas'})
+            </h2>
+            <p style={{ 
+              color: 'var(--muted)', 
+              fontSize: 14, 
+              marginBottom: 20,
+              lineHeight: 1.6 
+            }}>
+              Asigna la vuelta rápida de cada carrera. El piloto seleccionado recibirá <strong style={{ color: 'var(--green)' }}>{group.puntos_vuelta_rapida_piloto} puntos extra</strong> en las predicciones que lo incluyeron.
+            </p>
+
+            {finishedRaces.map(race => {
+              const results = raceResults[race.id] || [];
+              const currentFastest = fastestLaps[race.id];
+              const currentDriver = results.find(r => r.piloto_id === currentFastest);
+              const isSaving = savingFastestLap === race.id;
+
+              return (
+                <div key={race.id} className="race-fastest-card">
+                  <div className="race-fastest-header">
+                    <div>
+                      <div className="race-fastest-title">{race.nombre}</div>
+                      <div className="race-fastest-date">
+                        📍 {race.circuito} • 📅 {new Date(race.fecha_programada).toLocaleDateString('es', {
+                          day: 'numeric',
+                          month: 'long',
+                          year: 'numeric'
+                        })}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="fastest-lap-controls">
+                    <select 
+                      className="fastest-lap-select"
+                      value={currentFastest || ''}
+                      onChange={(e) => handleSaveFastestLap(race.id, e.target.value || null)}
+                      disabled={isSaving}
+                    >
+                      <option value="">-- Seleccionar piloto con vuelta rápida --</option>
+                      {results.map(result => (
+                        <option key={result.piloto_id} value={result.piloto_id}>
+                          P{result.posicion_final} • #{result.drivers?.numero} {result.drivers?.nombre_completo}
+                        </option>
+                      ))}
+                    </select>
+
+                    {currentFastest && (
+                      <button
+                        className="btn-clear-fastest"
+                        onClick={() => handleClearFastestLap(race.id)}
+                        disabled={isSaving}
+                      >
+                        🗑️ Limpiar
+                      </button>
+                    )}
+                  </div>
+
+                  {currentDriver && (
+                    <div className="current-fastest">
+                      <span className="current-fastest-icon">⚡</span>
+                      <span className="current-fastest-text">
+                        Vuelta rápida: #{currentDriver.drivers?.numero} {currentDriver.drivers?.nombre_completo}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
 
         {/* Modal de Confirmación */}
         {confirmModal && (

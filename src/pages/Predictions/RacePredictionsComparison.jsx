@@ -870,22 +870,31 @@ export default function RacePredictionsComparison() {
   };
 
   const handleShareGeneralResults = () => {
-    const topUser = userRanking[0];
-    const avgPoints = userRanking.length > 0
-      ? userRanking.reduce((sum, u) => sum + u.puntos, 0) / userRanking.length
-      : 0;
+  const topUser = userRanking[0];
+  const avgPoints = userRanking.length > 0
+    ? userRanking.reduce((sum, u) => sum + u.puntos, 0) / userRanking.length
+    : 0;
 
-    setShareData({
-      type: 'general',
-      topUser: topUser?.userName || 'N/A',
-      topPoints: topUser?.puntos || 0,
-      totalParticipants: userRanking.length,
-      avgPoints: Math.round(avgPoints),
-      mostVoted: mostVotedByPosition.slice(0, 3)
-    });
-    
-    setShowShareModal(true);
-  };
+  // ✅ NUEVO: Preparar resultado oficial (top 3 del podio)
+  const maxPositions = group?.cantidad_posiciones || 10;
+  const officialTop3 = officialResult.slice(0, Math.min(3, maxPositions)).map((result, idx) => ({
+    posicion: idx + 1,
+    piloto_nombre: drivers[result.piloto_id] || 'Desconocido',
+    vuelta_rapida: result.vuelta_rapida || false
+  }));
+
+  setShareData({
+    type: 'general',
+    topUser: topUser?.userName || 'N/A',
+    topPoints: topUser?.puntos || 0,
+    totalParticipants: userRanking.length,
+    avgPoints: Math.round(avgPoints),
+    mostVoted: mostVotedByPosition.slice(0, 3),
+    officialResult: officialTop3  // ✅ NUEVO: Resultado oficial
+  });
+  
+  setShowShareModal(true);
+};
 
   const getInitials = (name, lastName) => {
     return `${name?.[0] || ''}${lastName?.[0] || ''}`.toUpperCase() || '?';

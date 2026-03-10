@@ -112,11 +112,13 @@ html, body {
 /* Card que se convertirá en imagen - SIEMPRE DARK */
 .share-card {
   width: 540px;
-  height: 540px;
+  min-height: 540px; /* ✅ CAMBIO: min-height en lugar de height */
+  height: auto; /* ✅ NUEVO: altura automática */
   background: linear-gradient(135deg, #1a0510 0%, #0A0A0C 100%);
   border: 2px solid #E8002D;
   border-radius: 16px;
   padding: 40px;
+  padding-bottom: 80px; /* ✅ NUEVO: espacio para watermark */
   position: relative;
   overflow: hidden;
   margin: 0 auto 24px;
@@ -130,6 +132,7 @@ html, body {
   bottom: -30px;
   font-size: 180px;
   opacity: 0.03;
+  pointer-events: none; /* ✅ NUEVO */
 }
 
 /* Logo */
@@ -321,6 +324,7 @@ html, body {
 
 .most-voted-section {
   margin-top: 20px;
+  margin-bottom: 20px; /* ✅ NUEVO: espacio antes del watermark */
 }
 
 .most-voted-title {
@@ -360,10 +364,13 @@ html, body {
 /* Watermark */
 .card-watermark {
   position: absolute;
-  bottom: 24px;
-  left: 24px;
-  right: 24px;
+  bottom: 20px; /* ✅ CAMBIO: reducido de 24px */
+  left: 40px;
+  right: 40px;
   text-align: center;
+  background: linear-gradient(135deg, #1a0510 0%, #0A0A0C 100%); /* ✅ NUEVO: fondo */
+  padding: 12px 0; /* ✅ NUEVO */
+  z-index: 10; /* ✅ NUEVO: por encima del emoji */
 }
 
 .watermark-text {
@@ -435,9 +442,9 @@ html, body {
 @media (max-width: 600px) {
   .share-card {
     width: 100%;
-    height: auto;
-    aspect-ratio: 1;
+    min-height: auto;
     padding: 30px;
+    padding-bottom: 70px;
   }
   
   .card-title {
@@ -457,7 +464,7 @@ html, body {
  * @param {object} data - Datos según el tipo:
  *   - prediction: { drivers: [{ name: string }] }
  *   - individual/result: { points, exactHits, totalDrivers, position, totalParticipants, accuracy }
- *   - general: { topUser, topPoints, totalParticipants, avgPoints, mostVoted }
+ *   - general: { topUser, topPoints, totalParticipants, avgPoints, mostVoted, officialResult }
  * @param {string} raceName - Nombre de la carrera
  * @param {object} user - Objeto user completo de Supabase Auth
  * @param {function} onClose - Callback para cerrar el modal
@@ -496,12 +503,17 @@ export default function SharePredictionCard({ type, data, raceName, user, onClos
     try {
       setGenerating(true);
       
+      // ✅ MEJORADO: Opciones optimizadas para captura completa
       const canvas = await html2canvas(cardRef.current, {
         backgroundColor: '#0A0A0C',
         scale: 2,
         logging: false,
         useCORS: true,
-        allowTaint: true
+        allowTaint: true,
+        windowWidth: cardRef.current.scrollWidth, // ✅ NUEVO
+        windowHeight: cardRef.current.scrollHeight, // ✅ NUEVO
+        width: cardRef.current.offsetWidth, // ✅ NUEVO
+        height: cardRef.current.offsetHeight // ✅ NUEVO
       });
 
       return canvas.toDataURL('image/png');
@@ -648,7 +660,24 @@ export default function SharePredictionCard({ type, data, raceName, user, onClos
                   </div>
                 </div>
 
-                {data.mostVoted && data.mostVoted.length > 0 && (
+                {data.officialResult && data.officialResult.length > 0 ? (
+                  // ✅ MOSTRAR RESULTADO OFICIAL DE LA CARRERA
+                  <div className="most-voted-section">
+                    <div className="most-voted-title">🏁 Resultado Oficial</div>
+                    {data.officialResult.map((result, idx) => (
+                      <div key={idx} className="most-voted-item">
+                        <div className="most-voted-pos">
+                          {result.posicion === 1 ? '🥇' : result.posicion === 2 ? '🥈' : '🥉'}
+                        </div>
+                        <div className="most-voted-driver">{result.piloto_nombre}</div>
+                        {result.vuelta_rapida && (
+                          <span style={{ fontSize: 14, marginLeft: 'auto' }}>🏎️</span>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ) : data.mostVoted && data.mostVoted.length > 0 ? (
+                  // Fallback: Mostrar más votados si no hay resultado oficial
                   <div className="most-voted-section">
                     <div className="most-voted-title">Más Votados</div>
                     {data.mostVoted.map((vote, idx) => (
@@ -658,7 +687,7 @@ export default function SharePredictionCard({ type, data, raceName, user, onClos
                       </div>
                     ))}
                   </div>
-                )}
+                ) : null}
               </>
             ) : null}
 
