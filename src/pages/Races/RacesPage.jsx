@@ -388,6 +388,15 @@ html, body {
     grid-template-columns: 1fr;
   }
 }
+.race-badge.sprint {
+  background: linear-gradient(135deg, #FFB800, #FF8C00);
+  color: #000;
+  font-weight: 900;
+  padding: 6px 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
 `;
 
 export default function RacesPage() {
@@ -432,14 +441,22 @@ export default function RacesPage() {
       setDrivers(driversMap);
 
       // Cargar carreras de la temporada
-      const { data: racesData, error: racesError } = await supabase
+      let racesQuery = supabase
         .from('races')
         .select('*')
-        .eq('temporada', groupData.temporada)
+        .eq('temporada', groupData.temporada);
+
+      // ✅ Filtrar Sprints si el grupo no los incluye
+      if (!groupData.incluir_sprints) {
+        racesQuery = racesQuery.eq('tipo', 'carrera');
+      }
+
+      const { data: racesData, error: racesError } = await racesQuery
         .order('fecha_programada', { ascending: true });
 
-      if (racesError) throw racesError;
+      if (racesError) throw racesError;  // ✅ ESTO FALTABA
       setRaces(racesData || []);
+  
 
       // Cargar predicciones del usuario para este grupo
       const { data: predictionsData } = await supabase
@@ -651,6 +668,13 @@ export default function RacesPage() {
                         </div>
                       </div>
                       <div className="race-badges">
+                        {/* ✅ NUEVO: Badge Sprint */}
+                        {race.tipo === 'sprint' && (
+                          <span className="race-badge sprint">
+                            ⚡ SPRINT
+                          </span>
+                        )}
+                        
                         {status.badge && (
                           <span className={`race-badge ${status.badge}`}>
                             {status.label}

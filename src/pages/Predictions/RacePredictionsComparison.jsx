@@ -876,7 +876,16 @@ export default function RacePredictionsComparison() {
     : 0;
 
   // ✅ NUEVO: Preparar resultado oficial (top 3 del podio)
-  const maxPositions = group?.cantidad_posiciones || 10;
+  // ✅ NUEVO: Detectar si es Sprint y usar cantidad correspondiente
+const isSprint = race?.tipo === 'sprint';
+const maxPositions = isSprint 
+  ? (group?.cantidad_posiciones_sprint || 8)
+  : (group?.cantidad_posiciones || 10);
+
+// ✅ NUEVO: Sistema de puntos según tipo
+const sistemaPuntos = isSprint
+  ? (group?.sistema_puntos_sprint || {"1":8,"2":7,"3":6,"4":5,"5":4,"6":3,"7":2,"8":1})
+  : group?.sistema_puntos;
   const officialTop3 = officialResult.slice(0, Math.min(3, maxPositions)).map((result, idx) => ({
     posicion: idx + 1,
     piloto_nombre: drivers[result.piloto_id] || 'Desconocido',
@@ -904,7 +913,16 @@ export default function RacePredictionsComparison() {
     if (!positions || !officialResult.length) return 0;
     
     let correct = 0;
-    const maxPositions = group?.cantidad_posiciones || 10;
+    // ✅ NUEVO: Detectar si es Sprint y usar cantidad correspondiente
+const isSprint = race?.tipo === 'sprint';
+const maxPositions = isSprint 
+  ? (group?.cantidad_posiciones_sprint || 8)
+  : (group?.cantidad_posiciones || 10);
+
+// ✅ NUEVO: Sistema de puntos según tipo
+const sistemaPuntos = isSprint
+  ? (group?.sistema_puntos_sprint || {"1":8,"2":7,"3":6,"4":5,"5":4,"6":3,"7":2,"8":1})
+  : group?.sistema_puntos;
     positions.slice(0, maxPositions).forEach((pilotoId, idx) => {
       if (officialResult[idx]?.piloto_id === pilotoId) {
         correct++;
@@ -920,7 +938,16 @@ export default function RacePredictionsComparison() {
 
   const handleShareResult = (prediction, positionInRanking) => {
     const accuracy = calculateAccuracy(prediction.posiciones);
-    const maxPositions = group?.cantidad_posiciones || 10;
+    // ✅ NUEVO: Detectar si es Sprint y usar cantidad correspondiente
+const isSprint = race?.tipo === 'sprint';
+const maxPositions = isSprint 
+  ? (group?.cantidad_posiciones_sprint || 8)
+  : (group?.cantidad_posiciones || 10);
+
+// ✅ NUEVO: Sistema de puntos según tipo
+const sistemaPuntos = isSprint
+  ? (group?.sistema_puntos_sprint || {"1":8,"2":7,"3":6,"4":5,"5":4,"6":3,"7":2,"8":1})
+  : group?.sistema_puntos;
 
     setShareData({
       type: 'individual',
@@ -986,7 +1013,16 @@ export default function RacePredictionsComparison() {
     );
   }
 
-  const maxPositions = group?.cantidad_posiciones || 10;
+  // ✅ NUEVO: Detectar si es Sprint y usar cantidad correspondiente
+const isSprint = race?.tipo === 'sprint';
+const maxPositions = isSprint 
+  ? (group?.cantidad_posiciones_sprint || 8)
+  : (group?.cantidad_posiciones || 10);
+
+// ✅ NUEVO: Sistema de puntos según tipo
+const sistemaPuntos = isSprint
+  ? (group?.sistema_puntos_sprint || {"1":8,"2":7,"3":6,"4":5,"5":4,"6":3,"7":2,"8":1})
+  : group?.sistema_puntos;
 
   return (
     <>

@@ -420,6 +420,17 @@ html, body {
     width: 100%;
   }
 }
+.race-badge-sprint {
+  background: linear-gradient(135deg, #FFB800, #FF8C00);
+  color: #000;
+  font-weight: 900;
+  padding: 8px 16px;
+  border-radius: 10px;
+  display: inline-block;
+  margin-bottom: 16px;
+  font-size: 14px;
+  letter-spacing: 1px;
+}
 `;
 
 export default function RaceDetailPage() {
@@ -608,6 +619,12 @@ export default function RaceDetailPage() {
 
         <div className="race-hero">
           <div className="race-hero-content">
+              {/* ✅ NUEVO: Badge Sprint */}
+              {race.tipo === 'sprint' && (
+                <div className="race-badge-sprint">
+                  ⚡ CARRERA SPRINT
+                </div>
+              )}
             <div className="race-round-big">Ronda {race.numero_ronda}</div>
             <h2 className="race-name-big">{race.nombre}</h2>
 

@@ -504,6 +504,40 @@ const CSS_STYLES = `
   .bonus-grid { grid-template-columns: 1fr; }
   .pred-header { flex-direction: column; gap: 12px; align-items: flex-start; }
 }
+.sprint-badge-prediction {
+  background: linear-gradient(135deg, #FFB800, #FF8C00);
+  color: #000;
+  font-weight: 900;
+  padding: 12px 20px;
+  border-radius: 12px;
+  display: inline-block;
+  margin-bottom: 16px;
+  font-size: 16px;
+  letter-spacing: 1px;
+}
+
+.sprint-points-info {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.sprint-points-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--muted);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.sprint-points-list {
+  font-size: 13px;
+  color: var(--white);
+  line-height: 1.8;
+}
 `;
 
 function SortableDriver({ driver, position, isSelected, onRemove }) {
@@ -605,10 +639,21 @@ export default function PredictionPage() {
     }
   }, [drivers, existingPrediction]);
 
-  const maxPositions = group?.cantidad_posiciones || 10;
+    // ✅ NUEVO: Detectar si es Sprint y usar cantidad correspondiente
+  const isSprint = race?.tipo === 'sprint';
+  const maxPositions = isSprint 
+    ? (group?.cantidad_posiciones_sprint || 8)
+    : (group?.cantidad_posiciones || 10);
+
+  // ✅ NUEVO: Sistema de puntos según tipo
+  const sistemaPuntos = isSprint
+    ? (group?.sistema_puntos_sprint || {"1":8,"2":7,"3":6,"4":5,"5":4,"6":3,"7":2,"8":1})
+    : group?.sistema_puntos;
+
   const needsMore = selectedDrivers.length < maxPositions;
-  const hasFastestLapDriver = group?.bonus_vuelta_rapida_piloto || false;
-  const hasFastestLapTeam = group?.bonus_vuelta_rapida_escuderia || false;
+// ✅ NUEVO: Deshabilitar vuelta rápida en Sprint
+  const hasFastestLapDriver = !isSprint && (group?.bonus_vuelta_rapida_piloto || false);
+  const hasFastestLapTeam = !isSprint && (group?.bonus_vuelta_rapida_escuderia || false);
 
   const handleDragStart = (event) => {
     setActiveId(event.active.id);
@@ -818,6 +863,22 @@ export default function PredictionPage() {
             day: 'numeric'
           })}
         </p>
+        {/* ✅ NUEVO: Badge Sprint */}
+          {isSprint && (
+            <div className="sprint-badge-prediction">
+              ⚡ CARRERA SPRINT
+            </div>
+          )}
+
+          {/* ✅ NUEVO: Mostrar sistema de puntos Sprint */}
+          {isSprint && (
+            <div className="sprint-points-info">
+              <div className="sprint-points-title">Sistema de Puntos Sprint</div>
+              <div className="sprint-points-list">
+                1º = 8 pts • 2º = 7 pts • 3º = 6 pts • 4º = 5 pts • 5º = 4 pts • 6º = 3 pts • 7º = 2 pts • 8º = 1 pt
+              </div>
+            </div>
+          )}
 
         {!canPredict && (
           <div className="deadline-banner expired">
@@ -838,14 +899,23 @@ export default function PredictionPage() {
         {canPredict ? (
           <>
             <div className="instruction-box">
-              <h3 className="instruction-title">📝 Instrucciones</h3>
-              <p className="instruction-text">
-                1. Selecciona {maxPositions} pilotos en el orden que crees que terminarán<br/>
-                2. Arrastra para reordenar<br/>
-                3. Haz clic en ✕ para quitar un piloto<br/>
-                4. Guarda antes de que cierre el plazo
-              </p>
-            </div>
+            <h3 className="instruction-title">
+              📝 Instrucciones {isSprint ? '(Sprint)' : ''}
+            </h3>
+            <p className="instruction-text">
+              1. Selecciona {maxPositions} pilotos en el orden que crees que terminarán<br/>
+              2. Arrastra para reordenar<br/>
+              3. Haz clic en ✕ para quitar un piloto<br/>
+              4. Guarda antes de que cierre el plazo
+              {isSprint && (
+                <>
+                  <br/>
+                  <br/>
+                  ⚡ <strong>Sprint:</strong> Solo top {maxPositions} reciben puntos ({sistemaPuntos?.["1"]} pts para el ganador)
+                </>
+              )}
+            </p>
+          </div>
 
             <div className="prediction-grid">
               <div className="drivers-list">

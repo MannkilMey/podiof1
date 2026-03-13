@@ -485,7 +485,11 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
     bonus_vuelta_rapida_escuderia: false,
     usa_sistema_dual: false,
     puntos_piloto_correcto: 5,
-    bonus_posicion_exacta: 10
+    bonus_posicion_exacta: 10,
+    // ✅ NUEVO: Campos Sprint
+    incluir_sprints: true,
+    cantidad_posiciones_sprint: 8,
+    bonus_vuelta_rapida_sprint: false
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -504,6 +508,12 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
         "6": 8, "7": 6, "8": 4, "9": 2, "10": 1
       };
 
+      // ✅ NUEVO: Sistema de puntos Sprint
+      const sistema_puntos_sprint = {
+        "1": 8, "2": 7, "3": 6, "4": 5,
+        "5": 4, "6": 3, "7": 2, "8": 1
+      };
+
       const { data: newGroup, error: groupError } = await supabase
         .from('groups')
         .insert({
@@ -519,7 +529,13 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
           usa_sistema_dual: formData.usa_sistema_dual,
           puntos_piloto_correcto: formData.puntos_piloto_correcto,
           bonus_posicion_exacta: formData.bonus_posicion_exacta,
-          sistema_puntos: sistema_puntos
+          sistema_puntos: sistema_puntos,
+          // ✅ NUEVO: Campos Sprint
+          incluir_sprints: formData.incluir_sprints,
+          cantidad_posiciones_sprint: formData.cantidad_posiciones_sprint,
+          sistema_puntos_sprint: sistema_puntos_sprint,
+          bonus_vuelta_rapida_sprint: formData.bonus_vuelta_rapida_sprint,
+          puntos_vuelta_rapida_sprint: 0
         })
         .select()
         .single();
@@ -742,6 +758,86 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
             </div>
           </div>
 
+          {/* ✅ NUEVO: Incluir Sprints */}
+          <div style={{
+            background: colors.bg3,
+            border: `1px solid ${colors.border}`,
+            borderRadius: '12px',
+            padding: '18px',
+            marginBottom: '20px'
+          }}>
+            <label style={{
+              display: 'flex',
+              alignItems: 'flex-start',
+              gap: '12px',
+              cursor: 'pointer',
+              fontSize: '14px',
+              marginBottom: formData.incluir_sprints ? '16px' : '0'
+            }}>
+              <input
+                type="checkbox"
+                checked={formData.incluir_sprints}
+                onChange={(e) => setFormData({ ...formData, incluir_sprints: e.target.checked })}
+                style={{ width: '18px', height: '18px', cursor: 'pointer', marginTop: '2px', flexShrink: 0 }}
+              />
+              <div>
+                <div style={{ fontWeight: '700', marginBottom: '6px', color: colors.text }}>
+                  ⚡ Incluir Carreras Sprint
+                </div>
+                <div style={{ color: colors.muted, fontSize: '13px', lineHeight: '1.6' }}>
+                  La temporada 2026 tendrá 6 carreras Sprint con formato y puntuación especiales
+                </div>
+              </div>
+            </label>
+
+            {formData.incluir_sprints && (
+              <div style={{
+                background: colors.bg2,
+                border: `1px solid ${colors.border}`,
+                borderRadius: '10px',
+                padding: '14px'
+              }}>
+                <div style={{ marginBottom: '12px' }}>
+                  <label style={{
+                    display: 'block',
+                    fontSize: '12px',
+                    fontWeight: '600',
+                    letterSpacing: '1px',
+                    textTransform: 'uppercase',
+                    color: colors.muted,
+                    marginBottom: '8px'
+                  }}>Posiciones Sprint</label>
+                  <select
+                    value={formData.cantidad_posiciones_sprint}
+                    onChange={(e) => setFormData({ ...formData, cantidad_posiciones_sprint: parseInt(e.target.value) })}
+                    style={{
+                      width: '100%',
+                      padding: '10px 14px',
+                      background: colors.bg3,
+                      border: `1px solid ${colors.border}`,
+                      borderRadius: '8px',
+                      color: colors.text,
+                      fontSize: '14px',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <option value={8} style={{ background: colors.bg }}>Top 8 (oficial F1)</option>
+                    <option value={5} style={{ background: colors.bg }}>Top 5</option>
+                    <option value={3} style={{ background: colors.bg }}>Top 3</option>
+                  </select>
+                </div>
+
+                <div style={{ fontSize: '13px', color: colors.muted, lineHeight: '1.7' }}>
+                  <div style={{ marginBottom: '4px', fontWeight: '600', color: colors.text }}>
+                    Sistema de Puntos Sprint:
+                  </div>
+                  1° = 8 pts · 2° = 7 pts · 3° = 6 pts · 4° = 5 pts<br/>
+                  5° = 4 pts · 6° = 3 pts · 7° = 2 pts · 8° = 1 pt
+                </div>
+              </div>
+            )}
+          </div>
+
           {/* Sistema de Puntaje Info */}
           <div style={{
             background: colors.bg3,
@@ -828,7 +924,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
               textTransform: 'uppercase',
               color: colors.muted,
               marginBottom: '10px'
-            }}>Bonus Opcionales</div>
+            }}>Bonus Opcionales (Solo Carreras)</div>
             
             <label style={{
               display: 'flex',
@@ -872,6 +968,15 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
               />
               <span>Bonus vuelta rápida escudería (+1 pt)</span>
             </label>
+
+            <div style={{
+              fontSize: '12px',
+              color: colors.muted,
+              marginTop: '8px',
+              fontStyle: 'italic'
+            }}>
+              ℹ️ Los Sprint no tienen bonus de vuelta rápida
+            </div>
           </div>
 
           {/* Botones */}

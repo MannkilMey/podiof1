@@ -727,21 +727,15 @@ export default function GroupDetail() {
   }
 };
 
-  // ✅ NUEVO: Toggle predicciones forzadas
-const handleToggleForcedPredictions = async (raceId, currentValue) => {
+ const handleToggleForcedPredictions = async (raceId, currentValue) => {
   try {
     const newValue = !currentValue;
     
-    // 🆕 UPSERT en group_races (específico del grupo)
+    // ⚠️ TEMPORAL: Actualizar races directamente (afecta todos los grupos)
     const { error } = await supabase
-      .from('group_races')
-      .upsert({
-        grupo_id: groupId,
-        carrera_id: raceId,
-        predicciones_forzadas_abiertas: newValue
-      }, {
-        onConflict: 'grupo_id,carrera_id'
-      });
+      .from('races')
+      .update({ predicciones_forzadas_abiertas: newValue })
+      .eq('id', raceId);
 
     if (error) throw error;
 
@@ -756,13 +750,12 @@ const handleToggleForcedPredictions = async (raceId, currentValue) => {
 
     toast.success(
       newValue 
-        ? '✅ Predicciones abiertas para ESTE grupo' 
-        : '🔒 Predicciones cerradas para ESTE grupo'
+        ? '✅ Predicciones abiertas (TODOS los grupos)' 
+        : '🔒 Predicciones cerradas (TODOS los grupos)'
     );
   } catch (err) {
     console.error('Error toggling predictions:', err);
     toast.error('Error al cambiar estado');
-    // Recargar en caso de error
     loadRaces();
   }
 };
