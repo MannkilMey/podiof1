@@ -29,6 +29,7 @@ import RacesPage from './pages/Races/RacesPage';
 import RaceDetailPage from './pages/Races/RaceDetailPage';
 import SuperAdminPanel from './pages/Admin/SuperAdminPanel';
 import RacePredictionsComparison from './pages/Predictions/RacePredictionsComparison';
+import ManualResults from './pages/Admin/ManualResults';
 
 
 
@@ -120,6 +121,7 @@ export default function App() {
             } 
           />
           <Route path="/como-funciona" element={<HowItWorks />} />
+          
 
 
           {/* Join Group via Invite Link */}
@@ -158,6 +160,7 @@ export default function App() {
               </ProtectedRoute>
             } 
           />
+          <Route path="/admin/race/:raceId/results" element={<ManualResults />} />
           <Route 
             path="/settings" 
             element={

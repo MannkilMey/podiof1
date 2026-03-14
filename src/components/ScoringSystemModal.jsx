@@ -27,6 +27,8 @@ const ScoringSystemModal = ({ group, onClose }) => {
 
   if (!group) return null;
 
+  const incluirSprints = group.incluir_sprints || false;
+
   return (
     <div 
       style={{
@@ -51,9 +53,9 @@ const ScoringSystemModal = ({ group, onClose }) => {
           border: '2px solid var(--border2)',
           borderRadius: 16,
           padding: 32,
-          maxWidth: 600,
+          maxWidth: 700,
           width: '100%',
-          maxHeight: '80vh',
+          maxHeight: '85vh',
           overflowY: 'auto'
         }} 
         onClick={(e) => e.stopPropagation()}
@@ -76,107 +78,247 @@ const ScoringSystemModal = ({ group, onClose }) => {
           {group.nombre}
         </p>
 
-        {/* Sistema base */}
-        <div style={{marginBottom: 20}}>
+        {/* ========================================
+            CARRERAS NORMALES
+        ======================================== */}
+        <div style={{
+          background: 'var(--bg3)',
+          border: '2px solid var(--border2)',
+          borderRadius: 14,
+          padding: 20,
+          marginBottom: 20
+        }}>
           <h3 style={{
-            fontSize: 16,
-            fontWeight: 700,
+            fontFamily: 'Barlow Condensed',
+            fontSize: 22,
+            fontWeight: 900,
             color: 'var(--white)',
-            marginBottom: 12
-          }}>
-            🏆 Puntos por Posición
-          </h3>
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(80px, 1fr))',
+            marginBottom: 16,
+            display: 'flex',
+            alignItems: 'center',
             gap: 8
           }}>
-            {Object.entries(group.sistema_puntos || {}).map(([pos, pts]) => (
-              <div key={pos} style={{
-                background: 'var(--bg3)',
-                border: '1px solid var(--border)',
-                borderRadius: 8,
-                padding: 10,
-                textAlign: 'center'
-              }}>
-                <div style={{fontSize: 12, color: 'var(--muted)', marginBottom: 4}}>
-                  P{pos}
-                </div>
-                <div style={{fontSize: 20, fontWeight: 900, color: 'var(--gold)'}}>
-                  {pts}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Bonus exacto */}
-        <div style={{marginBottom: 20}}>
-          <h3 style={{fontSize: 16, fontWeight: 700, color: 'var(--white)', marginBottom: 8}}>
-            🎯 Bonus Posición Exacta
+            🏁 CARRERAS
           </h3>
-          <div style={{
-            background: 'var(--green-dim)',
-            border: '1px solid var(--green)',
-            borderRadius: 10,
-            padding: 12,
-            color: 'var(--green)',
-            fontWeight: 600
-          }}>
-            +{group.bonus_posicion_exacta || 0} puntos adicionales por acertar posición exacta
+
+          {/* Sistema base */}
+          <div style={{marginBottom: 20}}>
+            <h4 style={{
+              fontSize: 14,
+              fontWeight: 700,
+              color: 'var(--muted)',
+              marginBottom: 12,
+              textTransform: 'uppercase',
+              letterSpacing: 1
+            }}>
+              Puntos por Posición
+            </h4>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(70px, 1fr))',
+              gap: 8
+            }}>
+              {Object.entries(group.sistema_puntos || {}).map(([pos, pts]) => (
+                <div key={pos} style={{
+                  background: 'var(--bg2)',
+                  border: '1px solid var(--border)',
+                  borderRadius: 8,
+                  padding: 10,
+                  textAlign: 'center'
+                }}>
+                  <div style={{fontSize: 11, color: 'var(--muted)', marginBottom: 4}}>
+                    P{pos}
+                  </div>
+                  <div style={{fontSize: 18, fontWeight: 900, color: 'var(--gold)'}}>
+                    {pts}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
+
+          {/* Bonus exacto */}
+          <div style={{marginBottom: 16}}>
+            <h4 style={{
+              fontSize: 14,
+              fontWeight: 700,
+              color: 'var(--muted)',
+              marginBottom: 8,
+              textTransform: 'uppercase',
+              letterSpacing: 1
+            }}>
+              🎯 Bonus Posición Exacta
+            </h4>
+            <div style={{
+              background: 'rgba(0, 212, 160, 0.15)',
+              border: '1px solid var(--green)',
+              borderRadius: 10,
+              padding: 12,
+              color: 'var(--green)',
+              fontWeight: 600,
+              fontSize: 14
+            }}>
+              +{group.bonus_posicion_exacta || 0} puntos por acertar posición exacta
+            </div>
+          </div>
+
+          {/* Piloto correcto */}
+          {group.usa_sistema_dual && (
+            <div style={{marginBottom: 16}}>
+              <h4 style={{
+                fontSize: 14,
+                fontWeight: 700,
+                color: 'var(--muted)',
+                marginBottom: 8,
+                textTransform: 'uppercase',
+                letterSpacing: 1
+              }}>
+                ✓ Piloto Correcto (sin posición exacta)
+              </h4>
+              <div style={{
+                background: 'var(--bg2)',
+                border: '1px solid var(--border)',
+                borderRadius: 10,
+                padding: 12,
+                color: 'var(--white)',
+                fontSize: 14
+              }}>
+                +{group.puntos_piloto_correcto || 0} puntos si el piloto termina en top {group.cantidad_posiciones}
+              </div>
+            </div>
+          )}
+
+          {/* Vuelta rápida piloto */}
+          {group.bonus_vuelta_rapida_piloto && (
+            <div style={{marginBottom: 16}}>
+              <h4 style={{
+                fontSize: 14,
+                fontWeight: 700,
+                color: 'var(--muted)',
+                marginBottom: 8,
+                textTransform: 'uppercase',
+                letterSpacing: 1
+              }}>
+                🏎️ Vuelta Rápida Piloto
+              </h4>
+              <div style={{
+                background: 'var(--bg2)',
+                border: '1px solid var(--border)',
+                borderRadius: 10,
+                padding: 12,
+                color: 'var(--white)',
+                fontSize: 14
+              }}>
+                +{group.puntos_vuelta_rapida_piloto || 0} puntos por acertar vuelta más rápida
+              </div>
+            </div>
+          )}
+
+          {/* Vuelta rápida escudería */}
+          {group.bonus_vuelta_rapida_escuderia && (
+            <div style={{marginBottom: 0}}>
+              <h4 style={{
+                fontSize: 14,
+                fontWeight: 700,
+                color: 'var(--muted)',
+                marginBottom: 8,
+                textTransform: 'uppercase',
+                letterSpacing: 1
+              }}>
+                🏁 Vuelta Rápida Escudería
+              </h4>
+              <div style={{
+                background: 'var(--bg2)',
+                border: '1px solid var(--border)',
+                borderRadius: 10,
+                padding: 12,
+                color: 'var(--white)',
+                fontSize: 14
+              }}>
+                +{group.puntos_vuelta_rapida_escuderia || 0} puntos por acertar escudería con vuelta más rápida
+              </div>
+            </div>
+          )}
         </div>
 
-        {/* Piloto correcto */}
-        {group.usa_sistema_dual && (
-          <div style={{marginBottom: 20}}>
-            <h3 style={{fontSize: 16, fontWeight: 700, color: 'var(--white)', marginBottom: 8}}>
-              ✓ Piloto Correcto (sin posición exacta)
-            </h3>
-            <div style={{
-              background: 'var(--bg3)',
-              border: '1px solid var(--border)',
-              borderRadius: 10,
-              padding: 12,
-              color: 'var(--muted)'
+        {/* ========================================
+            CARRERAS SPRINT
+        ======================================== */}
+        {incluirSprints && (
+          <div style={{
+            background: 'linear-gradient(135deg, rgba(255, 184, 0, 0.1), rgba(255, 140, 0, 0.1))',
+            border: '2px solid rgba(255, 184, 0, 0.4)',
+            borderRadius: 14,
+            padding: 20,
+            marginBottom: 20
+          }}>
+            <h3 style={{
+              fontFamily: 'Barlow Condensed',
+              fontSize: 22,
+              fontWeight: 900,
+              color: '#FFB800',
+              marginBottom: 16,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8
             }}>
-              +{group.puntos_piloto_correcto || 0} puntos si el piloto termina en top {group.cantidad_posiciones}
-            </div>
-          </div>
-        )}
+              ⚡ SPRINT
+            </h3>
 
-        {/* Vuelta rápida piloto */}
-        {group.bonus_vuelta_rapida_piloto && (
-          <div style={{marginBottom: 20}}>
-            <h3 style={{fontSize: 16, fontWeight: 700, color: 'var(--white)', marginBottom: 8}}>
-              🏎️ Bonus Vuelta Rápida Piloto
-            </h3>
-            <div style={{
-              background: 'var(--bg3)',
-              border: '1px solid var(--border)',
-              borderRadius: 10,
-              padding: 12,
-              color: 'var(--muted)'
-            }}>
-              +{group.puntos_vuelta_rapida_piloto || 0} puntos por acertar el piloto con vuelta más rápida
+            {/* Sistema Sprint */}
+            <div style={{marginBottom: 16}}>
+              <h4 style={{
+                fontSize: 14,
+                fontWeight: 700,
+                color: 'var(--muted)',
+                marginBottom: 12,
+                textTransform: 'uppercase',
+                letterSpacing: 1
+              }}>
+                Puntos por Posición
+              </h4>
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(70px, 1fr))',
+                gap: 8
+              }}>
+                {Object.entries(group.sistema_puntos_sprint || {
+                  "1":8,"2":7,"3":6,"4":5,"5":4,"6":3,"7":2,"8":1
+                }).map(([pos, pts]) => (
+                  <div key={pos} style={{
+                    background: 'var(--bg2)',
+                    border: '1px solid rgba(255, 184, 0, 0.3)',
+                    borderRadius: 8,
+                    padding: 10,
+                    textAlign: 'center'
+                  }}>
+                    <div style={{fontSize: 11, color: 'var(--muted)', marginBottom: 4}}>
+                      P{pos}
+                    </div>
+                    <div style={{fontSize: 18, fontWeight: 900, color: '#FFB800'}}>
+                      {pts}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        )}
 
-        {/* Vuelta rápida escudería (si aplica) */}
-        {group.bonus_vuelta_rapida_escuderia && (
-          <div style={{marginBottom: 20}}>
-            <h3 style={{fontSize: 16, fontWeight: 700, color: 'var(--white)', marginBottom: 8}}>
-              🏁 Bonus Vuelta Rápida Escudería
-            </h3>
+            {/* Info Sprint */}
             <div style={{
-              background: 'var(--bg3)',
+              background: 'var(--bg2)',
               border: '1px solid var(--border)',
               borderRadius: 10,
-              padding: 12,
-              color: 'var(--muted)'
+              padding: 14,
+              fontSize: 13,
+              color: 'var(--muted)',
+              lineHeight: 1.6
             }}>
-              +{group.puntos_vuelta_rapida_escuderia || 0} puntos por acertar la escudería con vuelta más rápida
+              <div style={{marginBottom: 8, color: 'var(--white)', fontWeight: 600}}>
+                ℹ️ Características Sprint:
+              </div>
+              • Se predicen <strong style={{color: 'var(--white)'}}>{group.cantidad_posiciones_sprint || 8}</strong> posiciones<br/>
+              • Mismo sistema dual (+{group.bonus_posicion_exacta || 10} exacto, +{group.puntos_piloto_correcto || 5} piloto)<br/>
+              • <strong style={{color: '#FFB800'}}>No hay bonus de vuelta rápida</strong>
             </div>
           </div>
         )}
@@ -197,7 +339,7 @@ const ScoringSystemModal = ({ group, onClose }) => {
             textTransform: 'uppercase',
             letterSpacing: 1
           }}>
-            📝 Ejemplo de Cálculo
+            📝 Ejemplo de Cálculo (Carrera)
           </h3>
           <div style={{fontSize: 13, color: 'var(--muted)', lineHeight: 1.6}}>
             • Aciertas P1 exacto: {group.sistema_puntos?.['1'] || 0} + {group.bonus_posicion_exacta || 0} = {(group.sistema_puntos?.['1'] || 0) + (group.bonus_posicion_exacta || 0)} pts<br/>
@@ -208,6 +350,33 @@ const ScoringSystemModal = ({ group, onClose }) => {
               <>• Aciertas vuelta rápida piloto: +{group.puntos_vuelta_rapida_piloto || 0} pts</>
             )}
           </div>
+
+          {incluirSprints && (
+            <>
+              <div style={{
+                height: 1,
+                background: 'var(--border)',
+                margin: '12px 0'
+              }}></div>
+              <h3 style={{
+                fontSize: 14,
+                fontWeight: 700,
+                color: '#FFB800',
+                marginBottom: 8,
+                textTransform: 'uppercase',
+                letterSpacing: 1
+              }}>
+                ⚡ Ejemplo de Cálculo (Sprint)
+              </h3>
+              <div style={{fontSize: 13, color: 'var(--muted)', lineHeight: 1.6}}>
+                • Aciertas P1 exacto: 8 + {group.bonus_posicion_exacta || 0} = {8 + (group.bonus_posicion_exacta || 0)} pts<br/>
+                {group.usa_sistema_dual && (
+                  <>• Aciertas piloto en P2 pero termina P4: {group.puntos_piloto_correcto || 0} pts<br/></>
+                )}
+                • No hay bonus de vuelta rápida en Sprint
+              </div>
+            </>
+          )}
         </div>
 
         {/* Info adicional */}
@@ -221,10 +390,13 @@ const ScoringSystemModal = ({ group, onClose }) => {
           color: 'var(--muted)',
           lineHeight: 1.5
         }}>
-          <strong style={{color: 'var(--white)'}}>ℹ️ Información:</strong><br/>
-          • Se predicen las primeras <strong style={{color: 'var(--white)'}}>{group.cantidad_posiciones}</strong> posiciones<br/>
-          • Los puntos se calculan automáticamente al finalizar cada carrera<br/>
-          • Las predicciones cierran antes de la clasificación o carrera
+          <strong style={{color: 'var(--white)'}}>ℹ️ Información General:</strong><br/>
+          • Carreras: {group.cantidad_posiciones} posiciones a predecir<br/>
+          {incluirSprints && (
+            <>• Sprint: {group.cantidad_posiciones_sprint || 8} posiciones a predecir<br/></>
+          )}
+          • Los puntos se calculan automáticamente al finalizar<br/>
+          • Las predicciones cierran {group.horas_cierre_prediccion || 24}h antes (o según admin)
         </div>
 
         {/* Botón cerrar */}
@@ -239,8 +411,11 @@ const ScoringSystemModal = ({ group, onClose }) => {
             fontFamily: 'Barlow Condensed',
             fontSize: 16,
             fontWeight: 800,
-            cursor: 'pointer'
+            cursor: 'pointer',
+            transition: 'opacity 0.2s'
           }} 
+          onMouseOver={(e) => e.target.style.opacity = '0.9'}
+          onMouseOut={(e) => e.target.style.opacity = '1'}
           onClick={onClose}
         >
           CERRAR

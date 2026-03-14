@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { useAuthStore } from '../../stores/authStore';
@@ -520,10 +520,37 @@ export default function GroupAdminPanel() {
   const [raceResults, setRaceResults] = useState({});
   const [fastestLaps, setFastestLaps] = useState({});
   const [savingFastestLap, setSavingFastestLap] = useState(null);
+  const [allRacesData, setAllRacesData] = useState([]);
+  const [loadingRaces, setLoadingRaces] = useState(true);
 
   useEffect(() => {
     loadGroupData();
   }, [groupId]);
+
+// ✅ NUEVO: Cargar carreras para sección de resultados
+  useEffect(() => {
+    const loadAllRaces = async () => {
+      if (!group?.temporada) return;
+      
+      try {
+        const { data, error } = await supabase
+          .from('races')
+          .select('*')
+          .eq('temporada', group.temporada)
+          .in('estado', ['programada', 'finalizada'])
+          .order('fecha_programada', { ascending: false });
+
+        if (error) throw error;
+        setAllRacesData(data || []);
+      } catch (err) {
+        console.error('Error loading races:', err);
+      } finally {
+        setLoadingRaces(false);
+      }
+    };
+
+    loadAllRaces();
+  }, [group?.temporada]);
 
   const loadGroupData = async () => {
     try {
@@ -1037,8 +1064,141 @@ const handleClearFastestLap = async (raceId) => {
               );
             })}
           </div>
+          
         )}
+            {/* 🆕 INGRESAR RESULTADOS MANUALMENTE */}
+            <div className="admin-section">
+              <h2 className="section-title">
+                📊 Gestionar Resultados de Carreras
+              </h2>
+              <p style={{ 
+                color: 'var(--muted)', 
+                fontSize: 14, 
+                marginBottom: 20,
+                lineHeight: 1.6 
+              }}>
+                Ingresa los resultados de las carreras manualmente (ideal para Sprints o cuando OpenF1 no tiene datos).
+              </p>
 
+              {loadingRaces ? (
+                <div style={{ color: 'var(--muted)', padding: 20 }}>Cargando carreras...</div>
+              ) : allRacesData.length === 0 ? (
+                <div className="empty-state">
+                  No hay carreras programadas o finalizadas
+                </div>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                  {allRacesData.map(race => (
+                    <div 
+                      key={race.id}
+                      style={{
+                        background: 'var(--bg3)',
+                        border: '1px solid var(--border)',
+                        borderRadius: 12,
+                        padding: 20,
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        gap: 16
+                      }}
+                    >
+                      <div style={{ flex: 1 }}>
+                        <div style={{ 
+                          display: 'flex', 
+                          alignItems: 'center', 
+                          gap: 8,
+                          marginBottom: 8
+                        }}>
+                          {race.tipo === 'sprint' && (
+                            <span style={{
+                              background: 'linear-gradient(135deg, #FFB800, #FF8C00)',
+                              color: '#000',
+                              fontWeight: 900,
+                              padding: '4px 10px',
+                              borderRadius: 8,
+                              fontSize: 11,
+                              letterSpacing: 1
+                            }}>
+                              ⚡ SPRINT
+                            </span>
+                          )}
+                          <span style={{
+                            fontFamily: 'Barlow Condensed',
+                            fontSize: 18,
+                            fontWeight: 800,
+                            color: 'var(--white)'
+                          }}>
+                            {race.nombre}
+                          </span>
+                        </div>
+                        
+                        <div style={{ 
+                          fontSize: 13, 
+                          color: 'var(--muted)',
+                          display: 'flex',
+                          gap: 16,
+                          flexWrap: 'wrap'
+                        }}>
+                          <span>📍 {race.circuito}</span>
+                          <span>📅 {new Date(race.fecha_programada).toLocaleDateString('es', {
+                            day: 'numeric',
+                            month: 'long',
+                            year: 'numeric'
+                          })}</span>
+                          <span style={{
+                            color: race.estado === 'finalizada' ? 'var(--green)' : 'var(--muted)',
+                            fontWeight: race.estado === 'finalizada' ? 700 : 400
+                          }}>
+                            {race.estado === 'finalizada' ? '✓ Finalizada' : '⏳ Programada'}
+                          </span>
+                        </div>
+                      </div>
+
+                      <button
+                        onClick={() => navigate(`/admin/race/${race.id}/results`)}
+                        style={{
+                          padding: '10px 20px',
+                          background: race.estado === 'finalizada' 
+                            ? 'transparent' 
+                            : 'linear-gradient(135deg, var(--red), #FF3355)',
+                          border: race.estado === 'finalizada' 
+                            ? '2px solid var(--border2)' 
+                            : 'none',
+                          borderRadius: 10,
+                          color: race.estado === 'finalizada' ? 'var(--white)' : 'white',
+                          fontFamily: 'Barlow Condensed',
+                          fontSize: 13,
+                          fontWeight: 800,
+                          letterSpacing: 1,
+                          textTransform: 'uppercase',
+                          cursor: 'pointer',
+                          transition: 'all 0.2s',
+                          minWidth: 140
+                        }}
+                        onMouseOver={(e) => {
+                          if (race.estado === 'finalizada') {
+                            e.target.style.borderColor = 'var(--red)';
+                            e.target.style.color = 'var(--red)';
+                          } else {
+                            e.target.style.opacity = '0.9';
+                          }
+                        }}
+                        onMouseOut={(e) => {
+                          if (race.estado === 'finalizada') {
+                            e.target.style.borderColor = 'var(--border2)';
+                            e.target.style.color = 'var(--white)';
+                          } else {
+                            e.target.style.opacity = '1';
+                          }
+                        }}
+                      >
+                        {race.estado === 'finalizada' ? '✏️ Editar Resultados' : '➕ Ingresar Resultados'}
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
         {/* Modal de Confirmación */}
         {confirmModal && (
           <div className="modal-overlay" onClick={() => setConfirmModal(null)}>
