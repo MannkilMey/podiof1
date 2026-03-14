@@ -6,6 +6,9 @@ export function useGroupDashboard(groupId, userId) {
     group: null,
     nextRace: null,
     leaderboard: [],
+    leaderboardTotal: [],
+    leaderboardRaces: [],
+    leaderboardSprints: [],
     lastRace: null,
     pointsHistory: [],
     loading: true,
@@ -60,28 +63,63 @@ export function useGroupDashboard(groupId, userId) {
           userHasPredicted = !!prediction;
         }
 
-        // 5. Obtener leaderboard
+        // 5. ✅ NUEVO: Obtener scores CON tipo de carrera
         const { data: scores } = await supabase
           .from('scores')
           .select(`
             usuario_id,
+            carrera_id,
             puntos,
-            users (nombre, apellido)
+            users (nombre, apellido),
+            races:carrera_id (tipo)
           `)
           .eq('grupo_id', groupId);
 
-        // Agrupar puntos por usuario
-        const userScores = {};
+        // ✅ NUEVO: Agrupar puntos por usuario Y por tipo
+        const userScoresTotal = {};
+        const userScoresRaces = {};
+        const userScoresSprints = {};
+
         scores?.forEach(s => {
-          if (!userScores[s.usuario_id]) {
-            userScores[s.usuario_id] = {
+          const raceType = s.races?.tipo || 'carrera';
+          const puntos = parseFloat(s.puntos || 0);
+
+          // Total (todos)
+          if (!userScoresTotal[s.usuario_id]) {
+            userScoresTotal[s.usuario_id] = {
               userId: s.usuario_id,
               nombre: `${s.users.nombre || ''} ${s.users.apellido || ''}`.trim() || 'Usuario',
               puntos: 0,
               exactos: 0
             };
           }
-          userScores[s.usuario_id].puntos += parseFloat(s.puntos || 0);
+          userScoresTotal[s.usuario_id].puntos += puntos;
+
+          // Solo carreras
+          if (raceType === 'carrera') {
+            if (!userScoresRaces[s.usuario_id]) {
+              userScoresRaces[s.usuario_id] = {
+                userId: s.usuario_id,
+                nombre: `${s.users.nombre || ''} ${s.users.apellido || ''}`.trim() || 'Usuario',
+                puntos: 0,
+                exactos: 0
+              };
+            }
+            userScoresRaces[s.usuario_id].puntos += puntos;
+          }
+
+          // Solo sprints
+          if (raceType === 'sprint') {
+            if (!userScoresSprints[s.usuario_id]) {
+              userScoresSprints[s.usuario_id] = {
+                userId: s.usuario_id,
+                nombre: `${s.users.nombre || ''} ${s.users.apellido || ''}`.trim() || 'Usuario',
+                puntos: 0,
+                exactos: 0
+              };
+            }
+            userScoresSprints[s.usuario_id].puntos += puntos;
+          }
         });
 
         // Contar predicciones exactas
@@ -93,15 +131,13 @@ export function useGroupDashboard(groupId, userId) {
         // Solo buscar resultados si hay predicciones
         let results = [];
         if (predictions && predictions.length > 0) {
-          // Obtener IDs únicos de carreras
           const carrerasSet = new Set(predictions.map(p => p.carrera_id).filter(Boolean));
           const carreras = Array.from(carrerasSet);
           
-          // Solo hacer la consulta si hay carreras válidas
           if (carreras.length > 0) {
             const { data: resultsData, error: resultsError } = await supabase
               .from('race_results')
-              .select('carrera_id, piloto_id, posicion_final')  // ← CORREGIDO
+              .select('carrera_id, piloto_id, posicion_final')
               .in('carrera_id', carreras);
             
             if (resultsError) {
@@ -112,7 +148,7 @@ export function useGroupDashboard(groupId, userId) {
           }
         }
 
-        // Calcular exactos
+        // Calcular exactos (aplica a todos los tipos)
         if (predictions && predictions.length > 0 && results.length > 0) {
           predictions.forEach(pred => {
             if (!pred.posiciones || !Array.isArray(pred.posiciones)) return;
@@ -122,24 +158,37 @@ export function useGroupDashboard(groupId, userId) {
 
             let exactCount = 0;
             pred.posiciones.forEach((pilotoId, idx) => {
-              const realPosition = raceResults.find(r => r.piloto_id === pilotoId)?.posicion_final;  // ← CORREGIDO
+              const realPosition = raceResults.find(r => r.piloto_id === pilotoId)?.posicion_final;
               if (realPosition === idx + 1) exactCount++;
             });
 
-            if (userScores[pred.usuario_id]) {
-              userScores[pred.usuario_id].exactos += exactCount;
+            // Agregar exactos a todos los leaderboards
+            if (userScoresTotal[pred.usuario_id]) {
+              userScoresTotal[pred.usuario_id].exactos += exactCount;
+            }
+            if (userScoresRaces[pred.usuario_id]) {
+              userScoresRaces[pred.usuario_id].exactos += exactCount;
+            }
+            if (userScoresSprints[pred.usuario_id]) {
+              userScoresSprints[pred.usuario_id].exactos += exactCount;
             }
           });
         }
 
-        // Convertir a array y ordenar
-        const leaderboard = Object.values(userScores)
-          .sort((a, b) => b.puntos - a.puntos)
-          .map((user, idx) => ({
-            ...user,
-            position: idx + 1,
-            isCurrentUser: user.userId === userId
-          }));
+        // ✅ NUEVO: Crear 3 leaderboards
+        const createLeaderboard = (userScores) => {
+          return Object.values(userScores)
+            .sort((a, b) => b.puntos - a.puntos)
+            .map((user, idx) => ({
+              ...user,
+              position: idx + 1,
+              isCurrentUser: user.userId === userId
+            }));
+        };
+
+        const leaderboardTotal = createLeaderboard(userScoresTotal);
+        const leaderboardRaces = createLeaderboard(userScoresRaces);
+        const leaderboardSprints = createLeaderboard(userScoresSprints);
 
         // 6. Última carrera completada
         const { data: lastRace } = await supabase
@@ -159,7 +208,10 @@ export function useGroupDashboard(groupId, userId) {
             userHasPredicted,
             deadlineHours: group.horas_cierre_prediccion || 2
           } : null,
-          leaderboard,
+          leaderboard: leaderboardTotal, // Legacy (retrocompatibilidad)
+          leaderboardTotal,
+          leaderboardRaces,
+          leaderboardSprints,
           lastRace,
           pointsHistory: [],
           loading: false,

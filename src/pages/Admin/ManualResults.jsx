@@ -418,11 +418,18 @@ export default function ManualResults() {
       throw new Error('No puedes seleccionar el mismo piloto dos veces');
     }
 
-    // Construir resultados
+    // ✅ NUEVO: Determinar sistema de puntos según tipo de carrera
+    const isSprint = race.tipo === 'sprint';
+    const puntosF1 = isSprint 
+      ? { 1: 8, 2: 7, 3: 6, 4: 5, 5: 4, 6: 3, 7: 2, 8: 1 }
+      : { 1: 25, 2: 18, 3: 15, 4: 12, 5: 10, 6: 8, 7: 6, 8: 4, 9: 2, 10: 1 };
+
+    // ✅ MODIFICADO: Construir resultados CON puntos_f1
     const results = filledPositions.map(p => ({
       carrera_id: raceId,
       piloto_id: p.driverId,
       posicion_final: p.position,
+      puntos_f1: puntosF1[p.position] || 0,  // ✅ NUEVO
       vuelta_rapida: race.tipo === 'sprint' ? false : p.hasFastestLap,
       estado_carrera: 'finalizado',
       created_at: new Date().toISOString()
@@ -455,7 +462,7 @@ export default function ManualResults() {
 
     if (updateError) throw updateError;
 
-    // ✅ NUEVO: Calcular puntos de todas las predicciones
+    // Calcular puntos de todas las predicciones
     console.log('🔄 Calculando puntos para carrera:', raceId);
     
     const { data: recalcData, error: recalcError } = await supabase
@@ -472,7 +479,7 @@ export default function ManualResults() {
       toast.success(`✅ Resultados guardados y ${prediccionesCalculadas} predicciones calculadas`);
     }
 
-    // Navegar después de 1 segundo para que el usuario vea el mensaje
+    // Navegar después de 1 segundo
     setTimeout(() => navigate(-1), 1000);
 
   } catch (err) {
@@ -482,7 +489,6 @@ export default function ManualResults() {
     setSaving(false);
   }
 };
-
   if (loading) {
     return (
       <>

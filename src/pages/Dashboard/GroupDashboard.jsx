@@ -432,7 +432,6 @@ function HeroBanner({ group, nextRace, navigate, groupId, onShowScoringModal }) 
             <div style={{display: 'flex', alignItems: 'center', gap: 16, marginBottom: 8}}>
               <h1 className="hero-title" style={{marginBottom: 0}}>{group.nombre}</h1>
               
-              {/* 🆕 BOTÓN SISTEMA DE PUNTOS */}
               <button 
                 onClick={onShowScoringModal}
                 style={{
@@ -523,7 +522,6 @@ function HeroBanner({ group, nextRace, navigate, groupId, onShowScoringModal }) 
           <div style={{display: 'flex', alignItems: 'center', gap: 16, marginBottom: 8, flexWrap: 'wrap'}}>
             <h1 className="hero-title" style={{marginBottom: 0}}>{group.nombre}</h1>
             
-            {/* 🆕 BOTÓN SISTEMA DE PUNTOS */}
             <button 
               onClick={onShowScoringModal}
               style={{
@@ -801,7 +799,7 @@ function SeasonProgressBar({ temporada }) {
   );
 }
 
-function LeaderboardTab({ leaderboard, userId, groupId }) {
+function LeaderboardTab({ leaderboard, userId, groupId, type = 'total' }) {
   const [expandedUser, setExpandedUser] = useState(null);
   const { details, loading: detailsLoading, loadDetails } = useUserRaceDetails(groupId, expandedUser);
 
@@ -1208,7 +1206,6 @@ function LastRaceTab({ groupId, temporada, userId, group, navigate }) {
           <span>👥 {predictions.length} predicciones</span>
         </div>
         
-        {/* BOTÓN VER TODAS LAS PREDICCIONES */}
         <button
           onClick={() => navigate(`/group/${groupId}/race/${lastRace.id}/predictions`)}
           style={{
@@ -1415,10 +1412,23 @@ export default function GroupDashboard() {
   const theme = useThemeStore((state) => state.theme);
   const [activeTab, setActiveTab] = useState('general');
   
-  // 🆕 Estado para modal de sistema de puntos
+  // ✅ NUEVO: Estado para sub-pestaña de leaderboard
+  const [leaderboardType, setLeaderboardType] = useState('total');
+  
+  // Estado para modal de sistema de puntos
   const [showScoringModal, setShowScoringModal] = useState(false);
   
-  const { group, nextRace, leaderboard, loading, error } = useGroupDashboard(groupId, user?.id);
+  const { 
+    group, 
+    nextRace, 
+    leaderboard,
+    leaderboardTotal,    // ✅ NUEVO
+    leaderboardRaces,    // ✅ NUEVO
+    leaderboardSprints,  // ✅ NUEVO
+    loading, 
+    error 
+  } = useGroupDashboard(groupId, user?.id);
+  
   const { standings: driverStandings, loading: standingsLoading } = useDriverStandings(group?.temporada);
   const { standings: teamStandings, loading: teamsLoading } = useTeamStandings(group?.temporada);
 
@@ -1476,7 +1486,7 @@ export default function GroupDashboard() {
           onShowScoringModal={() => setShowScoringModal(true)}
         />
         
-        <StatsCards leaderboard={leaderboard} userId={user.id} />
+        <StatsCards leaderboard={leaderboardTotal} userId={user.id} />
         <SeasonProgressBar temporada={group.temporada} />
 
         <div className="tabs-container">
@@ -1508,7 +1518,104 @@ export default function GroupDashboard() {
           </div>
 
           <div className="tab-content" key={activeTab}>
-            {activeTab === 'general' && <LeaderboardTab leaderboard={leaderboard} userId={user.id} groupId={groupId} />}
+            {activeTab === 'general' && (
+              <>
+                {/* ✅ NUEVO: Sub-pestañas de Leaderboard */}
+                <div style={{
+                  display: 'flex',
+                  gap: 8,
+                  marginBottom: 20,
+                  borderBottom: '1px solid var(--border)',
+                  paddingBottom: 12
+                }}>
+                  <button
+                    onClick={() => setLeaderboardType('total')}
+                    style={{
+                      padding: '8px 16px',
+                      background: leaderboardType === 'total' ? 'var(--red-dim)' : 'transparent',
+                      border: leaderboardType === 'total' ? '2px solid var(--red)' : '2px solid var(--border)',
+                      borderRadius: 8,
+                      color: leaderboardType === 'total' ? 'var(--red)' : 'var(--muted)',
+                      cursor: 'pointer',
+                      fontFamily: 'Barlow Condensed',
+                      fontSize: 14,
+                      fontWeight: 700,
+                      letterSpacing: 1,
+                      textTransform: 'uppercase',
+                      transition: 'all 0.2s'
+                    }}
+                  >
+                    🏆 Total
+                  </button>
+
+                  <button
+                    onClick={() => setLeaderboardType('races')}
+                    style={{
+                      padding: '8px 16px',
+                      background: leaderboardType === 'races' ? 'var(--red-dim)' : 'transparent',
+                      border: leaderboardType === 'races' ? '2px solid var(--red)' : '2px solid var(--border)',
+                      borderRadius: 8,
+                      color: leaderboardType === 'races' ? 'var(--red)' : 'var(--muted)',
+                      cursor: 'pointer',
+                      fontFamily: 'Barlow Condensed',
+                      fontSize: 14,
+                      fontWeight: 700,
+                      letterSpacing: 1,
+                      textTransform: 'uppercase',
+                      transition: 'all 0.2s'
+                    }}
+                  >
+                    🏁 Carreras
+                  </button>
+
+                  <button
+                    onClick={() => setLeaderboardType('sprints')}
+                    style={{
+                      padding: '8px 16px',
+                      background: leaderboardType === 'sprints' ? 'var(--red-dim)' : 'transparent',
+                      border: leaderboardType === 'sprints' ? '2px solid var(--red)' : '2px solid var(--border)',
+                      borderRadius: 8,
+                      color: leaderboardType === 'sprints' ? 'var(--red)' : 'var(--muted)',
+                      cursor: 'pointer',
+                      fontFamily: 'Barlow Condensed',
+                      fontSize: 14,
+                      fontWeight: 700,
+                      letterSpacing: 1,
+                      textTransform: 'uppercase',
+                      transition: 'all 0.2s'
+                    }}
+                  >
+                    ⚡ Sprints
+                  </button>
+                </div>
+
+                {/* ✅ MODIFICADO: Renderizar leaderboard según tipo */}
+                {leaderboardType === 'total' && (
+                  <LeaderboardTab 
+                    leaderboard={leaderboardTotal} 
+                    userId={user.id} 
+                    groupId={groupId}
+                    type="total"
+                  />
+                )}
+                {leaderboardType === 'races' && (
+                  <LeaderboardTab 
+                    leaderboard={leaderboardRaces} 
+                    userId={user.id} 
+                    groupId={groupId}
+                    type="races"
+                  />
+                )}
+                {leaderboardType === 'sprints' && (
+                  <LeaderboardTab 
+                    leaderboard={leaderboardSprints} 
+                    userId={user.id} 
+                    groupId={groupId}
+                    type="sprints"
+                  />
+                )}
+              </>
+            )}
             {activeTab === 'pilotos' && (
               <DriversStandingsTab standings={driverStandings} loading={standingsLoading} />
             )}
@@ -1527,7 +1634,6 @@ export default function GroupDashboard() {
           </div>
         </div>
 
-        {/* 🆕 MODAL SISTEMA DE PUNTOS */}
         {showScoringModal && group && (
           <ScoringSystemModal
             group={group}
