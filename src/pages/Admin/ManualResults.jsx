@@ -400,71 +400,88 @@ export default function ManualResults() {
     })));
   };
 
-  const handleSave = async () => {
-    try {
-      setSaving(true);
-      setError('');
+ const handleSave = async () => {
+  try {
+    setSaving(true);
+    setError('');
 
-      // Validar que al menos top 3 esté completo
-      const filledPositions = positions.filter(p => p.driverId);
-      if (filledPositions.length < 3) {
-        throw new Error('Debes completar al menos las primeras 3 posiciones');
-      }
-
-      // Verificar pilotos duplicados
-      const driverIds = filledPositions.map(p => p.driverId);
-      const uniqueDrivers = new Set(driverIds);
-      if (driverIds.length !== uniqueDrivers.size) {
-        throw new Error('No puedes seleccionar el mismo piloto dos veces');
-      }
-
-      // Construir resultados
-      const results = filledPositions.map(p => ({
-        carrera_id: raceId,
-        piloto_id: p.driverId,
-        posicion_final: p.position,
-        vuelta_rapida: race.tipo === 'sprint' ? false : p.hasFastestLap,
-        estado_carrera: 'finalizado',
-        created_at: new Date().toISOString()
-      }));
-
-      // Eliminar resultados existentes
-      const { error: deleteError } = await supabase
-        .from('race_results')
-        .delete()
-        .eq('carrera_id', raceId);
-
-      if (deleteError) throw deleteError;
-
-      // Insertar nuevos resultados
-      const { error: insertError } = await supabase
-        .from('race_results')
-        .insert(results);
-
-      if (insertError) throw insertError;
-
-      // Actualizar estado de carrera
-      const { error: updateError } = await supabase
-        .from('races')
-        .update({ 
-          estado: 'finalizada',
-          resultados_importados: true,
-          fecha_importacion: new Date().toISOString()
-        })
-        .eq('id', raceId);
-
-      if (updateError) throw updateError;
-
-      toast.success('¡Resultados guardados exitosamente! 🏁');
-      navigate(-1);
-
-    } catch (err) {
-      console.error('Error saving results:', err);
-      setError(err.message || 'Error al guardar resultados');
-    } finally {
-      setSaving(false);
+    // Validar que al menos top 3 esté completo
+    const filledPositions = positions.filter(p => p.driverId);
+    if (filledPositions.length < 3) {
+      throw new Error('Debes completar al menos las primeras 3 posiciones');
     }
-  };
+
+    // Verificar pilotos duplicados
+    const driverIds = filledPositions.map(p => p.driverId);
+    const uniqueDrivers = new Set(driverIds);
+    if (driverIds.length !== uniqueDrivers.size) {
+      throw new Error('No puedes seleccionar el mismo piloto dos veces');
+    }
+
+    // Construir resultados
+    const results = filledPositions.map(p => ({
+      carrera_id: raceId,
+      piloto_id: p.driverId,
+      posicion_final: p.position,
+      vuelta_rapida: race.tipo === 'sprint' ? false : p.hasFastestLap,
+      estado_carrera: 'finalizado',
+      created_at: new Date().toISOString()
+    }));
+
+    // Eliminar resultados existentes
+    const { error: deleteError } = await supabase
+      .from('race_results')
+      .delete()
+      .eq('carrera_id', raceId);
+
+    if (deleteError) throw deleteError;
+
+    // Insertar nuevos resultados
+    const { error: insertError } = await supabase
+      .from('race_results')
+      .insert(results);
+
+    if (insertError) throw insertError;
+
+    // Actualizar estado de carrera
+    const { error: updateError } = await supabase
+      .from('races')
+      .update({ 
+        estado: 'finalizada',
+        resultados_importados: true,
+        fecha_importacion: new Date().toISOString()
+      })
+      .eq('id', raceId);
+
+    if (updateError) throw updateError;
+
+    // ✅ NUEVO: Calcular puntos de todas las predicciones
+    console.log('🔄 Calculando puntos para carrera:', raceId);
+    
+    const { data: recalcData, error: recalcError } = await supabase
+      .rpc('calcular_puntos_carrera', {
+        p_carrera_id: raceId
+      });
+
+    if (recalcError) {
+      console.error('Error recalculando puntos:', recalcError);
+      toast.warning('⚠️ Resultados guardados pero hubo un error al calcular puntos automáticamente');
+    } else {
+      console.log('✅ Puntos calculados:', recalcData);
+      const prediccionesCalculadas = recalcData?.[0]?.predicciones_calculadas || 0;
+      toast.success(`✅ Resultados guardados y ${prediccionesCalculadas} predicciones calculadas`);
+    }
+
+    // Navegar después de 1 segundo para que el usuario vea el mensaje
+    setTimeout(() => navigate(-1), 1000);
+
+  } catch (err) {
+    console.error('Error saving results:', err);
+    setError(err.message || 'Error al guardar resultados');
+  } finally {
+    setSaving(false);
+  }
+};
 
   if (loading) {
     return (
@@ -551,45 +568,55 @@ export default function ManualResults() {
 
         {/* Posiciones */}
         <div className="positions-section">
-          <h3 className="section-title">🏁 Posiciones</h3>
-          
-          {positions.map(pos => (
-            <div key={pos.position} className="position-row">
-              <div className={`position-number ${pos.position <= 3 ? 'podium' : ''}`}>
-                {pos.position}°
-              </div>
+        <h3 className="section-title">🏁 Posiciones</h3>
+        
+        {positions.map(pos => {
+            // ✅ NUEVO: Filtrar pilotos ya seleccionados (excepto el actual)
+            const selectedDriverIds = positions
+            .filter(p => p.driverId && p.position !== pos.position)
+            .map(p => p.driverId);
+            
+            const availableDrivers = drivers.filter(
+            driver => !selectedDriverIds.includes(driver.id)
+            );
 
-              <select
+            return (
+            <div key={pos.position} className="position-row">
+                <div className={`position-number ${pos.position <= 3 ? 'podium' : ''}`}>
+                {pos.position}°
+                </div>
+
+                <select
                 className="driver-select"
                 value={pos.driverId}
                 onChange={(e) => handleDriverChange(pos.position, e.target.value)}
-              >
+                >
                 <option value="">Seleccionar piloto...</option>
-                {drivers.map(driver => (
-                  <option key={driver.id} value={driver.id}>
+                {availableDrivers.map(driver => (
+                    <option key={driver.id} value={driver.id}>
                     #{driver.numero} {driver.nombre}
-                  </option>
+                    </option>
                 ))}
-              </select>
+                </select>
 
-              {!isSprint && (
+                {!isSprint && (
                 <div className="fastest-lap-checkbox">
-                  <input
+                    <input
                     type="checkbox"
                     checked={pos.hasFastestLap}
                     onChange={() => handleFastestLapChange(pos.position)}
                     disabled={!pos.driverId}
                     title="Vuelta más rápida"
-                  />
-                  <span style={{ marginLeft: 8, fontSize: 13, color: 'var(--muted)' }}>
+                    />
+                    <span style={{ marginLeft: 8, fontSize: 13, color: 'var(--muted)' }}>
                     V.Rápida
-                  </span>
+                    </span>
                 </div>
-              )}
+                )}
             </div>
-          ))}
+            );
+        })}
         </div>
-
         {/* Acciones */}
         <div className="actions">
           <button

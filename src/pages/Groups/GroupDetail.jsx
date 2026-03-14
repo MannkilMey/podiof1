@@ -38,7 +38,7 @@ html, body {
 }
 
 .group-detail {
-  background: var(--bg);  /* ✅ NUEVO */
+  background: var(--bg);
   padding: 24px 28px;
   max-width: 1200px;
   margin: 0 auto;
@@ -635,10 +635,15 @@ export default function GroupDetail() {
   const [confirmLeave, setConfirmLeave] = useState(false);
   const [confirmToggleAdmin, setConfirmToggleAdmin] = useState({ show: false, member: null });
   
-  // ✅ NUEVO: Modal de predicciones
+  // ✅ Modal de predicciones
   const [showPredictionsModal, setShowPredictionsModal] = useState(false);
   const [races, setRaces] = useState([]);
   const [racesLoading, setRacesLoading] = useState(false);
+
+  // ✅ NUEVO: Estados para tracking de predicciones
+  const [expandedRace, setExpandedRace] = useState(null);
+  const [predictionStats, setPredictionStats] = useState({});
+  const [loadingStats, setLoadingStats] = useState(false);
 
   // Cargar información del grupo
   useEffect(() => {
@@ -678,87 +683,185 @@ export default function GroupDetail() {
     }
   }, [groupId, user]);
 
-  // ✅ NUEVO: Cargar carreras para modal
+  // Cargar carreras para modal
   const loadRaces = async () => {
-  try {
-    setRacesLoading(true);
-    
-    // 1. Obtener todas las carreras de la temporada
-    const { data: racesData, error: racesError } = await supabase
-      .from('races')
-      .select('*')
-      .eq('temporada', group.temporada)
-      .order('fecha_programada', { ascending: true });
+    try {
+      setRacesLoading(true);
+      
+      // 1. Obtener todas las carreras de la temporada
+      const { data: racesData, error: racesError } = await supabase
+        .from('races')
+        .select('*')
+        .eq('temporada', group.temporada)
+        .order('fecha_programada', { ascending: true });
 
-    if (racesError) throw racesError;
+      if (racesError) throw racesError;
 
-    // 2. 🆕 Obtener configuraciones específicas de ESTE grupo
-    const { data: groupRacesData, error: groupRacesError } = await supabase
-      .from('group_races')
-      .select('carrera_id, predicciones_forzadas_abiertas')
-      .eq('grupo_id', groupId);
+      // 2. Obtener configuraciones específicas de ESTE grupo
+      const { data: groupRacesData, error: groupRacesError } = await supabase
+        .from('group_races')
+        .select('carrera_id, predicciones_forzadas_abiertas')
+        .eq('grupo_id', groupId);
 
-    if (groupRacesError && groupRacesError.code !== 'PGRST116') {
-      throw groupRacesError;
+      if (groupRacesError && groupRacesError.code !== 'PGRST116') {
+        throw groupRacesError;
+      }
+
+      // 3. Crear lookup de configuraciones por carrera
+      const configMap = {};
+      (groupRacesData || []).forEach(config => {
+        configMap[config.carrera_id] = config.predicciones_forzadas_abiertas;
+      });
+
+      // 4. Combinar carreras con configuración específica del grupo
+      const racesWithConfig = (racesData || []).map(race => ({
+        ...race,
+        predicciones_forzadas_abiertas: 
+          configMap[race.id] !== undefined 
+            ? configMap[race.id] 
+            : race.predicciones_forzadas_abiertas
+      }));
+
+      setRaces(racesWithConfig);
+    } catch (err) {
+      console.error('Error loading races:', err);
+      toast.error('Error al cargar carreras');
+    } finally {
+      setRacesLoading(false);
     }
+  };
 
-    // 3. Crear lookup de configuraciones por carrera
-    const configMap = {};
-    (groupRacesData || []).forEach(config => {
-      configMap[config.carrera_id] = config.predicciones_forzadas_abiertas;
-    });
+  // ✅ NUEVO: Cargar estadísticas de predicciones por carrera
+  const loadPredictionStats = async (raceId) => {
+    try {
+      setLoadingStats(true);
 
-    // 4. Combinar carreras con configuración específica del grupo
-    const racesWithConfig = (racesData || []).map(race => ({
-      ...race,
-      // Si hay config específica del grupo, usarla; sino usar la global
-      predicciones_forzadas_abiertas: 
-        configMap[race.id] !== undefined 
-          ? configMap[race.id] 
-          : race.predicciones_forzadas_abiertas
-    }));
+      // 1. Obtener miembros aprobados del grupo
+      const { data: membersData, error: membersError } = await supabase
+        .from('group_members')
+        .select(`
+          usuario_id,
+          users:usuario_id (
+            id,
+            nombre,
+            apellido,
+            email
+          )
+        `)
+        .eq('grupo_id', groupId)
+        .eq('estado', 'aprobado');
 
-    setRaces(racesWithConfig);
-  } catch (err) {
-    console.error('Error loading races:', err);
-    toast.error('Error al cargar carreras');
-  } finally {
-    setRacesLoading(false);
-  }
-};
+      if (membersError) throw membersError;
 
- const handleToggleForcedPredictions = async (raceId, currentValue) => {
-  try {
-    const newValue = !currentValue;
-    
-    // ⚠️ TEMPORAL: Actualizar races directamente (afecta todos los grupos)
-    const { error } = await supabase
-      .from('races')
-      .update({ predicciones_forzadas_abiertas: newValue })
-      .eq('id', raceId);
+      // 2. Obtener predicciones de esta carrera
+      const { data: predictionsData, error: predictionsError } = await supabase
+        .from('predictions')
+        .select('usuario_id, created_at, updated_at')
+        .eq('grupo_id', groupId)
+        .eq('carrera_id', raceId);
 
-    if (error) throw error;
+      if (predictionsError) throw predictionsError;
 
-    // Actualizar estado local inmediatamente
-    setRaces(prevRaces => 
-      prevRaces.map(race => 
-        race.id === raceId 
-          ? { ...race, predicciones_forzadas_abiertas: newValue }
-          : race
-      )
-    );
+      // 3. Crear mapa de predicciones por usuario
+      const predictionMap = {};
+      (predictionsData || []).forEach(pred => {
+        predictionMap[pred.usuario_id] = {
+          createdAt: pred.created_at,
+          updatedAt: pred.updated_at,
+          wasModified: pred.created_at !== pred.updated_at
+        };
+      });
 
-    toast.success(
-      newValue 
-        ? '✅ Predicciones abiertas (TODOS los grupos)' 
-        : '🔒 Predicciones cerradas (TODOS los grupos)'
-    );
-  } catch (err) {
-    console.error('Error toggling predictions:', err);
-    toast.error('Error al cambiar estado');
-    loadRaces();
-  }
-};
+      // 4. Clasificar usuarios
+      const hasPredicted = [];
+      const missing = [];
+
+      (membersData || []).forEach(member => {
+        const user = member.users;
+        const fullName = `${user.nombre || ''} ${user.apellido || ''}`.trim() || user.email;
+        
+        if (predictionMap[member.usuario_id]) {
+          const pred = predictionMap[member.usuario_id];
+          hasPredicted.push({
+            userId: member.usuario_id,
+            name: fullName,
+            lastModified: pred.updatedAt,
+            wasModified: pred.wasModified
+          });
+        } else {
+          missing.push({
+            userId: member.usuario_id,
+            name: fullName
+          });
+        }
+      });
+
+      // 5. Ordenar por última modificación
+      hasPredicted.sort((a, b) => 
+        new Date(b.lastModified) - new Date(a.lastModified)
+      );
+
+      setPredictionStats(prev => ({
+        ...prev,
+        [raceId]: {
+          hasPredicted,
+          missing,
+          total: membersData.length
+        }
+      }));
+
+    } catch (err) {
+      console.error('Error loading prediction stats:', err);
+      toast.error('Error al cargar estadísticas');
+    } finally {
+      setLoadingStats(false);
+    }
+  };
+
+  // ✅ NUEVO: Toggle expand race
+  const handleToggleRaceExpand = (raceId) => {
+    if (expandedRace === raceId) {
+      setExpandedRace(null);
+    } else {
+      setExpandedRace(raceId);
+      if (!predictionStats[raceId]) {
+        loadPredictionStats(raceId);
+      }
+    }
+  };
+
+  const handleToggleForcedPredictions = async (raceId, currentValue) => {
+    try {
+      const newValue = !currentValue;
+      
+      // ⚠️ TEMPORAL: Actualizar races directamente (afecta todos los grupos)
+      const { error } = await supabase
+        .from('races')
+        .update({ predicciones_forzadas_abiertas: newValue })
+        .eq('id', raceId);
+
+      if (error) throw error;
+
+      // Actualizar estado local inmediatamente
+      setRaces(prevRaces => 
+        prevRaces.map(race => 
+          race.id === raceId 
+            ? { ...race, predicciones_forzadas_abiertas: newValue }
+            : race
+        )
+      );
+
+      toast.success(
+        newValue 
+          ? '✅ Predicciones abiertas (TODOS los grupos)' 
+          : '🔒 Predicciones cerradas (TODOS los grupos)'
+      );
+    } catch (err) {
+      console.error('Error toggling predictions:', err);
+      toast.error('Error al cambiar estado');
+      loadRaces();
+    }
+  };
 
   // Handlers existentes
   const handleRemoveMember = async () => {
@@ -803,7 +906,7 @@ export default function GroupDetail() {
     toast.success('¡Link de invitación copiado! 📋');
   };
 
-  // ✅ NUEVO: Abrir modal de predicciones
+  // Abrir modal de predicciones
   const handleManagePredictions = () => {
     setShowPredictionsModal(true);
     loadRaces();
@@ -822,6 +925,21 @@ export default function GroupDetail() {
       hour: '2-digit',
       minute: '2-digit'
     });
+  };
+
+  // ✅ NUEVO: Función helper para tiempo relativo
+  const getTimeAgo = (dateString) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now - date;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+
+    if (diffMins < 60) return `hace ${diffMins} min`;
+    if (diffHours < 24) return `hace ${diffHours}h`;
+    if (diffDays === 1) return 'hace 1 día';
+    return `hace ${diffDays} días`;
   };
 
   if (groupLoading || membersLoading) {
@@ -1040,7 +1158,7 @@ export default function GroupDetail() {
           )}
         </div>
 
-        {/* ✅ NUEVO: Modal Gestionar Predicciones */}
+        {/* ✅ Modal Gestionar Predicciones */}
         {showPredictionsModal && (
           <div className="modal-overlay" onClick={() => setShowPredictionsModal(false)}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -1062,54 +1180,178 @@ export default function GroupDetail() {
                     const now = new Date();
                     const raceStart = new Date(race.fecha_programada);
                     const isPast = now >= raceStart;
-                     const status = canPredictRaceSync(race, group);
+                    const status = canPredictRaceSync(race, group);
+                    const isExpanded = expandedRace === race.id;
+                    const stats = predictionStats[race.id];
 
                     return (
-                      <div 
-                        key={race.id} 
-                        className={`race-item ${isPast ? 'past' : ''}`}
-                      >
-                        <div className="race-item-info">
-                          <div className="race-item-name">
-                            {race.nombre}
+                      <div key={race.id}>
+                        <div 
+                          className={`race-item ${isPast ? 'past' : ''}`}
+                          style={{ cursor: 'pointer' }}
+                          onClick={() => handleToggleRaceExpand(race.id)}
+                        >
+                          <div className="race-item-info" style={{ flex: 1 }}>
+                            <div className="race-item-name">
+                              {race.nombre}
+                              {stats && (
+                                <span style={{ 
+                                  marginLeft: 12, 
+                                  fontSize: 13, 
+                                  color: 'var(--green)',
+                                  fontWeight: 600
+                                }}>
+                                  ✅ {stats.hasPredicted.length}/{stats.total}
+                                </span>
+                              )}
+                            </div>
+                            <div className="race-item-date">
+                              {formatDate(race.fecha_programada)}
+                            </div>
+                            {isPast && (
+                              <div className="race-item-status closed">
+                                ✓ Finalizada
+                              </div>
+                            )}
+                            {!isPast && race.predicciones_forzadas_abiertas && (
+                              <div className="race-item-status forced">
+                                🔓 Abierto hasta inicio
+                              </div>
+                            )}
+                            {!isPast && !race.predicciones_forzadas_abiertas && status.canPredict && (
+                              <div className="race-item-status open">
+                                ✓ Normal
+                              </div>
+                            )}
+                            {!isPast && !race.predicciones_forzadas_abiertas && !status.canPredict && (
+                              <div className="race-item-status closed">
+                                🔒 Cerrado
+                              </div>
+                            )}
                           </div>
-                          <div className="race-item-date">
-                            {formatDate(race.fecha_programada)}
+
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                            <span style={{ 
+                              fontSize: 20,
+                              transition: 'transform 0.2s',
+                              transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)'
+                            }}>
+                              ▼
+                            </span>
+
+                            <label 
+                              className="toggle-switch"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <input
+                                type="checkbox"
+                                checked={race.predicciones_forzadas_abiertas || false}
+                                disabled={isPast}
+                                onChange={() => handleToggleForcedPredictions(
+                                  race.id,
+                                  race.predicciones_forzadas_abiertas
+                                )}
+                              />
+                              <span className="toggle-slider"></span>
+                            </label>
                           </div>
-                          {isPast && (
-                            <div className="race-item-status closed">
-                              ✓ Finalizada
-                            </div>
-                          )}
-                          {!isPast && race.predicciones_forzadas_abiertas && (
-                            <div className="race-item-status forced">
-                              🔓 Abierto hasta inicio
-                            </div>
-                          )}
-                          {!isPast && !race.predicciones_forzadas_abiertas && status.canPredict && (
-                            <div className="race-item-status open">
-                              ✓ Normal
-                            </div>
-                          )}
-                          {!isPast && !race.predicciones_forzadas_abiertas && !status.canPredict && (
-                            <div className="race-item-status closed">
-                              🔒 Cerrado
-                            </div>
-                          )}
                         </div>
 
-                        <label className="toggle-switch">
-                          <input
-                            type="checkbox"
-                            checked={race.predicciones_forzadas_abiertas || false}
-                            disabled={isPast}
-                            onChange={() => handleToggleForcedPredictions(
-                              race.id,
-                              race.predicciones_forzadas_abiertas
-                            )}
-                          />
-                          <span className="toggle-slider"></span>
-                        </label>
+                        {/* ✅ NUEVO: Panel expandible */}
+                        {isExpanded && (
+                          <div style={{
+                            background: 'var(--bg4)',
+                            border: '1px solid var(--border)',
+                            borderTop: 'none',
+                            borderRadius: '0 0 12px 12px',
+                            padding: 20,
+                            marginTop: -12,
+                            marginBottom: 12
+                          }}>
+                            {loadingStats ? (
+                              <div style={{ textAlign: 'center', padding: 20, color: 'var(--muted)' }}>
+                                Cargando estadísticas...
+                              </div>
+                            ) : stats ? (
+                              <>
+                                {/* ✅ Han Predicho */}
+                                {stats.hasPredicted.length > 0 && (
+                                  <div style={{ marginBottom: 20 }}>
+                                    <div style={{
+                                      fontSize: 13,
+                                      fontWeight: 700,
+                                      color: 'var(--green)',
+                                      marginBottom: 12,
+                                      textTransform: 'uppercase',
+                                      letterSpacing: 1
+                                    }}>
+                                      ✅ Han Predicho ({stats.hasPredicted.length})
+                                    </div>
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                                      {stats.hasPredicted.map(user => (
+                                        <div key={user.userId} style={{
+                                          background: 'var(--bg3)',
+                                          border: '1px solid var(--border)',
+                                          borderRadius: 8,
+                                          padding: '10px 14px',
+                                          display: 'flex',
+                                          justifyContent: 'space-between',
+                                          alignItems: 'center',
+                                          fontSize: 13
+                                        }}>
+                                          <span style={{ color: 'var(--white)', fontWeight: 600 }}>
+                                            {user.name}
+                                          </span>
+                                          <div style={{ 
+                                            display: 'flex', 
+                                            alignItems: 'center', 
+                                            gap: 12,
+                                            color: 'var(--muted)'
+                                          }}>
+                                            {user.wasModified && (
+                                              <span style={{ color: '#FFB800' }}>🔄 Modificado</span>
+                                            )}
+                                            <span>{getTimeAgo(user.lastModified)}</span>
+                                          </div>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                )}
+
+                                {/* ✅ Faltan */}
+                                {stats.missing.length > 0 && (
+                                  <div>
+                                    <div style={{
+                                      fontSize: 13,
+                                      fontWeight: 700,
+                                      color: 'var(--red)',
+                                      marginBottom: 12,
+                                      textTransform: 'uppercase',
+                                      letterSpacing: 1
+                                    }}>
+                                      ❌ Faltan ({stats.missing.length})
+                                    </div>
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                                      {stats.missing.map(user => (
+                                        <div key={user.userId} style={{
+                                          background: 'var(--bg3)',
+                                          border: '1px solid var(--border)',
+                                          borderRadius: 8,
+                                          padding: '10px 14px',
+                                          fontSize: 13,
+                                          color: 'var(--muted)'
+                                        }}>
+                                          {user.name}
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                )}
+                              </>
+                            ) : null}
+                          </div>
+                        )}
                       </div>
                     );
                   })}

@@ -830,8 +830,14 @@ export default function RacePredictionsComparison() {
     try {
       const wb = XLSX.utils.book_new();
 
-      // Hoja 1: Resultado Oficial
-      const officialSheet = officialResult.slice(0, group?.cantidad_posiciones || 10).map((result, idx) => ({
+      // ✅ DETECTAR TIPO DE CARRERA
+      const isSprint = race?.tipo === 'sprint';
+      const maxPositions = isSprint 
+        ? (group?.cantidad_posiciones_sprint || 8)
+        : (group?.cantidad_posiciones || 10);
+
+      // HOJA 1: Resultado Oficial
+      const officialSheet = officialResult.slice(0, maxPositions).map((result, idx) => ({
         'Posición': idx + 1,
         'Piloto': drivers[result.piloto_id] || 'Desconocido',
         'Puntos F1': result.puntos_f1,
@@ -839,17 +845,17 @@ export default function RacePredictionsComparison() {
       }));
       XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(officialSheet), 'Resultado Oficial');
 
-      // Hoja 2: Ranking Usuarios
+      // HOJA 2: Ranking Usuarios
       const rankingSheet = userRanking.map(user => ({
         'Posición': user.position,
         'Usuario': user.userName,
-        'Puntos': user.puntos,
+        'Puntos': Math.round(user.puntos),
         'Aciertos Exactos': user.aciertos_exactos,
         'Piloto Correcto': user.aciertos_piloto
       }));
       XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rankingSheet), 'Ranking Usuarios');
 
-      // Hoja 3: Votos por Posición
+      // HOJA 3: Votos por Posición
       const votesSheet = mostVotedByPosition.map(vote => ({
         'Posición': `P${vote.posicion}`,
         'Piloto': vote.piloto_nombre,
@@ -858,8 +864,81 @@ export default function RacePredictionsComparison() {
       }));
       XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(votesSheet), 'Votos por Posición');
 
-      // Descargar archivo
-      const fileName = `Resultados_${race.nombre.replace(/\s+/g, '_')}.xlsx`;
+      // ✅ HOJA 4 NUEVA: Predicciones Detalladas
+      const predictionsSheet = [];
+      predictions.forEach((pred, idx) => {
+        // Fila de encabezado del usuario
+        predictionsSheet.push({
+          'Pos. Ranking': idx + 1,
+          'Usuario': pred.userName,
+          'Puntos Totales': Math.round(pred.puntos),
+          'Aciertos Exactos': pred.aciertos_exactos,
+          'Pilotos Correctos': pred.aciertos_piloto,
+          'P1': '',
+          'P2': '',
+          'P3': '',
+          'P4': '',
+          'P5': '',
+          'P6': '',
+          'P7': '',
+          'P8': '',
+          'P9': '',
+          'P10': ''
+        });
+
+        // Fila con las predicciones
+        const predictionRow = {
+          'Pos. Ranking': '',
+          'Usuario': 'Predicción →',
+          'Puntos Totales': '',
+          'Aciertos Exactos': '',
+          'Pilotos Correctos': ''
+        };
+
+        pred.posiciones?.slice(0, maxPositions).forEach((pilotoId, position) => {
+          const driverName = drivers[pilotoId] || 'Desconocido';
+          const isCorrect = officialResult[position]?.piloto_id === pilotoId;
+          predictionRow[`P${position + 1}`] = `${driverName}${isCorrect ? ' ✓' : ' ✗'}`;
+        });
+
+        predictionsSheet.push(predictionRow);
+
+        // Fila vacía de separación
+        predictionsSheet.push({});
+      });
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(predictionsSheet), 'Predicciones Detalladas');
+
+      // ✅ HOJA 5 NUEVA: Desglose de Puntos
+      const breakdownSheet = predictions.map((pred, idx) => {
+        const totalPuntos = pred.puntos || 0;
+        
+        // Calcular bonus vuelta rápida
+        const bonusVueltaRapida = (() => {
+          if (!group?.bonus_vuelta_rapida_piloto) return 0;
+          const fastestDriver = officialResult.find(r => r.vuelta_rapida);
+          if (!fastestDriver) return 0;
+          return pred.vuelta_rapida_piloto_id === fastestDriver.piloto_id 
+            ? (group.puntos_vuelta_rapida_piloto || 0)
+            : 0;
+        })();
+
+        const puntosPositions = totalPuntos - bonusVueltaRapida;
+
+        return {
+          'Ranking': idx + 1,
+          'Usuario': pred.userName,
+          'Puntos por Posiciones': Math.round(puntosPositions),
+          'Exactos': pred.aciertos_exactos,
+          'Correctos (no exactos)': pred.aciertos_piloto - pred.aciertos_exactos,
+          'Bonus Vuelta Rápida': Math.round(bonusVueltaRapida),
+          'TOTAL': Math.round(totalPuntos)
+        };
+      });
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(breakdownSheet), 'Desglose de Puntos');
+
+      // ✅ NOMBRE DE ARCHIVO CON TIPO
+      const tipoCarrera = isSprint ? 'Sprint' : 'Carrera';
+      const fileName = `${tipoCarrera}_${race.nombre.replace(/\s+/g, '_')}.xlsx`;
       XLSX.writeFile(wb, fileName);
 
       toast.success('Excel exportado correctamente');
@@ -868,6 +947,7 @@ export default function RacePredictionsComparison() {
       toast.error('Error al exportar Excel');
     }
   };
+
 
   const handleShareGeneralResults = () => {
   const topUser = userRanking[0];
