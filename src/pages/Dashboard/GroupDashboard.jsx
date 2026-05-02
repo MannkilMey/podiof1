@@ -13,6 +13,15 @@ import { SkeletonTable, SkeletonStats } from '../../components/SkeletonLoader';
 import ScoringSystemModal from '../../components/ScoringSystemModal';
 import { supabase } from '../../lib/supabase';
 import { subHours } from 'date-fns';
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer
+} from 'recharts';
 
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap');`;
 
@@ -486,6 +495,17 @@ function HeroBanner({ group, nextRace, navigate, groupId, onShowScoringModal }) 
           >
             👥 Ver Miembros
           </button>
+
+          <button 
+            className="btn-admin"
+            onClick={() => navigate(`/group/${groupId}/stats`)}
+            style={{ 
+              background: 'linear-gradient(135deg, #C9A84C, #A67C00)', 
+              marginBottom: 0 
+            }}
+          >
+            📊 Estadísticas
+          </button>
           
           {group.isAdmin && (
             <>
@@ -607,6 +627,17 @@ function HeroBanner({ group, nextRace, navigate, groupId, onShowScoringModal }) 
           }}
         >
           👥 Ver Miembros del Grupo
+        </button>
+
+        <button 
+          className="btn-admin"
+          onClick={() => navigate(`/group/${groupId}/stats`)}
+          style={{ 
+            background: 'linear-gradient(135deg, #C9A84C, #A67C00)', 
+            marginBottom: 0 
+          }}
+        >
+          📊 Estadísticas
         </button>
         
         {group.isAdmin && (
@@ -977,10 +1008,7 @@ function LeaderboardTab({ leaderboard, userId, groupId, type = 'total' }) {
 }
 
 function DriversStandingsTab({ standings, loading }) {
-  if (loading) {
-    return <SkeletonTable rows={10} columns={5} />;
-  }
-
+  if (loading) return <SkeletonTable rows={10} columns={5} />;
   if (standings.length === 0) {
     return (
       <div style={{ padding: 40, textAlign: 'center', color: 'var(--muted)' }}>
@@ -991,70 +1019,26 @@ function DriversStandingsTab({ standings, loading }) {
     );
   }
 
-  const getMedal = (position) => {
-    if (position === 1) return '🥇';
-    if (position === 2) return '🥈';
-    if (position === 3) return '🥉';
-    return '';
-  };
+  const getMedal = (p) => p === 1 ? '🥇' : p === 2 ? '🥈' : p === 3 ? '🥉' : '';
 
   return (
     <div className="leaderboard-table">
       <table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Piloto</th>
-            <th>Equipo</th>
-            <th>Carreras</th>
-            <th>Puntos</th>
-          </tr>
-        </thead>
+        <thead><tr><th>#</th><th>Piloto</th><th>Equipo</th><th>Carreras</th><th>Puntos</th></tr></thead>
         <tbody>
           {standings.map(driver => (
             <tr key={driver.piloto_id}>
-              <td className="position-cell">
-                <span className="medal">{getMedal(driver.position)}</span>
-                {driver.position}
-              </td>
+              <td className="position-cell"><span className="medal">{getMedal(driver.position)}</span>{driver.position}</td>
               <td>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <span style={{ 
-                    fontSize: 12, 
-                    color: 'var(--muted)',
-                    fontFamily: 'monospace',
-                    minWidth: 30
-                  }}>
-                    #{driver.numero}
-                  </span>
-                  <span style={{ fontWeight: 600 }}>
-                    {driver.nombre_completo || 'Desconocido'}
-                  </span>
-                  {driver.acronimo && (
-                    <span style={{ 
-                      fontSize: 11, 
-                      color: 'var(--muted)',
-                      fontFamily: 'monospace',
-                      marginLeft: 4
-                    }}>
-                      {driver.acronimo}
-                    </span>
-                  )}
+                  <span style={{ fontSize: 12, color: 'var(--muted)', fontFamily: 'monospace', minWidth: 30 }}>#{driver.numero}</span>
+                  <span style={{ fontWeight: 600 }}>{driver.nombre_completo || 'Desconocido'}</span>
+                  {driver.acronimo && <span style={{ fontSize: 11, color: 'var(--muted)', fontFamily: 'monospace', marginLeft: 4 }}>{driver.acronimo}</span>}
                 </div>
               </td>
-              <td style={{ color: 'var(--muted)', fontSize: 14 }}>
-                {driver.equipo || 'N/A'}
-              </td>
-              <td style={{ textAlign: 'center', color: 'var(--muted)' }}>
-                {driver.carreras}
-              </td>
-              <td style={{ 
-                fontFamily: 'Barlow Condensed', 
-                fontSize: 18, 
-                fontWeight: 700 
-              }}>
-                {Math.round(driver.puntos)}
-              </td>
+              <td style={{ color: 'var(--muted)', fontSize: 14 }}>{driver.equipo || 'N/A'}</td>
+              <td style={{ textAlign: 'center', color: 'var(--muted)' }}>{driver.carreras}</td>
+              <td style={{ fontFamily: 'Barlow Condensed', fontSize: 18, fontWeight: 700 }}>{Math.round(driver.puntos)}</td>
             </tr>
           ))}
         </tbody>
@@ -1064,10 +1048,7 @@ function DriversStandingsTab({ standings, loading }) {
 }
 
 function TeamsStandingsTab({ standings, loading }) {
-  if (loading) {
-    return <SkeletonTable rows={10} columns={4} />;
-  }
-
+  if (loading) return <SkeletonTable rows={10} columns={4} />;
   if (standings.length === 0) {
     return (
       <div style={{ padding: 40, textAlign: 'center', color: 'var(--muted)' }}>
@@ -1078,44 +1059,19 @@ function TeamsStandingsTab({ standings, loading }) {
     );
   }
 
-  const getMedal = (position) => {
-    if (position === 1) return '🥇';
-    if (position === 2) return '🥈';
-    if (position === 3) return '🥉';
-    return '';
-  };
+  const getMedal = (p) => p === 1 ? '🥇' : p === 2 ? '🥈' : p === 3 ? '🥉' : '';
 
   return (
     <div className="leaderboard-table">
       <table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Equipo</th>
-            <th>Carreras</th>
-            <th>Puntos</th>
-          </tr>
-        </thead>
+        <thead><tr><th>#</th><th>Equipo</th><th>Carreras</th><th>Puntos</th></tr></thead>
         <tbody>
           {standings.map(team => (
             <tr key={team.equipo_id}>
-              <td className="position-cell">
-                <span className="medal">{getMedal(team.position)}</span>
-                {team.position}
-              </td>
-              <td style={{ fontWeight: 600, fontSize: 15 }}>
-                {team.nombre}
-              </td>
-              <td style={{ textAlign: 'center', color: 'var(--muted)' }}>
-                {team.carreras}
-              </td>
-              <td style={{ 
-                fontFamily: 'Barlow Condensed', 
-                fontSize: 18, 
-                fontWeight: 700 
-              }}>
-                {Math.round(team.puntos)}
-              </td>
+              <td className="position-cell"><span className="medal">{getMedal(team.position)}</span>{team.position}</td>
+              <td style={{ fontWeight: 600, fontSize: 15 }}>{team.nombre}</td>
+              <td style={{ textAlign: 'center', color: 'var(--muted)' }}>{team.carreras}</td>
+              <td style={{ fontFamily: 'Barlow Condensed', fontSize: 18, fontWeight: 700 }}>{Math.round(team.puntos)}</td>
             </tr>
           ))}
         </tbody>
@@ -1156,9 +1112,7 @@ function LastRaceTab({ groupId, temporada, userId, group, navigate }) {
     if (!userPositions || !results) return 0;
     let correct = 0;
     userPositions.slice(0, group.cantidad_posiciones || 10).forEach((pilotoId, idx) => {
-      if (results[idx]?.piloto_id === pilotoId) {
-        correct++;
-      }
+      if (results[idx]?.piloto_id === pilotoId) correct++;
     });
     return correct;
   };
@@ -1172,57 +1126,27 @@ function LastRaceTab({ groupId, temporada, userId, group, navigate }) {
         padding: '24px',
         marginBottom: '24px'
       }}>
-        <div style={{ 
-          fontSize: 12, 
-          color: 'var(--muted)', 
-          textTransform: 'uppercase', 
-          letterSpacing: 1,
-          marginBottom: 8
-        }}>
+        <div style={{ fontSize: 12, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 }}>
           Última Carrera Completada
         </div>
-        <h2 style={{
-          fontFamily: 'Barlow Condensed',
-          fontSize: 32,
-          fontWeight: 900,
-          color: 'var(--white)',
-          marginBottom: 8
-        }}>
+        <h2 style={{ fontFamily: 'Barlow Condensed', fontSize: 32, fontWeight: 900, color: 'var(--white)', marginBottom: 8 }}>
           {lastRace.nombre}
         </h2>
-        <div style={{ 
-          fontSize: 14, 
-          color: 'var(--muted)',
-          display: 'flex',
-          gap: 16,
-          flexWrap: 'wrap'
-        }}>
+        <div style={{ fontSize: 14, color: 'var(--muted)', display: 'flex', gap: 16, flexWrap: 'wrap' }}>
           <span>📍 {lastRace.circuito}</span>
-          <span>📅 {new Date(lastRace.fecha_programada).toLocaleDateString('es', { 
-            day: 'numeric', 
-            month: 'long', 
-            year: 'numeric' 
-          })}</span>
+          <span>📅 {new Date(lastRace.fecha_programada).toLocaleDateString('es', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
           <span>👥 {predictions.length} predicciones</span>
         </div>
         
         <button
           onClick={() => navigate(`/group/${groupId}/race/${lastRace.id}/predictions`)}
           style={{
-            width: '100%',
-            padding: '14px 24px',
+            width: '100%', padding: '14px 24px',
             background: 'linear-gradient(135deg, #00D4A0, #00A67E)',
-            border: 'none',
-            borderRadius: '10px',
-            color: 'white',
-            fontFamily: 'Barlow Condensed',
-            fontSize: 16,
-            fontWeight: 800,
-            letterSpacing: 1,
-            textTransform: 'uppercase',
-            cursor: 'pointer',
-            transition: 'all 0.2s',
-            marginTop: 16
+            border: 'none', borderRadius: '10px', color: 'white',
+            fontFamily: 'Barlow Condensed', fontSize: 16, fontWeight: 800,
+            letterSpacing: 1, textTransform: 'uppercase', cursor: 'pointer',
+            transition: 'all 0.2s', marginTop: 16
           }}
           onMouseOver={(e) => e.target.style.opacity = '0.9'}
           onMouseOut={(e) => e.target.style.opacity = '1'}
@@ -1231,121 +1155,35 @@ function LastRaceTab({ groupId, temporada, userId, group, navigate }) {
         </button>
       </div>
 
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-        gap: 16,
-        marginBottom: 24
-      }}>
-        <div style={{
-          background: 'var(--bg2)',
-          border: '2px solid var(--green)',
-          borderRadius: 12,
-          padding: 20,
-          textAlign: 'center',
-          transition: 'transform 0.2s ease'
-        }}>
-          <div style={{ fontSize: 11, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 }}>
-            🏆 Mejor Predicción
-          </div>
-          <div style={{ fontFamily: 'Barlow Condensed', fontSize: 24, fontWeight: 900, color: 'var(--white)', marginBottom: 4 }}>
-            {bestPrediction?.nombre || 'N/A'}
-          </div>
-          <div style={{ fontSize: 14, color: 'var(--green)', fontWeight: 700 }}>
-            {Math.round(bestPrediction?.puntos || 0)} puntos • {calculateCorrect(bestPrediction?.posiciones)} exactos
-          </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 16, marginBottom: 24 }}>
+        <div style={{ background: 'var(--bg2)', border: '2px solid var(--green)', borderRadius: 12, padding: 20, textAlign: 'center' }}>
+          <div style={{ fontSize: 11, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 }}>🏆 Mejor Predicción</div>
+          <div style={{ fontFamily: 'Barlow Condensed', fontSize: 24, fontWeight: 900, color: 'var(--white)', marginBottom: 4 }}>{bestPrediction?.nombre || 'N/A'}</div>
+          <div style={{ fontSize: 14, color: 'var(--green)', fontWeight: 700 }}>{Math.round(bestPrediction?.puntos || 0)} puntos • {calculateCorrect(bestPrediction?.posiciones)} exactos</div>
         </div>
-
-        <div style={{
-          background: 'var(--bg2)',
-          border: '1px solid var(--border)',
-          borderRadius: 12,
-          padding: 20,
-          textAlign: 'center',
-          transition: 'transform 0.2s ease'
-        }}>
-          <div style={{ fontSize: 11, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 }}>
-            📊 Promedio del Grupo
-          </div>
-          <div style={{ fontFamily: 'Barlow Condensed', fontSize: 24, fontWeight: 900, color: 'var(--white)' }}>
-            {Math.round(avgPoints)} puntos
-          </div>
+        <div style={{ background: 'var(--bg2)', border: '1px solid var(--border)', borderRadius: 12, padding: 20, textAlign: 'center' }}>
+          <div style={{ fontSize: 11, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 }}>📊 Promedio del Grupo</div>
+          <div style={{ fontFamily: 'Barlow Condensed', fontSize: 24, fontWeight: 900, color: 'var(--white)' }}>{Math.round(avgPoints)} puntos</div>
         </div>
-
         {worstPrediction && (
-          <div style={{
-            background: 'var(--bg2)',
-            border: '1px solid rgba(232,0,45,0.3)',
-            borderRadius: 12,
-            padding: 20,
-            textAlign: 'center',
-            transition: 'transform 0.2s ease'
-          }}>
-            <div style={{ fontSize: 11, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 }}>
-              😅 Peor Predicción
-            </div>
-            <div style={{ fontFamily: 'Barlow Condensed', fontSize: 24, fontWeight: 900, color: 'var(--white)', marginBottom: 4 }}>
-              {worstPrediction.nombre}
-            </div>
-            <div style={{ fontSize: 14, color: 'var(--red)', fontWeight: 700 }}>
-              {Math.round(worstPrediction.puntos)} puntos
-            </div>
+          <div style={{ background: 'var(--bg2)', border: '1px solid rgba(232,0,45,0.3)', borderRadius: 12, padding: 20, textAlign: 'center' }}>
+            <div style={{ fontSize: 11, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 }}>😅 Peor Predicción</div>
+            <div style={{ fontFamily: 'Barlow Condensed', fontSize: 24, fontWeight: 900, color: 'var(--white)', marginBottom: 4 }}>{worstPrediction.nombre}</div>
+            <div style={{ fontSize: 14, color: 'var(--red)', fontWeight: 700 }}>{Math.round(worstPrediction.puntos)} puntos</div>
           </div>
         )}
       </div>
 
-      <div style={{
-        background: 'var(--bg2)',
-        border: '1px solid var(--border)',
-        borderRadius: 14,
-        padding: 24,
-        marginBottom: 24
-      }}>
-        <h3 style={{
-          fontFamily: 'Barlow Condensed',
-          fontSize: 18,
-          fontWeight: 800,
-          color: 'var(--white)',
-          marginBottom: 16,
-          textTransform: 'uppercase',
-          letterSpacing: 1
-        }}>
-          🏁 Resultado Oficial
-        </h3>
+      <div style={{ background: 'var(--bg2)', border: '1px solid var(--border)', borderRadius: 14, padding: 24, marginBottom: 24 }}>
+        <h3 style={{ fontFamily: 'Barlow Condensed', fontSize: 18, fontWeight: 800, color: 'var(--white)', marginBottom: 16, textTransform: 'uppercase', letterSpacing: 1 }}>🏁 Resultado Oficial</h3>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           {results.slice(0, group.cantidad_posiciones || 10).map((result, idx) => {
             const driver = drivers[result.piloto_id];
             return (
-              <div key={result.id} style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 12,
-                padding: 12,
-                background: 'var(--bg3)',
-                borderRadius: 8,
-                border: '1px solid var(--border)',
-                transition: 'transform 0.2s ease'
-              }}>
-                <span style={{
-                  fontFamily: 'Barlow Condensed',
-                  fontSize: 20,
-                  fontWeight: 900,
-                  color: 'var(--white)',
-                  minWidth: 30
-                }}>
-                  {idx + 1}°
-                </span>
-                <span style={{ flex: 1, fontWeight: 600 }}>
-                  {driver ? driver.nombre_completo : 'Desconocido'}
-                </span>
-                <span style={{
-                  fontFamily: 'Barlow Condensed',
-                  fontSize: 16,
-                  fontWeight: 700,
-                  color: 'var(--muted)'
-                }}>
-                  {result.puntos_f1} pts
-                </span>
+              <div key={result.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: 12, background: 'var(--bg3)', borderRadius: 8, border: '1px solid var(--border)' }}>
+                <span style={{ fontFamily: 'Barlow Condensed', fontSize: 20, fontWeight: 900, color: 'var(--white)', minWidth: 30 }}>{idx + 1}°</span>
+                <span style={{ flex: 1, fontWeight: 600 }}>{driver ? driver.nombre_completo : 'Desconocido'}</span>
+                <span style={{ fontFamily: 'Barlow Condensed', fontSize: 16, fontWeight: 700, color: 'var(--muted)' }}>{result.puntos_f1} pts</span>
               </div>
             );
           })}
@@ -1354,47 +1192,19 @@ function LastRaceTab({ groupId, temporada, userId, group, navigate }) {
 
       <div className="leaderboard-table">
         <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Usuario</th>
-              <th>Exactos</th>
-              <th>Puntos</th>
-            </tr>
-          </thead>
+          <thead><tr><th>#</th><th>Usuario</th><th>Exactos</th><th>Puntos</th></tr></thead>
           <tbody>
             {predictions.map((pred, idx) => {
               const correctPredictions = calculateCorrect(pred.posiciones);
               const isCurrentUser = pred.usuario_id === userId;
-              
               return (
                 <tr key={pred.id} className={isCurrentUser ? 'current-user' : ''}>
-                  <td className="position-cell">
-                    {idx === 0 && '🥇'}
-                    {idx === 1 && '🥈'}
-                    {idx === 2 && '🥉'}
-                    {idx + 1}
-                  </td>
+                  <td className="position-cell">{idx === 0 && '🥇'}{idx === 1 && '🥈'}{idx === 2 && '🥉'}{idx + 1}</td>
                   <td>{pred.nombre}</td>
                   <td style={{ textAlign: 'center' }}>
-                    <span style={{
-                      background: correctPredictions > 0 ? 'rgba(0,212,160,0.15)' : 'var(--bg3)',
-                      color: correctPredictions > 0 ? 'var(--green)' : 'var(--muted)',
-                      padding: '4px 12px',
-                      borderRadius: 12,
-                      fontWeight: 700,
-                      fontSize: 14
-                    }}>
-                      {correctPredictions}
-                    </span>
+                    <span style={{ background: correctPredictions > 0 ? 'rgba(0,212,160,0.15)' : 'var(--bg3)', color: correctPredictions > 0 ? 'var(--green)' : 'var(--muted)', padding: '4px 12px', borderRadius: 12, fontWeight: 700, fontSize: 14 }}>{correctPredictions}</span>
                   </td>
-                  <td style={{
-                    fontFamily: 'Barlow Condensed',
-                    fontSize: 18,
-                    fontWeight: 700
-                  }}>
-                    {Math.round(pred.puntos)}
-                  </td>
+                  <td style={{ fontFamily: 'Barlow Condensed', fontSize: 18, fontWeight: 700 }}>{Math.round(pred.puntos)}</td>
                 </tr>
               );
             })}
@@ -1405,26 +1215,265 @@ function LastRaceTab({ groupId, temporada, userId, group, navigate }) {
   );
 }
 
+// ============================================
+// PESTAÑA PREVIEW ESTADÍSTICAS
+// ============================================
+const PREVIEW_COLORS = [
+  '#E8002D', '#00D4A0', '#C9A84C', '#3B82F6', '#F97316',
+  '#8B5CF6', '#EC4899', '#14B8A6', '#EAB308', '#06B6D4'
+];
+
+function StatsPreviewTab({ groupId, temporada, navigate }) {
+  const [chartData, setChartData] = useState([]);
+  const [userNames, setUserNames] = useState([]);
+  const [topUsers, setTopUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const theme = useThemeStore((state) => state.theme);
+
+  useEffect(() => {
+    fetchPreviewData();
+  }, [groupId]);
+
+  async function fetchPreviewData() {
+    setLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('scores')
+        .select(`
+          puntos,
+          aciertos_exactos,
+          usuario:usuario_id ( id, nombre, apellido ),
+          carrera:carrera_id ( nombre, ronda, tipo )
+        `)
+        .eq('grupo_id', groupId)
+        .order('created_at', { ascending: true });
+
+      if (error) throw error;
+      if (!data || data.length === 0) {
+        setLoading(false);
+        return;
+      }
+
+      // Build user list
+      const usersMap = new Map();
+      data.forEach(s => {
+        if (!s.usuario?.id) return;
+        const uid = s.usuario.id;
+        if (!usersMap.has(uid)) {
+          const name = `${s.usuario.nombre} ${s.usuario.apellido?.[0] || ''}`.trim();
+          usersMap.set(uid, { id: uid, name, color: PREVIEW_COLORS[usersMap.size % PREVIEW_COLORS.length] });
+        }
+      });
+
+      const users = [...usersMap.values()];
+      setUserNames(users);
+
+      // Group by race (last 5 races)
+      const racesMap = new Map();
+      data.forEach(s => {
+        const raceName = s.carrera?.nombre || '';
+        const ronda = s.carrera?.ronda || 0;
+        const tipo = s.carrera?.tipo || 'carrera';
+        const uInfo = usersMap.get(s.usuario?.id);
+        if (!uInfo || !raceName) return;
+
+        if (!racesMap.has(raceName)) {
+          racesMap.set(raceName, { ronda, tipo });
+        }
+        racesMap.get(raceName)[uInfo.name] = Number(s.puntos) || 0;
+      });
+
+      const sorted = [...racesMap.entries()]
+        .sort(([, a], [, b]) => a.ronda - b.ronda)
+        .slice(-5)
+        .map(([name, data]) => {
+          const shortName = name
+            .replace('Gran Premio de ', 'GP ')
+            .replace('Gran Premio del ', 'GP ');
+          const label = data.tipo === 'sprint' ? `⚡${shortName}` : shortName;
+          return { raceName: label, ...data };
+        });
+
+      setChartData(sorted);
+
+      // Top 3 users by total points
+      const totals = new Map();
+      data.forEach(s => {
+        const uInfo = usersMap.get(s.usuario?.id);
+        if (!uInfo) return;
+        if (!totals.has(uInfo.name)) {
+          totals.set(uInfo.name, { name: uInfo.name, color: uInfo.color, puntos: 0, exactos: 0 });
+        }
+        const t = totals.get(uInfo.name);
+        t.puntos += Number(s.puntos) || 0;
+        t.exactos += Number(s.aciertos_exactos) || 0;
+      });
+
+      setTopUsers([...totals.values()].sort((a, b) => b.puntos - a.puntos).slice(0, 3));
+    } catch (err) {
+      console.error('Error fetching stats preview:', err);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  if (loading) {
+    return (
+      <div style={{ padding: 40, textAlign: 'center', color: 'var(--muted)' }}>
+        <div style={{ fontSize: 32, marginBottom: 16 }}>📊</div>
+        <div>Cargando estadísticas...</div>
+      </div>
+    );
+  }
+
+  if (chartData.length === 0) {
+    return (
+      <div style={{ padding: 40, textAlign: 'center', color: 'var(--muted)' }}>
+        <div style={{ fontSize: 48, marginBottom: 16, opacity: 0.3 }}>📊</div>
+        <div style={{ fontSize: 18, marginBottom: 8 }}>No hay datos disponibles</div>
+        <div style={{ fontSize: 14, marginBottom: 24 }}>Las estadísticas aparecerán cuando haya carreras completadas</div>
+        <button
+          onClick={() => navigate(`/group/${groupId}/stats`)}
+          style={{
+            padding: '12px 24px',
+            background: 'linear-gradient(135deg, #C9A84C, #A67C00)',
+            border: 'none', borderRadius: 10, color: 'white',
+            fontFamily: "'Barlow Condensed', sans-serif",
+            fontSize: 14, fontWeight: 800, letterSpacing: 1,
+            textTransform: 'uppercase', cursor: 'pointer', transition: 'all 0.2s'
+          }}
+          onMouseOver={(e) => e.target.style.opacity = '0.9'}
+          onMouseOut={(e) => e.target.style.opacity = '1'}
+        >
+          📊 Ir a Estadísticas
+        </button>
+      </div>
+    );
+  }
+
+  const gridColor = theme === 'dark' ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.08)';
+  const mutedColor = theme === 'dark' ? 'rgba(240,240,240,0.40)' : 'rgba(26,27,30,0.55)';
+  const axisColor = theme === 'dark' ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.10)';
+
+  return (
+    <div>
+      {/* Top 3 mini cards */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+        gap: 12,
+        marginBottom: 24
+      }}>
+        {topUsers.map((u, i) => {
+          const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉';
+          return (
+            <div key={u.name} style={{
+              background: 'var(--bg2)',
+              border: i === 0 ? '2px solid var(--gold)' : '1px solid var(--border)',
+              borderRadius: 12, padding: 16,
+              display: 'flex', alignItems: 'center', gap: 12, transition: 'all 0.2s'
+            }}>
+              <span style={{ fontSize: 24 }}>{medal}</span>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--white)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{u.name}</div>
+                <div style={{ fontSize: 11, color: 'var(--muted)' }}>🎯 {u.exactos} exactos</div>
+              </div>
+              <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 22, fontWeight: 900, color: u.color }}>
+                {Math.round(u.puntos)}
+                <span style={{ fontSize: 10, color: 'var(--muted)', marginLeft: 2 }}>pts</span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Mini chart */}
+      <div style={{
+        background: 'var(--bg2)',
+        border: '1px solid var(--border)',
+        borderRadius: 14, padding: 20, marginBottom: 24
+      }}>
+        <div style={{
+          fontFamily: "'Barlow Condensed', sans-serif",
+          fontSize: 14, fontWeight: 800, color: 'var(--muted)',
+          textTransform: 'uppercase', letterSpacing: 1, marginBottom: 16
+        }}>
+          Últimas {chartData.length} carreras
+        </div>
+
+        <ResponsiveContainer width="100%" height={260}>
+          <BarChart data={chartData} margin={{ top: 5, right: 10, left: -10, bottom: 20 }} barCategoryGap="20%" barGap={1}>
+            <CartesianGrid strokeDasharray="3 3" stroke={gridColor} vertical={false} />
+            <XAxis
+              dataKey="raceName"
+              tick={{ fill: mutedColor, fontSize: 10, fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 600 }}
+              tickLine={false}
+              axisLine={{ stroke: axisColor }}
+              angle={-20} textAnchor="end" height={50} interval={0}
+            />
+            <YAxis
+              tick={{ fill: mutedColor, fontSize: 10, fontFamily: "'Share Tech Mono', monospace" }}
+              tickLine={false} axisLine={false} width={35}
+            />
+            <Tooltip
+              contentStyle={{
+                background: theme === 'dark' ? '#18181D' : '#FFFFFF',
+                border: `1px solid ${theme === 'dark' ? 'rgba(255,255,255,0.13)' : 'rgba(0,0,0,0.15)'}`,
+                borderRadius: 10, fontSize: 12, fontFamily: "'Barlow', sans-serif"
+              }}
+              labelStyle={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 800, fontSize: 13, marginBottom: 6 }}
+            />
+            {userNames.map(u => (
+              <Bar key={u.id} dataKey={u.name} fill={u.color} radius={[3, 3, 0, 0]} maxBarSize={28} />
+            ))}
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+
+      {/* CTA Button */}
+      <button
+        onClick={() => navigate(`/group/${groupId}/stats`)}
+        style={{
+          width: '100%', padding: '16px 24px',
+          background: 'linear-gradient(135deg, #C9A84C, #A67C00)',
+          border: 'none', borderRadius: 10, color: 'white',
+          fontFamily: "'Barlow Condensed', sans-serif",
+          fontSize: 16, fontWeight: 800, letterSpacing: 1,
+          textTransform: 'uppercase', cursor: 'pointer', transition: 'all 0.2s',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8
+        }}
+        onMouseOver={(e) => { e.currentTarget.style.opacity = '0.9'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
+        onMouseOut={(e) => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.transform = 'translateY(0)'; }}
+      >
+        📊 Ver Estadísticas Completas →
+      </button>
+
+      <div style={{ textAlign: 'center', marginTop: 12, fontSize: 12, color: 'var(--muted)' }}>
+        Filtros por usuario, proyecciones y más
+      </div>
+    </div>
+  );
+}
+
+// ============================================
+// COMPONENTE PRINCIPAL
+// ============================================
 export default function GroupDashboard() {
   const { groupId } = useParams();
   const navigate = useNavigate();
   const user = useAuthStore((state) => state.user);
   const theme = useThemeStore((state) => state.theme);
   const [activeTab, setActiveTab] = useState('general');
-  
-  // ✅ NUEVO: Estado para sub-pestaña de leaderboard
   const [leaderboardType, setLeaderboardType] = useState('total');
-  
-  // Estado para modal de sistema de puntos
   const [showScoringModal, setShowScoringModal] = useState(false);
   
   const { 
     group, 
     nextRace, 
     leaderboard,
-    leaderboardTotal,    // ✅ NUEVO
-    leaderboardRaces,    // ✅ NUEVO
-    leaderboardSprints,  // ✅ NUEVO
+    leaderboardTotal,
+    leaderboardRaces,
+    leaderboardSprints,
     loading, 
     error 
   } = useGroupDashboard(groupId, user?.id);
@@ -1437,14 +1486,7 @@ export default function GroupDashboard() {
       <>
         <style>{FONTS + CSS}</style>
         <div data-theme={theme} className="group-dashboard">
-          <div style={{ 
-            height: 200, 
-            background: 'var(--bg2)', 
-            border: '1px solid var(--border)',
-            borderRadius: 16,
-            marginBottom: 24,
-            animation: 'pulse 1.5s ease-in-out infinite'
-          }} />
+          <div style={{ height: 200, background: 'var(--bg2)', border: '1px solid var(--border)', borderRadius: 16, marginBottom: 24, animation: 'pulse 1.5s ease-in-out infinite' }} />
           <SkeletonStats />
           <SkeletonTable rows={8} columns={4} />
         </div>
@@ -1457,9 +1499,7 @@ export default function GroupDashboard() {
       <>
         <style>{FONTS + CSS}</style>
         <div data-theme={theme} className="group-dashboard">
-          <button className="back-btn" onClick={() => navigate('/')}>
-            ← Volver a todos los grupos
-          </button>
+          <button className="back-btn" onClick={() => navigate('/')}>← Volver a todos los grupos</button>
           <div style={{ textAlign: 'center', padding: '80px 20px', color: 'var(--red)' }}>
             <div style={{ fontSize: 48, marginBottom: 16 }}>⚠️</div>
             <div>Error al cargar el dashboard</div>
@@ -1474,9 +1514,7 @@ export default function GroupDashboard() {
     <>
       <style>{FONTS + CSS}</style>
       <div data-theme={theme} className="group-dashboard">
-        <button className="back-btn" onClick={() => navigate('/')}>
-          ← Volver a todos los grupos
-        </button>
+        <button className="back-btn" onClick={() => navigate('/')}>← Volver a todos los grupos</button>
 
         <HeroBanner 
           group={group} 
@@ -1491,154 +1529,61 @@ export default function GroupDashboard() {
 
         <div className="tabs-container">
           <div className="tabs-nav">
-            <button 
-              className={`tab-btn ${activeTab === 'general' ? 'active' : ''}`}
-              onClick={() => setActiveTab('general')}
-            >
+            <button className={`tab-btn ${activeTab === 'general' ? 'active' : ''}`} onClick={() => setActiveTab('general')}>
               📊 General
             </button>
-            <button 
-              className={`tab-btn ${activeTab === 'pilotos' ? 'active' : ''}`}
-              onClick={() => setActiveTab('pilotos')}
-            >
+            <button className={`tab-btn ${activeTab === 'pilotos' ? 'active' : ''}`} onClick={() => setActiveTab('pilotos')}>
               🏎️ Pilotos
             </button>
-            <button 
-              className={`tab-btn ${activeTab === 'equipos' ? 'active' : ''}`}
-              onClick={() => setActiveTab('equipos')}
-            >
+            <button className={`tab-btn ${activeTab === 'equipos' ? 'active' : ''}`} onClick={() => setActiveTab('equipos')}>
               🏁 Equipos
             </button>
-            <button 
-              className={`tab-btn ${activeTab === 'ultima' ? 'active' : ''}`}
-              onClick={() => setActiveTab('ultima')}
-            >
+            <button className={`tab-btn ${activeTab === 'ultima' ? 'active' : ''}`} onClick={() => setActiveTab('ultima')}>
               📜 Última Carrera
+            </button>
+            <button className={`tab-btn ${activeTab === 'stats' ? 'active' : ''}`} onClick={() => setActiveTab('stats')}>
+              📈 Estadísticas
             </button>
           </div>
 
           <div className="tab-content" key={activeTab}>
             {activeTab === 'general' && (
               <>
-                {/* ✅ NUEVO: Sub-pestañas de Leaderboard */}
-                <div style={{
-                  display: 'flex',
-                  gap: 8,
-                  marginBottom: 20,
-                  borderBottom: '1px solid var(--border)',
-                  paddingBottom: 12
-                }}>
-                  <button
-                    onClick={() => setLeaderboardType('total')}
-                    style={{
-                      padding: '8px 16px',
-                      background: leaderboardType === 'total' ? 'var(--red-dim)' : 'transparent',
-                      border: leaderboardType === 'total' ? '2px solid var(--red)' : '2px solid var(--border)',
-                      borderRadius: 8,
-                      color: leaderboardType === 'total' ? 'var(--red)' : 'var(--muted)',
-                      cursor: 'pointer',
-                      fontFamily: 'Barlow Condensed',
-                      fontSize: 14,
-                      fontWeight: 700,
-                      letterSpacing: 1,
-                      textTransform: 'uppercase',
-                      transition: 'all 0.2s'
-                    }}
-                  >
-                    🏆 Total
-                  </button>
-
-                  <button
-                    onClick={() => setLeaderboardType('races')}
-                    style={{
-                      padding: '8px 16px',
-                      background: leaderboardType === 'races' ? 'var(--red-dim)' : 'transparent',
-                      border: leaderboardType === 'races' ? '2px solid var(--red)' : '2px solid var(--border)',
-                      borderRadius: 8,
-                      color: leaderboardType === 'races' ? 'var(--red)' : 'var(--muted)',
-                      cursor: 'pointer',
-                      fontFamily: 'Barlow Condensed',
-                      fontSize: 14,
-                      fontWeight: 700,
-                      letterSpacing: 1,
-                      textTransform: 'uppercase',
-                      transition: 'all 0.2s'
-                    }}
-                  >
-                    🏁 Carreras
-                  </button>
-
-                  <button
-                    onClick={() => setLeaderboardType('sprints')}
-                    style={{
-                      padding: '8px 16px',
-                      background: leaderboardType === 'sprints' ? 'var(--red-dim)' : 'transparent',
-                      border: leaderboardType === 'sprints' ? '2px solid var(--red)' : '2px solid var(--border)',
-                      borderRadius: 8,
-                      color: leaderboardType === 'sprints' ? 'var(--red)' : 'var(--muted)',
-                      cursor: 'pointer',
-                      fontFamily: 'Barlow Condensed',
-                      fontSize: 14,
-                      fontWeight: 700,
-                      letterSpacing: 1,
-                      textTransform: 'uppercase',
-                      transition: 'all 0.2s'
-                    }}
-                  >
-                    ⚡ Sprints
-                  </button>
+                <div style={{ display: 'flex', gap: 8, marginBottom: 20, borderBottom: '1px solid var(--border)', paddingBottom: 12 }}>
+                  {['total', 'races', 'sprints'].map(type => (
+                    <button
+                      key={type}
+                      onClick={() => setLeaderboardType(type)}
+                      style={{
+                        padding: '8px 16px',
+                        background: leaderboardType === type ? 'var(--red-dim)' : 'transparent',
+                        border: leaderboardType === type ? '2px solid var(--red)' : '2px solid var(--border)',
+                        borderRadius: 8,
+                        color: leaderboardType === type ? 'var(--red)' : 'var(--muted)',
+                        cursor: 'pointer',
+                        fontFamily: 'Barlow Condensed', fontSize: 14, fontWeight: 700,
+                        letterSpacing: 1, textTransform: 'uppercase', transition: 'all 0.2s'
+                      }}
+                    >
+                      {type === 'total' ? '🏆 Total' : type === 'races' ? '🏁 Carreras' : '⚡ Sprints'}
+                    </button>
+                  ))}
                 </div>
 
-                {/* ✅ MODIFICADO: Renderizar leaderboard según tipo */}
-                {leaderboardType === 'total' && (
-                  <LeaderboardTab 
-                    leaderboard={leaderboardTotal} 
-                    userId={user.id} 
-                    groupId={groupId}
-                    type="total"
-                  />
-                )}
-                {leaderboardType === 'races' && (
-                  <LeaderboardTab 
-                    leaderboard={leaderboardRaces} 
-                    userId={user.id} 
-                    groupId={groupId}
-                    type="races"
-                  />
-                )}
-                {leaderboardType === 'sprints' && (
-                  <LeaderboardTab 
-                    leaderboard={leaderboardSprints} 
-                    userId={user.id} 
-                    groupId={groupId}
-                    type="sprints"
-                  />
-                )}
+                {leaderboardType === 'total' && <LeaderboardTab leaderboard={leaderboardTotal} userId={user.id} groupId={groupId} type="total" />}
+                {leaderboardType === 'races' && <LeaderboardTab leaderboard={leaderboardRaces} userId={user.id} groupId={groupId} type="races" />}
+                {leaderboardType === 'sprints' && <LeaderboardTab leaderboard={leaderboardSprints} userId={user.id} groupId={groupId} type="sprints" />}
               </>
             )}
-            {activeTab === 'pilotos' && (
-              <DriversStandingsTab standings={driverStandings} loading={standingsLoading} />
-            )}
-            {activeTab === 'equipos' && (
-              <TeamsStandingsTab standings={teamStandings} loading={teamsLoading} />
-            )}
-            {activeTab === 'ultima' && (
-              <LastRaceTab 
-                groupId={groupId} 
-                temporada={group.temporada} 
-                userId={user.id}
-                group={group}
-                navigate={navigate}
-              />
-            )}
+            {activeTab === 'pilotos' && <DriversStandingsTab standings={driverStandings} loading={standingsLoading} />}
+            {activeTab === 'equipos' && <TeamsStandingsTab standings={teamStandings} loading={teamsLoading} />}
+            {activeTab === 'ultima' && <LastRaceTab groupId={groupId} temporada={group.temporada} userId={user.id} group={group} navigate={navigate} />}
+            {activeTab === 'stats' && <StatsPreviewTab groupId={groupId} temporada={group.temporada} navigate={navigate} />}
           </div>
         </div>
 
         {showScoringModal && group && (
-          <ScoringSystemModal
-            group={group}
-            onClose={() => setShowScoringModal(false)}
-          />
+          <ScoringSystemModal group={group} onClose={() => setShowScoringModal(false)} />
         )}
       </div>
     </>

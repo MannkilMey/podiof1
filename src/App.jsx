@@ -31,6 +31,8 @@ import SuperAdminPanel from './pages/Admin/SuperAdminPanel';
 import RacePredictionsComparison from './pages/Predictions/RacePredictionsComparison';
 import ManualResults from './pages/Admin/ManualResults';
 
+// Stats Pages
+import PointsHistogram from './pages/Stats/PointsHistogram';
 
 
 // Protected route wrapper
@@ -236,6 +238,16 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <PredictionPage />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Stats - Histograma de Puntos */}
+          <Route
+            path="/group/:groupId/stats"
+            element={
+              <ProtectedRoute>
+                <PointsHistogram />
               </ProtectedRoute>
             }
           />
