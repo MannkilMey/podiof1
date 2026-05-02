@@ -462,7 +462,6 @@ export default function ManualResults() {
 
     if (updateError) throw updateError;
 
-    // Calcular puntos de todas las predicciones
     console.log('🔄 Calculando puntos para carrera:', raceId);
     
     const { data: recalcData, error: recalcError } = await supabase
@@ -479,7 +478,6 @@ export default function ManualResults() {
       toast.success(`✅ Resultados guardados y ${prediccionesCalculadas} predicciones calculadas`);
     }
 
-    // Navegar después de 1 segundo
     setTimeout(() => navigate(-1), 1000);
 
   } catch (err) {
