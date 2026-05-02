@@ -575,7 +575,7 @@ export default function ManualResults() {
         <h3 className="section-title">🏁 Posiciones</h3>
         
         {positions.map(pos => {
-            // ✅ NUEVO: Filtrar pilotos ya seleccionados (excepto el actual)
+          
             const selectedDriverIds = positions
             .filter(p => p.driverId && p.position !== pos.position)
             .map(p => p.driverId);
