@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../stores/authStore';
 import { useThemeStore } from '../../stores/themeStore';
 import { supabase } from '../../lib/supabase';
+import StatsTabBar from './StatsTabBar';  
 import * as XLSX from 'xlsx';
 import {
   BarChart, Bar, LineChart, Line,
@@ -176,7 +177,7 @@ export default function PointsHistogram() {
   const [filterType, setFilterType] = useState('todas');
   const [selectedUsers, setSelectedUsers] = useState(new Set());
   const [showForecast, setShowForecast] = useState(false);
-  const [activeChart, setActiveChart] = useState('barras'); // 'barras' | 'acumulado'
+  const [activeChart, setActiveChart] = useState('barras');
   const [exporting, setExporting] = useState(false);
 
   // ============================================
@@ -190,32 +191,36 @@ export default function PointsHistogram() {
   async function fetchData() {
     setLoading(true);
     try {
-      // Parallel fetch: group info + scores
-      const [groupRes, scoresRes] = await Promise.all([
-        supabase.from('groups').select('id, nombre, temporada, incluir_sprints').eq('id', groupId).single(),
+      // Step 1: get group info first (need temporada for races query)
+      const { data: gData, error: gError } = await supabase
+        .from('groups')
+        .select('id, nombre, temporada, incluir_sprints')
+        .eq('id', groupId)
+        .single();
+
+      if (gError) throw gError;
+
+      // Step 2: parallel fetch scores + races (both depend on group data)
+      const [scoresRes, racesRes] = await Promise.all([
         supabase.from('scores').select(`
           puntos, aciertos_exactos, aciertos_piloto,
           usuario:usuario_id ( id, nombre, apellido ),
           carrera:carrera_id ( id, nombre, ronda, tipo, estado )
-        `).eq('grupo_id', groupId).order('created_at', { ascending: true })
+        `).eq('grupo_id', groupId).order('created_at', { ascending: true }),
+        supabase.from('races').select('id, nombre, ronda, tipo, estado')
+          .eq('temporada', gData.temporada)
+          .order('ronda', { ascending: true })
       ]);
 
-      const gData = groupRes.data;
-      const scoresData = scoresRes.data || [];
       if (scoresRes.error) throw scoresRes.error;
 
-      setGroupInfo(gData);
-      setScores(scoresData);
+      const scoresData = scoresRes.data || [];
+      const racesData = racesRes.data || [];
 
-      // Fetch races (needs temporada from group)
-      if (gData?.temporada) {
-        const { data: racesData } = await supabase
-          .from('races')
-          .select('id, nombre, ronda, tipo, estado')
-          .eq('temporada', gData.temporada)
-          .order('ronda', { ascending: true });
-        setAllRaces(racesData || []);
-      }
+      // Set all states together before loading ends
+      setGroupInfo(gData);
+      setAllRaces(racesData);
+      setScores(scoresData);
 
       const users = new Set();
       scoresData.forEach(s => { if (s.usuario?.id) users.add(s.usuario.id); });
@@ -231,7 +236,9 @@ export default function PointsHistogram() {
   // PROCESS DATA
   // ============================================
   const { chartData, cumulativeData, userList, stats, forecastData } = useMemo(() => {
-    if (!scores.length) return { chartData: [], cumulativeData: [], userList: [], stats: null, forecastData: [] };
+    if (!scores.length) {
+      return { chartData: [], cumulativeData: [], userList: [], stats: null, forecastData: [] };
+    }
 
     let filtered = scores;
     if (filterType === 'carrera') filtered = scores.filter(s => s.carrera?.tipo !== 'sprint');
@@ -271,12 +278,9 @@ export default function PointsHistogram() {
         ...data
       }));
 
-    // ============================================
-    // CUMULATIVE LINE DATA
-    // ============================================
+    // Cumulative
     const cumTotals = {};
     userList.forEach(u => { cumTotals[u.displayName] = 0; });
-
     const cumulativeData = chartData.map(race => {
       const entry = { raceName: race.raceName };
       userList.forEach(u => {
@@ -295,13 +299,15 @@ export default function PointsHistogram() {
     if (filterType === 'carrera') remainingRaces = remainingRaces.filter(r => r.tipo !== 'sprint');
     else if (filterType === 'sprint') remainingRaces = remainingRaces.filter(r => r.tipo === 'sprint');
 
+    
+
     if (remainingRaces.length > 0 && chartData.length > 0) {
       const userWeightedAvg = {};
       userList.forEach(u => {
-        const scores = chartData.map(r => r[u.displayName]).filter(v => v != null);
-        if (!scores.length) { userWeightedAvg[u.displayName] = 0; return; }
+        const uScores = chartData.map(r => r[u.displayName]).filter(v => v != null);
+        if (!uScores.length) { userWeightedAvg[u.displayName] = 0; return; }
         let wSum = 0, wTotal = 0;
-        scores.forEach((pts, i) => { const w = i + 1; wSum += pts * w; wTotal += w; });
+        uScores.forEach((pts, i) => { const w = i + 1; wSum += pts * w; wTotal += w; });
         userWeightedAvg[u.displayName] = wTotal > 0 ? Math.round(wSum / wTotal) : 0;
       });
 
@@ -311,8 +317,9 @@ export default function PointsHistogram() {
         userList.forEach(u => { entry[u.displayName] = userWeightedAvg[u.displayName]; });
         return entry;
       });
-    }
 
+    } 
+    
     // Ranking
     const totalByUser = new Map();
     filtered.forEach(s => {
@@ -370,14 +377,12 @@ export default function PointsHistogram() {
     try {
       const wb = XLSX.utils.book_new();
 
-      // Sheet 1: Puntos por Carrera
       const headers = ['Carrera', ...userList.map(u => u.displayName)];
       const rows = chartData.map(race => {
         const row = [race.raceName.replace('⚡ ', '(Sprint) ')];
         userList.forEach(u => row.push(race[u.displayName] ?? 0));
         return row;
       });
-      // Total row
       const totalRow = ['TOTAL'];
       userList.forEach(u => {
         const total = chartData.reduce((sum, r) => sum + (r[u.displayName] || 0), 0);
@@ -386,18 +391,15 @@ export default function PointsHistogram() {
       rows.push(totalRow);
 
       const ws1 = XLSX.utils.aoa_to_sheet([headers, ...rows]);
-      // Column widths
       ws1['!cols'] = [{ wch: 30 }, ...userList.map(() => ({ wch: 15 }))];
       XLSX.utils.book_append_sheet(wb, ws1, 'Puntos por Carrera');
 
-      // Sheet 2: Ranking
       const rankHeaders = ['Posición', 'Usuario', 'Puntos', 'Aciertos Exactos', 'Aciertos Piloto', 'Carreras'];
       const rankRows = stats.ranking.map((u, i) => [i + 1, u.name, Math.round(u.puntos), u.aciertos_exactos, u.aciertos_piloto, u.carreras]);
       const ws2 = XLSX.utils.aoa_to_sheet([rankHeaders, ...rankRows]);
       ws2['!cols'] = [{ wch: 10 }, { wch: 25 }, { wch: 10 }, { wch: 18 }, { wch: 18 }, { wch: 10 }];
       XLSX.utils.book_append_sheet(wb, ws2, 'Ranking');
 
-      // Sheet 3: Acumulado
       const cumHeaders = ['Carrera', ...userList.map(u => u.displayName)];
       const cumRows = cumulativeData.map(race => {
         const row = [race.raceName.replace('⚡ ', '(Sprint) ')];
@@ -418,7 +420,7 @@ export default function PointsHistogram() {
   }, [chartData, cumulativeData, stats, userList, groupInfo]);
 
   // ============================================
-  // THEME COLORS (memoized)
+  // THEME COLORS
   // ============================================
   const tc = useMemo(() => ({
     grid: theme === 'dark' ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.08)',
@@ -437,6 +439,7 @@ export default function PointsHistogram() {
         <style>{FONTS + CSS}</style>
         <div data-theme={theme} className="stats-page">
           <div className="stats-back-btn">← Volver al grupo</div>
+          <StatsTabBar active="charts" groupId={groupId} />
           <div className="stats-header"><div className="stats-header-left"><h1 className="stats-title">📊 Histograma de Puntos</h1><p className="stats-subtitle">Cargando...</p></div></div>
           <div className="stats-skeleton" />
           <div className="stats-skeleton" style={{ height: 200, marginTop: 24 }} />
@@ -451,6 +454,8 @@ export default function PointsHistogram() {
       <div data-theme={theme} className="stats-page">
 
         <button className="stats-back-btn" onClick={() => navigate(`/group/${groupId}`)}>← Volver al grupo</button>
+
+        <StatsTabBar active="charts" groupId={groupId} />
 
         {/* HEADER */}
         <div className="stats-header">
@@ -487,7 +492,6 @@ export default function PointsHistogram() {
             </div>
           )}
 
-          {/* Chart type toggle */}
           <div className="stats-control-group">
             <label>Gráfico</label>
             <div className="stats-filter-bar">
@@ -531,9 +535,7 @@ export default function PointsHistogram() {
           </div>
         )}
 
-        {/* ============================================ */}
         {/* BAR CHART */}
-        {/* ============================================ */}
         {activeChart === 'barras' && (
           <div className="stats-panel">
             <div className="stats-panel-title">📊 Puntos por Carrera</div>
@@ -562,9 +564,7 @@ export default function PointsHistogram() {
           </div>
         )}
 
-        {/* ============================================ */}
         {/* CUMULATIVE LINE CHART */}
-        {/* ============================================ */}
         {activeChart === 'acumulado' && (
           <div className="stats-panel">
             <div className="stats-panel-title">

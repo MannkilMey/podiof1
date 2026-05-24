@@ -33,6 +33,7 @@ import ManualResults from './pages/Admin/ManualResults';
 
 // Stats Pages
 import PointsHistogram from './pages/Stats/PointsHistogram';
+import PredictionAnalysis from './pages/Stats/PredictionAnalysis';
 
 
 // Protected route wrapper
@@ -238,6 +239,16 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <PredictionPage />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Stats - Análisis (más específica, va primero) */}
+          <Route
+            path="/group/:groupId/stats/analysis"
+            element={
+              <ProtectedRoute>
+                <PredictionAnalysis />
               </ProtectedRoute>
             }
           />
