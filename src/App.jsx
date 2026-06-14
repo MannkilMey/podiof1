@@ -34,6 +34,7 @@ import ManualResults from './pages/Admin/ManualResults';
 // Stats Pages
 import PointsHistogram from './pages/Stats/PointsHistogram';
 import PredictionAnalysis from './pages/Stats/PredictionAnalysis';
+import DeepAnalytics from './pages/Stats/DeepAnalytics';
 
 
 // Protected route wrapper
@@ -243,7 +244,17 @@ export default function App() {
             }
           />
 
-          {/* Stats - Análisis (más específica, va primero) */}
+          {/* Stats - Deep Analytics (más específica, va primero) */}
+          <Route
+            path="/group/:groupId/stats/deep"
+            element={
+              <ProtectedRoute>
+                <DeepAnalytics />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Stats - Análisis */}
           <Route
             path="/group/:groupId/stats/analysis"
             element={

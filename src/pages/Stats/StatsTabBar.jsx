@@ -2,7 +2,8 @@ import { useNavigate } from 'react-router-dom';
 
 const tabs = [
   { key: 'charts', label: '📊 Gráficos', path: '' },
-  { key: 'analysis', label: '📋 Análisis', path: '/analysis' }
+  { key: 'analysis', label: '📋 Análisis', path: '/analysis' },
+  { key: 'deep', label: '🔬 Deep Analytics', path: '/deep' }
 ];
 
 export default function StatsTabBar({ active, groupId }) {
@@ -14,7 +15,9 @@ export default function StatsTabBar({ active, groupId }) {
       gap: 4,
       marginBottom: 24,
       borderBottom: '2px solid var(--border)',
-      paddingBottom: 0
+      paddingBottom: 0,
+      overflowX: 'auto',
+      WebkitOverflowScrolling: 'touch'
     }}>
       {tabs.map(tab => {
         const isActive = active === tab.key;
