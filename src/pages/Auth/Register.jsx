@@ -10,7 +10,6 @@ const PAISES = [
   'Panamá', 'Paraguay', 'Perú', 'Puerto Rico', 'República Dominicana', 'Uruguay', 'Venezuela'
 ]
 
-const AÑOS = Array.from({ length: 80 }, (_, i) => new Date().getFullYear() - i - 10)
 
 const CSS = `
 [data-theme="dark"] {
@@ -326,7 +325,7 @@ export default function Register() {
     nombre: '',
     apellido: '',
     pais: '',
-    anho_nacimiento: '',
+    fecha_nacimiento: '',
     sexo: ''
   })
   const [loading, setLoading] = useState(false)
@@ -379,7 +378,7 @@ export default function Register() {
         nombre: formData.nombre,
         apellido: formData.apellido,
         pais: formData.pais,
-        anho_nacimiento: parseInt(formData.anho_nacimiento),
+        fecha_nacimiento: formData.fecha_nacimiento || null,
         sexo: formData.sexo || null,
       })
 
@@ -529,20 +528,18 @@ export default function Register() {
             </div>
 
             <div className="form-group-row">
-              <div>
-                <label className="form-label">Año de Nacimiento</label>
-                <select
-                  name="anho_nacimiento"
-                  value={formData.anho_nacimiento}
+             <div>
+                <label className="form-label">Fecha de Nacimiento</label>
+                <input
+                  type="date"
+                  name="fecha_nacimiento"
+                  value={formData.fecha_nacimiento}
                   onChange={handleChange}
                   required
-                  className="form-select"
-                >
-                  <option value="">Año</option>
-                  {AÑOS.map((y) => (
-                    <option key={y} value={y}>{y}</option>
-                  ))}
-                </select>
+                  className="form-input"
+                  max={new Date().toISOString().split('T')[0]}
+                  style={{ boxSizing: 'border-box' }}
+                />
               </div>
               <div>
                 <label className="form-label">Sexo (Opcional)</label>

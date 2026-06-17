@@ -522,6 +522,8 @@ export default function GroupAdminPanel() {
   const [savingFastestLap, setSavingFastestLap] = useState(null);
   const [allRacesData, setAllRacesData] = useState([]);
   const [loadingRaces, setLoadingRaces] = useState(true);
+  const [pozoData, setPozoData] = useState({ pozo_habilitado: false, pozo_monto_por_persona: 0, pozo_moneda: 'USD', pozo_distribucion: '60-25-15' });
+  const [savingPozo, setSavingPozo] = useState(false);
 
   useEffect(() => {
     loadGroupData();
@@ -571,7 +573,22 @@ export default function GroupAdminPanel() {
         .eq('grupo_id', groupId)
         .eq('usuario_id', user.id)
         .single();
-
+        // Inicializar datos del pozo
+      const distPreset = (() => {
+        const d = groupData.pozo_distribucion;
+        if (!d) return '60-25-15';
+        if (d['1'] === 60) return '60-25-15';
+        if (d['1'] === 50) return '50-30-20';
+        if (d['1'] === 70) return '70-20-10';
+        if (d['1'] === 100) return '100-0-0';
+        return '60-25-15';
+      })();
+      setPozoData({
+        pozo_habilitado: groupData.pozo_habilitado || false,
+        pozo_monto_por_persona: groupData.pozo_monto_por_persona || 0,
+        pozo_moneda: groupData.pozo_moneda || 'USD',
+        pozo_distribucion: distPreset
+      });
       if (!memberCheck?.es_admin && groupData.creador_id !== user.id) {
         toast.error('No tienes permisos de administrador');
         navigate(`/group/${groupId}`);
@@ -1065,7 +1082,116 @@ const handleClearFastestLap = async (raceId) => {
             })}
           </div>
           
+          
         )}
+
+        {/* 💰 CONFIGURACIÓN DEL POZO */}
+        <div className="admin-section">
+          <h2 className="section-title">💰 Pozo del Grupo</h2>
+          <p style={{ color: 'var(--muted)', fontSize: 14, marginBottom: 20, lineHeight: 1.6 }}>
+            Configura el pozo informativo del grupo. PodioF1 no gestiona dinero, solo muestra la información.
+          </p>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <label style={{
+              display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer',
+              padding: 16, background: 'var(--bg3)', borderRadius: 10,
+              border: `1px solid ${pozoData.pozo_habilitado ? 'var(--gold)' : 'var(--border)'}`
+            }}>
+              <input type="checkbox" checked={pozoData.pozo_habilitado}
+                onChange={e => setPozoData({ ...pozoData, pozo_habilitado: e.target.checked })}
+                style={{ width: 18, height: 18, cursor: 'pointer' }} />
+              <div>
+                <div style={{ fontWeight: 700, color: 'var(--white)', fontSize: 15 }}>Habilitar Pozo</div>
+                <div style={{ fontSize: 12, color: 'var(--muted)' }}>Los miembros verán el monto y distribución en el dashboard</div>
+              </div>
+            </label>
+
+            {pozoData.pozo_habilitado && (
+              <div style={{ background: 'var(--bg3)', border: '1px solid var(--border)', borderRadius: 12, padding: 20 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
+                  <div>
+                    <label className="info-label">Monto por persona</label>
+                    <input type="number" min="0" value={pozoData.pozo_monto_por_persona}
+                      onChange={e => setPozoData({ ...pozoData, pozo_monto_por_persona: Number(e.target.value) })}
+                      style={{
+                        width: '100%', padding: '10px 14px', background: 'var(--bg2)',
+                        border: '1px solid var(--border)', borderRadius: 8, color: 'var(--white)',
+                        fontSize: 14, fontFamily: "'Share Tech Mono', monospace", boxSizing: 'border-box'
+                      }} />
+                  </div>
+                  <div>
+                    <label className="info-label">Moneda</label>
+                    <select value={pozoData.pozo_moneda}
+                      onChange={e => setPozoData({ ...pozoData, pozo_moneda: e.target.value })}
+                      className="fastest-lap-select">
+                      <option value="USD">🇺🇸 USD (Dólar)</option>
+                      <option value="PYG">🇵🇾 PYG (Guaraní)</option>
+                      <option value="BRL">🇧🇷 BRL (Real)</option>
+                      <option value="ARS">🇦🇷 ARS (Peso Arg)</option>
+                      <option value="EUR">🇪🇺 EUR (Euro)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div style={{ marginBottom: 16 }}>
+                  <label className="info-label">Distribución de premios</label>
+                  <select value={pozoData.pozo_distribucion}
+                    onChange={e => setPozoData({ ...pozoData, pozo_distribucion: e.target.value })}
+                    className="fastest-lap-select">
+                    <option value="60-25-15">🥇 60% · 🥈 25% · 🥉 15%</option>
+                    <option value="50-30-20">🥇 50% · 🥈 30% · 🥉 20%</option>
+                    <option value="70-20-10">🥇 70% · 🥈 20% · 🥉 10%</option>
+                    <option value="100-0-0">🥇 100% (todo al ganador)</option>
+                  </select>
+                </div>
+
+                {pozoData.pozo_monto_por_persona > 0 && (
+                  <div style={{
+                    padding: 12, background: 'var(--bg2)', borderRadius: 8,
+                    border: '1px solid var(--border)', fontSize: 13, color: 'var(--muted)', marginBottom: 16
+                  }}>
+                    Total estimado: <strong style={{ color: 'var(--gold)', fontFamily: "'Barlow Condensed'", fontSize: 18 }}>
+                      {pozoData.pozo_moneda === 'PYG' ? '₲' : pozoData.pozo_moneda === 'BRL' ? 'R$' : '$'} {(pozoData.pozo_monto_por_persona * members.length).toLocaleString('es-PY')}
+                    </strong> ({members.length} miembros × {pozoData.pozo_monto_por_persona.toLocaleString('es-PY')})
+                  </div>
+                )}
+              </div>
+            )}
+
+            <button
+              onClick={async () => {
+                setSavingPozo(true);
+                try {
+                  const presets = {
+                    '60-25-15': { "1": 60, "2": 25, "3": 15 },
+                    '50-30-20': { "1": 50, "2": 30, "3": 20 },
+                    '70-20-10': { "1": 70, "2": 20, "3": 10 },
+                    '100-0-0': { "1": 100 }
+                  };
+                  const { error } = await supabase.from('groups').update({
+                    pozo_habilitado: pozoData.pozo_habilitado,
+                    pozo_monto_por_persona: pozoData.pozo_monto_por_persona,
+                    pozo_moneda: pozoData.pozo_moneda,
+                    pozo_distribucion: presets[pozoData.pozo_distribucion] || presets['60-25-15']
+                  }).eq('id', groupId);
+                  if (error) throw error;
+                  toast.success('Configuración del pozo guardada');
+                } catch (err) {
+                  console.error(err);
+                  toast.error('Error al guardar configuración del pozo');
+                } finally {
+                  setSavingPozo(false);
+                }
+              }}
+              disabled={savingPozo}
+              className="btn-save-fastest"
+              style={{ alignSelf: 'flex-start' }}
+            >
+              {savingPozo ? 'Guardando...' : '💾 Guardar Configuración del Pozo'}
+            </button>
+          </div>
+        </div>
             {/* 🆕 INGRESAR RESULTADOS MANUALMENTE */}
             <div className="admin-section">
               <h2 className="section-title">

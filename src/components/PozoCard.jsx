@@ -91,7 +91,7 @@ export default function PozoCard({ groupId }) {
       {/* Header */}
       <div style={{
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-        marginBottom: 20
+        marginBottom: 20, gap: 12, flexWrap: 'wrap'
       }}>
         <div>
           <div style={{
@@ -106,8 +106,12 @@ export default function PozoCard({ groupId }) {
           </div>
         </div>
         <div style={{
-          fontFamily: "'Barlow Condensed', sans-serif", fontSize: 36,
-          fontWeight: 900, color: '#C9A84C', lineHeight: 1
+            fontFamily: "'Barlow Condensed', sans-serif",
+            fontSize: 'clamp(22px, 5vw, 36px)',
+            fontWeight: 900, color: '#C9A84C', 
+            lineHeight: 1,
+            textAlign: 'right', 
+            wordBreak: 'break-word'
         }}>
           {formatMoney(total, moneda)}
         </div>
