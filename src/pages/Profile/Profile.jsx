@@ -1,319 +1,425 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../stores/authStore';
 import { useThemeStore } from '../../stores/themeStore';
 import { supabase } from '../../lib/supabase';
 import { toast } from 'sonner';
 
-const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap');`;
+const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600&family=Share+Tech+Mono&display=swap');`;
 
 const CSS = `
 [data-theme="dark"] {
-  --bg: #0A0A0C; --bg2: #111114; --bg3: #18181D;
+  --bg: #0A0A0C; --bg2: #111114; --bg3: #18181D; --bg4: #1E1E24;
   --border: rgba(255,255,255,0.07); --border2: rgba(255,255,255,0.13);
   --red: #E8002D; --red-dim: rgba(232,0,45,0.13);
   --white: #F0F0F0; --muted: rgba(240,240,240,0.40);
+  --gold: #C9A84C; --green: #00D4A0; --green-dim: rgba(0,212,160,0.15);
 }
-
 [data-theme="light"] {
-  --bg: #F5F6F8; --bg2: #FFFFFF; --bg3: #E8EAEE;
+  --bg: #F5F6F8; --bg2: #FFFFFF; --bg3: #E8EAEE; --bg4: #DFE1E6;
   --border: rgba(0,0,0,0.10); --border2: rgba(0,0,0,0.18);
   --red: #D40029; --red-dim: rgba(212,0,41,0.08);
   --white: #1A1B1E; --muted: rgba(26,27,30,0.55);
+  --gold: #9C6F10; --green: #007F5F; --green-dim: rgba(0,127,95,0.15);
 }
+body { background: var(--bg); color: var(--white); font-family: 'Barlow', sans-serif; }
+.profile-page { padding: 24px 28px; max-width: 900px; margin: 0 auto; min-height: 100vh; }
+.profile-back { background: transparent; border: none; color: var(--red); cursor: pointer; font-size: 14px; font-weight: 600; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; padding: 0; transition: opacity 0.2s; }
+.profile-back:hover { opacity: 0.7; }
+.profile-page-title { font-family: 'Barlow Condensed', sans-serif; font-size: 36px; font-weight: 900; color: var(--white); margin-bottom: 28px; letter-spacing: 1px; }
+.profile-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 28px; margin-bottom: 24px; }
+.profile-card-title { font-family: 'Barlow Condensed', sans-serif; font-size: 18px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--white); margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+.profile-card-title-sub { font-size: 12px; font-weight: 500; color: var(--muted); text-transform: none; letter-spacing: 0; }
+.profile-avatar-row { display: flex; align-items: center; gap: 20px; margin-bottom: 28px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
+.profile-avatar-circle { width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, #E8002D, #FF6B35); display: flex; align-items: center; justify-content: center; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 28px; color: white; flex-shrink: 0; }
+.profile-avatar-info { flex: 1; }
+.profile-avatar-name { font-family: 'Barlow Condensed', sans-serif; font-size: 22px; font-weight: 800; color: var(--white); margin-bottom: 2px; }
+.profile-avatar-email { color: var(--muted); font-size: 13px; }
+.profile-avatar-badges-count { display: flex; gap: 16px; margin-top: 6px; }
+.profile-avatar-stat { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 4px; }
+.profile-avatar-stat strong { color: var(--white); font-family: 'Barlow Condensed', sans-serif; font-size: 16px; font-weight: 800; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-group { margin-bottom: 20px; }
+.form-label { display: block; font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.form-input, .form-select { width: 100%; padding: 12px 16px; background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; color: var(--white); font-size: 14px; font-family: 'Barlow', sans-serif; transition: border-color 0.2s; box-sizing: border-box; }
+.form-input:focus, .form-select:focus { outline: none; border-color: var(--red); }
+.form-input:disabled, .form-select:disabled { opacity: 0.5; cursor: not-allowed; }
+.form-select option { background: var(--bg2); color: var(--white); }
+.btn-save { padding: 12px 28px; background: linear-gradient(135deg, var(--red), #FF3355); border: none; border-radius: 10px; color: white; font-family: 'Barlow Condensed', sans-serif; font-size: 14px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: opacity 0.2s; }
+.btn-save:hover { opacity: 0.9; }
+.btn-save:disabled { opacity: 0.5; cursor: not-allowed; }
+.msg-error { background: var(--red-dim); border: 1px solid rgba(232,0,45,0.3); border-radius: 8px; padding: 12px; color: var(--red); font-size: 13px; margin-bottom: 16px; }
+.msg-success { background: rgba(0,212,160,0.1); border: 1px solid rgba(0,212,160,0.3); border-radius: 8px; padding: 12px; color: #00D4A0; font-size: 13px; margin-bottom: 16px; }
 
-body {
-  background: var(--bg);
-  color: var(--white);
-  font-family: 'Barlow', sans-serif;
+/* BADGES */
+.badges-filter { display: flex; gap: 6px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 4px; -webkit-overflow-scrolling: touch; }
+.badges-filter-btn { padding: 6px 14px; background: var(--bg3); border: 1px solid var(--border); border-radius: 20px; color: var(--muted); font-size: 12px; font-weight: 600; cursor: pointer; font-family: 'Barlow', sans-serif; transition: all 0.2s; white-space: nowrap; }
+.badges-filter-btn.active { background: var(--red-dim); border-color: var(--red); color: var(--red); }
+.badges-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.badge-card { background: var(--bg3); border: 1px solid var(--border); border-radius: 12px; padding: 16px; text-align: center; transition: all 0.25s; position: relative; overflow: hidden; }
+.badge-card.unlocked { border-color: var(--border2); }
+.badge-card.unlocked:hover { transform: translateY(-2px); border-color: var(--gold); box-shadow: 0 4px 20px rgba(201,168,76,0.15); }
+.badge-card.locked { opacity: 0.45; }
+.badge-card.locked .badge-icon { filter: grayscale(1); }
+.badge-icon { font-size: 36px; margin-bottom: 8px; display: block; line-height: 1; }
+.badge-name { font-family: 'Barlow Condensed', sans-serif; font-size: 13px; font-weight: 700; color: var(--white); margin-bottom: 4px; letter-spacing: 0.3px; }
+.badge-desc { font-size: 10px; color: var(--muted); line-height: 1.4; }
+.badge-date { font-size: 9px; color: var(--gold); margin-top: 6px; font-family: 'Share Tech Mono', monospace; }
+.badge-locked-label { font-size: 9px; color: var(--muted); margin-top: 6px; font-style: italic; }
+.badge-category-tag { position: absolute; top: 8px; right: 8px; font-size: 8px; padding: 2px 6px; border-radius: 4px; background: var(--bg2); color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+.badge-new-indicator { position: absolute; top: 8px; left: 8px; width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 6px rgba(0,212,160,0.5); }
+
+.profile-skeleton { height: 200px; background: var(--bg3); border-radius: 12px; animation: pulse 1.5s ease-in-out infinite; margin-bottom: 24px; }
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+@media (max-width: 1024px) { .badges-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 768px) {
+  .profile-page { padding: 16px; }
+  .profile-page-title { font-size: 28px; }
+  .badges-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .badge-card { padding: 14px 10px; }
+  .badge-icon { font-size: 30px; }
+  .form-row { grid-template-columns: 1fr; }
+  .profile-avatar-row { flex-direction: column; text-align: center; }
 }
-
-.profile-container {
-  padding: 24px 28px;
-  max-width: 800px;
-  margin: 0 auto;
-  min-height: 100vh;
-}
-
-.profile-header {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 32px;
-}
-
-.back-btn {
-  background: transparent;
-  border: none;
-  color: var(--red);
-  cursor: pointer;
-  font-size: 24px;
-  transition: opacity 0.2s;
-}
-
-.back-btn:hover { opacity: 0.7; }
-
-.profile-title {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 32px;
-  font-weight: 900;
-  color: var(--white);
-}
-
-.profile-card {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 32px;
-  margin-bottom: 24px;
-}
-
-.profile-avatar-section {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  margin-bottom: 32px;
-  padding-bottom: 32px;
-  border-bottom: 1px solid var(--border);
-}
-
-.profile-avatar-large {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #E8002D, #FF6B35);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Barlow Condensed', sans-serif;
-  font-weight: 700;
-  font-size: 32px;
-  color: white;
-}
-
-.profile-info {
-  flex: 1;
-}
-
-.profile-name {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 24px;
-  font-weight: 800;
-  color: var(--white);
-  margin-bottom: 4px;
-}
-
-.profile-email {
-  color: var(--muted);
-  font-size: 14px;
-}
-
-.form-group {
-  margin-bottom: 24px;
-}
-
-.form-label {
-  display: block;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 8px;
-}
-
-.form-input {
-  width: 100%;
-  padding: 12px 16px;
-  background: var(--bg3);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  color: var(--white);
-  font-size: 15px;
-  transition: border-color 0.2s;
-}
-
-.form-input:focus {
-  outline: none;
-  border-color: var(--red);
-}
-
-.form-input:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.btn-primary {
-  padding: 12px 24px;
-  background: linear-gradient(135deg, var(--red), #FF3355);
-  border: none;
-  border-radius: 10px;
-  color: white;
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 14px;
-  font-weight: 800;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: opacity 0.2s;
-}
-
-.btn-primary:hover {
-  opacity: 0.9;
-}
-
-.btn-primary:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.error-message {
-  background: var(--red-dim);
-  border: 1px solid rgba(232, 0, 45, 0.3);
-  border-radius: 8px;
-  padding: 12px;
-  color: var(--red);
-  font-size: 13px;
-  margin-bottom: 20px;
-}
-
-.success-message {
-  background: rgba(0, 212, 160, 0.1);
-  border: 1px solid rgba(0, 212, 160, 0.3);
-  border-radius: 8px;
-  padding: 12px;
-  color: #00D4A0;
-  font-size: 13px;
-  margin-bottom: 20px;
+@media (max-width: 400px) {
+  .badges-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .badge-card { padding: 12px 8px; }
+  .badge-icon { font-size: 26px; }
+  .badge-name { font-size: 11px; }
+  .badge-desc { font-size: 9px; }
 }
 `;
 
+const CATEGORY_LABELS = {
+  todas: '🏠 Todas',
+  victorias: '🏆 Victorias',
+  rachas: '🔥 Rachas',
+  precision: '🎯 Precisión',
+  participacion: '📊 Participación',
+  especiales: '🏎 Especiales',
+  secretos: '🤫 Secretos'
+};
+
 export default function Profile() {
   const navigate = useNavigate();
-  const user = useAuthStore((state) => state.user);
+  const authUser = useAuthStore((state) => state.user);
   const theme = useThemeStore((state) => state.theme);
-  
-  const [formData, setFormData] = useState({
-    nombre: '',
-    apellido: ''
-  });
-  const [loading, setLoading] = useState(false);
+
+  const [profileData, setProfileData] = useState(null);
+  const [formData, setFormData] = useState({ nombre: '', apellido: '', fecha_nacimiento: '', piloto_favorito_id: '', escuderia_favorita_id: '' });
+  const [allBadges, setAllBadges] = useState([]);
+  const [userBadges, setUserBadges] = useState([]);
+  const [teams, setTeams] = useState([]);
+  const [drivers, setDrivers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [badgeFilter, setBadgeFilter] = useState('todas');
 
+  // ============================================
+  // FETCH DATA
+  // ============================================
   useEffect(() => {
-    if (user) {
-      setFormData({
-        nombre: user.user_metadata?.nombre || '',
-        apellido: user.user_metadata?.apellido || ''
-      });
-    }
-  }, [user]);
+    if (!authUser) return;
+    fetchProfile();
+  }, [authUser]);
 
-  const handleSubmit = async (e) => {
+  async function fetchProfile() {
+    setLoading(true);
+    try {
+      const userId = authUser.id;
+
+      const [profileRes, badgesRes, userBadgesRes, teamsRes, driversRes] = await Promise.all([
+        supabase.from('users').select('*').eq('id', userId).single(),
+        supabase.from('badges').select('*').order('orden'),
+        supabase.from('user_badges').select('badge_id, grupo_id, desbloqueado_en, groups:grupo_id(nombre)').eq('usuario_id', userId),
+        supabase.from('teams').select('id, nombre').order('nombre'),
+        supabase.from('drivers').select('id, nombre_completo').order('nombre_completo')
+      ]);
+
+      const profile = profileRes.data;
+      setProfileData(profile);
+      setFormData({
+        nombre: profile?.nombre || '',
+        apellido: profile?.apellido || '',
+        fecha_nacimiento: profile?.fecha_nacimiento || '',
+        piloto_favorito_id: profile?.piloto_favorito_id || '',
+        escuderia_favorita_id: profile?.escuderia_favorita_id || ''
+      });
+      setAllBadges(badgesRes.data || []);
+      setUserBadges(userBadgesRes.data || []);
+      setTeams(teamsRes.data || []);
+      setDrivers(driversRes.data || []);
+    } catch (err) {
+      console.error('Error fetching profile:', err);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  // ============================================
+  // SAVE PROFILE
+  // ============================================
+  async function handleSave(e) {
     e.preventDefault();
     setError('');
     setSuccess('');
-    setLoading(true);
-
+    setSaving(true);
     try {
-      const { error: updateError } = await supabase.auth.updateUser({
-        data: {
-          nombre: formData.nombre,
-          apellido: formData.apellido
-        }
-      });
+      const updates = {
+        nombre: formData.nombre,
+        apellido: formData.apellido,
+        fecha_nacimiento: formData.fecha_nacimiento || null,
+        piloto_favorito_id: formData.piloto_favorito_id || null,
+        escuderia_favorita_id: formData.escuderia_favorita_id || null
+      };
 
-      if (updateError) throw updateError;
+      const { error: dbError } = await supabase
+        .from('users')
+        .update(updates)
+        .eq('id', authUser.id);
+
+      if (dbError) throw dbError;
+
+      // Also update auth metadata for name
+      await supabase.auth.updateUser({
+        data: { nombre: formData.nombre, apellido: formData.apellido }
+      });
 
       setSuccess('Perfil actualizado correctamente');
       toast.success('Perfil actualizado');
-      
-      setTimeout(() => {
-        window.location.reload();
-      }, 1500);
-
     } catch (err) {
       console.error('Error:', err);
       setError(err.message || 'Error al actualizar perfil');
       toast.error('Error al actualizar perfil');
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
+  }
+
+  // ============================================
+  // BADGES DATA
+  // ============================================
+  const unlockedBadgeIds = useMemo(() => {
+    const map = new Map();
+    userBadges.forEach(ub => {
+      if (!map.has(ub.badge_id)) {
+        map.set(ub.badge_id, { date: ub.desbloqueado_en, grupo: ub.groups?.nombre || '' });
+      }
+    });
+    return map;
+  }, [userBadges]);
+
+  const filteredBadges = useMemo(() => {
+    if (badgeFilter === 'todas') return allBadges;
+    return allBadges.filter(b => b.categoria === badgeFilter);
+  }, [allBadges, badgeFilter]);
+
+  const badgeStats = useMemo(() => {
+    const total = allBadges.filter(b => !b.es_secreto).length;
+    const unlocked = allBadges.filter(b => unlockedBadgeIds.has(b.id)).length;
+    const secretsUnlocked = allBadges.filter(b => b.es_secreto && unlockedBadgeIds.has(b.id)).length;
+    return { total, unlocked, secretsUnlocked, pct: total > 0 ? Math.round((unlocked / (total + allBadges.filter(b => b.es_secreto).length)) * 100) : 0 };
+  }, [allBadges, unlockedBadgeIds]);
+
+  const formatDate = (dateStr) => {
+    if (!dateStr) return '';
+    const d = new Date(dateStr);
+    return d.toLocaleDateString('es-PY', { day: '2-digit', month: 'short', year: 'numeric' });
   };
+
+  // ============================================
+  // RENDER
+  // ============================================
+  if (loading) {
+    return (
+      <>
+        <style>{FONTS + CSS}</style>
+        <div data-theme={theme} className="profile-page">
+          <button className="profile-back">← Volver</button>
+          <h1 className="profile-page-title">Mi Perfil</h1>
+          <div className="profile-skeleton" />
+          <div className="profile-skeleton" style={{ height: 400 }} />
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
       <style>{FONTS + CSS}</style>
-      <div data-theme={theme} className="profile-container">
-        <div className="profile-header">
-          <button className="back-btn" onClick={() => navigate('/')}>
-            ←
-          </button>
-          <h1 className="profile-title">Mi Perfil</h1>
-        </div>
+      <div data-theme={theme} className="profile-page">
 
+        <button className="profile-back" onClick={() => navigate(-1)}>← Volver</button>
+        <h1 className="profile-page-title">Mi Perfil</h1>
+
+        {/* ============================================ */}
+        {/* PROFILE CARD */}
+        {/* ============================================ */}
         <div className="profile-card">
-          <div className="profile-avatar-section">
-            <div className="profile-avatar-large">
-              {formData.nombre?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase() || 'U'}
+          <div className="profile-avatar-row">
+            <div className="profile-avatar-circle">
+              {formData.nombre?.[0]?.toUpperCase() || authUser?.email?.[0]?.toUpperCase() || 'U'}
             </div>
-            <div className="profile-info">
-              <div className="profile-name">
-                {formData.nombre || formData.apellido 
-                  ? `${formData.nombre} ${formData.apellido}`.trim()
-                  : 'Usuario'}
+            <div className="profile-avatar-info">
+              <div className="profile-avatar-name">
+                {formData.nombre || formData.apellido ? `${formData.nombre} ${formData.apellido}`.trim() : 'Usuario'}
               </div>
-              <div className="profile-email">{user?.email}</div>
+              <div className="profile-avatar-email">{authUser?.email}</div>
+              <div className="profile-avatar-badges-count">
+                <span className="profile-avatar-stat">🏅 <strong>{badgeStats.unlocked}</strong>/{badgeStats.total + allBadges.filter(b => b.es_secreto).length} badges</span>
+                {badgeStats.secretsUnlocked > 0 && (
+                  <span className="profile-avatar-stat">🤫 <strong>{badgeStats.secretsUnlocked}</strong> secretos</span>
+                )}
+              </div>
             </div>
           </div>
 
-          {error && <div className="error-message">{error}</div>}
-          {success && <div className="success-message">{success}</div>}
+          {error && <div className="msg-error">{error}</div>}
+          {success && <div className="msg-success">{success}</div>}
 
-          <form onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label className="form-label">Nombre</label>
-              <input
-                type="text"
-                className="form-input"
-                value={formData.nombre}
-                onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
-                placeholder="Tu nombre"
-                disabled={loading}
-              />
+          <form onSubmit={handleSave}>
+            <div className="form-row">
+              <div className="form-group">
+                <label className="form-label">Nombre</label>
+                <input type="text" className="form-input" value={formData.nombre}
+                  onChange={e => setFormData({ ...formData, nombre: e.target.value })}
+                  placeholder="Tu nombre" disabled={saving} />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Apellido</label>
+                <input type="text" className="form-input" value={formData.apellido}
+                  onChange={e => setFormData({ ...formData, apellido: e.target.value })}
+                  placeholder="Tu apellido" disabled={saving} />
+              </div>
             </div>
 
-            <div className="form-group">
-              <label className="form-label">Apellido</label>
-              <input
-                type="text"
-                className="form-input"
-                value={formData.apellido}
-                onChange={(e) => setFormData({ ...formData, apellido: e.target.value })}
-                placeholder="Tu apellido"
-                disabled={loading}
-              />
+            <div className="form-row">
+              <div className="form-group">
+                <label className="form-label">Fecha de Nacimiento</label>
+                <input type="date" className="form-input" value={formData.fecha_nacimiento}
+                  onChange={e => setFormData({ ...formData, fecha_nacimiento: e.target.value })}
+                  disabled={saving} max={new Date().toISOString().split('T')[0]} />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Email</label>
+                <input type="email" className="form-input" value={authUser?.email || ''} disabled />
+              </div>
             </div>
 
-            <div className="form-group">
-              <label className="form-label">Email</label>
-              <input
-                type="email"
-                className="form-input"
-                value={user?.email}
-                disabled
-              />
+            <div className="form-row">
+              <div className="form-group">
+                <label className="form-label">🏎 Escudería Favorita</label>
+                <select className="form-select" value={formData.escuderia_favorita_id}
+                  onChange={e => setFormData({ ...formData, escuderia_favorita_id: e.target.value })}
+                  disabled={saving}>
+                  <option value="">Seleccionar escudería...</option>
+                  {teams.map(t => <option key={t.id} value={t.id}>{t.nombre}</option>)}
+                </select>
+              </div>
+              <div className="form-group">
+                <label className="form-label">👤 Piloto Favorito</label>
+                <select className="form-select" value={formData.piloto_favorito_id}
+                  onChange={e => setFormData({ ...formData, piloto_favorito_id: e.target.value })}
+                  disabled={saving}>
+                  <option value="">Seleccionar piloto...</option>
+                  {drivers.map(d => <option key={d.id} value={d.id}>{d.nombre_completo}</option>)}
+                </select>
+              </div>
             </div>
 
-            <button
-              type="submit"
-              className="btn-primary"
-              disabled={loading}
-            >
-              {loading ? 'Guardando...' : 'Guardar Cambios'}
+            <button type="submit" className="btn-save" disabled={saving}>
+              {saving ? 'Guardando...' : 'Guardar Cambios'}
             </button>
           </form>
+        </div>
+
+        {/* ============================================ */}
+        {/* BADGES SECTION */}
+        {/* ============================================ */}
+        <div className="profile-card">
+          <div className="profile-card-title">
+            🏅 Mis Badges
+            <span className="profile-card-title-sub">({badgeStats.unlocked} desbloqueados)</span>
+          </div>
+
+          {/* Progress bar */}
+          <div style={{ marginBottom: 20 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'var(--muted)', marginBottom: 6 }}>
+              <span>Progreso general</span>
+              <span style={{ fontFamily: "'Share Tech Mono'", color: 'var(--white)' }}>{badgeStats.pct}%</span>
+            </div>
+            <div style={{ height: 6, background: 'var(--bg3)', borderRadius: 3, overflow: 'hidden' }}>
+              <div style={{ height: '100%', width: `${badgeStats.pct}%`, background: 'linear-gradient(90deg, var(--red), var(--gold))', borderRadius: 3, transition: 'width 0.5s ease' }} />
+            </div>
+          </div>
+
+          {/* Category filter */}
+          <div className="badges-filter">
+            {Object.entries(CATEGORY_LABELS).map(([key, label]) => {
+              const count = key === 'todas' ? allBadges.length : allBadges.filter(b => b.categoria === key).length;
+              const unlockedCount = key === 'todas'
+                ? badgeStats.unlocked
+                : allBadges.filter(b => b.categoria === key && unlockedBadgeIds.has(b.id)).length;
+              return (
+                <button key={key} className={`badges-filter-btn ${badgeFilter === key ? 'active' : ''}`}
+                  onClick={() => setBadgeFilter(key)}>
+                  {label} {key !== 'todas' && <span style={{ opacity: 0.6 }}>{unlockedCount}/{count}</span>}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Badges grid */}
+          <div className="badges-grid">
+            {filteredBadges.map(badge => {
+              const isUnlocked = unlockedBadgeIds.has(badge.id);
+              const unlockData = unlockedBadgeIds.get(badge.id);
+              const isSecret = badge.es_secreto;
+
+              return (
+                <div key={badge.id} className={`badge-card ${isUnlocked ? 'unlocked' : 'locked'}`}>
+                  {isUnlocked && (
+                    <div className="badge-new-indicator" title="Desbloqueado" />
+                  )}
+
+                  <span className="badge-icon">{isUnlocked || !isSecret ? badge.icono : '🔒'}</span>
+
+                  <div className="badge-name">
+                    {isUnlocked || !isSecret ? badge.nombre : '???'}
+                  </div>
+
+                  <div className="badge-desc">
+                    {isUnlocked
+                      ? badge.descripcion
+                      : isSecret
+                        ? 'Badge secreto — desbloquéalo para descubrir'
+                        : badge.descripcion
+                    }
+                  </div>
+
+                  {isUnlocked ? (
+                    <div className="badge-date">
+                      ✅ {formatDate(unlockData?.date)}
+                      {unlockData?.grupo && <span style={{ display: 'block', fontSize: 8, opacity: 0.7 }}>{unlockData.grupo}</span>}
+                    </div>
+                  ) : (
+                    <div className="badge-locked-label">
+                      {isSecret ? '🤫 Secreto' : '🔒 Bloqueado'}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          {filteredBadges.length === 0 && (
+            <div style={{ textAlign: 'center', padding: 40, color: 'var(--muted)' }}>
+              No hay badges en esta categoría
+            </div>
+          )}
         </div>
       </div>
     </>

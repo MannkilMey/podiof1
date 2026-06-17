@@ -6,6 +6,7 @@ import { useGroups } from '../../hooks/useGroups';
 import { supabase } from '../../lib/supabase';
 import { toast } from 'sonner';
 import GroupDashboard from './GroupDashboard';
+import OnboardingModal from '../../components/OnboardingModal';
 
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600&family=Share+Tech+Mono&display=swap');`;
 
@@ -489,7 +490,12 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
     // ✅ NUEVO: Campos Sprint
     incluir_sprints: true,
     cantidad_posiciones_sprint: 8,
-    bonus_vuelta_rapida_sprint: false
+    bonus_vuelta_rapida_sprint: false,
+    // 💰 Pozo
+    pozo_habilitado: false,
+    pozo_monto_por_persona: 0,
+    pozo_moneda: 'USD',
+    pozo_distribucion: '60-25-15'
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -535,7 +541,21 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
           cantidad_posiciones_sprint: formData.cantidad_posiciones_sprint,
           sistema_puntos_sprint: sistema_puntos_sprint,
           bonus_vuelta_rapida_sprint: formData.bonus_vuelta_rapida_sprint,
-          puntos_vuelta_rapida_sprint: 0
+          puntos_vuelta_rapida_sprint: 0,
+          pozo_habilitado: formData.pozo_habilitado,
+          pozo_monto_por_persona: formData.pozo_monto_por_persona,
+          pozo_moneda: formData.pozo_moneda,
+          pozo_distribucion: formData.pozo_habilitado
+            ? (() => {
+                const presets = {
+                  '60-25-15': { "1": 60, "2": 25, "3": 15 },
+                  '50-30-20': { "1": 50, "2": 30, "3": 20 },
+                  '70-20-10': { "1": 70, "2": 20, "3": 10 },
+                  '100-0-0': { "1": 100 }
+                };
+                return presets[formData.pozo_distribucion] || { "1": 60, "2": 25, "3": 15 };
+              })()
+            : { "1": 60, "2": 25, "3": 15 }
         })
         .select()
         .single();
@@ -914,7 +934,122 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
               </div>
             )}
           </div>
+          
+          {/* 💰 Pozo del Grupo */}
+          <div style={{
+            background: colors.bg3,
+            border: `1px solid ${colors.border}`,
+            borderRadius: '12px',
+            padding: '18px',
+            marginBottom: '20px'
+          }}>
+            <label style={{
+              display: 'flex',
+              alignItems: 'flex-start',
+              gap: '12px',
+              cursor: 'pointer',
+              fontSize: '14px',
+              marginBottom: formData.pozo_habilitado ? '16px' : '0'
+            }}>
+              <input
+                type="checkbox"
+                checked={formData.pozo_habilitado}
+                onChange={(e) => setFormData({ ...formData, pozo_habilitado: e.target.checked })}
+                style={{ width: '18px', height: '18px', cursor: 'pointer', marginTop: '2px', flexShrink: 0 }}
+              />
+              <div>
+                <div style={{ fontWeight: '700', marginBottom: '6px', color: colors.text }}>
+                  💰 Habilitar Pozo del Grupo
+                </div>
+                <div style={{ color: colors.muted, fontSize: '13px', lineHeight: '1.6' }}>
+                  Muestra el monto acumulado y la distribución de premios. PodioF1 no gestiona dinero, es solo informativo.
+                </div>
+              </div>
+            </label>
 
+            {formData.pozo_habilitado && (
+              <div style={{
+                background: colors.bg2,
+                border: `1px solid ${colors.border}`,
+                borderRadius: '10px',
+                padding: '14px'
+              }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '12px' }}>
+                  <div>
+                    <label style={{
+                      display: 'block', fontSize: '11px', fontWeight: '600',
+                      letterSpacing: '1px', textTransform: 'uppercase',
+                      color: colors.muted, marginBottom: '6px'
+                    }}>Monto por persona</label>
+                    <input
+                      type="number"
+                      min="0"
+                      value={formData.pozo_monto_por_persona}
+                      onChange={(e) => setFormData({ ...formData, pozo_monto_por_persona: Number(e.target.value) })}
+                      style={{
+                        width: '100%', padding: '10px 14px',
+                        background: colors.bg3, border: `1px solid ${colors.border}`,
+                        borderRadius: '8px', color: colors.text, fontSize: '14px',
+                        fontFamily: "'Share Tech Mono', monospace"
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{
+                      display: 'block', fontSize: '11px', fontWeight: '600',
+                      letterSpacing: '1px', textTransform: 'uppercase',
+                      color: colors.muted, marginBottom: '6px'
+                    }}>Moneda</label>
+                    <select
+                      value={formData.pozo_moneda}
+                      onChange={(e) => setFormData({ ...formData, pozo_moneda: e.target.value })}
+                      style={{
+                        width: '100%', padding: '10px 14px',
+                        background: colors.bg3, border: `1px solid ${colors.border}`,
+                        borderRadius: '8px', color: colors.text, fontSize: '14px', cursor: 'pointer'
+                      }}
+                    >
+                      <option value="USD" style={{ background: colors.bg }}>🇺🇸 USD (Dólar)</option>
+                      <option value="PYG" style={{ background: colors.bg }}>🇵🇾 PYG (Guaraní)</option>
+                      <option value="BRL" style={{ background: colors.bg }}>🇧🇷 BRL (Real)</option>
+                      <option value="ARS" style={{ background: colors.bg }}>🇦🇷 ARS (Peso Arg)</option>
+                      <option value="EUR" style={{ background: colors.bg }}>🇪🇺 EUR (Euro)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label style={{
+                    display: 'block', fontSize: '11px', fontWeight: '600',
+                    letterSpacing: '1px', textTransform: 'uppercase',
+                    color: colors.muted, marginBottom: '6px'
+                  }}>Distribución de premios</label>
+                  <select
+                    value={formData.pozo_distribucion}
+                    onChange={(e) => setFormData({ ...formData, pozo_distribucion: e.target.value })}
+                    style={{
+                      width: '100%', padding: '10px 14px',
+                      background: colors.bg3, border: `1px solid ${colors.border}`,
+                      borderRadius: '8px', color: colors.text, fontSize: '14px', cursor: 'pointer'
+                    }}
+                  >
+                    <option value="60-25-15" style={{ background: colors.bg }}>🥇 60% · 🥈 25% · 🥉 15%</option>
+                    <option value="50-30-20" style={{ background: colors.bg }}>🥇 50% · 🥈 30% · 🥉 20%</option>
+                    <option value="70-20-10" style={{ background: colors.bg }}>🥇 70% · 🥈 20% · 🥉 10%</option>
+                    <option value="100-0-0" style={{ background: colors.bg }}>🥇 100% (todo al ganador)</option>
+                  </select>
+                </div>
+
+                <div style={{
+                  marginTop: '12px', padding: '10px 12px',
+                  background: colors.bg3, borderRadius: '8px',
+                  fontSize: '11px', color: colors.muted, lineHeight: '1.5', textAlign: 'center'
+                }}>
+                  ⚠️ PodioF1 no gestiona, almacena ni transfiere dinero. El pozo es informativo y la gestión es responsabilidad de los participantes.
+                </div>
+              </div>
+            )}
+          </div>
           {/* Bonus Vuelta Rápida */}
           <div style={{ marginBottom: '24px' }}>
             <div style={{
@@ -1541,6 +1676,7 @@ export default function Dashboard() {
         onSuccess={handleModalSuccess}
         theme={theme}
       />
+      <OnboardingModal />
     </>
   );
 }

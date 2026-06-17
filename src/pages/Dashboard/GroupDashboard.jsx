@@ -13,6 +13,8 @@ import { SkeletonTable, SkeletonStats } from '../../components/SkeletonLoader';
 import ScoringSystemModal from '../../components/ScoringSystemModal';
 import { supabase } from '../../lib/supabase';
 import { subHours } from 'date-fns';
+import UserProfileCard from '../../components/UserProfileCard';
+import PozoCard from '../../components/PozoCard';
 import {
   BarChart,
   Bar,
@@ -22,6 +24,7 @@ import {
   Tooltip,
   ResponsiveContainer
 } from 'recharts';
+import UserBadgesMini from '../../components/UserBadgesMini';
 
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap');`;
 
@@ -964,6 +967,16 @@ function LeaderboardTab({ leaderboard, userId, groupId, type = 'total' }) {
                               </div>
                             ))}
                           </div>
+                          {/* Badges del usuario */}
+                          <div style={{ marginTop: 16, paddingTop: 16, borderTop: '1px solid var(--border)' }}>
+                            <div style={{
+                              fontFamily: 'Barlow Condensed', fontSize: 14, fontWeight: 700,
+                              color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8
+                            }}>
+                              🏅 Badges
+                            </div>
+                            <UserBadgesMini userId={user.userId} grupoId={groupId} />
+                          </div>
 
                           <div style={{
                             marginTop: 16,
@@ -1523,9 +1536,10 @@ export default function GroupDashboard() {
           groupId={groupId}
           onShowScoringModal={() => setShowScoringModal(true)}
         />
-        
+        <UserProfileCard userId={user.id} />
         <StatsCards leaderboard={leaderboardTotal} userId={user.id} />
         <SeasonProgressBar temporada={group.temporada} />
+        <PozoCard groupId={groupId} />  
 
         <div className="tabs-container">
           <div className="tabs-nav">
