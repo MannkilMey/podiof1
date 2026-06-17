@@ -69,13 +69,10 @@ export default function UserProfileCard({ userId }) {
         borderRadius: 14,
         padding: '20px 24px',
         marginBottom: 24,
-        display: 'flex',
-        alignItems: 'center',
-        gap: 16,
-        position: 'relative',
-        overflow: 'visible',
         cursor: 'pointer',
-        transition: 'all 0.2s'
+        transition: 'all 0.2s',
+        position: 'relative',
+        overflow: 'visible'
       }}
       onClick={() => navigate('/profile')}
       onMouseEnter={e => { e.currentTarget.style.borderColor = teamColor; e.currentTarget.style.transform = 'translateY(-1px)'; }}
@@ -85,55 +82,57 @@ export default function UserProfileCard({ userId }) {
       <div style={{
         position: 'absolute', top: 0, left: 0, right: 0, height: 3,
         background: `linear-gradient(90deg, ${teamColor}, ${teamColor}88)`,
-        borderRadius: '14px 14px 0 0'        
+        borderRadius: '14px 14px 0 0'
       }} />
 
-      {/* Avatar */}
-      <div style={{
-        width: 52, height: 52, borderRadius: '50%',
-        background: `linear-gradient(135deg, ${teamColor}, ${teamColor}88)`,
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 800,
-        fontSize: 20, color: 'white', flexShrink: 0,
-        boxShadow: `0 2px 12px ${teamColor}33`
-      }}>
-        {initials || '?'}
+      {/* Top row: Avatar + Name + Arrow */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+        <div style={{
+          width: 48, height: 48, borderRadius: '50%',
+          background: `linear-gradient(135deg, ${teamColor}, ${teamColor}88)`,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 800,
+          fontSize: 18, color: 'white', flexShrink: 0,
+          boxShadow: `0 2px 12px ${teamColor}33`
+        }}>
+          {initials || '?'}
+        </div>
+
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{
+            fontFamily: "'Barlow Condensed', sans-serif", fontSize: 20,
+            fontWeight: 800, color: 'var(--white)', letterSpacing: 0.5,
+            overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'
+          }}>
+            {fullName}
+          </div>
+          <div style={{ display: 'flex', gap: 12, marginTop: 2, flexWrap: 'wrap' }}>
+            {teamName && (
+              <span style={{ fontSize: 12, color: teamColor, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 4 }}>
+                <span style={{ width: 8, height: 8, borderRadius: '50%', background: teamColor, flexShrink: 0 }} />
+                {teamName}
+              </span>
+            )}
+            {driverName && (
+              <span style={{ fontSize: 12, color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: 4 }}>
+                🏎 {driverName}
+              </span>
+            )}
+            {!teamName && !driverName && (
+              <span style={{ fontSize: 12, color: 'var(--muted)', fontStyle: 'italic' }}>
+                Tocá para completar tu perfil →
+              </span>
+            )}
+          </div>
+        </div>
+
+        <div style={{ color: 'var(--muted)', fontSize: 18, flexShrink: 0 }}>›</div>
       </div>
 
-      {/* Info */}
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{
-          fontFamily: "'Barlow Condensed', sans-serif", fontSize: 20,
-          fontWeight: 800, color: 'var(--white)', letterSpacing: 0.5,
-          overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'
-        }}>
-          {fullName}
-        </div>
-        <div style={{ display: 'flex', gap: 16, marginTop: 4, flexWrap: 'wrap' }}>
-          {teamName && (
-            <span style={{ fontSize: 12, color: teamColor, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 4 }}>
-              <span style={{ width: 8, height: 8, borderRadius: '50%', background: teamColor, flexShrink: 0 }} />
-              {teamName}
-            </span>
-          )}
-          {driverName && (
-            <span style={{ fontSize: 12, color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: 4 }}>
-              🏎 {driverName}
-            </span>
-          )}
-          {!teamName && !driverName && (
-            <span style={{ fontSize: 12, color: 'var(--muted)', fontStyle: 'italic' }}>
-              Tocá para completar tu perfil →
-            </span>
-          )}
-        </div>
+      {/* Badges row - separate line */}
+      <div style={{ marginTop: 12, paddingTop: 10, borderTop: '1px solid var(--border)' }}>
+        <UserBadgesMini userId={userId} compact maxShow={8} />
       </div>
-          {/* Badges */}
-      <div style={{ flexShrink: 0, maxWidth: 180 }}>
-        <UserBadgesMini userId={userId} compact maxShow={6} />
-      </div>
-      {/* Arrow */}
-      <div style={{ color: 'var(--muted)', fontSize: 18, flexShrink: 0 }}>›</div>
     </div>
   );
 }

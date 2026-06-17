@@ -27,8 +27,7 @@ body { background: var(--bg); color: var(--white); font-family: 'Barlow', sans-s
 .profile-back { background: transparent; border: none; color: var(--red); cursor: pointer; font-size: 14px; font-weight: 600; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; padding: 0; transition: opacity 0.2s; }
 .profile-back:hover { opacity: 0.7; }
 .profile-page-title { font-family: 'Barlow Condensed', sans-serif; font-size: 36px; font-weight: 900; color: var(--white); margin-bottom: 28px; letter-spacing: 1px; }
-.profile-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 28px; margin-bottom: 24px; }
-.profile-card-title { font-family: 'Barlow Condensed', sans-serif; font-size: 18px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--white); margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+.profile-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 28px; margin-bottom: 24px; overflow: hidden; }.profile-card-title { font-family: 'Barlow Condensed', sans-serif; font-size: 18px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--white); margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
 .profile-card-title-sub { font-size: 12px; font-weight: 500; color: var(--muted); text-transform: none; letter-spacing: 0; }
 .profile-avatar-row { display: flex; align-items: center; gap: 20px; margin-bottom: 28px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
 .profile-avatar-circle { width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, #E8002D, #FF6B35); display: flex; align-items: center; justify-content: center; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 28px; color: white; flex-shrink: 0; }
@@ -76,10 +75,12 @@ body { background: var(--bg); color: var(--white); font-family: 'Barlow', sans-s
 @media (max-width: 768px) {
   .profile-page { padding: 16px; }
   .profile-page-title { font-size: 28px; }
+  .profile-card { padding: 20px 16px; }
   .badges-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
   .badge-card { padding: 14px 10px; }
   .badge-icon { font-size: 30px; }
   .form-row { grid-template-columns: 1fr; }
+  .form-input, .form-select { font-size: 16px; }
   .profile-avatar-row { flex-direction: column; text-align: center; }
 }
 @media (max-width: 400px) {

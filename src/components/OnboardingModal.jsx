@@ -293,7 +293,7 @@ export default function OnboardingModal() {
                 width: '100%', padding: '16px', background: 'var(--bg3)',
                 border: '2px solid var(--border)', borderRadius: 12,
                 color: 'var(--white)', fontSize: 16, fontFamily: "'Barlow', sans-serif",
-                textAlign: 'center'
+                textAlign: 'center', boxSizing: 'border-box'
               }}
             />
           )}
