@@ -447,13 +447,13 @@ function HeroBanner({ group, nextRace, navigate, groupId, onShowScoringModal }) 
               <button 
                 onClick={onShowScoringModal}
                 style={{
-                  padding: '8px 16px',
+                  padding: window.innerWidth < 768 ? '6px 10px' : '8px 16px',
                   background: 'var(--bg3)',
                   border: '2px solid var(--border)',
                   borderRadius: 10,
                   color: 'var(--white)',
                   cursor: 'pointer',
-                  fontSize: 14,
+                  fontSize: window.innerWidth < 768 ? 12 : 14,
                   fontWeight: 600,
                   display: 'flex',
                   alignItems: 'center',

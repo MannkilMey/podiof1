@@ -7,6 +7,7 @@ import { supabase } from '../../lib/supabase';
 import { toast } from 'sonner';
 import GroupDashboard from './GroupDashboard';
 import OnboardingModal from '../../components/OnboardingModal';
+import InstallPrompt from '../../components/InstallPrompt';
 
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600&family=Share+Tech+Mono&display=swap');`;
 
@@ -461,8 +462,25 @@ html, body {
 @media(max-width: 900px) { 
   .main { padding: 16px; } 
   .nav { padding: 0 16px; } 
-  .group-bar { padding: 0 16px; } 
+  .group-bar { padding: 0 12px; } 
   .groups-grid { grid-template-columns: 1fr; } 
+}
+
+@media(max-width: 768px) {
+  .nav { padding: 0 10px; height: 48px; }
+  .nav-logo { font-size: 18px; gap: 6px; letter-spacing: 1px; }
+  .nav-logo-icon { width: 26px; height: 26px; font-size: 13px; border-radius: 4px; }
+  .nav-right { gap: 6px; }
+  .icon-btn { width: 30px; height: 30px; font-size: 13px; border-radius: 6px; }
+  .nav-avatar { width: 30px; height: 30px; font-size: 11px; }
+  .theme-toggle { border-radius: 6px; }
+  .theme-opt { padding: 4px 7px; font-size: 12px; }
+  .group-bar { padding: 0 10px; }
+  .group-tab { padding: 8px 10px; font-size: 12px; gap: 5px; }
+  .group-tab-dot { width: 5px; height: 5px; }
+  .group-bar-all { padding: 8px 10px; font-size: 12px; }
+  .back-btn { display: none; }
+  .main { padding: 12px; }
 }
 `;
 
@@ -1677,6 +1695,7 @@ export default function Dashboard() {
         theme={theme}
       />
       <OnboardingModal />
+      <InstallPrompt />
     </>
   );
 }
