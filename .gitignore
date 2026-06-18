@@ -30,4 +30,4 @@ dist-ssr
 *.ntvs*
 *.njsproj
 *.sln
-*.sw?
+*.sw?android/app/google-services.json
