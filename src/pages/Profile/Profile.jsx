@@ -23,6 +23,8 @@ const CSS = `
   --gold: #9C6F10; --green: #007F5F; --green-dim: rgba(0,127,95,0.15);
 }
 body { background: var(--bg); color: var(--white); font-family: 'Barlow', sans-serif; }
+.profile-card { padding: 16px 12px; }
+.form-input, .form-select { font-size: 16px; padding: 10px 12px; }
 .profile-page { padding: 24px 28px; max-width: 900px; margin: 0 auto; min-height: 100vh; }
 .profile-back { background: transparent; border: none; color: var(--red); cursor: pointer; font-size: 14px; font-weight: 600; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; padding: 0; transition: opacity 0.2s; }
 .profile-back:hover { opacity: 0.7; }
@@ -89,6 +91,8 @@ body { background: var(--bg); color: var(--white); font-family: 'Barlow', sans-s
   .badge-icon { font-size: 26px; }
   .badge-name { font-size: 11px; }
   .badge-desc { font-size: 9px; }
+  .profile-card { padding: 16px 12px; }
+  .form-input, .form-select { font-size: 16px; padding: 10px 12px; }
 }
 `;
 
