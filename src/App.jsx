@@ -3,17 +3,23 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'sonner';
 import { useAuthStore } from './stores/authStore';
 import ToastContainer from './components/Toast';
+import AppOnboarding from './pages/Onboarding/AppOnboarding';
+import { isNative } from './hooks/usePlatform';
 
 // Public Pages
 import Landing from './pages/Landing/Landing';
 import JoinGroup from './pages/Groups/JoinGroup';
 import HowItWorks from './pages/HowItWorks/HowItWorks';
+import PrivacyPolicy from './pages/Legal/PrivacyPolicy';
+import TermsOfService from './pages/Legal/TermsOfService';
 
 // Auth Pages
 import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
 import ForgotPassword from './pages/Auth/ForgotPassword';
 import ResetPassword from './pages/Auth/ResetPassword';
+import DeleteAccount from './pages/Settings/DeleteAccount';
+
 
 // Main Pages
 import Dashboard from './pages/Dashboard/Dashboard';
@@ -120,11 +126,15 @@ export default function App() {
             path="/landing" 
             element={
               <PublicRoute>
-                <Landing />
+                  {isNative ? <AppOnboarding /> : <Landing />}
               </PublicRoute>
             } 
           />
+          
           <Route path="/como-funciona" element={<HowItWorks />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/terms" element={<TermsOfService />} />
+
           
 
 
@@ -173,6 +183,9 @@ export default function App() {
               </ProtectedRoute>
             } 
           />
+          <Route path="/delete-account" element={<ProtectedRoute><DeleteAccount /></ProtectedRoute>} />
+
+
 
           {/* Super Admin Panel */}
           <Route

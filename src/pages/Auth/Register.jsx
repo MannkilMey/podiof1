@@ -326,7 +326,8 @@ export default function Register() {
     apellido: '',
     pais: '',
     fecha_nacimiento: '',
-    sexo: ''
+    sexo: '',
+    termsAccepted: false
   })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -347,6 +348,11 @@ export default function Register() {
     if (formData.password !== formData.confirmPassword) {
       setError('Las contraseñas no coinciden')
       toast.error('Las contraseñas no coinciden')
+      return
+    }
+    if (!formData.termsAccepted) {
+      setError('Debés aceptar los términos y condiciones')
+      toast.error('Debés aceptar los términos y condiciones')
       return
     }
     if (formData.password.length < 6) {
@@ -380,6 +386,8 @@ export default function Register() {
         pais: formData.pais,
         fecha_nacimiento: formData.fecha_nacimiento || null,
         sexo: formData.sexo || null,
+        terms_accepted_at: new Date().toISOString(),
+        terms_version: '1.0',
       })
 
       if (userError) throw userError
@@ -556,6 +564,33 @@ export default function Register() {
                 </select>
               </div>
             </div>
+            <label style={{
+              display: 'flex',
+              alignItems: 'flex-start',
+              gap: 10,
+              cursor: 'pointer',
+              fontSize: 13,
+              color: 'var(--muted)',
+              marginBottom: 16,
+              lineHeight: 1.5
+            }}>
+              <input
+                type="checkbox"
+                checked={formData.termsAccepted}
+                onChange={(e) => setFormData({ ...formData, termsAccepted: e.target.checked })}
+                style={{ width: 18, height: 18, cursor: 'pointer', marginTop: 2, flexShrink: 0 }}
+              />
+              <span>
+                Acepto los{' '}
+                <a href="/terms" target="_blank" style={{ color: 'var(--red)', textDecoration: 'none' }}>
+                  Términos y Condiciones
+                </a>{' '}
+                y la{' '}
+                <a href="/privacy" target="_blank" style={{ color: 'var(--red)', textDecoration: 'none' }}>
+                  Política de Privacidad
+                </a>
+              </span>
+            </label>
 
             <button
               type="submit"

@@ -1068,6 +1068,10 @@ export default function Landing() {
             <p className="footer-text" style={{ marginTop: 16 }}>
               Hecho con ❤️ para los fanáticos de F1 · <Link to="/register" className="footer-link">Crear cuenta gratis</Link>
             </p>
+            <a href="/privacy">Política de Privacidad </a>
+
+            <a href="/terms">Términos y Condiciones</a>
+            
           </footer>
         </div>
       </div>

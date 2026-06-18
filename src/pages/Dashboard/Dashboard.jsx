@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 import GroupDashboard from './GroupDashboard';
 import OnboardingModal from '../../components/OnboardingModal';
 import InstallPrompt from '../../components/InstallPrompt';
+import { usePushNotifications } from '../../hooks/usePushNotifications';
 
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600&family=Share+Tech+Mono&display=swap');`;
 
@@ -1455,6 +1456,7 @@ export default function Dashboard() {
   const user = useAuthStore((state) => state.user);
   const signOut = useAuthStore((state) => state.signOut);
   const { groups, loading } = useGroups(user?.id);
+  usePushNotifications();
   const navigate = useNavigate();
   const { groupId } = useParams();
   
@@ -1550,7 +1552,7 @@ export default function Dashboard() {
         {/* NAVBAR */}
         <nav className="nav">
           <div className="nav-logo">
-            <div className="nav-logo-icon">🏎</div>
+            
             Podio<span>F1</span>
           </div>
           <div className="nav-right">

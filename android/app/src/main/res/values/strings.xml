@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">PodioF1</string>
+    <string name="title_activity_main">PodioF1</string>
+    <string name="package_name">com.podiof1.app</string>
+    <string name="custom_url_scheme">com.podiof1.app</string>
+</resources>

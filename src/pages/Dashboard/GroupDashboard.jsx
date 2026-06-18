@@ -15,6 +15,7 @@ import { supabase } from '../../lib/supabase';
 import { subHours } from 'date-fns';
 import UserProfileCard from '../../components/UserProfileCard';
 import PozoCard from '../../components/PozoCard';
+import { isNative } from '../../hooks/usePlatform';
 import {
   BarChart,
   Bar,
@@ -25,7 +26,6 @@ import {
   ResponsiveContainer
 } from 'recharts';
 import UserBadgesMini from '../../components/UserBadgesMini';
-
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap');`;
 
 const CSS = `
@@ -1512,8 +1512,7 @@ export default function GroupDashboard() {
       <>
         <style>{FONTS + CSS}</style>
         <div data-theme={theme} className="group-dashboard">
-          <button className="back-btn" onClick={() => navigate('/')}>← Volver a todos los grupos</button>
-          <div style={{ textAlign: 'center', padding: '80px 20px', color: 'var(--red)' }}>
+            {!isNative && <button className="back-btn" onClick={() => navigate('/')}>← Volver a todos los grupos</button>}          <div style={{ textAlign: 'center', padding: '80px 20px', color: 'var(--red)' }}>
             <div style={{ fontSize: 48, marginBottom: 16 }}>⚠️</div>
             <div>Error al cargar el dashboard</div>
             <div style={{ fontSize: 14, marginTop: 8 }}>{error}</div>
@@ -1527,8 +1526,7 @@ export default function GroupDashboard() {
     <>
       <style>{FONTS + CSS}</style>
       <div data-theme={theme} className="group-dashboard">
-        <button className="back-btn" onClick={() => navigate('/')}>← Volver a todos los grupos</button>
-
+          {!isNative && <button className="back-btn" onClick={() => navigate('/')}>← Volver a todos los grupos</button>}
         <HeroBanner 
           group={group} 
           nextRace={nextRace} 
