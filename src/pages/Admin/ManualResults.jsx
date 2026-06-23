@@ -5,6 +5,7 @@ import { useThemeStore } from '../../stores/themeStore';
 import { supabase } from '../../lib/supabase';
 import { toast } from 'sonner';
 
+
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap');`;
 
 const CSS = `

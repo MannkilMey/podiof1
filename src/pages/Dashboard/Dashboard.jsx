@@ -362,7 +362,6 @@ html, body {
   text-transform: uppercase;
   cursor: pointer;
   transition: all .2s;
-  margin-left: 12px; 
 }
 
 .btn-secondary:hover { 
@@ -599,7 +598,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
       onClose();
     } catch (err) {
       console.error(err);
-      setError(err.message || 'Error al crear grupo');
+      setError(err.message || t('errors.createGroup'));
     } finally {
       setLoading(false);
     }
@@ -651,9 +650,9 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
           fontWeight: '900',
           marginBottom: '8px',
           color: colors.text
-        }}>Crear Nuevo Grupo</h2>
+        }}>{t('createGroup.title')}</h2>
         <p style={{ color: colors.muted, fontSize: '14px', marginBottom: '24px' }}>
-          Configura tu grupo de predicciones F1
+          {t('createGroup.subtitle')}
         </p>
 
         {error && (
@@ -679,13 +678,13 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
               textTransform: 'uppercase',
               color: colors.muted,
               marginBottom: '8px'
-            }}>Nombre del Grupo</label>
+            }}>{t('createGroup.name')}</label>
             <input
               type="text"
               value={formData.nombre}
               onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
               required
-              placeholder="Mi Grupo F1"
+              placeholder={t('createGroup.namePlaceholder')}
               style={{
                 width: '100%',
                 padding: '12px 16px',
@@ -710,7 +709,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
                 textTransform: 'uppercase',
                 color: colors.muted,
                 marginBottom: '8px'
-              }}>Temporada</label>
+              }}>{t('createGroup.season')}</label>
               <select
                 value={formData.temporada}
                 onChange={(e) => setFormData({ ...formData, temporada: parseInt(e.target.value) })}
@@ -738,7 +737,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
                 textTransform: 'uppercase',
                 color: colors.muted,
                 marginBottom: '8px'
-              }}>Posiciones a predecir</label>
+              }}>{t('createGroup.positions')}</label>
               <select
                 value={formData.cantidad_posiciones}
                 onChange={(e) => setFormData({ ...formData, cantidad_posiciones: parseInt(e.target.value) })}
@@ -753,9 +752,9 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
                   cursor: 'pointer'
                 }}
               >
-                <option value={3} style={{ background: colors.bg }}>Top 3</option>
-                <option value={5} style={{ background: colors.bg }}>Top 5</option>
-                <option value={10} style={{ background: colors.bg }}>Top 10</option>
+                <option value={3} style={{ background: colors.bg }}>{t('createGroup.top3')}</option>
+                <option value={5} style={{ background: colors.bg }}>{t('createGroup.top5')}</option>
+                <option value={10} style={{ background: colors.bg }}>{t('createGroup.top10')}</option>
               </select>
             </div>
           </div>
@@ -770,7 +769,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
               textTransform: 'uppercase',
               color: colors.muted,
               marginBottom: '8px'
-            }}>⏰ Cierre de Predicciones</label>
+            }}>⏰ {t('createGroup.deadline')}</label>
             <select
               value={formData.horas_cierre_prediccion}
               onChange={(e) => setFormData({ ...formData, horas_cierre_prediccion: parseInt(e.target.value) })}
@@ -785,9 +784,9 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
                 cursor: 'pointer'
               }}
             >
-              <option value={24} style={{ background: colors.bg }}>24 horas antes (recomendado)</option>
-              <option value={32} style={{ background: colors.bg }}>32 horas antes</option>
-              <option value={48} style={{ background: colors.bg }}>48 horas antes (2 días)</option>
+              <option value={24} style={{ background: colors.bg }}>{t('createGroup.deadlineOptions.h24')}</option>
+              <option value={32} style={{ background: colors.bg }}>{t('createGroup.deadlineOptions.h32')}</option>
+              <option value={48} style={{ background: colors.bg }}>{t('createGroup.deadlineOptions.h48')}</option>
             </select>
             <div style={{
               fontSize: '12px',
@@ -823,10 +822,10 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
               />
               <div>
                 <div style={{ fontWeight: '700', marginBottom: '6px', color: colors.text }}>
-                  ⚡ Incluir Carreras Sprint
+                  ⚡ {t('createGroup.includeSprints')}
                 </div>
                 <div style={{ color: colors.muted, fontSize: '13px', lineHeight: '1.6' }}>
-                  La temporada 2026 tendrá 6 carreras Sprint con formato y puntuación especiales
+                  {t('createGroup.includeSprintsSub')}
                 </div>
               </div>
             </label>
@@ -847,7 +846,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
                     textTransform: 'uppercase',
                     color: colors.muted,
                     marginBottom: '8px'
-                  }}>Posiciones Sprint</label>
+                  }}>{t('createGroup.sprintPositions')}</label>
                   <select
                     value={formData.cantidad_posiciones_sprint}
                     onChange={(e) => setFormData({ ...formData, cantidad_posiciones_sprint: parseInt(e.target.value) })}
@@ -862,15 +861,15 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
                       cursor: 'pointer'
                     }}
                   >
-                    <option value={8} style={{ background: colors.bg }}>Top 8 (oficial F1)</option>
-                    <option value={5} style={{ background: colors.bg }}>Top 5</option>
-                    <option value={3} style={{ background: colors.bg }}>Top 3</option>
+                    <option value={8} style={{ background: colors.bg }}>{t('createGroup.top8Official')}</option>
+                    <option value={5} style={{ background: colors.bg }}>{t('createGroup.top5')}</option>
+                    <option value={3} style={{ background: colors.bg }}>{t('createGroup.top3')}</option>
                   </select>
                 </div>
 
                 <div style={{ fontSize: '13px', color: colors.muted, lineHeight: '1.7' }}>
                   <div style={{ marginBottom: '4px', fontWeight: '600', color: colors.text }}>
-                    Sistema de Puntos Sprint:
+                    {t('createGroup.sprintPoints')}:
                   </div>
                   1° = 8 pts · 2° = 7 pts · 3° = 6 pts · 4° = 5 pts<br/>
                   5° = 4 pts · 6° = 3 pts · 7° = 2 pts · 8° = 1 pt
@@ -925,11 +924,10 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
               />
               <div>
                 <div style={{ fontWeight: '700', marginBottom: '6px', color: colors.text }}>
-                  Puntuación por piloto sin posición exacta
+                  {t('createGroup.dualScoring')}
                 </div>
                 <div style={{ color: colors.muted, fontSize: '13px', lineHeight: '1.6' }}>
-                  Otorga puntos cuando aciertas el piloto aunque no esté en la posición exacta,
-                  y da un bonus extra cuando aciertas ambos.
+                  {t('createGroup.dualScoringSub')}
                 </div>
               </div>
             </label>
@@ -947,10 +945,10 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
                   <strong>{t('createGroup.dualExampleLabel')}</strong> {t('createGroup.dualExampleText', { driver: 'Verstappen', position: 1 })}
                 </div>
                 <div style={{ color: colors.muted }}>
-                  • Si llega <strong style={{ color: colors.text }}>2°</strong> → 5 puntos (piloto correcto)
+                  • {t('createGroup.dualExampleCase1')}
                 </div>
                 <div style={{ color: colors.muted }}>
-                  • Si llega <strong style={{ color: colors.text }}>1°</strong> → 25 + 10 = 35 puntos (exacto + bonus)
+                  • {t('createGroup.dualExampleCase2')}
                 </div>
               </div>
             )}
@@ -980,10 +978,10 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
               />
               <div>
                 <div style={{ fontWeight: '700', marginBottom: '6px', color: colors.text }}>
-                  💰 Habilitar Pozo del Grupo
+                  💰 {t('pozo.enable')}
                 </div>
                 <div style={{ color: colors.muted, fontSize: '13px', lineHeight: '1.6' }}>
-                  Muestra el monto acumulado y la distribución de premios. PodioF1 no gestiona dinero, es solo informativo.
+                  {t('pozo.enableSub')}
                 </div>
               </div>
             </label>
@@ -1001,7 +999,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
                       display: 'block', fontSize: '11px', fontWeight: '600',
                       letterSpacing: '1px', textTransform: 'uppercase',
                       color: colors.muted, marginBottom: '6px'
-                    }}>Monto por persona</label>
+                    }}>{t('pozo.amountPerPerson')}</label>
                     <input
                       type="number"
                       min="0"
@@ -1020,7 +1018,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
                       display: 'block', fontSize: '11px', fontWeight: '600',
                       letterSpacing: '1px', textTransform: 'uppercase',
                       color: colors.muted, marginBottom: '6px'
-                    }}>Moneda</label>
+                    }}>{t('pozo.currency')}</label>
                     <select
                       value={formData.pozo_moneda}
                       onChange={(e) => setFormData({ ...formData, pozo_moneda: e.target.value })}
@@ -1044,7 +1042,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
                     display: 'block', fontSize: '11px', fontWeight: '600',
                     letterSpacing: '1px', textTransform: 'uppercase',
                     color: colors.muted, marginBottom: '6px'
-                  }}>Distribución de premios</label>
+                  }}>{t('pozo.distribution')}</label>
                   <select
                     value={formData.pozo_distribucion}
                     onChange={(e) => setFormData({ ...formData, pozo_distribucion: e.target.value })}
@@ -1057,7 +1055,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
                     <option value="60-25-15" style={{ background: colors.bg }}>🥇 60% · 🥈 25% · 🥉 15%</option>
                     <option value="50-30-20" style={{ background: colors.bg }}>🥇 50% · 🥈 30% · 🥉 20%</option>
                     <option value="70-20-10" style={{ background: colors.bg }}>🥇 70% · 🥈 20% · 🥉 10%</option>
-                    <option value="100-0-0" style={{ background: colors.bg }}>🥇 100% (todo al ganador)</option>
+                    <option value="100-0-0" style={{ background: colors.bg }}>🥇 100% {t('createGroup.distAllToWinner')}</option>
                   </select>
                 </div>
 
@@ -1080,7 +1078,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
               textTransform: 'uppercase',
               color: colors.muted,
               marginBottom: '10px'
-            }}>Bonus Opcionales (Solo Carreras)</div>
+            }}>{t('createGroup.bonusOptions')}</div>
             
             <label style={{
               display: 'flex',
@@ -1101,7 +1099,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
                 onChange={(e) => setFormData({ ...formData, bonus_vuelta_rapida_piloto: e.target.checked })}
                 style={{ width: '18px', height: '18px', cursor: 'pointer' }}
               />
-              <span>Bonus vuelta rápida piloto (+1 pt)</span>
+              <span>{t('createGroup.bonusFastLapDriver')}</span>
             </label>
             
             <label style={{
@@ -1122,7 +1120,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
                 onChange={(e) => setFormData({ ...formData, bonus_vuelta_rapida_escuderia: e.target.checked })}
                 style={{ width: '18px', height: '18px', cursor: 'pointer' }}
               />
-              <span>Bonus vuelta rápida escudería (+1 pt)</span>
+              <span>{t('createGroup.bonusFastLapTeam')}</span>
             </label>
 
             <div style={{
@@ -1131,7 +1129,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
               marginTop: '8px',
               fontStyle: 'italic'
             }}>
-              ℹ️ Los Sprint no tienen bonus de vuelta rápida
+              ℹ️ {t('createGroup.noSprintBonus')}
             </div>
           </div>
 
@@ -1161,7 +1159,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
               onMouseOver={(e) => !loading && (e.target.style.opacity = '0.88')}
               onMouseOut={(e) => !loading && (e.target.style.opacity = '1')}
             >
-              {loading ? 'Creando...' : 'Crear Grupo'}
+              {loading ? t('createGroup.creating') : t('createGroup.createBtn')}
             </button>
             <button
               type="button"
@@ -1192,7 +1190,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
                 e.target.style.background = 'transparent';
               }}
             >
-              Cancelar
+              {t('common.cancel')}
             </button>
           </div>
         </form>
@@ -1225,7 +1223,7 @@ function JoinGroupModal({ isOpen, onClose, onSuccess, theme }) {
         .single();
 
       if (groupError || !group) {
-        throw new Error('Código de invitación inválido');
+        throw new Error(t('joinGroup.invalidCode'));
       }
 
       const { data: existing } = await supabase
@@ -1236,7 +1234,7 @@ function JoinGroupModal({ isOpen, onClose, onSuccess, theme }) {
         .maybeSingle();
 
       if (existing) {
-        throw new Error('Ya eres miembro de este grupo');
+        throw new Error(t('joinGroup.alreadyMember'))
       }
 
       const { error: joinError } = await supabase
@@ -1255,7 +1253,7 @@ function JoinGroupModal({ isOpen, onClose, onSuccess, theme }) {
       onClose();
     } catch (err) {
       console.error(err);
-      setError(err.message || 'Error al unirse al grupo');
+      setError(err.message || t('errors.joinGroup'));
     } finally {
       setLoading(false);
     }
@@ -1302,9 +1300,9 @@ function JoinGroupModal({ isOpen, onClose, onSuccess, theme }) {
           fontWeight: '900',
           marginBottom: '8px',
           color: colors.text
-        }}>Unirse a Grupo</h2>
+        }}>{t('joinGroup.title')}</h2>
         <p style={{ color: colors.muted, fontSize: '14px', marginBottom: '24px' }}>
-          Ingresa el código de invitación del grupo
+          {t('joinGroup.subtitle')}
         </p>
 
         {error && (
@@ -1329,7 +1327,7 @@ function JoinGroupModal({ isOpen, onClose, onSuccess, theme }) {
               textTransform: 'uppercase',
               color: colors.muted,
               marginBottom: '8px'
-            }}>Código de Invitación</label>
+            }}>{t('joinGroup.code')}</label>
             <input
               type="text"
               value={code}
@@ -1360,7 +1358,7 @@ function JoinGroupModal({ isOpen, onClose, onSuccess, theme }) {
               className="btn-primary"
               style={{ flex: 1, opacity: loading ? 0.5 : 1 }}
             >
-              {loading ? 'Verificando...' : 'Unirse'}
+              {loading ? t('joinGroup.verifying') : t('joinGroup.joinBtn')}
             </button>
             <button
               type="button"
@@ -1368,7 +1366,7 @@ function JoinGroupModal({ isOpen, onClose, onSuccess, theme }) {
               className="btn-secondary"
               style={{ flex: 1, margin: 0 }}
             >
-              Cancelar
+              {t('common.cancel')}
             </button>
           </div>
         </form>
@@ -1384,21 +1382,21 @@ function GroupsView({ groups, onCreateGroup, onJoinGroup, onSelectGroup }) {
   const { t } = useTranslation();
   return (
     <>
-      <div style={{ textAlign: 'center', marginBottom: 24 }}>
+      <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: 12, marginBottom: 24 }}>
         <button className="btn-primary" onClick={onCreateGroup}>
-          ＋ Crear Grupo
+          ＋ {t('dashboard.createGroup')}
         </button>
         <button className="btn-secondary" onClick={onJoinGroup}>
-          🔗 Unirse con Código
+          🔗 {t('dashboard.joinWithCode')}
         </button>
       </div>
 
       {groups.length === 0 ? (
         <div className="empty-state">
           <div className="empty-icon">🏁</div>
-          <div className="empty-title">No tienes grupos todavía</div>
+          <div className="empty-title">{t('dashboard.noGroups')}</div>
           <div className="empty-text">
-            Crea tu primer grupo de predicciones o únete a uno existente con un código de invitación.
+            {t('dashboard.noGroupsSub')}
           </div>
         </div>
       ) : (
@@ -1424,17 +1422,17 @@ function GroupsView({ groups, onCreateGroup, onJoinGroup, onSelectGroup }) {
                 <div className="gc-stats">
                   <div className="gc-stat">
                     <div className="gc-stat-val">{g.posicion}°</div>
-                    <div className="gc-stat-lbl">Posición</div>
+                    <div className="gc-stat-lbl">{t('common.position')}</div>
                   </div>
                   <div className="gc-divider"/>
                   <div className="gc-stat">
                     <div className="gc-stat-val">{g.puntos}</div>
-                    <div className="gc-stat-lbl">Puntos</div>
+                    <div className="gc-stat-lbl">{t('common.points')}</div>
                   </div>
                   <div className="gc-divider"/>
                   <div className="gc-stat">
                     <div className="gc-stat-val">{g.miembros}</div>
-                    <div className="gc-stat-lbl">Miembros</div>
+                    <div className="gc-stat-lbl">{t('common.members')}</div>
                   </div>
                 </div>
               </div>
@@ -1543,7 +1541,7 @@ export default function Dashboard() {
         <div data-theme={theme} className="loading-container">
           <div className="loading-box">
             <div className="loading-icon">🏎</div>
-            <div className="loading-text">Cargando grupos...</div>
+            <div className="loading-text">{t('dashboard.loadingGroups')}</div>
           </div>
         </div>
       </>

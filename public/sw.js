@@ -1,4 +1,4 @@
-const CACHE_NAME = 'podiof1-v5';
+const CACHE_NAME = 'podiof1-v6';
 const STATIC_ASSETS = [
   '/',
   '/manifest.json'
@@ -50,17 +50,17 @@ self.addEventListener('fetch', (event) => {
 
   // For navigation requests (HTML pages), network-first
   if (request.mode === 'navigate') {
-    event.respondWith(
-      fetch(request)
-        .then((response) => {
-          const clone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
-          return response;
-        })
-        .catch(() => caches.match(request) || caches.match('/'))
-    );
-    return;
-  }
+  event.respondWith(
+    fetch(request, { cache: 'no-store' })  // ← fuerza red real, ignora caché HTTP
+      .then((response) => {
+        const clone = response.clone();
+        caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+        return response;
+      })
+      .catch(() => caches.match(request) || caches.match('/'))
+  );
+  return;
+}
 
   // For static assets (JS, CSS, images, fonts), cache-first
   if (
