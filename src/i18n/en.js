@@ -407,7 +407,10 @@ prediction: {
     top8Official: 'Top 8 (official F1)',
     distAllToWinner: '(all to the winner)',
     dualExampleLabel: 'Example:',
-    dualExampleText: 'Predicting {{driver}} in {{position}} place'
+    dualExampleText: 'Predicting {{driver}} in {{position}} place',
+    namePlaceholder: 'My F1 Group',
+    dualExampleCase1: 'If they finish 2nd → 5 points (correct driver)',
+    dualExampleCase2: 'If they finish 1st → 25 + 10 = 35 points (exact + bonus)',
   },
 
   // ============================================

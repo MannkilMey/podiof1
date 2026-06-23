@@ -406,7 +406,10 @@ prediction: {
     top8Official: 'Top 8 (oficial F1)',
     distAllToWinner: '(todo al ganador)',
     dualExampleLabel: 'Ejemplo:',
-    dualExampleText: 'Predecir {{driver}} en {{position}}° lugar'
+    dualExampleText: 'Predecir {{driver}} en {{position}}° lugar',
+    namePlaceholder: 'Mi Grupo F1',
+    dualExampleCase1: 'Si llega 2° → 5 puntos (piloto correcto)',
+    dualExampleCase2: 'Si llega 1° → 25 + 10 = 35 puntos (exacto + bonus)',
   },
 
   // ============================================
@@ -1063,6 +1066,7 @@ sharePrediction: {
   shareBtn: 'Compartir',
   downloadBtn: 'Descargar',
 },
+
     // ============================================
     // PWA
     // ============================================
