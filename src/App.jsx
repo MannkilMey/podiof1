@@ -80,6 +80,7 @@ function ProtectedRoute({ children }) {
 function PublicRoute({ children }) {
   const user = useAuthStore((state) => state.user);
   const loading = useAuthStore((state) => state.loading);
+  const { t } = useTranslation(); 
 
   if (loading) {
     return (
@@ -128,7 +129,8 @@ export default function App() {
             path="/landing" 
             element={
               <PublicRoute>
-                  {isNative ? <AppOnboarding /> : <Landing />}
+                {console.log('isNative:', isNative)}
+                {isNative ? <AppOnboarding /> : <Landing />}
               </PublicRoute>
             } 
           />
