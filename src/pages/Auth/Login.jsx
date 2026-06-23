@@ -3,6 +3,8 @@ import { useNavigate, Link, useLocation } from 'react-router-dom'
 import { useAuthStore } from '../../stores/authStore'
 import { useThemeStore } from '../../stores/themeStore'
 import { useToastStore } from '../../stores/toastStore'
+import { useTranslation } from '../../i18n';
+
 
 const CSS = `
 [data-theme="dark"] {
@@ -271,6 +273,7 @@ export default function Login() {
   const theme = useThemeStore((state) => state.theme)
   const setTheme = useThemeStore((state) => state.setTheme)
   const toast = useToastStore()
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -288,13 +291,13 @@ export default function Login() {
 
     try {
       await signIn(email, password)
-      toast.success('¡Bienvenido de vuelta! 🏁')
+      toast.success(t('auth.welcomeBack'))
       const from = location.state?.from?.pathname || '/'
       navigate(from, { replace: true })
     } catch (err) {
       console.error(err)
-      setError(err.message || 'Error al iniciar sesión. Verifica tus credenciales.')
-      toast.error('Error al iniciar sesión')
+      setError(err.message || t('auth.loginErrorDetail'))
+      toast.error(t('auth.errorLogin'))
     } finally {
       setLoading(false)
     }
@@ -323,12 +326,12 @@ export default function Login() {
         <div className="login-box">
           {/* Logo Area */}
           <div className="logo-area">
-            <div className="logo-icon">🏎</div>
+            <img src="/logo.png" alt="PodioF1" style={{ width: 56, height: 56, borderRadius: 12, objectFit: 'cover' }} />
             <div className="logo-text">
               Podio<span className="accent">F1</span>
             </div>
             <div className="logo-subtitle">
-              Predicciones F1 · Temporada 2026
+            {t('auth.seasonSubtitle')}
             </div>
           </div>
 
@@ -340,10 +343,10 @@ export default function Login() {
           {/* Form */}
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label className="form-label">Email</label>
+              <label className="form-label">{t('auth.email')}</label>
               <input
                 type="email"
-                placeholder="tu@email.com"
+                placeholder={t('auth.emailPlaceholder')}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -352,7 +355,7 @@ export default function Login() {
             </div>
 
             <div className="form-group">
-              <label className="form-label">Contraseña</label>
+              <label className="form-label">{t('auth.password')}</label>
               <input
                 type="password"
                 placeholder="••••••••"
@@ -363,7 +366,7 @@ export default function Login() {
               />
               <div className="forgot-link">
                 <Link to="/forgot-password">
-                  ¿Olvidaste tu contraseña?
+                    {t('auth.forgotPassword')}
                 </Link>
               </div>
             </div>
@@ -373,21 +376,21 @@ export default function Login() {
               disabled={loading}
               className="btn-submit"
             >
-              {loading ? 'Iniciando...' : 'Iniciar Sesión'}
+              {loading ? t('auth.loginLoading') : t('auth.login')}
             </button>
           </form>
 
           {/* Divider */}
           <div className="divider">
-            <span className="divider-text">o</span>
+            <span className="divider-text">{t('common.or')}</span>
             <div className="divider-line" />
           </div>
 
           {/* Register Link */}
           <div className="register-link">
-            ¿No tienes cuenta?{' '}
+            {t('auth.noAccount')}{' '}
             <Link to="/register">
-              Regístrate aquí
+              {t('auth.registerHere')}
             </Link>
           </div>
         </div>

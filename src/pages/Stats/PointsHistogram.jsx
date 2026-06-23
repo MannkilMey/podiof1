@@ -5,6 +5,9 @@ import { useThemeStore } from '../../stores/themeStore';
 import { supabase } from '../../lib/supabase';
 import StatsTabBar from './StatsTabBar';  
 import * as XLSX from 'xlsx';
+import { useTranslation } from '../../i18n';
+import BackButton from '../../components/BackButton'; 
+import PaywallGate from '../../components/PaywallGate';
 import {
   BarChart, Bar, LineChart, Line,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend,
@@ -102,6 +105,7 @@ const USER_COLORS = [
 // CUSTOM TOOLTIPS
 // ============================================
 function BarTooltip({ active, payload, label, theme }) {
+  const { t } = useTranslation();
   if (!active || !payload?.length) return null;
   const bg = theme === 'dark' ? '#18181D' : '#FFFFFF';
   const border = theme === 'dark' ? 'rgba(255,255,255,0.13)' : 'rgba(0,0,0,0.15)';
@@ -113,7 +117,7 @@ function BarTooltip({ active, payload, label, theme }) {
   return (
     <div style={{ background: bg, border: `1px solid ${border}`, borderRadius: 12, padding: '14px 18px', boxShadow: '0 8px 30px rgba(0,0,0,0.3)', minWidth: 180, maxWidth: 280 }}>
       <div style={{ fontFamily: "'Barlow Condensed'", fontSize: 14, fontWeight: 800, color: text, marginBottom: 10, letterSpacing: 0.5, textTransform: 'uppercase' }}>
-        {label}{isProjected && <span style={{ fontSize: 10, color: muted, fontWeight: 500, textTransform: 'none', marginLeft: 8 }}>(Proyección)</span>}
+        {label}{isProjected && <span style={{ fontSize: 10, color: muted, fontWeight: 500, textTransform: 'none', marginLeft: 8 }}>({t('pointsHistogram.projectedLabel')})</span>}
       </div>
       {sorted.map((entry, i) => (
         <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, padding: '3px 0', fontSize: 13 }}>
@@ -121,7 +125,7 @@ function BarTooltip({ active, payload, label, theme }) {
             <div style={{ width: 10, height: 10, borderRadius: 3, background: entry.color || entry.fill, opacity: isProjected ? 0.5 : 1, flexShrink: 0 }} />
             <span style={{ color: muted }}>{entry.name}</span>
           </div>
-          <span style={{ fontFamily: "'Barlow Condensed'", fontWeight: 700, fontSize: 15, color: text }}>{Math.round(entry.value)} pts</span>
+          <span style={{ fontFamily: "'Barlow Condensed'", fontWeight: 700, fontSize: 15, color: text }}>{Math.round(entry.value)} {t('common.pts')}</span>
         </div>
       ))}
     </div>
@@ -129,6 +133,7 @@ function BarTooltip({ active, payload, label, theme }) {
 }
 
 function LineTooltip({ active, payload, label, theme }) {
+  const { t } = useTranslation();
   if (!active || !payload?.length) return null;
   const bg = theme === 'dark' ? '#18181D' : '#FFFFFF';
   const border = theme === 'dark' ? 'rgba(255,255,255,0.13)' : 'rgba(0,0,0,0.15)';
@@ -169,6 +174,7 @@ export default function PointsHistogram() {
   const navigate = useNavigate();
   const theme = useThemeStore((state) => state.theme);
   const user = useAuthStore((state) => state.user);
+  const { t } = useTranslation();
 
   const [groupInfo, setGroupInfo] = useState(null);
   const [scores, setScores] = useState([]);
@@ -262,7 +268,7 @@ export default function PointsHistogram() {
     // Bar chart data
     const racesMap = new Map();
     filtered.forEach(s => {
-      const raceName = s.carrera?.nombre || 'Sin nombre';
+      const raceName = s.carrera?.nombre || t('pointsHistogram.unnamedRace');
       const ronda = s.carrera?.ronda || 0;
       const tipo = s.carrera?.tipo || 'carrera';
       const uInfo = usersMap.get(s.usuario?.id);
@@ -377,13 +383,13 @@ export default function PointsHistogram() {
     try {
       const wb = XLSX.utils.book_new();
 
-      const headers = ['Carrera', ...userList.map(u => u.displayName)];
+      const headers = [t('pointsHistogram.raceColumn'), ...userList.map(u => u.displayName)];
       const rows = chartData.map(race => {
         const row = [race.raceName.replace('⚡ ', '(Sprint) ')];
         userList.forEach(u => row.push(race[u.displayName] ?? 0));
         return row;
       });
-      const totalRow = ['TOTAL'];
+      const totalRow = [t('pointsHistogram.totalRow')];
       userList.forEach(u => {
         const total = chartData.reduce((sum, r) => sum + (r[u.displayName] || 0), 0);
         totalRow.push(total);
@@ -392,15 +398,15 @@ export default function PointsHistogram() {
 
       const ws1 = XLSX.utils.aoa_to_sheet([headers, ...rows]);
       ws1['!cols'] = [{ wch: 30 }, ...userList.map(() => ({ wch: 15 }))];
-      XLSX.utils.book_append_sheet(wb, ws1, 'Puntos por Carrera');
+      XLSX.utils.book_append_sheet(wb, ws1, t('pointsHistogram.pointsByRace'));
 
-      const rankHeaders = ['Posición', 'Usuario', 'Puntos', 'Aciertos Exactos', 'Aciertos Piloto', 'Carreras'];
+      const rankHeaders = [t('common.position'), t('leaderboard.user'), t('common.points'), t('pointsHistogram.exactHitsColumn'), t('pointsHistogram.driverHitsColumn'), t('common.races')];
       const rankRows = stats.ranking.map((u, i) => [i + 1, u.name, Math.round(u.puntos), u.aciertos_exactos, u.aciertos_piloto, u.carreras]);
       const ws2 = XLSX.utils.aoa_to_sheet([rankHeaders, ...rankRows]);
       ws2['!cols'] = [{ wch: 10 }, { wch: 25 }, { wch: 10 }, { wch: 18 }, { wch: 18 }, { wch: 10 }];
-      XLSX.utils.book_append_sheet(wb, ws2, 'Ranking');
+      XLSX.utils.book_append_sheet(wb, ws2, t('pointsHistogram.rankingSheet'));
 
-      const cumHeaders = ['Carrera', ...userList.map(u => u.displayName)];
+      const cumHeaders = [t('pointsHistogram.raceColumn'), ...userList.map(u => u.displayName)];
       const cumRows = cumulativeData.map(race => {
         const row = [race.raceName.replace('⚡ ', '(Sprint) ')];
         userList.forEach(u => row.push(race[u.displayName] ?? 0));
@@ -408,9 +414,9 @@ export default function PointsHistogram() {
       });
       const ws3 = XLSX.utils.aoa_to_sheet([cumHeaders, ...cumRows]);
       ws3['!cols'] = [{ wch: 30 }, ...userList.map(() => ({ wch: 15 }))];
-      XLSX.utils.book_append_sheet(wb, ws3, 'Puntos Acumulados');
+      XLSX.utils.book_append_sheet(wb, ws3, t('pointsHistogram.cumulativePoints'));
 
-      const fileName = `PodioF1_Stats_${groupInfo?.nombre || 'grupo'}_${new Date().toISOString().slice(0, 10)}.xlsx`;
+      const fileName = `PodioF1_Stats_${groupInfo?.nombre || t('pointsHistogram.groupFallback')}_${new Date().toISOString().slice(0, 10)}.xlsx`;
       XLSX.writeFile(wb, fileName);
     } catch (err) {
       console.error('Error exporting:', err);
@@ -438,9 +444,9 @@ export default function PointsHistogram() {
       <>
         <style>{FONTS + CSS}</style>
         <div data-theme={theme} className="stats-page">
-          <div className="stats-back-btn">← Volver al grupo</div>
+          <BackButton className="stats-back-btn" onClick={() => navigate(`/group/${groupId}`)}>← {t('pointsHistogram.backToGroup')}</BackButton>
           <StatsTabBar active="charts" groupId={groupId} />
-          <div className="stats-header"><div className="stats-header-left"><h1 className="stats-title">📊 Histograma de Puntos</h1><p className="stats-subtitle">Cargando...</p></div></div>
+          <div className="stats-header"><div className="stats-header-left"><h1 className="stats-title">📊 {t('pointsHistogram.title')}</h1><p className="stats-subtitle">{t('common.loading')}</p></div></div>
           <div className="stats-skeleton" />
           <div className="stats-skeleton" style={{ height: 200, marginTop: 24 }} />
         </div>
@@ -453,30 +459,35 @@ export default function PointsHistogram() {
       <style>{FONTS + CSS}</style>
       <div data-theme={theme} className="stats-page">
 
-        <button className="stats-back-btn" onClick={() => navigate(`/group/${groupId}`)}>← Volver al grupo</button>
+      <BackButton className="stats-back-btn" onClick={() => navigate(`/group/${groupId}`)}>← {t('pointsHistogram.backToGroup')}</BackButton>
 
         <StatsTabBar active="charts" groupId={groupId} />
 
         {/* HEADER */}
         <div className="stats-header">
           <div className="stats-header-left">
-            <h1 className="stats-title">📊 Histograma de Puntos</h1>
-            <p className="stats-subtitle">{groupInfo?.nombre} · Puntos obtenidos por usuario en cada carrera</p>
+            <h1 className="stats-title">📊 {t('pointsHistogram.title')}</h1>
+            <p className="stats-subtitle">{groupInfo?.nombre} · {t('pointsHistogram.subtitle')}</p>
           </div>
           {chartData.length > 0 && (
-            <button className="stats-export-btn" onClick={handleExport} disabled={exporting}>
-              {exporting ? '⏳ Exportando...' : '📥 Exportar Excel'}
-            </button>
+            <PaywallGate feature="export_excel" compact>
+              <button className="stats-export-btn" onClick={handleExport} disabled={exporting}>
+                {exporting ? `⏳ ${t('pointsHistogram.exporting')}` : `📥 ${t('pointsHistogram.exportExcel')}`}
+              </button>
+            </PaywallGate>
           )}
+
         </div>
 
         {/* CONTROLS */}
         <div className="stats-controls">
           {hasSprints && (
             <div className="stats-control-group">
-              <label>Tipo de Carrera</label>
+              <label>{t('pointsHistogram.raceTypeLabel')}</label>
               <div className="stats-filter-bar">
-                {[{ key: 'todas', label: 'Todas' }, { key: 'carrera', label: '🏁 Carreras' }, { key: 'sprint', label: '⚡ Sprints' }].map(opt => (
+                {[  { key: 'todas', label: t('pointsHistogram.filterAll') },
+                    { key: 'carrera', label: `🏁 ${t('common.races')}` },
+                    { key: 'sprint', label: `⚡ ${t('tabs.sprints')}` }].map(opt => (
                   <button key={opt.key} className={`stats-filter-btn ${filterType === opt.key ? 'active' : ''}`} onClick={() => setFilterType(opt.key)}>{opt.label}</button>
                 ))}
               </div>
@@ -485,18 +496,18 @@ export default function PointsHistogram() {
 
           {forecastData.length > 0 && (
             <div className="stats-control-group">
-              <label>Proyección</label>
+              <label>{t('pointsHistogram.forecastLabel')}</label>
               <button className={`stats-toggle-btn ${showForecast ? 'active' : ''}`} onClick={() => setShowForecast(!showForecast)}>
-                {showForecast ? '📈 Proyección ON' : '📈 Proyección OFF'}
+                📈 {t('pointsHistogram.forecastLabel')} {showForecast ? t('pointsHistogram.on') : t('pointsHistogram.off')}
               </button>
             </div>
           )}
 
           <div className="stats-control-group">
-            <label>Gráfico</label>
+            <label>{t('pointsHistogram.chartLabel')}</label>
             <div className="stats-filter-bar">
-              <button className={`stats-filter-btn ${activeChart === 'barras' ? 'active' : ''}`} onClick={() => setActiveChart('barras')}>📊 Barras</button>
-              <button className={`stats-filter-btn ${activeChart === 'acumulado' ? 'active' : ''}`} onClick={() => setActiveChart('acumulado')}>📈 Acumulado</button>
+              <button className={`stats-filter-btn ${activeChart === 'barras' ? 'active' : ''}`} onClick={() => setActiveChart('barras')}>📊 {t('pointsHistogram.barsChart')}</button>
+              <button className={`stats-filter-btn ${activeChart === 'acumulado' ? 'active' : ''}`} onClick={() => setActiveChart('acumulado')}>📈 {t('pointsHistogram.cumulativeChart')}</button>
             </div>
           </div>
         </div>
@@ -505,10 +516,10 @@ export default function PointsHistogram() {
         {userList.length > 1 && (
           <div className="user-chips-container">
             <div className="user-chips-header">
-              <span className="user-chips-label">Filtrar Usuarios</span>
+              <span className="user-chips-label">{t('pointsHistogram.filterUsers')}</span>
               <div className="user-chips-actions">
-                <button className="user-chips-action-btn" onClick={selectAllUsers}>Todos</button>
-                <button className="user-chips-action-btn" onClick={clearAllUsers}>Ninguno</button>
+                <button className="user-chips-action-btn" onClick={selectAllUsers}>{t('pointsHistogram.allUsers')}</button>
+                <button className="user-chips-action-btn" onClick={clearAllUsers}>{t('pointsHistogram.noneUsers')}</button>
               </div>
             </div>
             <div className="user-chips">
@@ -529,20 +540,20 @@ export default function PointsHistogram() {
         {/* FORECAST LEGEND */}
         {showForecast && forecastData.length > 0 && activeChart === 'barras' && (
           <div className="forecast-legend">
-            <div className="forecast-legend-item"><div className="forecast-legend-swatch" style={{ background: 'var(--red)' }} /><span>Resultado real</span></div>
-            <div className="forecast-legend-item"><div className="forecast-legend-swatch" style={{ background: 'var(--red)', opacity: 0.35, border: '1px dashed var(--muted)' }} /><span>Proyección (promedio ponderado)</span></div>
-            <span style={{ fontSize: 11, fontStyle: 'italic' }}>Las carreras más recientes tienen mayor peso</span>
+            <div className="forecast-legend-item"><div className="forecast-legend-swatch" style={{ background: 'var(--red)' }} /><span>{t('pointsHistogram.realResult')}</span></div>
+            <div className="forecast-legend-item"><div className="forecast-legend-swatch" style={{ background: 'var(--red)', opacity: 0.35, border: '1px dashed var(--muted)' }} /><span>{t('pointsHistogram.forecastWeighted')}</span></div>
+            <span style={{ fontSize: 11, fontStyle: 'italic' }}>{t('pointsHistogram.recentRacesWeight')}</span>
           </div>
         )}
 
         {/* BAR CHART */}
         {activeChart === 'barras' && (
           <div className="stats-panel">
-            <div className="stats-panel-title">📊 Puntos por Carrera</div>
+            <div className="stats-panel-title">📊 {t('pointsHistogram.pointsByRace')}</div>
             {combinedChartData.length === 0 || visibleUsers.length === 0 ? (
               <div className="stats-empty">
                 <span className="stats-empty-icon">📊</span>
-                <span style={{ fontSize: 15 }}>{scores.length === 0 ? 'No hay puntuaciones registradas' : visibleUsers.length === 0 ? 'Selecciona al menos un usuario' : 'No hay datos para el filtro seleccionado'}</span>
+                <span style={{ fontSize: 15 }}>{scores.length === 0 ? t('pointsHistogram.noScores') : visibleUsers.length === 0 ? t('pointsHistogram.selectAtLeastOneUser') : t('pointsHistogram.noDataForFilter')}</span>
               </div>
             ) : (
               <ResponsiveContainer width="100%" height={Math.max(400, visibleUsers.length * 20 + 360)}>
@@ -550,12 +561,12 @@ export default function PointsHistogram() {
                   <CartesianGrid strokeDasharray="3 3" stroke={tc.grid} vertical={false} />
                   <XAxis dataKey="raceName" tick={{ fill: tc.muted, fontSize: 11, fontFamily: "'Barlow Condensed'", fontWeight: 600 }} tickLine={false} axisLine={{ stroke: tc.axis }} angle={-30} textAnchor="end" height={80} interval={0} />
                   <YAxis tick={{ fill: tc.muted, fontSize: 12, fontFamily: "'Share Tech Mono'" }} tickLine={false} axisLine={false}
-                    label={{ value: 'Puntos', angle: -90, position: 'insideLeft', fill: tc.muted, fontSize: 12, fontFamily: "'Barlow Condensed'", fontWeight: 600 }} />
+                   label={{ value: t('common.points'), angle: -90, position: 'insideLeft', fill: tc.muted, fontSize: 12, fontFamily: "'Barlow Condensed'", fontWeight: 600 }} />
                   <Tooltip content={<BarTooltip theme={theme} />} />
                   <Legend wrapperStyle={{ fontFamily: "'Barlow'", fontSize: 12, paddingTop: 16 }} iconType="square" iconSize={10} />
                   {showForecast && chartData.length > 0 && (
                     <ReferenceLine x={chartData[chartData.length - 1]?.raceName} stroke={tc.refLine} strokeDasharray="5 5"
-                      label={{ value: '← Real | Proyección →', position: 'top', fill: tc.refLabel, fontSize: 10, fontFamily: "'Barlow Condensed'" }} />
+                      label={{ value: t('pointsHistogram.realVsForecast'), position: 'top', fill: tc.refLabel, fontSize: 10, fontFamily: "'Barlow Condensed'" }} />
                   )}
                   {visibleUsers.map(u => <Bar key={u.id} dataKey={u.displayName} fill={u.color} radius={[4, 4, 0, 0]} maxBarSize={40} />)}
                 </BarChart>
@@ -568,13 +579,13 @@ export default function PointsHistogram() {
         {activeChart === 'acumulado' && (
           <div className="stats-panel">
             <div className="stats-panel-title">
-              📈 Puntos Acumulados
-              <span className="stats-panel-title-sub">Evolución de la distancia entre usuarios</span>
+              📈 {t('pointsHistogram.cumulativePoints')}
+              <span className="stats-panel-title-sub">{t('pointsHistogram.distanceEvolution')}</span>
             </div>
             {cumulativeData.length === 0 || visibleUsers.length === 0 ? (
               <div className="stats-empty">
                 <span className="stats-empty-icon">📈</span>
-                <span style={{ fontSize: 15 }}>{scores.length === 0 ? 'No hay puntuaciones registradas' : 'Selecciona al menos un usuario'}</span>
+                <span style={{ fontSize: 15 }}>{scores.length === 0 ? t('pointsHistogram.noScores') : t('pointsHistogram.selectAtLeastOneUser')}</span>
               </div>
             ) : (
               <ResponsiveContainer width="100%" height={Math.max(400, visibleUsers.length * 15 + 360)}>
@@ -582,7 +593,7 @@ export default function PointsHistogram() {
                   <CartesianGrid strokeDasharray="3 3" stroke={tc.grid} vertical={false} />
                   <XAxis dataKey="raceName" tick={{ fill: tc.muted, fontSize: 11, fontFamily: "'Barlow Condensed'", fontWeight: 600 }} tickLine={false} axisLine={{ stroke: tc.axis }} angle={-30} textAnchor="end" height={80} interval={0} />
                   <YAxis tick={{ fill: tc.muted, fontSize: 12, fontFamily: "'Share Tech Mono'" }} tickLine={false} axisLine={false}
-                    label={{ value: 'Pts Acumulados', angle: -90, position: 'insideLeft', fill: tc.muted, fontSize: 12, fontFamily: "'Barlow Condensed'", fontWeight: 600 }} />
+                    label={{ value: t('pointsHistogram.cumulativePtsLabel'), angle: -90, position: 'insideLeft', fill: tc.muted, fontSize: 12, fontFamily: "'Barlow Condensed'", fontWeight: 600 }} />
                   <Tooltip content={<LineTooltip theme={theme} />} />
                   <Legend wrapperStyle={{ fontFamily: "'Barlow'", fontSize: 12, paddingTop: 16 }} iconType="line" iconSize={14} />
                   {visibleUsers.map(u => (
@@ -599,7 +610,7 @@ export default function PointsHistogram() {
         {/* RANKING */}
         {stats?.ranking?.length > 0 && (
           <div className="stats-panel">
-            <div className="stats-panel-title">🏆 Ranking Acumulado <span className="stats-panel-title-sub">({stats.totalCarreras} {stats.totalCarreras === 1 ? 'carrera' : 'carreras'})</span></div>
+            <div className="stats-panel-title">🏆 {t('pointsHistogram.cumulativeRanking')} <span className="stats-panel-title-sub">({stats.totalCarreras} {stats.totalCarreras === 1 ? t('pointsHistogram.raceSingular') : t('common.races')})</span></div>
             <div className="ranking-grid">
               {stats.ranking.map((u, i) => {
                 const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `#${i + 1}`;
@@ -612,9 +623,13 @@ export default function PointsHistogram() {
                     <div className="ranking-info">
                       <div className="ranking-name">{u.name}</div>
                       <div className="ranking-bar-bg"><div className="ranking-bar-fill" style={{ width: `${pct}%`, background: u.color }} /></div>
-                      <div className="ranking-details"><span>🎯 {u.aciertos_exactos} exactos</span><span>✓ {u.aciertos_piloto} pilotos</span><span>🏁 {u.carreras} carreras</span></div>
+                      <div className="ranking-details">
+                        <span>🎯 {t('common.exactCount', { count: u.aciertos_exactos })}</span>
+                        <span>✓ {t('pointsHistogram.driversCount', { count: u.aciertos_piloto })}</span>
+                        <span>🏁 {t('pointsHistogram.racesCount', { count: u.carreras })}</span>
+                      </div>
                     </div>
-                    <div className="ranking-points"><div className="ranking-points-value">{Math.round(u.puntos)}</div><div className="ranking-points-label">pts</div></div>
+                    <div className="ranking-points"><div className="ranking-points-value">{Math.round(u.puntos)}</div><div className="ranking-points-label">{t('common.pts')}</div></div>
                   </div>
                 );
               })}
@@ -625,7 +640,7 @@ export default function PointsHistogram() {
         {/* FORECAST SUMMARY */}
         {showForecast && stats?.ranking?.length > 0 && forecastData.length > 0 && (
           <div className="stats-panel">
-            <div className="stats-panel-title">📈 Proyección Final de Temporada <span className="stats-panel-title-sub">(+{forecastData.length} carreras · promedio ponderado)</span></div>
+          <div className="stats-panel-title">📈 {t('pointsHistogram.finalSeasonForecast')}<span className="stats-panel-title-sub">{t('pointsHistogram.forecastRacesNote', { count: forecastData.length })}</span></div>
             <div className="ranking-grid">
               {stats.ranking.filter(u => selectedUsers.has(u.id)).map(u => {
                 const fpr = forecastData[0]?.[u.name] || 0;
@@ -639,9 +654,12 @@ export default function PointsHistogram() {
                     <div className="ranking-info">
                       <div className="ranking-name">{u.name}</div>
                       <div className="ranking-bar-bg"><div className="ranking-bar-fill" style={{ width: `${pct}%`, background: u.color }} /></div>
-                      <div className="ranking-details"><span>Actual: {Math.round(u.puntos)} pts</span><span>+{Math.round(u.fpr * forecastData.length)} proyectados</span></div>
-                    </div>
-                    <div className="ranking-points"><div className="ranking-points-value">{u.projectedTotal}</div><div className="ranking-points-label">pts est.</div></div>
+                      <div className="ranking-details">
+                        <span>{t('pointsHistogram.currentLabel')}: {Math.round(u.puntos)} {t('common.pts')}</span>
+                        <span>+{Math.round(u.fpr * forecastData.length)} {t('pointsHistogram.projectedSuffix')}</span>
+                      </div>                   
+                      </div>
+                    <div className="ranking-points"><div className="ranking-points-value">{u.projectedTotal}</div><div className="ranking-points-label">{t('pointsHistogram.ptsEstimated')}</div></div>
                   </div>
                 );
               })}

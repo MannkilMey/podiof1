@@ -4,12 +4,42 @@ import en from './en';
 import pt from './pt';
 
 const LANGUAGES = { es, en, pt };
+const LOCALE_MAP = {
+  es: 'es-PY',  
+  en: 'en-US',
+  pt: 'pt-BR',
+};
+
+export const CURRENCY_DECIMALS = {
+  USD: 2,
+  EUR: 2,
+  BRL: 2,
+  ARS: 2,
+  PYG: 0,
+};
+
+/**
+ * Detecta el idioma inicial:
+ * 1. Preferencia guardada en localStorage (si el usuario ya eligió antes)
+ * 2. Idioma del navegador, si es uno de los soportados (es/en/pt)
+ * 3. Inglés como fallback neutral (italiano, alemán, etc. no tienen traducción propia)
+ */
+function getInitialLocale() {
+  const saved = localStorage.getItem('podiof1_locale');
+  if (saved) return saved;
+
+  const browserLang = navigator.language?.slice(0, 2).toLowerCase();
+  if (browserLang === 'es' || browserLang === 'en' || browserLang === 'pt') {
+    return browserLang;
+  }
+  return 'en';
+}
 
 /**
  * Language Store - persiste en localStorage
  */
 export const useLanguageStore = create((set) => ({
-  locale: localStorage.getItem('podiof1_locale') || 'es',
+  locale: getInitialLocale(),
   setLocale: (locale) => {
     localStorage.setItem('podiof1_locale', locale);
     set({ locale });
@@ -51,4 +81,11 @@ export function useTranslation() {
   }
 
   return { t, locale, setLocale, locales: Object.keys(LANGUAGES) };
+}
+export function getDateLocale(locale) {
+  return LOCALE_MAP[locale] || 'es-PY';
+}
+export function getRaceName(race, t) {
+  if (!race) return '';
+  return race.slug ? t(`races.gp.${race.slug}.nombre`) : race.nombre;
 }

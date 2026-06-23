@@ -19,7 +19,7 @@ export function useUserRaceDetails(groupId, userId) {
 
       const { data: races } = await supabase
         .from('races')
-        .select('id, nombre, ronda, fecha_programada, estado')
+        .select('id, nombre, slug, ronda, fecha_programada, estado')
         .eq('temporada', group.temporada)
         .order('ronda', { ascending: true });
 
@@ -48,6 +48,7 @@ export function useUserRaceDetails(groupId, userId) {
       const raceDetails = races?.map(race => ({
         carrera_id: race.id,
         nombre: race.nombre,
+        slug: race.slug,
         ronda: race.ronda,
         fecha: race.fecha_programada,
         estado: race.estado,

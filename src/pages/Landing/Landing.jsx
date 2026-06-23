@@ -667,47 +667,78 @@ body {
 
 @media (max-width: 768px) {
   .nav {
-    padding: 20px 24px;
+    padding: 12px 16px;
   }
 
   .nav-logo {
-    font-size: 22px;
-  }
-
-  .nav-right {
+    font-size: 18px;
     gap: 8px;
   }
 
+  .nav-logo-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+  }
+
+  .nav-right {
+    gap: 6px;
+  }
+
+  .theme-toggle {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+  }
+
   .btn-login {
-    padding: 10px 16px;
-    font-size: 13px;
+    padding: 8px 12px;
+    font-size: 11px;
+    letter-spacing: 0.5px;
   }
 
   .btn-register {
-    padding: 10px 16px;
-    font-size: 13px;
+    padding: 8px 12px;
+    font-size: 11px;
+    letter-spacing: 0.5px;
   }
 
   .hero {
-    padding: 80px 24px 60px;
+    padding: 60px 20px 40px;
   }
 
   .hero-title {
-    font-size: 48px;
+    font-size: 36px;
   }
 
   .hero-subtitle {
-    font-size: 18px;
+    font-size: 16px;
+    margin-bottom: 32px;
+  }
+
+  .hero-badge {
+    font-size: 12px;
+    padding: 6px 14px;
+    margin-bottom: 20px;
   }
 
   .hero-cta {
     flex-direction: column;
+    gap: 12px;
+    margin-bottom: 40px;
   }
 
   .btn-hero-primary,
   .btn-hero-secondary {
     width: 100%;
     max-width: 400px;
+    padding: 14px 24px;
+    font-size: 16px;
+  }
+
+  .section-title {
+    font-size: 32px;
+    margin-bottom: 32px;
   }
 
   .features-grid {
@@ -715,20 +746,33 @@ body {
   }
 
   .cta-section {
-    margin: 60px 24px;
-    padding: 40px 32px;
+    margin: 40px 16px;
+    padding: 32px 24px;
+    border-radius: 16px;
   }
 
   .cta-title {
-    font-size: 32px;
+    font-size: 28px;
+  }
+
+  .cta-subtitle {
+    font-size: 15px;
   }
 
   .seo-section h2 {
-    font-size: 32px;
+    font-size: 28px;
   }
 
   .seo-section h3 {
-    font-size: 24px;
+    font-size: 22px;
+  }
+
+  .faq-item {
+    padding: 20px;
+  }
+
+  .faq-question {
+    font-size: 18px;
   }
 }
 `;
@@ -752,7 +796,7 @@ export default function Landing() {
           <nav className="nav">
             <div className="nav-left">
               <Link to="/" className="nav-logo">
-                <div className="nav-logo-icon">🏎</div>
+               <img src="/logo.png" alt="PodioF1" style={{width: 56, height: 56, borderRadius: 12, objectFit: 'cover'}} />
                 Podio<span>F1</span>
               </Link>
             </div>
@@ -1062,15 +1106,17 @@ export default function Landing() {
               Fantasy F1 Gratis • Grupos Privados 
             </p>
             <p className="footer-text">
-              © 2024 PodioF1. Plataforma gratuita de predicciones deportivas. 
-              
+              © 2026 PodioF1. Plataforma gratuita de predicciones deportivas.
+             
             </p>
             <p className="footer-text" style={{ marginTop: 16 }}>
               Hecho con ❤️ para los fanáticos de F1 · <Link to="/register" className="footer-link">Crear cuenta gratis</Link>
             </p>
-            <a href="/privacy">Política de Privacidad </a>
-
-            <a href="/terms">Términos y Condiciones</a>
+            <p className="footer-text" style={{ marginTop: 12, display: 'flex', gap: 16, justifyContent: 'center' }}>
+              <Link to="/privacy" className="footer-link">Política de Privacidad</Link>
+              <span style={{ color: 'var(--text-muted)' }}>·</span>
+              <Link to="/terms" className="footer-link">Términos y Condiciones</Link>
+            </p>
             
           </footer>
         </div>

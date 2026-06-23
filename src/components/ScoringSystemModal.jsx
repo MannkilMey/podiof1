@@ -1,5 +1,6 @@
 import React from 'react';
 import { useThemeStore } from '../stores/themeStore';
+import { useTranslation } from '../i18n';
 
 /**
  * Modal reutilizable para mostrar el sistema de puntos de un grupo
@@ -24,6 +25,7 @@ import { useThemeStore } from '../stores/themeStore';
 
 const ScoringSystemModal = ({ group, onClose }) => {
   const theme = useThemeStore((state) => state.theme);
+  const { t } = useTranslation();
 
   if (!group) return null;
 
@@ -68,7 +70,7 @@ const ScoringSystemModal = ({ group, onClose }) => {
           color: 'var(--white)',
           marginBottom: 8
         }}>
-          📊 Sistema de Puntos
+          📊 {t('scoringModal.title')}
         </h2>
         <p style={{
           fontSize: 16,
@@ -98,7 +100,7 @@ const ScoringSystemModal = ({ group, onClose }) => {
             alignItems: 'center',
             gap: 8
           }}>
-            🏁 CARRERAS
+            🏁 {t('scoringModal.racesSection')}
           </h3>
 
           {/* Sistema base */}
@@ -111,7 +113,7 @@ const ScoringSystemModal = ({ group, onClose }) => {
               textTransform: 'uppercase',
               letterSpacing: 1
             }}>
-              Puntos por Posición
+              {t('scoringModal.pointsByPosition')}
             </h4>
             <div style={{
               display: 'grid',
@@ -147,7 +149,7 @@ const ScoringSystemModal = ({ group, onClose }) => {
               textTransform: 'uppercase',
               letterSpacing: 1
             }}>
-              🎯 Bonus Posición Exacta
+              🎯 {t('scoringModal.exactPositionBonus')}
             </h4>
             <div style={{
               background: 'rgba(0, 212, 160, 0.15)',
@@ -158,7 +160,7 @@ const ScoringSystemModal = ({ group, onClose }) => {
               fontWeight: 600,
               fontSize: 14
             }}>
-              +{group.bonus_posicion_exacta || 0} puntos por acertar posición exacta
+              {t('scoringModal.exactPositionBonusValue', { points: group.bonus_posicion_exacta || 0 })}
             </div>
           </div>
 
@@ -173,7 +175,7 @@ const ScoringSystemModal = ({ group, onClose }) => {
                 textTransform: 'uppercase',
                 letterSpacing: 1
               }}>
-                ✓ Piloto Correcto (sin posición exacta)
+                ✓ {t('scoringModal.correctDriverNoExact')}
               </h4>
               <div style={{
                 background: 'var(--bg2)',
@@ -183,7 +185,7 @@ const ScoringSystemModal = ({ group, onClose }) => {
                 color: 'var(--white)',
                 fontSize: 14
               }}>
-                +{group.puntos_piloto_correcto || 0} puntos si el piloto termina en top {group.cantidad_posiciones}
+               {t('scoringModal.correctDriverNoExactValue', { points: group.puntos_piloto_correcto || 0, top: group.cantidad_posiciones })}
               </div>
             </div>
           )}
@@ -199,7 +201,7 @@ const ScoringSystemModal = ({ group, onClose }) => {
                 textTransform: 'uppercase',
                 letterSpacing: 1
               }}>
-                🏎️ Vuelta Rápida Piloto
+                🏎️ {t('scoringModal.fastestLapDriver')}
               </h4>
               <div style={{
                 background: 'var(--bg2)',
@@ -209,7 +211,7 @@ const ScoringSystemModal = ({ group, onClose }) => {
                 color: 'var(--white)',
                 fontSize: 14
               }}>
-                +{group.puntos_vuelta_rapida_piloto || 0} puntos por acertar vuelta más rápida
+                {t('scoringModal.fastestLapDriverValue', { points: group.puntos_vuelta_rapida_piloto || 0 })}
               </div>
             </div>
           )}
@@ -225,7 +227,7 @@ const ScoringSystemModal = ({ group, onClose }) => {
                 textTransform: 'uppercase',
                 letterSpacing: 1
               }}>
-                🏁 Vuelta Rápida Escudería
+                🏁 {t('scoringModal.fastestLapTeam')}
               </h4>
               <div style={{
                 background: 'var(--bg2)',
@@ -235,7 +237,7 @@ const ScoringSystemModal = ({ group, onClose }) => {
                 color: 'var(--white)',
                 fontSize: 14
               }}>
-                +{group.puntos_vuelta_rapida_escuderia || 0} puntos por acertar escudería con vuelta más rápida
+                {t('scoringModal.fastestLapTeamValue', { points: group.puntos_vuelta_rapida_escuderia || 0 })}
               </div>
             </div>
           )}
@@ -262,7 +264,7 @@ const ScoringSystemModal = ({ group, onClose }) => {
               alignItems: 'center',
               gap: 8
             }}>
-              ⚡ SPRINT
+              ⚡ {t('scoringModal.sprintSection')}
             </h3>
 
             {/* Sistema Sprint */}
@@ -275,7 +277,7 @@ const ScoringSystemModal = ({ group, onClose }) => {
                 textTransform: 'uppercase',
                 letterSpacing: 1
               }}>
-                Puntos por Posición
+                {t('scoringModal.pointsByPosition')}
               </h4>
               <div style={{
                 display: 'grid',
@@ -314,11 +316,11 @@ const ScoringSystemModal = ({ group, onClose }) => {
               lineHeight: 1.6
             }}>
               <div style={{marginBottom: 8, color: 'var(--white)', fontWeight: 600}}>
-                ℹ️ Características Sprint:
+                ℹ️ {t('scoringModal.sprintCharacteristics')}
               </div>
-              • Se predicen <strong style={{color: 'var(--white)'}}>{group.cantidad_posiciones_sprint || 8}</strong> posiciones<br/>
-              • Mismo sistema dual (+{group.bonus_posicion_exacta || 10} exacto, +{group.puntos_piloto_correcto || 5} piloto)<br/>
-              • <strong style={{color: '#FFB800'}}>No hay bonus de vuelta rápida</strong>
+              • {t('scoringModal.sprintPositionsPredicted', { count: group.cantidad_posiciones_sprint || 8 })}<br/>
+              • {t('scoringModal.sprintDualSystem', { exact: group.bonus_posicion_exacta || 10, driver: group.puntos_piloto_correcto || 5 })}<br/>
+              • <strong style={{color: '#FFB800'}}>{t('scoringModal.sprintNoFastestLap')}</strong>
             </div>
           </div>
         )}
@@ -339,15 +341,19 @@ const ScoringSystemModal = ({ group, onClose }) => {
             textTransform: 'uppercase',
             letterSpacing: 1
           }}>
-            📝 Ejemplo de Cálculo (Carrera)
+            📝 {t('scoringModal.exampleRaceTitle')}
           </h3>
           <div style={{fontSize: 13, color: 'var(--muted)', lineHeight: 1.6}}>
-            • Aciertas P1 exacto: {group.sistema_puntos?.['1'] || 0} + {group.bonus_posicion_exacta || 0} = {(group.sistema_puntos?.['1'] || 0) + (group.bonus_posicion_exacta || 0)} pts<br/>
+            {t('scoringModal.exampleExactP1', { 
+                base: group.sistema_puntos?.['1'] || 0, 
+                bonus: group.bonus_posicion_exacta || 0, 
+                total: (group.sistema_puntos?.['1'] || 0) + (group.bonus_posicion_exacta || 0) 
+              })}<br/>
             {group.usa_sistema_dual && (
-              <>• Aciertas piloto en P2 pero termina P4: {group.puntos_piloto_correcto || 0} pts<br/></>
+              <>• {t('scoringModal.exampleDriverOnly', { points: group.puntos_piloto_correcto || 0 })}<br/></>
             )}
             {group.bonus_vuelta_rapida_piloto && (
-              <>• Aciertas vuelta rápida piloto: +{group.puntos_vuelta_rapida_piloto || 0} pts</>
+              <>• {t('scoringModal.exampleFastestLap', { points: group.puntos_vuelta_rapida_piloto || 0 })}</>
             )}
           </div>
 
@@ -366,14 +372,18 @@ const ScoringSystemModal = ({ group, onClose }) => {
                 textTransform: 'uppercase',
                 letterSpacing: 1
               }}>
-                ⚡ Ejemplo de Cálculo (Sprint)
+                ⚡ {t('scoringModal.exampleSprintTitle')}
               </h3>
               <div style={{fontSize: 13, color: 'var(--muted)', lineHeight: 1.6}}>
-                • Aciertas P1 exacto: 8 + {group.bonus_posicion_exacta || 0} = {8 + (group.bonus_posicion_exacta || 0)} pts<br/>
+                •{t('scoringModal.exampleSprintExactP1', { 
+                    base: 8, 
+                    bonus: group.bonus_posicion_exacta || 0, 
+                    total: 8 + (group.bonus_posicion_exacta || 0) 
+                  })}<br/>
                 {group.usa_sistema_dual && (
-                  <>• Aciertas piloto en P2 pero termina P4: {group.puntos_piloto_correcto || 0} pts<br/></>
+                  <>• {t('scoringModal.exampleDriverOnly', { points: group.puntos_piloto_correcto || 0 })}<br/></>
                 )}
-                • No hay bonus de vuelta rápida en Sprint
+                • {t('scoringModal.exampleSprintNoFastestLap')}
               </div>
             </>
           )}
@@ -390,13 +400,13 @@ const ScoringSystemModal = ({ group, onClose }) => {
           color: 'var(--muted)',
           lineHeight: 1.5
         }}>
-          <strong style={{color: 'var(--white)'}}>ℹ️ Información General:</strong><br/>
-          • Carreras: {group.cantidad_posiciones} posiciones a predecir<br/>
-          {incluirSprints && (
-            <>• Sprint: {group.cantidad_posiciones_sprint || 8} posiciones a predecir<br/></>
-          )}
-          • Los puntos se calculan automáticamente al finalizar<br/>
-          • Las predicciones cierran {group.horas_cierre_prediccion || 24}h antes (o según admin)
+          <strong style={{color: 'var(--white)'}}>ℹ️ {t('scoringModal.generalInfoTitle')}</strong><br/>
+          • {t('scoringModal.generalInfoRaces', { count: group.cantidad_posiciones })}<br/>
+            {incluirSprints && (
+              <>• {t('scoringModal.generalInfoSprint', { count: group.cantidad_posiciones_sprint || 8 })}<br/></>
+            )}
+          • {t('scoringModal.generalInfoAutoCalc')}<br/>
+          • {t('scoringModal.generalInfoDeadline', { hours: group.horas_cierre_prediccion || 24 })}
         </div>
 
         {/* Botón cerrar */}
@@ -418,7 +428,7 @@ const ScoringSystemModal = ({ group, onClose }) => {
           onMouseOut={(e) => e.target.style.opacity = '1'}
           onClick={onClose}
         >
-          CERRAR
+          {t('scoringModal.closeBtn')}
         </button>
       </div>
     </div>

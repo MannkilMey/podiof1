@@ -88,7 +88,7 @@ export function useGroupDashboard(groupId, userId) {
           if (!userScoresTotal[s.usuario_id]) {
             userScoresTotal[s.usuario_id] = {
               userId: s.usuario_id,
-              nombre: `${s.users.nombre || ''} ${s.users.apellido || ''}`.trim() || 'Usuario',
+              nombre: `${s.users.nombre || ''} ${s.users.apellido || ''}`.trim(),
               puntos: 0,
               exactos: 0
             };
@@ -100,7 +100,7 @@ export function useGroupDashboard(groupId, userId) {
             if (!userScoresRaces[s.usuario_id]) {
               userScoresRaces[s.usuario_id] = {
                 userId: s.usuario_id,
-                nombre: `${s.users.nombre || ''} ${s.users.apellido || ''}`.trim() || 'Usuario',
+                nombre: `${s.users.nombre || ''} ${s.users.apellido || ''}`.trim(),
                 puntos: 0,
                 exactos: 0
               };
@@ -113,7 +113,7 @@ export function useGroupDashboard(groupId, userId) {
             if (!userScoresSprints[s.usuario_id]) {
               userScoresSprints[s.usuario_id] = {
                 userId: s.usuario_id,
-                nombre: `${s.users.nombre || ''} ${s.users.apellido || ''}`.trim() || 'Usuario',
+                nombre: `${s.users.nombre || ''} ${s.users.apellido || ''}`.trim(),
                 puntos: 0,
                 exactos: 0
               };

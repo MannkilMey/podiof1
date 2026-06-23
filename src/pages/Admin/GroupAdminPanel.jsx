@@ -4,6 +4,8 @@ import { supabase } from '../../lib/supabase';
 import { useAuthStore } from '../../stores/authStore';
 import { useThemeStore } from '../../stores/themeStore';
 import { toast } from 'sonner';
+import { useTranslation, getDateLocale, getRaceName } from '../../i18n';
+import BackButton from '../../components/BackButton';
 
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap');`;
 
@@ -508,6 +510,7 @@ export default function GroupAdminPanel() {
   const navigate = useNavigate();
   const user = useAuthStore((state) => state.user);
   const theme = useThemeStore((state) => state.theme);
+  const { t, locale } = useTranslation();
 
   const [group, setGroup] = useState(null);
   const [members, setMembers] = useState([]);
@@ -590,7 +593,7 @@ export default function GroupAdminPanel() {
         pozo_distribucion: distPreset
       });
       if (!memberCheck?.es_admin && groupData.creador_id !== user.id) {
-        toast.error('No tienes permisos de administrador');
+        toast.error(t('errors.notAdmin'));
         navigate(`/group/${groupId}`);
         return;
       }
@@ -643,7 +646,7 @@ export default function GroupAdminPanel() {
 
     } catch (err) {
       console.error('Error loading group data:', err);
-      toast.error('Error al cargar datos del grupo');
+      toast.error(t('errors.loadingGroup'));
     } finally {
       setLoading(false);
     }
@@ -720,11 +723,11 @@ export default function GroupAdminPanel() {
 
       if (error) throw error;
 
-      toast.success('Miembro aprobado');
+      toast.success(t('admin.memberApproved'));
       loadGroupData();
     } catch (err) {
       console.error('Error approving member:', err);
-      toast.error('Error al aprobar miembro');
+      toast.error(t('admin.errorApproving'));
     }
   };
 
@@ -737,18 +740,18 @@ export default function GroupAdminPanel() {
 
       if (error) throw error;
 
-      toast.success('Solicitud rechazada');
+      toast.success(t('admin.requestRejected'));
       loadGroupData();
     } catch (err) {
       console.error('Error rejecting member:', err);
-      toast.error('Error al rechazar solicitud');
+      toast.error(t('admin.errorRejecting'));
     }
   };
 
   const handleRemoveMember = async (member) => {
     setConfirmModal({
-      title: '¿Eliminar miembro?',
-      message: `¿Estás seguro de que quieres eliminar a ${member.users?.nombre || member.users?.email} del grupo?`,
+      title: t('admin.confirmRemove'),
+      message: t('admin.confirmRemoveMsg', { name: member.users?.nombre || member.users?.email }),
       onConfirm: async () => {
         try {
           const { error } = await supabase
@@ -758,23 +761,25 @@ export default function GroupAdminPanel() {
 
           if (error) throw error;
 
-          toast.success('Miembro eliminado');
+          toast.success(t('admin.memberRemoved'));
           loadGroupData();
           setConfirmModal(null);
         } catch (err) {
           console.error('Error removing member:', err);
-          toast.error('Error al eliminar miembro');
+          toast.error(t('admin.errorRemoving'));
         }
       }
     });
   };
 
   const handleToggleAdmin = async (member) => {
-    const action = member.es_admin ? 'quitar' : 'otorgar';
+    const action = member.es_admin ? t('admin.actionRemove') : t('admin.actionGrant');
+    const actionCapitalized = member.es_admin ? t('admin.actionRemoveCap') : t('admin.actionGrantCap');
+
     
     setConfirmModal({
-      title: `¿${action === 'quitar' ? 'Quitar' : 'Otorgar'} permisos de admin?`,
-      message: `¿Estás seguro de que quieres ${action} permisos de administrador a ${member.users?.nombre || member.users?.email}?`,
+      title: t('admin.confirmAdmin', { action: actionCapitalized }),
+      message: t('admin.confirmAdminMsg', { action, name: member.users?.nombre || member.users?.email }),
       onConfirm: async () => {
         try {
           const { error } = await supabase
@@ -784,12 +789,12 @@ export default function GroupAdminPanel() {
 
           if (error) throw error;
 
-          toast.success(member.es_admin ? 'Permisos de admin removidos' : 'Permisos de admin otorgados');
+          toast.success(member.es_admin ? t('admin.adminRemoved') : t('admin.adminGranted'));
           loadGroupData();
           setConfirmModal(null);
         } catch (err) {
           console.error('Error toggling admin:', err);
-          toast.error('Error al cambiar permisos');
+          toast.error(t('admin.errorTogglingAdmin'));
         }
       }
     });
@@ -797,7 +802,7 @@ export default function GroupAdminPanel() {
 
   const handleCopyCode = () => {
     navigator.clipboard.writeText(group.codigo_invitacion);
-    toast.success('Código copiado al portapapeles');
+    toast.success(t('admin.codeCopied'));
   };
 
   // 🆕 Función para guardar vuelta rápida
@@ -841,21 +846,21 @@ export default function GroupAdminPanel() {
       console.error('Error recalculando puntos:', recalcError);
       toast.warning(
         pilotoId 
-          ? '⚠️ Vuelta rápida guardada pero no se pudieron recalcular puntos automáticamente' 
-          : '🗑️ Vuelta rápida eliminada'
+          ? t('admin.fastestLapSavedNoRecalc') 
+          : t('admin.fastestLapCleared')
       );
     } else {
       console.log('✅ Puntos recalculados:', recalcData);
       toast.success(
         pilotoId 
-          ? `✅ Vuelta rápida guardada y puntos recalculados (${recalcData?.[0]?.predicciones_calculadas || 0} predicciones)` 
-          : '🗑️ Vuelta rápida eliminada y puntos recalculados'
+          ? t('admin.fastestLapSavedRecalc', { count: recalcData?.[0]?.predicciones_calculadas || 0 }) 
+          : t('admin.fastestLapClearedRecalc')
       );
     }
 
   } catch (err) {
     console.error('Error saving fastest lap:', err);
-    toast.error('Error al guardar vuelta rápida');
+    toast.error(t('admin.errorSavingFastestLap'));
   } finally {
     setSavingFastestLap(null);
   }
@@ -870,7 +875,7 @@ const handleClearFastestLap = async (raceId) => {
       <>
         <style>{FONTS + CSS}</style>
         <div data-theme={theme} className="admin-container">
-          <div className="empty-state">Cargando...</div>
+          <div className="empty-state">{t('common.loading')}</div>
         </div>
       </>
     );
@@ -882,30 +887,30 @@ const handleClearFastestLap = async (raceId) => {
       <div data-theme={theme} className="admin-container">
         {/* Header */}
         <div className="admin-header">
-          <h1 className="admin-title">Administrar Grupo</h1>
-          <button className="btn-back" onClick={() => navigate(`/group/${groupId}`)}>
-            ← Volver
-          </button>
+          <h1 className="admin-title">{t('admin.title')}</h1>
+          <BackButton className="btn-back" onClick={() => navigate(`/group/${groupId}`)}>
+            {t('admin.back')}
+          </BackButton>
         </div>
 
         {/* Info del Grupo */}
         <div className="admin-section">
-          <h2 className="section-title">Información del Grupo</h2>
+          <h2 className="section-title">{t('admin.groupInfo')}</h2>
           <div className="group-info">
             <div className="info-box">
-              <div className="info-label">Nombre</div>
+              <div className="info-label">{t('admin.name')}</div>
               <div className="info-value">{group?.nombre}</div>
             </div>
             <div className="info-box">
-              <div className="info-label">Temporada</div>
+              <div className="info-label">{t('admin.season')}</div>
               <div className="info-value">{group?.temporada}</div>
             </div>
             <div className="info-box">
-              <div className="info-label">Miembros</div>
+              <div className="info-label">{t('common.members')}</div>
               <div className="info-value">{members.length}</div>
             </div>
             <div className="info-box">
-              <div className="info-label">Código de Invitación</div>
+              <div className="info-label">{t('admin.inviteCode')}</div>
               <div className="code-box">
                 <div className="code-value">{group?.codigo_invitacion}</div>
                 <button className="btn-copy" onClick={handleCopyCode}>
@@ -919,7 +924,7 @@ const handleClearFastestLap = async (raceId) => {
         {/* Solicitudes Pendientes */}
         {pendingMembers.length > 0 && (
           <div className="admin-section">
-            <h2 className="section-title">Solicitudes Pendientes ({pendingMembers.length})</h2>
+            <h2 className="section-title">{t('admin.pendingRequests')} ({pendingMembers.length})</h2>
             <div className="members-list">
               {pendingMembers.map(member => (
                 <div key={member.id} className="member-card">
@@ -929,11 +934,11 @@ const handleClearFastestLap = async (raceId) => {
                     </div>
                     <div className="member-details">
                       <div className="member-name">
-                        {member.users?.nombre ? `${member.users.nombre} ${member.users.apellido || ''}`.trim() : 'Usuario'}
+                        {member.users?.nombre ? `${member.users.nombre} ${member.users.apellido || ''}`.trim() : t('dashboard.defaultUserName')}
                       </div>
                       <div className="member-email">{member.users?.email}</div>
                       <div className="member-badges">
-                        <span className="badge pending">Pendiente</span>
+                        <span className="badge pending">{t('common.pending')}</span>
                       </div>
                     </div>
                   </div>
@@ -942,13 +947,13 @@ const handleClearFastestLap = async (raceId) => {
                       className="btn-action btn-approve"
                       onClick={() => handleApproveMember(member.id)}
                     >
-                      Aprobar
+                      {t('admin.approve')}
                     </button>
                     <button 
                       className="btn-action btn-reject"
                       onClick={() => handleRejectMember(member.id)}
                     >
-                      Rechazar
+                      {t('admin.reject')}
                     </button>
                   </div>
                 </div>
@@ -959,7 +964,7 @@ const handleClearFastestLap = async (raceId) => {
 
         {/* Miembros Actuales */}
         <div className="admin-section">
-          <h2 className="section-title">Miembros ({members.length})</h2>
+          <h2 className="section-title">{t('admin.currentMembers')} ({members.length})</h2>
           <div className="members-list">
             {members.map(member => {
               const isCurrentUser = member.usuario_id === user.id;
@@ -973,13 +978,13 @@ const handleClearFastestLap = async (raceId) => {
                     </div>
                     <div className="member-details">
                       <div className="member-name">
-                        {member.users?.nombre ? `${member.users.nombre} ${member.users.apellido || ''}`.trim() : 'Usuario'}
-                        {isCurrentUser && ' (Tú)'}
+                        {member.users?.nombre ? `${member.users.nombre} ${member.users.apellido || ''}`.trim() : t('dashboard.defaultUserName')}
+                        {isCurrentUser && ` (${t('admin.youSuffix')})`}
                       </div>
                       <div className="member-email">{member.users?.email}</div>
                       <div className="member-badges">
-                        {member.es_admin && <span className="badge admin">Admin</span>}
-                        {isCreator && <span className="badge admin">Creador</span>}
+                        {member.es_admin && <span className="badge admin">{t('dashboard.admin')}</span>}
+                        {isCreator && <span className="badge admin">{t('admin.creatorBadge')}</span>}
                       </div>
                     </div>
                   </div>
@@ -990,13 +995,13 @@ const handleClearFastestLap = async (raceId) => {
                           className="btn-action btn-make-admin"
                           onClick={() => handleToggleAdmin(member)}
                         >
-                          {member.es_admin ? 'Quitar Admin' : 'Hacer Admin'}
+                          {member.es_admin ? t('admin.removeAdmin') : t('admin.makeAdmin')}
                         </button>
                         <button 
                           className="btn-action btn-remove"
                           onClick={() => handleRemoveMember(member)}
                         >
-                          Eliminar
+                          {t('admin.remove')}
                         </button>
                       </>
                     )}
@@ -1011,7 +1016,7 @@ const handleClearFastestLap = async (raceId) => {
         {group?.bonus_vuelta_rapida_piloto && finishedRaces.length > 0 && (
           <div className="admin-section fastest-lap-section">
             <h2 className="section-title">
-              🏁 Vuelta Rápida ({finishedRaces.length} {finishedRaces.length === 1 ? 'carrera finalizada' : 'carreras finalizadas'})
+            🏁 {t('admin.fastestLap')} ({finishedRaces.length} {finishedRaces.length === 1 ? t('admin.raceFinishedSingular') : t('admin.raceFinishedPlural')})
             </h2>
             <p style={{ 
               color: 'var(--muted)', 
@@ -1019,7 +1024,7 @@ const handleClearFastestLap = async (raceId) => {
               marginBottom: 20,
               lineHeight: 1.6 
             }}>
-              Asigna la vuelta rápida de cada carrera. El piloto seleccionado recibirá <strong style={{ color: 'var(--green)' }}>{group.puntos_vuelta_rapida_piloto} puntos extra</strong> en las predicciones que lo incluyeron.
+              {t('admin.fastestLapInstructions')} <strong style={{ color: 'var(--green)' }}>{t('admin.fastestLapExtraPoints', { points: group.puntos_vuelta_rapida_piloto })}</strong> {t('admin.fastestLapInPredictions')}
             </p>
 
             {finishedRaces.map(race => {
@@ -1032,9 +1037,9 @@ const handleClearFastestLap = async (raceId) => {
                 <div key={race.id} className="race-fastest-card">
                   <div className="race-fastest-header">
                     <div>
-                      <div className="race-fastest-title">{race.nombre}</div>
+                      <div className="race-fastest-title">{getRaceName(race, t)}</div>
                       <div className="race-fastest-date">
-                        📍 {race.circuito} • 📅 {new Date(race.fecha_programada).toLocaleDateString('es', {
+                        📍 {race.circuito} •📅 {new Date(race.fecha_programada).toLocaleDateString(getDateLocale(locale), {
                           day: 'numeric',
                           month: 'long',
                           year: 'numeric'
@@ -1050,7 +1055,7 @@ const handleClearFastestLap = async (raceId) => {
                       onChange={(e) => handleSaveFastestLap(race.id, e.target.value || null)}
                       disabled={isSaving}
                     >
-                      <option value="">-- Seleccionar piloto con vuelta rápida --</option>
+                      <option value="">{t('admin.selectFastestDriver')}</option>
                       {results.map(result => (
                         <option key={result.piloto_id} value={result.piloto_id}>
                           P{result.posicion_final} • #{result.drivers?.numero} {result.drivers?.nombre_completo}
@@ -1064,7 +1069,7 @@ const handleClearFastestLap = async (raceId) => {
                         onClick={() => handleClearFastestLap(race.id)}
                         disabled={isSaving}
                       >
-                        🗑️ Limpiar
+                        🗑️ {t('admin.clearBtn')}
                       </button>
                     )}
                   </div>
@@ -1073,7 +1078,7 @@ const handleClearFastestLap = async (raceId) => {
                     <div className="current-fastest">
                       <span className="current-fastest-icon">⚡</span>
                       <span className="current-fastest-text">
-                        Vuelta rápida: #{currentDriver.drivers?.numero} {currentDriver.drivers?.nombre_completo}
+                        {t('admin.currentFastestLabel')}: #{currentDriver.drivers?.numero} {currentDriver.drivers?.nombre_completo}
                       </span>
                     </div>
                   )}
@@ -1087,9 +1092,9 @@ const handleClearFastestLap = async (raceId) => {
 
         {/* 💰 CONFIGURACIÓN DEL POZO */}
         <div className="admin-section">
-          <h2 className="section-title">💰 Pozo del Grupo</h2>
+          <h2 className="section-title">💰 {t('pozo.title')}</h2>
           <p style={{ color: 'var(--muted)', fontSize: 14, marginBottom: 20, lineHeight: 1.6 }}>
-            Configura el pozo informativo del grupo. PodioF1 no gestiona dinero, solo muestra la información.
+            {t('admin.pozoConfigInfo')}
           </p>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -1102,8 +1107,8 @@ const handleClearFastestLap = async (raceId) => {
                 onChange={e => setPozoData({ ...pozoData, pozo_habilitado: e.target.checked })}
                 style={{ width: 18, height: 18, cursor: 'pointer' }} />
               <div>
-                <div style={{ fontWeight: 700, color: 'var(--white)', fontSize: 15 }}>Habilitar Pozo</div>
-                <div style={{ fontSize: 12, color: 'var(--muted)' }}>Los miembros verán el monto y distribución en el dashboard</div>
+                <div style={{ fontWeight: 700, color: 'var(--white)', fontSize: 15 }}>{t('admin.enablePot')}</div>
+                <div style={{ fontSize: 12, color: 'var(--muted)' }}>{t('admin.potVisibleNote')}</div>
               </div>
             </label>
 
@@ -1111,7 +1116,7 @@ const handleClearFastestLap = async (raceId) => {
               <div style={{ background: 'var(--bg3)', border: '1px solid var(--border)', borderRadius: 12, padding: 20 }}>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
                   <div>
-                    <label className="info-label">Monto por persona</label>
+                    <label className="info-label">{t('pozo.amountPerPerson')}</label>
                     <input type="number" min="0" value={pozoData.pozo_monto_por_persona}
                       onChange={e => setPozoData({ ...pozoData, pozo_monto_por_persona: Number(e.target.value) })}
                       style={{
@@ -1121,28 +1126,28 @@ const handleClearFastestLap = async (raceId) => {
                       }} />
                   </div>
                   <div>
-                    <label className="info-label">Moneda</label>
+                    <label className="info-label">{t('pozo.currency')}</label>
                     <select value={pozoData.pozo_moneda}
                       onChange={e => setPozoData({ ...pozoData, pozo_moneda: e.target.value })}
                       className="fastest-lap-select">
-                      <option value="USD">🇺🇸 USD (Dólar)</option>
-                      <option value="PYG">🇵🇾 PYG (Guaraní)</option>
-                      <option value="BRL">🇧🇷 BRL (Real)</option>
-                      <option value="ARS">🇦🇷 ARS (Peso Arg)</option>
-                      <option value="EUR">🇪🇺 EUR (Euro)</option>
+                      <option value="USD">{t('currencies.USD')}</option>
+                      <option value="PYG">{t('currencies.PYG')}</option>
+                      <option value="BRL">{t('currencies.BRL')}</option>
+                      <option value="ARS">{t('currencies.ARS')}</option>
+                      <option value="EUR">{t('currencies.EUR')}</option>
                     </select>
                   </div>
                 </div>
 
                 <div style={{ marginBottom: 16 }}>
-                  <label className="info-label">Distribución de premios</label>
+                  <label className="info-label">{t('pozo.distribution')}</label>
                   <select value={pozoData.pozo_distribucion}
                     onChange={e => setPozoData({ ...pozoData, pozo_distribucion: e.target.value })}
                     className="fastest-lap-select">
-                    <option value="60-25-15">🥇 60% · 🥈 25% · 🥉 15%</option>
-                    <option value="50-30-20">🥇 50% · 🥈 30% · 🥉 20%</option>
-                    <option value="70-20-10">🥇 70% · 🥈 20% · 🥉 10%</option>
-                    <option value="100-0-0">🥇 100% (todo al ganador)</option>
+                    <option value="60-25-15">🥇 {t('createGroup.dist602515')}</option>
+                    <option value="50-30-20">🥈 {t('createGroup.dist503020')}</option>
+                    <option value="70-20-10">🥉 {t('createGroup.dist702010')}</option>
+                    <option value="100-0-0">🥇 {t('createGroup.dist100')} {t('createGroup.distAllToWinner')}</option>
                   </select>
                 </div>
 
@@ -1151,9 +1156,9 @@ const handleClearFastestLap = async (raceId) => {
                     padding: 12, background: 'var(--bg2)', borderRadius: 8,
                     border: '1px solid var(--border)', fontSize: 13, color: 'var(--muted)', marginBottom: 16
                   }}>
-                    Total estimado: <strong style={{ color: 'var(--gold)', fontFamily: "'Barlow Condensed'", fontSize: 18 }}>
-                      {pozoData.pozo_moneda === 'PYG' ? '₲' : pozoData.pozo_moneda === 'BRL' ? 'R$' : '$'} {(pozoData.pozo_monto_por_persona * members.length).toLocaleString('es-PY')}
-                    </strong> ({members.length} miembros × {pozoData.pozo_monto_por_persona.toLocaleString('es-PY')})
+                   {t('pozo.estimatedTotal')}: <strong style={{ color: 'var(--gold)', fontFamily: "'Barlow Condensed'", fontSize: 18 }}>
+                    {pozoData.pozo_moneda === 'PYG' ? '₲' : pozoData.pozo_moneda === 'BRL' ? 'R$' : '$'} {(pozoData.pozo_monto_por_persona * members.length).toLocaleString(getDateLocale(locale))}
+                  </strong> {t('admin.potMembersBreakdown', { count: members.length, amount: pozoData.pozo_monto_por_persona.toLocaleString(getDateLocale(locale)) })}
                   </div>
                 )}
               </div>
@@ -1176,10 +1181,10 @@ const handleClearFastestLap = async (raceId) => {
                     pozo_distribucion: presets[pozoData.pozo_distribucion] || presets['60-25-15']
                   }).eq('id', groupId);
                   if (error) throw error;
-                  toast.success('Configuración del pozo guardada');
+                  toast.success(t('pozo.configSaved'));
                 } catch (err) {
                   console.error(err);
-                  toast.error('Error al guardar configuración del pozo');
+                  toast.error(t('admin.errorSavingPot'));
                 } finally {
                   setSavingPozo(false);
                 }
@@ -1188,14 +1193,14 @@ const handleClearFastestLap = async (raceId) => {
               className="btn-save-fastest"
               style={{ alignSelf: 'flex-start' }}
             >
-              {savingPozo ? 'Guardando...' : '💾 Guardar Configuración del Pozo'}
+              {savingPozo ? t('admin.savingPot') : `💾 ${t('pozo.saveConfig')}`}
             </button>
           </div>
         </div>
             {/* 🆕 INGRESAR RESULTADOS MANUALMENTE */}
             <div className="admin-section">
               <h2 className="section-title">
-                📊 Gestionar Resultados de Carreras
+                📊 {t('admin.manageResults')}
               </h2>
               <p style={{ 
                 color: 'var(--muted)', 
@@ -1203,14 +1208,14 @@ const handleClearFastestLap = async (raceId) => {
                 marginBottom: 20,
                 lineHeight: 1.6 
               }}>
-                Ingresa los resultados de las carreras manualmente (ideal para Sprints o cuando OpenF1 no tiene datos).
-              </p>
+                  {t('admin.manageResultsSubLong')}
+                </p>
 
               {loadingRaces ? (
-                <div style={{ color: 'var(--muted)', padding: 20 }}>Cargando carreras...</div>
+                <div style={{ color: 'var(--muted)', padding: 20 }}>{t('admin.loadingRaces')}</div>
               ) : allRacesData.length === 0 ? (
                 <div className="empty-state">
-                  No hay carreras programadas o finalizadas
+                  {t('admin.noRacesScheduled')}
                 </div>
               ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -1254,7 +1259,7 @@ const handleClearFastestLap = async (raceId) => {
                             fontWeight: 800,
                             color: 'var(--white)'
                           }}>
-                            {race.nombre}
+                            {getRaceName(race, t)}
                           </span>
                         </div>
                         
@@ -1266,16 +1271,16 @@ const handleClearFastestLap = async (raceId) => {
                           flexWrap: 'wrap'
                         }}>
                           <span>📍 {race.circuito}</span>
-                          <span>📅 {new Date(race.fecha_programada).toLocaleDateString('es', {
-                            day: 'numeric',
-                            month: 'long',
-                            year: 'numeric'
-                          })}</span>
+                         <span>📅 {new Date(race.fecha_programada).toLocaleDateString(getDateLocale(locale), {
+                          day: 'numeric',
+                          month: 'long',
+                          year: 'numeric'
+                        })}</span>
                           <span style={{
                             color: race.estado === 'finalizada' ? 'var(--green)' : 'var(--muted)',
                             fontWeight: race.estado === 'finalizada' ? 700 : 400
                           }}>
-                            {race.estado === 'finalizada' ? '✓ Finalizada' : '⏳ Programada'}
+                              {race.estado === 'finalizada' ? t('admin.finished') : `⏳ ${t('common.scheduled')}`}
                           </span>
                         </div>
                       </div>
@@ -1318,7 +1323,7 @@ const handleClearFastestLap = async (raceId) => {
                           }
                         }}
                       >
-                        {race.estado === 'finalizada' ? '✏️ Editar Resultados' : '➕ Ingresar Resultados'}
+                        {race.estado === 'finalizada' ? `✏️ ${t('admin.editResults')}` : `➕ ${t('admin.enterResults')}`}
                       </button>
                     </div>
                   ))}
@@ -1336,13 +1341,13 @@ const handleClearFastestLap = async (raceId) => {
                   className="btn-modal btn-modal-danger"
                   onClick={confirmModal.onConfirm}
                 >
-                  Confirmar
+                  {t('common.confirm')}
                 </button>
                 <button 
                   className="btn-modal btn-modal-cancel"
                   onClick={() => setConfirmModal(null)}
                 >
-                  Cancelar
+                  {t('common.cancel')}
                 </button>
               </div>
             </div>

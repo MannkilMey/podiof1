@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { supabase } from '../lib/supabase'
+import { usePremiumStore } from './premiumStore'
 
 export const useAuthStore = create((set) => ({
   user: null,
@@ -45,6 +46,7 @@ export const useAuthStore = create((set) => ({
   signOut: async () => {
     const { error } = await supabase.auth.signOut()
     if (error) throw error
+    usePremiumStore.getState().reset()
     set({ user: null, session: null })
   },
 }))

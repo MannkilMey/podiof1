@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useThemeStore } from '../stores/themeStore';
 import { usePremium } from '../hooks/usePremium';
+import { useTranslation } from '../i18n';
 
 /**
  * PaywallGate - Envuelve contenido premium
@@ -23,56 +24,20 @@ import { usePremium } from '../hooks/usePremium';
  *   </PaywallGate>
  */
 
-const FEATURE_INFO = {
-  stats_advanced: {
-    icon: '📊',
-    title: 'Análisis Avanzado',
-    description: 'Accedé a estadísticas detalladas, comparaciones y análisis profundo de predicciones.'
-  },
-  deep_analytics: {
-    icon: '🔬',
-    title: 'Deep Analytics',
-    description: 'Ganadores por carrera, puntos pre-carrera, performance de pilotos y más.'
-  },
-  export_excel: {
-    icon: '📥',
-    title: 'Exportar a Excel',
-    description: 'Descargá tus datos en formato Excel para análisis offline.'
-  },
-  unlimited_groups: {
-    icon: '👥',
-    title: 'Grupos Ilimitados',
-    description: 'Unite a todos los grupos que quieras sin límite.'
-  },
-  no_ads: {
-    icon: '🚫',
-    title: 'Sin Publicidad',
-    description: 'Disfrutá de la app sin banners ni interrupciones.'
-  },
-  custom_profile: {
-    icon: '🎨',
-    title: 'Perfil Personalizado',
-    description: 'Personalizá tu perfil con colores y estilos exclusivos.'
-  },
-  badge_supporter: {
-    icon: '⭐',
-    title: 'Badge Supporter',
-    description: 'Badge exclusivo que muestra tu apoyo a PodioF1.'
-  }
+const FEATURE_ICONS = {
+  stats_advanced: '📊',
+  deep_analytics: '🔬',
+  export_excel: '📥',
+  unlimited_groups: '👥',
+  no_ads: '🚫',
+  custom_profile: '🎨',
+  badge_supporter: '⭐'
 };
-
-const PREMIUM_BENEFITS = [
-  '📊 Análisis avanzado de predicciones',
-  '🔬 Deep Analytics con métricas de pilotos',
-  '📥 Exportar datos a Excel',
-  '👥 Grupos ilimitados',
-  '⭐ Badge exclusivo "Supporter"',
-  '🚫 Sin publicidad'
-];
 
 export default function PaywallGate({ feature, children, fallback, blur = true, compact = false }) {
   const { checkFeature, prices, loading } = usePremium();
   const theme = useThemeStore((state) => state.theme);
+  const { t } = useTranslation();
   const [showModal, setShowModal] = useState(false);
 
   // While loading, show children (avoids flash)
@@ -84,7 +49,18 @@ export default function PaywallGate({ feature, children, fallback, blur = true, 
   // If custom fallback provided, use it
   if (fallback) return fallback;
 
-  const info = FEATURE_INFO[feature] || { icon: '🔒', title: 'Premium', description: 'Esta función requiere una suscripción.' };
+  const hasFeatureInfo = FEATURE_ICONS[feature] !== undefined;
+  const info = hasFeatureInfo
+    ? {
+        icon: FEATURE_ICONS[feature],
+        title: t(`paywallGate.features.${feature}.title`),
+        description: t(`paywallGate.features.${feature}.description`)
+      }
+    : {
+        icon: '🔒',
+        title: t('paywallGate.fallbackTitle'),
+        description: t('paywallGate.fallbackDescription')
+      };
 
   // ============================================
   // COMPACT MODE (for inline buttons)
@@ -114,7 +90,7 @@ export default function PaywallGate({ feature, children, fallback, blur = true, 
         onMouseEnter={e => { e.currentTarget.style.background = 'rgba(201,168,76,0.15)'; }}
         onMouseLeave={e => { e.currentTarget.style.background = 'var(--bg3)'; }}
       >
-        👑 Premium
+        👑 {t('paywallGate.premiumButtonLabel')}
         {showModal && <UpgradeModal onClose={() => setShowModal(false)} prices={prices} theme={theme} />}
       </button>
     );
@@ -190,11 +166,11 @@ export default function PaywallGate({ feature, children, fallback, blur = true, 
             onMouseEnter={e => { e.currentTarget.style.opacity = '0.9'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
             onMouseLeave={e => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.transform = 'translateY(0)'; }}
           >
-            👑 Hacete Premium
+            👑 {t('premium.getPremium')}
           </button>
 
           <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 10 }}>
-            Desde ${prices.monthly}/mes
+            {t('paywallGate.fromPrice', { price: prices.monthly })}
           </div>
         </div>
       </div>
@@ -207,7 +183,10 @@ export default function PaywallGate({ feature, children, fallback, blur = true, 
 // ============================================
 // UPGRADE MODAL
 // ============================================
-function UpgradeModal({ onClose, prices, theme }) {
+export function UpgradeModal({ onClose, prices, theme }) {
+  const { t } = useTranslation();
+  const benefits = t('premium.benefits');
+
   return (
     <div
       data-theme={theme}
@@ -237,17 +216,17 @@ function UpgradeModal({ onClose, prices, theme }) {
             fontSize: 28, fontWeight: 900, color: 'white',
             letterSpacing: 1, textTransform: 'uppercase'
           }}>
-            PodioF1 Premium
+            {t('premium.title')}
           </div>
           <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.8)', marginTop: 4 }}>
-            Llevá tu experiencia al siguiente nivel
+            {t('premium.subtitle')}
           </div>
         </div>
 
         {/* Benefits */}
         <div style={{ padding: '24px 28px' }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 24 }}>
-            {PREMIUM_BENEFITS.map((benefit, i) => (
+            {Array.isArray(benefits) && benefits.map((benefit, i) => (
               <div key={i} style={{
                 display: 'flex', alignItems: 'center', gap: 10,
                 fontSize: 14, color: 'var(--white)'
@@ -276,15 +255,15 @@ function UpgradeModal({ onClose, prices, theme }) {
                 fontWeight: 800, padding: '2px 10px', borderRadius: 10,
                 textTransform: 'uppercase', letterSpacing: 1
               }}>
-                Popular
+                {t('premium.popular')}
               </div>
-              <div style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>Mensual</div>
+              <div style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>{t('premium.monthly')}</div>
               <div style={{
                 fontFamily: "'Barlow Condensed'", fontSize: 28, fontWeight: 900, color: 'var(--gold)'
               }}>
                 ${prices.monthly}
               </div>
-              <div style={{ fontSize: 10, color: 'var(--muted)' }}>por mes</div>
+              <div style={{ fontSize: 10, color: 'var(--muted)' }}>{t('premium.perMonth')}</div>
             </div>
 
             <div style={{
@@ -292,14 +271,14 @@ function UpgradeModal({ onClose, prices, theme }) {
               border: '1px solid var(--border)', borderRadius: 12,
               textAlign: 'center'
             }}>
-              <div style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>Temporada</div>
+              <div style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>{t('premium.seasonal')}</div>
               <div style={{
                 fontFamily: "'Barlow Condensed'", fontSize: 28, fontWeight: 900, color: 'var(--white)'
               }}>
                 ${prices.seasonal}
               </div>
               <div style={{ fontSize: 10, color: 'var(--green)' }}>
-                Ahorrás {Math.round((1 - prices.seasonal / (prices.monthly * 10)) * 100)}%
+                {t('premium.savings', { pct: Math.round((1 - prices.seasonal / (prices.monthly * 10)) * 100) })}
               </div>
             </div>
           </div>
@@ -308,7 +287,7 @@ function UpgradeModal({ onClose, prices, theme }) {
           <button
             onClick={() => {
               // TODO: Integrate payment provider
-              alert('Próximamente: integración con MercadoPago');
+              alert(t('paywallGate.comingSoonAlert'));
               onClose();
             }}
             style={{
@@ -323,14 +302,14 @@ function UpgradeModal({ onClose, prices, theme }) {
             onMouseEnter={e => { e.currentTarget.style.opacity = '0.9'; }}
             onMouseLeave={e => { e.currentTarget.style.opacity = '1'; }}
           >
-            Suscribirme Ahora
+            {t('premium.subscribe')}
           </button>
 
           <div style={{
             textAlign: 'center', fontSize: 11, color: 'var(--muted)',
             marginTop: 12, lineHeight: 1.5
           }}>
-            Cancelá cuando quieras · Sin compromisos
+            {t('premium.cancelAnytime')}
           </div>
         </div>
       </div>
@@ -347,12 +326,14 @@ function UpgradeModal({ onClose, prices, theme }) {
 
 /**
  * PremiumBadge - Small inline badge to indicate premium feature
- * Usage: <PremiumBadge /> next to a feature label
+ * Usage: <PremiumBadge /> next to a feature label (defaults to 'stats_advanced')
+ *        <PremiumBadge feature="deep_analytics" /> for a specific feature
  */
-export function PremiumBadge() {
+export function PremiumBadge({ feature = 'stats_advanced' }) {
   const { checkFeature } = usePremium();
-  // Don't show badge if paywall is off
-  if (checkFeature('stats_advanced')) return null;
+  const { t } = useTranslation();
+  // Don't show badge if paywall is off or this feature is accessible
+  if (checkFeature(feature)) return null;
   
   return (
     <span style={{
@@ -363,7 +344,7 @@ export function PremiumBadge() {
       textTransform: 'uppercase', letterSpacing: 0.5,
       marginLeft: 6, verticalAlign: 'middle'
     }}>
-      👑 PRO
+      👑 {t('paywallGate.proTag')}
     </span>
   );
 }

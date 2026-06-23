@@ -7,6 +7,8 @@ import { useGroupMembers } from '../../hooks/useGroupMembers';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
 import { supabase } from '../../lib/supabase';
 import { canPredictRace, canPredictRaceSync} from '../../utils/canPredictRace';
+import { useTranslation, getDateLocale, getRaceName } from '../../i18n';
+import BackButton from '../../components/BackButton';
 
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap');`;
 
@@ -623,6 +625,7 @@ export default function GroupDetail() {
   const user = useAuthStore((state) => state.user);
   const theme = useThemeStore((state) => state.theme);
   const toast = useToastStore();
+  const { t, locale } = useTranslation();
 
   const [group, setGroup] = useState(null);
   const [groupLoading, setGroupLoading] = useState(true);
@@ -672,7 +675,6 @@ export default function GroupDetail() {
         setCurrentUserMember(memberData);
       } catch (err) {
         console.error('Error loading group:', err);
-        toast.error('Error al cargar el grupo');
       } finally {
         setGroupLoading(false);
       }
@@ -725,7 +727,7 @@ export default function GroupDetail() {
       setRaces(racesWithConfig);
     } catch (err) {
       console.error('Error loading races:', err);
-      toast.error('Error al cargar carreras');
+      toast.error(t('groupDetail.errorLoadingRaces'));
     } finally {
       setRacesLoading(false);
     }
@@ -812,7 +814,7 @@ export default function GroupDetail() {
 
     } catch (err) {
       console.error('Error loading prediction stats:', err);
-      toast.error('Error al cargar estadísticas');
+      toast.error(t('groupDetail.errorLoadingStats'));
     } finally {
       setLoadingStats(false);
     }
@@ -853,12 +855,12 @@ export default function GroupDetail() {
 
       toast.success(
         newValue 
-          ? '✅ Predicciones abiertas (TODOS los grupos)' 
-          : '🔒 Predicciones cerradas (TODOS los grupos)'
+          ? t('groupDetail.predictionsOpenedAllGroups')
+          : t('groupDetail.predictionsClosedAllGroups')
       );
     } catch (err) {
       console.error('Error toggling predictions:', err);
-      toast.error('Error al cambiar estado');
+      toast.error(t('groupDetail.errorChangingStatus'));
       loadRaces();
     }
   };
@@ -867,10 +869,10 @@ export default function GroupDetail() {
   const handleRemoveMember = async () => {
     const result = await removeMember(confirmRemove.member.id);
     if (result.success) {
-      toast.success(`${confirmRemove.member.fullName} ha sido eliminado del grupo`);
+      toast.success(t('groupDetail.memberRemovedToast', { name: confirmRemove.member.fullName }));
       refresh();
     } else {
-      toast.error('Error al eliminar el miembro');
+      toast.error(t('groupDetail.errorRemovingMember'));
     }
     setConfirmRemove({ show: false, member: null });
   };
@@ -878,10 +880,10 @@ export default function GroupDetail() {
   const handleLeaveGroup = async () => {
     const result = await leaveGroup(user.id);
     if (result.success) {
-      toast.success('Has abandonado el grupo');
+      toast.success(t('groupDetail.leftGroupToast'));
       navigate('/');
     } else {
-      toast.error('Error al salir del grupo');
+      toast.error(t('groupDetail.errorLeavingGroup'));
     }
   };
 
@@ -892,10 +894,10 @@ export default function GroupDetail() {
       : await makeAdmin(member.id);
 
     if (result.success) {
-      toast.success(member.isAdmin ? 'Admin removido' : 'Admin asignado');
+      toast.success(member.isAdmin ? t('groupDetail.adminRemovedToast') : t('groupDetail.adminAssignedToast'));
       refresh();
     } else {
-      toast.error('Error al cambiar permisos');
+      toast.error(t('admin.errorTogglingAdmin'));
     }
     setConfirmToggleAdmin({ show: false, member: null });
   };
@@ -903,7 +905,7 @@ export default function GroupDetail() {
   const handleShareGroup = () => {
     const inviteLink = `${window.location.origin}/join/${group.codigo_invitacion}`;
     navigator.clipboard.writeText(inviteLink);
-    toast.success('¡Link de invitación copiado! 📋');
+    toast.success(t('groupDetail.inviteLinkCopiedToast'));
   };
 
   // Abrir modal de predicciones
@@ -918,7 +920,7 @@ export default function GroupDetail() {
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('es', {
+    return date.toLocaleDateString(getDateLocale(locale), {
       weekday: 'short',
       day: 'numeric',
       month: 'short',
@@ -928,7 +930,7 @@ export default function GroupDetail() {
   };
 
   // ✅ NUEVO: Función helper para tiempo relativo
-  const getTimeAgo = (dateString) => {
+    const getTimeAgo = (dateString) => {
     const date = new Date(dateString);
     const now = new Date();
     const diffMs = now - date;
@@ -936,10 +938,10 @@ export default function GroupDetail() {
     const diffHours = Math.floor(diffMs / 3600000);
     const diffDays = Math.floor(diffMs / 86400000);
 
-    if (diffMins < 60) return `hace ${diffMins} min`;
-    if (diffHours < 24) return `hace ${diffHours}h`;
-    if (diffDays === 1) return 'hace 1 día';
-    return `hace ${diffDays} días`;
+    if (diffMins < 60) return t('groupDetail.timeAgoMinutes', { mins: diffMins });
+    if (diffHours < 24) return t('groupDetail.timeAgoHours', { hours: diffHours });
+    if (diffDays === 1) return t('groupDetail.timeAgoOneDay');
+    return t('groupDetail.timeAgoDays', { days: diffDays });
   };
 
   if (groupLoading || membersLoading) {
@@ -949,7 +951,7 @@ export default function GroupDetail() {
         <div data-theme={theme} className="group-detail">
           <div className="loading-container">
             <div className="loading-spinner"></div>
-            <div className="loading-text">Cargando detalles del grupo...</div>
+            <div className="loading-text">{t('groupDetail.loadingDetails')}</div>
           </div>
         </div>
       </>
@@ -966,9 +968,9 @@ export default function GroupDetail() {
           </button>
           <div className="empty-state">
             <div className="empty-icon">⚠️</div>
-            <div className="empty-title">Grupo no encontrado</div>
+            <div className="empty-title">{t('groupDetail.groupNotFound')}</div>
             <div className="empty-message">
-              No tienes acceso a este grupo o no existe
+              {t('groupDetail.noAccessMessage')}
             </div>
           </div>
         </div>
@@ -983,9 +985,9 @@ export default function GroupDetail() {
     <>
       <style>{FONTS + CSS}</style>
       <div data-theme={theme} className="group-detail">
-        <button className="back-btn" onClick={() => navigate(`/group/${groupId}`)}>
-          ← Volver al Dashboard
-        </button>
+        <BackButton className="back-btn" onClick={() => navigate(`/group/${groupId}`)}>
+          ← {t('groupDetail.backToDashboard')}
+        </BackButton>
 
         {/* Header Section */}
         <div className="header-section">
@@ -994,20 +996,20 @@ export default function GroupDetail() {
           <div className="group-info">
             <div className="group-info-item">
               <span>📅</span>
-              <span>Temporada {group.temporada}</span>
+              <span>{t('groupDetail.seasonYear', { year: group.temporada })}</span>
             </div>
             <div className="group-info-item">
               <span>👥</span>
-              <span>{approvedMembers.length} miembros</span>
+              <span>{approvedMembers.length} {t('common.members')}</span>
             </div>
             <div className="group-info-item">
               <span>🎯</span>
-              <span>Top {group.cantidad_posiciones || 10}</span>
+              <span>{t('groupDetail.topPositions', { count: group.cantidad_posiciones || 10 })}</span>
             </div>
             {isAdmin && (
               <div className="group-info-item">
                 <span>⚙️</span>
-                <span>Administrador</span>
+                <span>{t('groupDetail.administratorWord')}</span>
               </div>
             )}
           </div>
@@ -1017,7 +1019,7 @@ export default function GroupDetail() {
               className="btn btn-primary"
               onClick={handleShareGroup}
             >
-              🔗 Compartir Grupo
+              🔗 {t('group.shareGroup')}
             </button>
             
             {isAdmin && (
@@ -1026,13 +1028,13 @@ export default function GroupDetail() {
                   className="btn btn-secondary"
                   onClick={handleManagePredictions}
                 >
-                  ⏰ Gestionar Predicciones
+                  ⏰ {t('groupDetail.managePredictionsLabel')}
                 </button>
                 <button 
                   className="btn btn-secondary"
                   onClick={() => navigate(`/admin/group/${groupId}`)}
                 >
-                  ⚙️ Configuración
+                  ⚙️ {t('nav.settings')}
                 </button>
               </>
             )}
@@ -1041,7 +1043,7 @@ export default function GroupDetail() {
               className="btn btn-danger"
               onClick={() => setConfirmLeave(true)}
             >
-              🚪 Salir del Grupo
+              🚪 {t('groupDetail.leaveGroupBtn')}
             </button>
           </div>
         </div>
@@ -1049,22 +1051,22 @@ export default function GroupDetail() {
         {/* Info Grid */}
         <div className="info-grid">
           <div className="info-card">
-            <div className="info-label">Sistema de Puntos</div>
-            <div className="info-value">F1 Oficial</div>
+            <div className="info-label">{t('scoringModal.title')}</div>
+            <div className="info-value">{t('groupDetail.f1OfficialValue')}</div>
           </div>
 
           <div className="info-card">
-            <div className="info-label">Posiciones a Predecir</div>
+            <div className="info-label">{t('createGroup.positions')}</div>
             <div className="info-value">{group.cantidad_posiciones || 10}</div>
           </div>
 
           <div className="info-card">
-            <div className="info-label">Cierre de Predicciones</div>
-            <div className="info-value">{group.horas_cierre_prediccion || 24}h antes</div>
+            <div className="info-label">{t('createGroup.deadline')}</div>
+            <div className="info-value">{t('groupDetail.hoursBefore', { hours: group.horas_cierre_prediccion || 24 })}</div>
           </div>
 
           <div className="info-card">
-            <div className="info-label">Código de Invitación</div>
+            <div className="info-label">{t('admin.inviteCode')}</div>
             <div className="info-value" style={{ fontSize: 18 }}>
               {group.codigo_invitacion}
             </div>
@@ -1075,7 +1077,7 @@ export default function GroupDetail() {
         <div className="members-section">
           <div className="section-header">
             <h2 className="section-title">
-              👥 Miembros ({approvedMembers.length})
+              👥 {t('admin.currentMembers')} ({approvedMembers.length})
             </h2>
           </div>
 
@@ -1084,7 +1086,7 @@ export default function GroupDetail() {
               <div className="empty-icon">👥</div>
               <div className="empty-title">No hay miembros</div>
               <div className="empty-message">
-                Comparte el link de invitación para que otros se unan
+                {t('groupDetail.noMembersMessage')}
               </div>
             </div>
           ) : (
@@ -1112,11 +1114,11 @@ export default function GroupDetail() {
                     <div className="member-stats">
                       <div className="stat-item">
                         <div className="stat-value">{member.puntos || 0}</div>
-                        <div className="stat-label">Puntos</div>
+                        <div className="stat-label">{t('common.points')}</div>
                       </div>
                       <div className="stat-item">
                         <div className="stat-value">{member.exactos || 0}</div>
-                        <div className="stat-label">Exactos</div>
+                        <div className="stat-label">{t('common.exact')}</div>
                       </div>
                     </div>
 
@@ -1125,7 +1127,7 @@ export default function GroupDetail() {
                         <span className="badge badge-admin">⚙️ Admin</span>
                       )}
                       {isCurrentUser && (
-                        <span className="badge badge-you">✓ Tú</span>
+                        <span className="badge badge-you">✓ {t('racePredictions.youTag')}</span>
                       )}
                     </div>
 
@@ -1135,7 +1137,7 @@ export default function GroupDetail() {
                           <button
                             className="btn-icon"
                             onClick={() => setConfirmToggleAdmin({ show: true, member })}
-                            title={member.isAdmin ? 'Quitar admin' : 'Hacer admin'}
+                            title={member.isAdmin ? t('groupDetail.removeAdminAction') : t('groupDetail.makeAdminAction')}
                           >
                             {member.isAdmin ? '👤' : '⚙️'}
                           </button>
@@ -1144,7 +1146,7 @@ export default function GroupDetail() {
                           <button
                             className="btn-icon danger"
                             onClick={() => setConfirmRemove({ show: true, member })}
-                            title="Eliminar miembro"
+                            title={t('groupDetail.removeMemberTooltip')}
                           >
                             🗑️
                           </button>
@@ -1163,16 +1165,16 @@ export default function GroupDetail() {
           <div className="modal-overlay" onClick={() => setShowPredictionsModal(false)}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
               <div className="modal-header">
-                <h2 className="modal-title">⏰ Gestionar Predicciones</h2>
+                <h2 className="modal-title">⏰ {t('groupDetail.managePredictionsLabel')}</h2>
                 <p className="modal-subtitle">
-                  Habilita predicciones hasta el inicio de la carrera
+                  {t('groupDetail.managePredictionsSubtitle')}
                 </p>
               </div>
 
               {racesLoading ? (
                 <div className="loading-container">
                   <div className="loading-spinner"></div>
-                  <div className="loading-text">Cargando carreras...</div>
+                  <div className="loading-text">{t('admin.loadingRaces')}</div>
                 </div>
               ) : (
                 <div className="races-list">
@@ -1193,7 +1195,7 @@ export default function GroupDetail() {
                         >
                           <div className="race-item-info" style={{ flex: 1 }}>
                             <div className="race-item-name">
-                              {race.nombre}
+                              {getRaceName(race, t)}
                               {stats && (
                                 <span style={{ 
                                   marginLeft: 12, 
@@ -1210,22 +1212,22 @@ export default function GroupDetail() {
                             </div>
                             {isPast && (
                               <div className="race-item-status closed">
-                                ✓ Finalizada
+                                {t('admin.finished')}
                               </div>
                             )}
                             {!isPast && race.predicciones_forzadas_abiertas && (
                               <div className="race-item-status forced">
-                                🔓 Abierto hasta inicio
+                                🔓 {t('racesPage.openUntilStart')}
                               </div>
                             )}
                             {!isPast && !race.predicciones_forzadas_abiertas && status.canPredict && (
                               <div className="race-item-status open">
-                                ✓ Normal
+                                ✓ {t('groupDetail.statusNormalLabel')}
                               </div>
                             )}
                             {!isPast && !race.predicciones_forzadas_abiertas && !status.canPredict && (
                               <div className="race-item-status closed">
-                                🔒 Cerrado
+                                🔒 {t('racesPage.closed')}
                               </div>
                             )}
                           </div>
@@ -1270,7 +1272,7 @@ export default function GroupDetail() {
                           }}>
                             {loadingStats ? (
                               <div style={{ textAlign: 'center', padding: 20, color: 'var(--muted)' }}>
-                                Cargando estadísticas...
+                                {t('groupDetail.loadingStats')}
                               </div>
                             ) : stats ? (
                               <>
@@ -1285,7 +1287,7 @@ export default function GroupDetail() {
                                       textTransform: 'uppercase',
                                       letterSpacing: 1
                                     }}>
-                                      ✅ Han Predicho ({stats.hasPredicted.length})
+                                      ✅ {t('groupDetail.havePredictedLabel')} ({stats.hasPredicted.length})
                                     </div>
                                     <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                                       {stats.hasPredicted.map(user => (
@@ -1309,7 +1311,7 @@ export default function GroupDetail() {
                                             color: 'var(--muted)'
                                           }}>
                                             {user.wasModified && (
-                                              <span style={{ color: '#FFB800' }}>🔄 Modificado</span>
+                                              <span style={{ color: '#FFB800' }}>🔄 {t('groupDetail.modifiedTag')}</span>
                                             )}
                                             <span>{getTimeAgo(user.lastModified)}</span>
                                           </div>
@@ -1330,7 +1332,7 @@ export default function GroupDetail() {
                                       textTransform: 'uppercase',
                                       letterSpacing: 1
                                     }}>
-                                      ❌ Faltan ({stats.missing.length})
+                                      ❌ {t('groupDetail.missingLabel')} ({stats.missing.length})
                                     </div>
                                     <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                                       {stats.missing.map(user => (
@@ -1363,7 +1365,7 @@ export default function GroupDetail() {
                   className="btn btn-secondary"
                   onClick={() => setShowPredictionsModal(false)}
                 >
-                  Cerrar
+                  {t('common.close')}
                 </button>
               </div>
             </div>
@@ -1375,10 +1377,10 @@ export default function GroupDetail() {
           isOpen={confirmRemove.show}
           onClose={() => setConfirmRemove({ show: false, member: null })}
           onConfirm={handleRemoveMember}
-          title="¿Eliminar miembro?"
-          message={`¿Estás seguro de eliminar a ${confirmRemove.member?.fullName}? Esta acción no se puede deshacer.`}
-          confirmText="Eliminar"
-          cancelText="Cancelar"
+          title={t('admin.confirmRemove')}
+          message={t('groupDetail.confirmRemoveMemberMsg', { name: confirmRemove.member?.fullName })}
+          confirmText={t('admin.remove')}
+          cancelText={t('common.cancel')}
           type="danger"
         />
 
@@ -1386,10 +1388,10 @@ export default function GroupDetail() {
           isOpen={confirmLeave}
           onClose={() => setConfirmLeave(false)}
           onConfirm={handleLeaveGroup}
-          title="¿Salir del grupo?"
-          message="Perderás acceso a las predicciones y la clasificación de este grupo. Podrás volver a unirte si tienes el código de invitación."
-          confirmText="Sí, salir"
-          cancelText="Cancelar"
+          title={t('groupDetail.confirmLeaveTitle')}
+          message={t('groupDetail.confirmLeaveMsg')}
+          confirmText={t('groupDetail.yesLeaveBtn')}
+          cancelText={t('common.cancel')}
           type="warning"
         />
 
@@ -1397,14 +1399,14 @@ export default function GroupDetail() {
           isOpen={confirmToggleAdmin.show}
           onClose={() => setConfirmToggleAdmin({ show: false, member: null })}
           onConfirm={handleToggleAdmin}
-          title={confirmToggleAdmin.member?.isAdmin ? '¿Quitar admin?' : '¿Hacer admin?'}
+          title={confirmToggleAdmin.member?.isAdmin ? t('groupDetail.confirmRemoveAdminTitle') : t('groupDetail.confirmMakeAdminTitle')}
           message={
             confirmToggleAdmin.member?.isAdmin
-              ? `${confirmToggleAdmin.member?.fullName} dejará de ser administrador del grupo.`
-              : `${confirmToggleAdmin.member?.fullName} podrá gestionar el grupo y sus miembros.`
+              ? t('groupDetail.confirmRemoveAdminMsg', { name: confirmToggleAdmin.member?.fullName })
+              : t('groupDetail.confirmMakeAdminMsg', { name: confirmToggleAdmin.member?.fullName })
           }
-          confirmText={confirmToggleAdmin.member?.isAdmin ? 'Quitar admin' : 'Hacer admin'}
-          cancelText="Cancelar"
+          confirmText={confirmToggleAdmin.member?.isAdmin ? t('groupDetail.removeAdminAction') : t('groupDetail.makeAdminAction')}
+          cancelText={t('common.cancel')}
           type="info"
         />
       </div>

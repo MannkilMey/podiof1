@@ -4,6 +4,9 @@ import { useAuthStore } from '../../stores/authStore';
 import { useThemeStore } from '../../stores/themeStore';
 import { useToastStore } from '../../stores/toastStore';
 import { supabase } from '../../lib/supabase';
+import { useTranslation, getDateLocale } from '../../i18n';
+import BackButton from '../../components/BackButton';
+import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
 
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap');`;
 
@@ -235,6 +238,103 @@ const CSS = `
   opacity: 0.9;
 }
 
+.settings-panel {
+  padding: 24px;
+}
+
+.toggle-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  background: var(--bg3);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.toggle-row-info {
+  flex: 1;
+  min-width: 200px;
+}
+
+.toggle-row-label {
+  font-weight: 700;
+  color: var(--white);
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.toggle-row-desc {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 52px;
+  height: 28px;
+  flex-shrink: 0;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--bg4);
+  border: 1px solid var(--border2);
+  transition: 0.3s;
+  border-radius: 28px;
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 3px;
+  bottom: 3px;
+  background-color: var(--white);
+  transition: 0.3s;
+  border-radius: 50%;
+}
+
+input:checked + .toggle-slider {
+  background: var(--red);
+  border-color: var(--red);
+}
+
+input:checked + .toggle-slider:before {
+  transform: translateX(24px);
+}
+
+input:disabled + .toggle-slider {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.paywall-warning {
+  margin-top: 12px;
+  padding: 12px 16px;
+  background: var(--red-dim);
+  border: 1px solid rgba(232,0,45,0.3);
+  border-radius: 10px;
+  color: var(--red);
+  font-size: 13px;
+  font-weight: 600;
+}
+
 @media (max-width: 768px) {
   .super-admin-panel {
     padding: 16px;
@@ -263,6 +363,7 @@ export default function SuperAdminPanel() {
   const user = useAuthStore((state) => state.user);
   const theme = useThemeStore((state) => state.theme);
   const toast = useToastStore();
+  const { t, locale } = useTranslation();
 
   const [activeTab, setActiveTab] = useState('stats');
   const [loading, setLoading] = useState(true);
@@ -276,6 +377,11 @@ export default function SuperAdminPanel() {
   const [groups, setGroups] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
+
+  // Paywall toggle state
+  const [paywallEnabled, setPaywallEnabled] = useState(false);
+  const [savingPaywall, setSavingPaywall] = useState(false);
+  const [confirmPaywallEnable, setConfirmPaywallEnable] = useState(false);
 
   useEffect(() => {
     checkSuperAdmin();
@@ -300,7 +406,7 @@ export default function SuperAdminPanel() {
       if (error) throw error;
 
       if (!data.is_super_admin) {
-        toast.error('No tienes permisos para acceder a esta página');
+        toast.error(t('superAdmin.noPermissionToast'));
         navigate('/');
         return;
       }
@@ -309,6 +415,21 @@ export default function SuperAdminPanel() {
     } catch (err) {
       console.error('Error checking super admin:', err);
       navigate('/');
+    }
+  };
+
+  const loadPaywallSetting = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('app_settings')
+        .select('value')
+        .eq('key', 'paywall_enabled')
+        .single();
+
+      if (error) throw error;
+      setPaywallEnabled(data?.value === true);
+    } catch (err) {
+      console.error('Error loading paywall setting:', err);
     }
   };
 
@@ -349,11 +470,45 @@ export default function SuperAdminPanel() {
 
       setGroups(groupsData || []);
 
+      // Paywall setting
+      await loadPaywallSetting();
+
     } catch (err) {
       console.error('Error loading data:', err);
-      toast.error('Error al cargar datos');
+      toast.error(t('superAdmin.errorLoadingData'));
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleTogglePaywallRequest = () => {
+    if (!paywallEnabled) {
+      // Turning ON affects every user in the app — confirm first
+      setConfirmPaywallEnable(true);
+    } else {
+      // Turning OFF is always safe — apply directly
+      handleTogglePaywall(false);
+    }
+  };
+
+  const handleTogglePaywall = async (newValue) => {
+    setSavingPaywall(true);
+    try {
+      const { error } = await supabase
+        .from('app_settings')
+        .update({ value: newValue })
+        .eq('key', 'paywall_enabled');
+
+      if (error) throw error;
+
+      setPaywallEnabled(newValue);
+      toast.success(newValue ? t('superAdmin.paywallEnabledToast') : t('superAdmin.paywallDisabledToast'));
+    } catch (err) {
+      console.error('Error toggling paywall:', err);
+      toast.error(t('superAdmin.errorSavingPaywall'));
+    } finally {
+      setSavingPaywall(false);
+      setConfirmPaywallEnable(false);
     }
   };
 
@@ -375,7 +530,7 @@ export default function SuperAdminPanel() {
         <div data-theme={theme} className="super-admin-panel">
           <div style={{ textAlign: 'center', padding: '80px 20px', color: 'var(--muted)' }}>
             <div style={{ fontSize: 48, marginBottom: 16 }}>⚙️</div>
-            <div>Cargando panel...</div>
+            <div>{t('superAdmin.loadingPanel')}</div>
           </div>
         </div>
       </>
@@ -388,14 +543,14 @@ export default function SuperAdminPanel() {
     <>
       <style>{FONTS + CSS}</style>
       <div data-theme={theme} className="super-admin-panel">
-        <button className="back-btn" onClick={() => navigate('/')}>
-          ← Volver al Dashboard
-        </button>
+        <BackButton className="back-btn" onClick={() => navigate('/')}>
+          ← {t('groupDetail.backToDashboard')}
+        </BackButton>
 
         <div className="panel-header">
           <div>
-            <h1 className="panel-title">⚙️ Panel de Super Admin</h1>
-            <p className="panel-subtitle">Administración general de PodioF1</p>
+            <h1 className="panel-title">⚙️ {t('superAdmin.panelTitle')}</h1>
+            <p className="panel-subtitle">{t('superAdmin.panelSubtitle')}</p>
           </div>
         </div>
 
@@ -404,22 +559,22 @@ export default function SuperAdminPanel() {
           <div className="stat-card">
             <div className="stat-icon">👥</div>
             <div className="stat-value">{stats.totalUsers}</div>
-            <div className="stat-label">Usuarios</div>
+            <div className="stat-label">{t('superAdmin.statUsers')}</div>
           </div>
           <div className="stat-card">
             <div className="stat-icon">🏁</div>
             <div className="stat-value">{stats.totalGroups}</div>
-            <div className="stat-label">Grupos</div>
+            <div className="stat-label">{t('superAdmin.statGroups')}</div>
           </div>
           <div className="stat-card">
             <div className="stat-icon">📊</div>
             <div className="stat-value">{stats.totalPredictions}</div>
-            <div className="stat-label">Predicciones</div>
+            <div className="stat-label">{t('superAdmin.statPredictions')}</div>
           </div>
           <div className="stat-card">
             <div className="stat-icon">🏎</div>
             <div className="stat-value">{stats.totalRaces}</div>
-            <div className="stat-label">Carreras</div>
+            <div className="stat-label">{t('common.races')}</div>
           </div>
         </div>
 
@@ -430,26 +585,34 @@ export default function SuperAdminPanel() {
               className={`tab-btn ${activeTab === 'users' ? 'active' : ''}`}
               onClick={() => setActiveTab('users')}
             >
-              👥 Usuarios
+              👥 {t('superAdmin.statUsers')}
             </button>
             <button 
               className={`tab-btn ${activeTab === 'groups' ? 'active' : ''}`}
               onClick={() => setActiveTab('groups')}
             >
-              🏁 Grupos
+              🏁 {t('superAdmin.statGroups')}
+            </button>
+            <button 
+              className={`tab-btn ${activeTab === 'settings' ? 'active' : ''}`}
+              onClick={() => setActiveTab('settings')}
+            >
+              🔐 {t('superAdmin.settingsTab')}
             </button>
           </div>
 
-          {/* Search Bar */}
-          <div className="search-bar">
-            <input
-              type="text"
-              className="search-input"
-              placeholder="Buscar..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
+          {/* Search Bar — solo aplica a las tablas */}
+          {(activeTab === 'users' || activeTab === 'groups') && (
+            <div className="search-bar">
+              <input
+                type="text"
+                className="search-input"
+                placeholder={`${t('common.search')}...`}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+          )}
 
           {/* Users Table */}
           {activeTab === 'users' && (
@@ -457,12 +620,12 @@ export default function SuperAdminPanel() {
               <table>
                 <thead>
                   <tr>
-                    <th>Nombre</th>
-                    <th>Email</th>
-                    <th>País</th>
-                    <th>Año Nac.</th>
-                    <th>Registro</th>
-                    <th>Admin</th>
+                    <th>{t('admin.name')}</th>
+                    <th>{t('auth.email')}</th>
+                    <th>{t('auth.country')}</th>
+                    <th>{t('superAdmin.birthYearColumn')}</th>
+                    <th>{t('superAdmin.registeredColumn')}</th>
+                    <th>{t('dashboard.admin')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -472,10 +635,10 @@ export default function SuperAdminPanel() {
                       <td>{u.email}</td>
                       <td>{u.pais || '-'}</td>
                       <td>{u.anho_nacimiento || '-'}</td>
-                      <td>{new Date(u.created_at).toLocaleDateString('es')}</td>
+                      <td>{new Date(u.created_at).toLocaleDateString(getDateLocale(locale))}</td>
                       <td>
                         {u.is_super_admin ? (
-                          <span className="badge active">SUPER</span>
+                          <span className="badge active">{t('superAdmin.superBadge')}</span>
                         ) : (
                           <span className="badge inactive">-</span>
                         )}
@@ -493,12 +656,12 @@ export default function SuperAdminPanel() {
               <table>
                 <thead>
                   <tr>
-                    <th>Nombre</th>
-                    <th>Creador</th>
-                    <th>Temporada</th>
-                    <th>Código</th>
-                    <th>Creado</th>
-                    <th>Acción</th>
+                    <th>{t('admin.name')}</th>
+                    <th>{t('superAdmin.creatorColumn')}</th>
+                    <th>{t('admin.season')}</th>
+                    <th>{t('superAdmin.codeColumn')}</th>
+                    <th>{t('superAdmin.createdColumn')}</th>
+                    <th>{t('superAdmin.actionColumn')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -508,13 +671,13 @@ export default function SuperAdminPanel() {
                       <td>{g.creator?.nombre} {g.creator?.apellido}</td>
                       <td>{g.temporada}</td>
                       <td style={{ fontFamily: 'monospace' }}>{g.codigo_invitacion}</td>
-                      <td>{new Date(g.created_at).toLocaleDateString('es')}</td>
+                      <td>{new Date(g.created_at).toLocaleDateString(getDateLocale(locale))}</td>
                       <td>
                         <button 
                           className="btn-view"
                           onClick={() => navigate(`/group/${g.id}`)}
                         >
-                          Ver →
+                          {t('superAdmin.viewBtn')}
                         </button>
                       </td>
                     </tr>
@@ -523,7 +686,46 @@ export default function SuperAdminPanel() {
               </table>
             </div>
           )}
+
+          {/* Settings Tab — Paywall toggle */}
+          {activeTab === 'settings' && (
+            <div className="data-table settings-panel">
+              <div className="toggle-row">
+                <div className="toggle-row-info">
+                  <div className="toggle-row-label">{t('superAdmin.paywallToggleLabel')}</div>
+                  <div className="toggle-row-desc">{t('superAdmin.paywallToggleDescription')}</div>
+                </div>
+                <label className="toggle-switch">
+                  <input
+                    type="checkbox"
+                    checked={paywallEnabled}
+                    disabled={savingPaywall}
+                    onChange={handleTogglePaywallRequest}
+                  />
+                  <span className="toggle-slider"></span>
+                </label>
+              </div>
+
+              {paywallEnabled && (
+                <div className="paywall-warning">
+                  ⚠️ {t('superAdmin.paywallActiveWarning')}
+                </div>
+              )}
+            </div>
+          )}
         </div>
+
+        {/* Confirm enabling paywall (affects every user) */}
+        <ConfirmModal
+          isOpen={confirmPaywallEnable}
+          onClose={() => setConfirmPaywallEnable(false)}
+          onConfirm={() => handleTogglePaywall(true)}
+          title={t('superAdmin.confirmEnableTitle')}
+          message={t('superAdmin.confirmEnableMsg')}
+          confirmText={t('superAdmin.confirmEnableBtn')}
+          cancelText={t('common.cancel')}
+          type="danger"
+        />
       </div>
     </>
   );

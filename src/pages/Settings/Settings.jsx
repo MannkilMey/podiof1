@@ -1,5 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useThemeStore } from '../../stores/themeStore';
+import { useTranslation } from '../../i18n';
+import BackButton from '../../components/BackButton';
 
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap');`;
 
@@ -130,26 +132,28 @@ export default function Settings() {
   const navigate = useNavigate();
   const theme = useThemeStore((state) => state.theme);
   const setTheme = useThemeStore((state) => state.setTheme);
+  const { t, locale, setLocale } = useTranslation();
+
 
   return (
     <>
       <style>{FONTS + CSS}</style>
       <div data-theme={theme} className="settings-container">
         <div className="settings-header">
-          <button className="back-btn" onClick={() => navigate('/')}>
+          <BackButton className="back-btn" onClick={() => navigate('/')}>
             ←
-          </button>
-          <h1 className="settings-title">Configuración</h1>
+          </BackButton>
+          <h1 className="settings-title">{t('nav.settings')}</h1>
         </div>
 
         <div className="settings-card">
-          <h2 className="settings-section-title">Apariencia</h2>
+          <h2 className="settings-section-title">{t('settings.appearance')}</h2>
           
           <div className="setting-item">
             <div className="setting-info">
-              <div className="setting-label">Tema</div>
+              <div className="setting-label">{t('settings.themeLabel')}</div>
               <div className="setting-description">
-                Elige entre tema claro u oscuro
+                {t('settings.themeDescription')}
               </div>
             </div>
             <div className="theme-toggle">
@@ -157,32 +161,60 @@ export default function Settings() {
                 className={`theme-btn ${theme === 'dark' ? 'active' : ''}`}
                 onClick={() => setTheme('dark')}
               >
-                🌙 Oscuro
+                🌙 {t('dashboard.themeDark')}
               </button>
               <button
                 className={`theme-btn ${theme === 'light' ? 'active' : ''}`}
                 onClick={() => setTheme('light')}
               >
-                ☀️ Claro
+                ☀️ {t('dashboard.themeLight')}
               </button>
             </div>
           </div>
         </div>
 
         <div className="settings-card">
-          <h2 className="settings-section-title">Información</h2>
+          <h2 className="settings-section-title">{t('settings.information')}</h2>
           
           <div className="setting-item">
             <div className="setting-info">
-              <div className="setting-label">Versión</div>
+              <div className="setting-label">{t('settings.versionLabel')}</div>
               <div className="setting-description">PodioF1 v1.0.0</div>
             </div>
           </div>
 
           <div className="setting-item">
             <div className="setting-info">
-              <div className="setting-label">Temporada</div>
-              <div className="setting-description">Fórmula 1 2026</div>
+              <div className="setting-label">{t('admin.season')}</div>
+              <div className="setting-description">{t('settings.f1Season', { year: 2026 })}</div>
+            </div>
+          </div>
+          <div className="setting-item">
+            <div className="setting-info">
+              <div className="setting-label">{t('settings.languageLabel')}</div>
+              <div className="setting-description">
+                {t('settings.languageDescription')}
+              </div>
+            </div>
+            <div className="theme-toggle">
+              <button
+                className={`theme-btn ${locale === 'es' ? 'active' : ''}`}
+                onClick={() => setLocale('es')}
+              >
+                🇪🇸 ES
+              </button>
+              <button
+                className={`theme-btn ${locale === 'en' ? 'active' : ''}`}
+                onClick={() => setLocale('en')}
+              >
+                🇺🇸 EN
+              </button>
+              <button
+                className={`theme-btn ${locale === 'pt' ? 'active' : ''}`}
+                onClick={() => setLocale('pt')}
+              >
+                🇧🇷 PT
+              </button>
             </div>
           </div>
         </div>

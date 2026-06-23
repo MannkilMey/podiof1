@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import { useThemeStore } from '../../stores/themeStore'
 import { useToastStore } from '../../stores/toastStore'
 import { supabase } from '../../lib/supabase'
+import { useTranslation } from '../../i18n'
 
 const PAISES = [
   'Argentina', 'Brasil', 'Chile', 'Colombia', 'Costa Rica', 'Ecuador', 'El Salvador',
@@ -336,6 +337,7 @@ export default function Register() {
   const setTheme = useThemeStore((state) => state.setTheme)
   const toast = useToastStore()
   const navigate = useNavigate()
+  const { t } = useTranslation()
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -346,18 +348,18 @@ export default function Register() {
     setError('')
 
     if (formData.password !== formData.confirmPassword) {
-      setError('Las contraseñas no coinciden')
-      toast.error('Las contraseñas no coinciden')
+      setError(t('auth.passwordMismatch'))
+      toast.error(t('auth.passwordMismatch'))
       return
     }
     if (!formData.termsAccepted) {
-      setError('Debés aceptar los términos y condiciones')
-      toast.error('Debés aceptar los términos y condiciones')
+      setError(t('auth.mustAcceptTerms'))
+      toast.error(t('auth.mustAcceptTerms'))
       return
     }
     if (formData.password.length < 6) {
-      setError('La contraseña debe tener al menos 6 caracteres')
-      toast.error('La contraseña debe tener al menos 6 caracteres')
+      setError(t('auth.passwordTooShort'))
+      toast.error(t('auth.passwordTooShort'))
       return
     }
 
@@ -394,12 +396,12 @@ export default function Register() {
 
       await supabase.auth.signOut()
 
-      toast.success('¡Cuenta creada! Ya puedes iniciar sesión 🏁')
+      toast.success(t('auth.accountCreated'))
       navigate('/login', { replace: true })
     } catch (err) {
       console.error(err)
-      setError(err.message || 'Error al crear cuenta. Intenta de nuevo.')
-      toast.error('Error al crear cuenta')
+      setError(err.message || t('auth.accountCreationError'))
+      toast.error(t('auth.accountCreationErrorShort'))
     } finally {
       setLoading(false)
     }
@@ -414,7 +416,7 @@ export default function Register() {
           className="back-btn-top"
           onClick={() => navigate('/landing')}
         >
-          ← Volver
+          ← {t('common.back')}
         </button>
 
         {/* Theme Toggle */}
@@ -436,12 +438,12 @@ export default function Register() {
         <div className="register-box">
           {/* Logo Area */}
           <div className="logo-area">
-            <div className="logo-icon">🏎</div>
+            <img src="/logo.png" alt="PodioF1" style={{width: 56, height: 56, borderRadius: 12, objectFit: 'cover'}} />
             <div className="logo-text">
               Podio<span className="accent">F1</span>
             </div>
             <div className="logo-subtitle">
-              Crea tu cuenta para competir
+              {t('auth.registerSubtitle')}
             </div>
           </div>
 
@@ -454,11 +456,11 @@ export default function Register() {
           <form onSubmit={handleSubmit}>
             <div className="form-group-row">
               <div>
-                <label className="form-label">Nombre</label>
+                <label className="form-label">{t('auth.firstName')}</label>
                 <input
                   type="text"
                   name="nombre"
-                  placeholder="José"
+                  placeholder={t('auth.firstNamePlaceholder')}
                   value={formData.nombre}
                   onChange={handleChange}
                   required
@@ -466,11 +468,11 @@ export default function Register() {
                 />
               </div>
               <div>
-                <label className="form-label">Apellido</label>
+                <label className="form-label">{t('auth.lastName')}</label>
                 <input
                   type="text"
                   name="apellido"
-                  placeholder="López"
+                  placeholder={t('auth.lastNamePlaceholder')}
                   value={formData.apellido}
                   onChange={handleChange}
                   required
@@ -480,11 +482,11 @@ export default function Register() {
             </div>
 
             <div className="form-group">
-              <label className="form-label">Email</label>
+              <label className="form-label">{t('auth.email')}</label>
               <input
                 type="email"
                 name="email"
-                placeholder="tu@email.com"
+                placeholder={t('auth.emailPlaceholder')}
                 value={formData.email}
                 onChange={handleChange}
                 required
@@ -494,7 +496,7 @@ export default function Register() {
 
             <div className="form-group-row">
               <div>
-                <label className="form-label">Contraseña</label>
+                <label className="form-label">{t('auth.password')}</label>
                 <input
                   type="password"
                   name="password"
@@ -506,7 +508,7 @@ export default function Register() {
                 />
               </div>
               <div>
-                <label className="form-label">Confirmar</label>
+                <label className="form-label">{t('auth.confirmPassword')}</label>
                 <input
                   type="password"
                   name="confirmPassword"
@@ -520,7 +522,7 @@ export default function Register() {
             </div>
 
             <div className="form-group">
-              <label className="form-label">País</label>
+              <label className="form-label">{t('auth.country')}</label>
               <select
                 name="pais"
                 value={formData.pais}
@@ -528,7 +530,7 @@ export default function Register() {
                 required
                 className="form-select"
               >
-                <option value="">Selecciona tu país</option>
+                <option value="">{t('auth.countryPlaceholder')}</option>
                 {PAISES.map((p) => (
                   <option key={p} value={p}>{p}</option>
                 ))}
@@ -537,7 +539,7 @@ export default function Register() {
 
             <div className="form-group-row">
              <div>
-                <label className="form-label">Fecha de Nacimiento</label>
+                <label className="form-label">{t('auth.birthDate')}</label>
                 <input
                   type="date"
                   name="fecha_nacimiento"
@@ -550,17 +552,17 @@ export default function Register() {
                 />
               </div>
               <div>
-                <label className="form-label">Sexo (Opcional)</label>
+                <label className="form-label">{t('auth.gender')}</label>
                 <select
                   name="sexo"
                   value={formData.sexo}
                   onChange={handleChange}
                   className="form-select"
                 >
-                  <option value="">Prefiero no decir</option>
-                  <option value="M">Masculino</option>
-                  <option value="F">Femenino</option>
-                  <option value="Otro">Otro</option>
+                  <option value="">{t('auth.genderPreferNotSay')}</option>
+                  <option value="M">{t('auth.genderMale')}</option>
+                  <option value="F">{t('auth.genderFemale')}</option>
+                  <option value="Otro">{t('auth.genderOther')}</option>
                 </select>
               </div>
             </div>
@@ -581,13 +583,13 @@ export default function Register() {
                 style={{ width: 18, height: 18, cursor: 'pointer', marginTop: 2, flexShrink: 0 }}
               />
               <span>
-                Acepto los{' '}
+                {t('auth.acceptTermsPrefix')}{' '}
                 <a href="/terms" target="_blank" style={{ color: 'var(--red)', textDecoration: 'none' }}>
-                  Términos y Condiciones
+                  {t('auth.termsAndConditions')}
                 </a>{' '}
-                y la{' '}
+                {t('auth.acceptTermsAnd')}{' '}
                 <a href="/privacy" target="_blank" style={{ color: 'var(--red)', textDecoration: 'none' }}>
-                  Política de Privacidad
+                  {t('auth.privacyPolicy')}
                 </a>
               </span>
             </label>
@@ -597,21 +599,21 @@ export default function Register() {
               disabled={loading}
               className="btn-submit"
             >
-              {loading ? 'Creando cuenta...' : 'Crear Cuenta'}
+              {loading ? t('auth.creatingAccount') : t('auth.createAccount')}
             </button>
           </form>
 
           {/* Divider */}
           <div className="divider">
-            <span className="divider-text">o</span>
+            <span className="divider-text">{t('common.or')}</span>
             <div className="divider-line" />
           </div>
 
           {/* Login Link */}
           <div className="login-link">
-            ¿Ya tienes cuenta?{' '}
+           {t('auth.haveAccount')}{' '}
             <Link to="/login">
-              Inicia sesión
+              {t('auth.signIn')}
             </Link>
           </div>
         </div>

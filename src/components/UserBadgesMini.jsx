@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { supabase } from '../lib/supabase';
+import { useTranslation } from '../i18n';
 
 const CSS = `
 .badges-mini { display: flex; flex-wrap: wrap; gap: 4px; }
@@ -41,6 +42,7 @@ const CSS = `
  *   onClick    (optional) - callback when clicking the badges area
  */
 export default function UserBadgesMini({ userId, grupoId, showAll = false, compact = false, maxShow = 12, onClick }) {
+  const { t } = useTranslation(); 
   const [allBadges, setAllBadges] = useState([]);
   const [userBadges, setUserBadges] = useState([]);
   const [loaded, setLoaded] = useState(false);
@@ -53,7 +55,7 @@ export default function UserBadgesMini({ userId, grupoId, showAll = false, compa
   async function fetchBadges() {
     try {
       const [badgesRes, ubRes] = await Promise.all([
-        supabase.from('badges').select('id, nombre, descripcion, icono, categoria, es_secreto, orden').order('orden'),
+        supabase.from('badges').select('id, key, nombre, descripcion, icono, categoria, es_secreto, orden').order('orden'),
         grupoId
           ? supabase.from('user_badges').select('badge_id').eq('usuario_id', userId).eq('grupo_id', grupoId)
           : supabase.from('user_badges').select('badge_id').eq('usuario_id', userId)
@@ -82,7 +84,7 @@ export default function UserBadgesMini({ userId, grupoId, showAll = false, compa
   if (!compact && unlockedCount === 0) {
     return (
       <div style={{ fontSize: 11, color: 'var(--muted)', padding: '8px 0' }}>
-        🔒 Sin badges desbloqueados
+        🔒 {t('badges.noneUnlocked')}
       </div>
     );
   }
@@ -111,8 +113,8 @@ export default function UserBadgesMini({ userId, grupoId, showAll = false, compa
                 {isUnlocked || !isSecret ? badge.icono : '🔒'}
                 {isUnlocked && (
                   <div className="badge-mini-tooltip">
-                    <div className="badge-mini-tooltip-name">{badge.nombre}</div>
-                    <div className="badge-mini-tooltip-desc">{badge.descripcion}</div>
+                    <div className="badge-mini-tooltip-name">{t(`badges.items.${badge.key}.nombre`)}</div>
+                    <div className="badge-mini-tooltip-desc">{t(`badges.items.${badge.key}.descripcion`)}</div>
                   </div>
                 )}
               </div>

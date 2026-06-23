@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { toast } from 'sonner';
+import { useTranslation } from '../../i18n';
 
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap');`;
 
@@ -198,19 +199,20 @@ export default function ForgotPassword() {
   const [loading, setLoading] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
   const [error, setError] = useState('');
+  const { t } = useTranslation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
     if (!email) {
-      setError('Por favor ingresa tu email');
+      setError(t('forgotPassword.emailRequired'));
       return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      setError('Por favor ingresa un email válido');
+      setError(t('forgotPassword.emailInvalid'));
       return;
     }
 
@@ -224,12 +226,12 @@ export default function ForgotPassword() {
       if (resetError) throw resetError;
 
       setEmailSent(true);
-      toast.success('Email enviado correctamente');
+      toast.success(t('forgotPassword.emailSent'));
 
     } catch (err) {
       console.error('Error:', err);
-      setError(err.message || 'Error al enviar el email');
-      toast.error('Error al enviar el email');
+      setError(err.message || t('forgotPassword.sendError'));
+      toast.error(t('forgotPassword.sendError'));
     } finally {
       setLoading(false);
     }
@@ -241,34 +243,34 @@ export default function ForgotPassword() {
       <div className="forgot-container">
         <div className="forgot-box">
           <div className="logo">
-            <div className="logo-icon">🏎</div>
+            <img src="/logo.png" alt="PodioF1" style={{width: 56, height: 56, borderRadius: 12, objectFit: 'cover'}} />
             <div className="logo-text">Podio<span>F1</span></div>
           </div>
 
           {emailSent ? (
             <>
               <div className="success-message">
-                <div className="success-icon">✅</div>
-                <div>
-                  <strong>Email enviado correctamente</strong>
-                  <br/><br/>
-                  Te enviamos un enlace de recuperación a:
-                  <br/>
-                  <strong>{email}</strong>
-                  <br/><br/>
-                  Revisa tu bandeja de entrada y spam. El enlace es válido por 1 hora.
-                </div>
+              <div className="success-icon">✅</div>
+              <div>
+                <strong>{t('forgotPassword.emailSent')}</strong>
+                <br/><br/>
+                {t('forgotPassword.sentTo')}
+                <br/>
+                <strong>{email}</strong>
+                <br/><br/>
+                {t('forgotPassword.checkInbox')}
               </div>
+            </div>
 
               <div className="back-link">
-                <Link to="/login">← Volver al login</Link>
+                <Link to="/login">← {t('forgotPassword.backToLogin')}</Link>
               </div>
             </>
           ) : (
             <>
-              <h1 className="forgot-title">¿Olvidaste tu contraseña?</h1>
+              <h1 className="forgot-title">{t('auth.forgotPassword')}</h1>
               <p className="forgot-subtitle">
-                Ingresa tu email y te enviaremos un enlace para restablecer tu contraseña.
+                {t('forgotPassword.subtitle')}
               </p>
 
               {error && (
@@ -277,11 +279,11 @@ export default function ForgotPassword() {
 
               <form onSubmit={handleSubmit}>
                 <div className="form-group">
-                  <label className="form-label">Email</label>
+                  <label className="form-label">{t('auth.email')}</label>
                   <input
                     type="email"
                     className="form-input"
-                    placeholder="tu@email.com"
+                    placeholder={t('auth.emailPlaceholder')}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     disabled={loading}
@@ -294,12 +296,12 @@ export default function ForgotPassword() {
                   className="btn-submit"
                   disabled={loading}
                 >
-                  {loading ? 'Enviando...' : 'Enviar enlace de recuperación'}
+                  {loading ? t('forgotPassword.sending') : t('forgotPassword.sendLink')}
                 </button>
               </form>
 
               <div className="back-link">
-                ¿Recordaste tu contraseña? <Link to="/login">Inicia sesión</Link>
+                {t('forgotPassword.rememberedPassword')} <Link to="/login">{t('auth.signIn')}</Link>
               </div>
             </>
           )}

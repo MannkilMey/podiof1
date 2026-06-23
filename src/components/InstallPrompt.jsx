@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from '../i18n';
 
 /**
  * InstallPrompt - Banner que sugiere instalar la PWA
@@ -11,6 +12,7 @@ import { useState, useEffect } from 'react';
  * En iOS Safari muestra instrucciones manuales
  */
 export default function InstallPrompt() {
+  const { t } = useTranslation(); 
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [showBanner, setShowBanner] = useState(false);
   const [isIOS, setIsIOS] = useState(false);
@@ -97,7 +99,7 @@ export default function InstallPrompt() {
             color: 'var(--white, #F0F0F0)',
             letterSpacing: 0.5
           }}>
-            Instalá PodioF1
+             {t('pwa.installTitle')}
           </div>
           <div style={{
             fontSize: 12,
@@ -105,8 +107,8 @@ export default function InstallPrompt() {
             lineHeight: 1.4
           }}>
             {isIOS
-              ? 'Tocá el ícono de compartir y luego "Agregar a inicio"'
-              : 'Acceso rápido desde tu pantalla de inicio'
+                ? t('pwa.installSubIOS')
+                : t('pwa.installSubAndroid')
             }
           </div>
         </div>
@@ -121,7 +123,7 @@ export default function InstallPrompt() {
             fontFamily: "'Barlow Condensed', sans-serif",
             textTransform: 'uppercase', letterSpacing: 0.5
           }}>
-            Entendido
+            {t('pwa.understood')}
           </button>
         ) : (
           <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
@@ -132,7 +134,7 @@ export default function InstallPrompt() {
               fontFamily: "'Barlow Condensed', sans-serif",
               textTransform: 'uppercase', letterSpacing: 0.5
             }}>
-              Ahora no
+              {t('pwa.notNow')}
             </button>
             <button onClick={handleInstall} style={{
               padding: '8px 16px',
@@ -142,7 +144,7 @@ export default function InstallPrompt() {
               fontFamily: "'Barlow Condensed', sans-serif",
               textTransform: 'uppercase', letterSpacing: 0.5
             }}>
-              Instalar
+              {t('pwa.installBtn')}
             </button>
           </div>
         )}

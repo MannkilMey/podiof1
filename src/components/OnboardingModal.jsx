@@ -2,65 +2,66 @@ import { useState, useEffect, useCallback } from 'react';
 import { useAuthStore } from '../stores/authStore';
 import { supabase } from '../lib/supabase';
 import { useThemeStore } from '../stores/themeStore';
+import { useTranslation } from '../i18n';
 
 // ============================================
 // CONFIGURACIÓN DE PREGUNTAS
 // ============================================
-const PROFILE_QUESTIONS = [
+const getProfileQuestions = (t) => [
   {
     key: 'fecha_nacimiento',
-    title: '🎂 ¿Cuándo es tu cumpleaños?',
-    subtitle: 'Para personalizar tu experiencia',
+    title: t('onboarding.birthday'),
+    subtitle: t('onboarding.birthdaySub'),
     type: 'date',
     table: 'users',
     field: 'fecha_nacimiento'
   },
   {
     key: 'escuderia_favorita_id',
-    title: '🏎 ¿Cuál es tu escudería favorita?',
-    subtitle: 'Personalizaremos los colores de tu perfil',
+    title: t('onboarding.favoriteTeam'),
+    subtitle: t('onboarding.favoriteTeamSub'),
     type: 'select_teams',
     table: 'users',
     field: 'escuderia_favorita_id'
   },
   {
     key: 'piloto_favorito_id',
-    title: '👤 ¿Quién es tu piloto favorito?',
-    subtitle: '¡Apoyalo en cada carrera!',
+    title: t('onboarding.favoriteDriver'),
+    subtitle: t('onboarding.favoriteDriverSub'),
     type: 'select_drivers',
     table: 'users',
     field: 'piloto_favorito_id'
   }
 ];
 
-const SURVEY_QUESTIONS = [
+const getSurveyQuestions = (t) => [
   {
     key: 'como_ve_carreras',
-    title: '📺 ¿Cómo ves las carreras?',
-    subtitle: 'Podés elegir varias opciones',
+    title: t('onboarding.howWatch'),
+    subtitle: t('onboarding.howWatchSub'),
     type: 'multi_select',
-    options: ['TV abierta', 'TV cable/satélite', 'F1 TV Pro', 'Streaming pirata', 'En el circuito', 'Resúmenes después'],
+    options: t('onboarding.howWatchOptions'),
     table: 'survey'
   },
   {
     key: 'anios_siguiendo_f1',
-    title: '📅 ¿Desde cuándo seguís F1?',
-    subtitle: 'Queremos conocerte mejor',
+    title: t('onboarding.sinceWhen'),
+    subtitle: t('onboarding.sinceWhenSub'),
     type: 'single_select',
-    options: ['Menos de 1 año', '1-3 años', '3-5 años', '5-10 años', 'Más de 10 años', 'Toda mi vida'],
+    options: t('onboarding.sinceWhenOptions'),
     table: 'survey'
   },
   {
     key: 'tiene_vehiculo',
-    title: '🚗 ¿Tenés vehículo propio?',
-    subtitle: 'Información para futuras funcionalidades',
+    title: t('onboarding.hasVehicle'),
+    subtitle: t('onboarding.hasVehicleSub'),
     type: 'single_select',
-    options: ['Sí, auto', 'Sí, moto', 'Sí, ambos', 'No tengo'],
+    options: t('onboarding.hasVehicleOptions'),
     table: 'survey'
   }
 ];
 
-const ALL_QUESTIONS = [...PROFILE_QUESTIONS, ...SURVEY_QUESTIONS];
+const getAllQuestions = (t) => [...getProfileQuestions(t), ...getSurveyQuestions(t)];
 
 // ============================================
 // COMPONENTE PRINCIPAL
@@ -68,6 +69,8 @@ const ALL_QUESTIONS = [...PROFILE_QUESTIONS, ...SURVEY_QUESTIONS];
 export default function OnboardingModal() {
   const user = useAuthStore((state) => state.user);
   const theme = useThemeStore((state) => state.theme);
+  const { t } = useTranslation();  
+  const ALL_QUESTIONS = getAllQuestions(t);  
   const [visible, setVisible] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [pendingQuestions, setPendingQuestions] = useState([]);
@@ -258,7 +261,7 @@ export default function OnboardingModal() {
             display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4
           }}>
             <span style={{ fontSize: 11, color: 'var(--muted)', fontWeight: 600, letterSpacing: 1, textTransform: 'uppercase' }}>
-              {currentIndex + 1} de {pendingQuestions.length}
+               {currentIndex + 1} {t('onboarding.of')} {pendingQuestions.length}
             </span>
             <button onClick={handleClose} style={{
               background: 'transparent', border: 'none', color: 'var(--muted)',
@@ -388,7 +391,7 @@ export default function OnboardingModal() {
           }}
           onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--border2)'; e.currentTarget.style.color = 'var(--white)'; }}
           onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--muted)'; }}>
-            Saltar
+            {t('onboarding.skipBtn')}
           </button>
           <button onClick={handleSave} disabled={!canSave || saving} style={{
             flex: 2, padding: '14px',
@@ -399,7 +402,7 @@ export default function OnboardingModal() {
             textTransform: 'uppercase', cursor: canSave ? 'pointer' : 'not-allowed',
             transition: 'all 0.2s', opacity: saving ? 0.6 : 1
           }}>
-            {saving ? 'Guardando...' : currentIndex + 1 >= pendingQuestions.length ? 'Finalizar' : 'Continuar →'}
+            {saving ? t('onboarding.savingBtn') : currentIndex + 1 >= pendingQuestions.length ? t('onboarding.finishBtn') : t('onboarding.continueBtn')}
           </button>
         </div>
       </div>

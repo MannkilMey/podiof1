@@ -272,7 +272,7 @@ export default function ResetPassword() {
       <div className="reset-container">
         <div className="reset-box">
           <div className="logo">
-            <div className="logo-icon">🏎</div>
+            <img src="/logo.png" alt="PodioF1" style={{width: 56, height: 56, borderRadius: 12, objectFit: 'cover'}} />
             <div className="logo-text">Podio<span>F1</span></div>
           </div>
 

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import UserBadgesMini from './UserBadgesMini';
+import { useTranslation } from '../i18n';
 
 const TEAM_COLORS = {
   'Mercedes': '#00D2BE',
@@ -25,6 +26,7 @@ const DEFAULT_COLOR = '#E8002D';
 
 export default function UserProfileCard({ userId }) {
   const navigate = useNavigate();
+  const { t } = useTranslation(); 
   const [data, setData] = useState(null);
   const [loaded, setLoaded] = useState(false);
 
@@ -120,7 +122,7 @@ export default function UserProfileCard({ userId }) {
             )}
             {!teamName && !driverName && (
               <span style={{ fontSize: 12, color: 'var(--muted)', fontStyle: 'italic' }}>
-                Tocá para completar tu perfil →
+                {t('profile.completeTap')}
               </span>
             )}
           </div>

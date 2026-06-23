@@ -5,6 +5,9 @@ import { useThemeStore } from '../../stores/themeStore';
 import { supabase } from '../../lib/supabase';
 import * as XLSX from 'xlsx';
 import StatsTabBar from './StatsTabBar';
+import { useTranslation, getRaceName } from '../../i18n';
+import BackButton from '../../components/BackButton';
+import PaywallGate from '../../components/PaywallGate';  
 
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600&family=Share+Tech+Mono&display=swap');`;
 
@@ -81,6 +84,7 @@ export default function PredictionAnalysis() {
   const navigate = useNavigate();
   const theme = useThemeStore((state) => state.theme);
   const user = useAuthStore((state) => state.user);
+  const { t } = useTranslation(); 
 
   const [groupInfo, setGroupInfo] = useState(null);
   const [predictions, setPredictions] = useState([]);
@@ -101,10 +105,10 @@ export default function PredictionAnalysis() {
     try {
       const [groupRes, predsRes, driversRes] = await Promise.all([
         supabase.from('groups').select('id, nombre, temporada, cantidad_posiciones, sistema_puntos, sistema_puntos_sprint, incluir_sprints, usa_sistema_dual, puntos_piloto_correcto, bonus_posicion_exacta').eq('id', groupId).single(),
-        supabase.from('predictions').select(`
+       supabase.from('predictions').select(`
           id, posiciones, puntos_obtenidos,
           usuario:usuario_id ( id, nombre, apellido ),
-          carrera:carrera_id ( id, nombre, ronda, tipo, estado )
+          carrera:carrera_id ( id, nombre, slug, ronda, tipo, estado )
         `).eq('grupo_id', groupId).order('created_at', { ascending: true }),
         supabase.from('drivers').select('id, nombre_completo, acronimo')
       ]);
@@ -146,7 +150,7 @@ export default function PredictionAnalysis() {
     predictions.forEach(p => {
       if (!p.carrera?.id) return;
       if (!racesMap.has(p.carrera.id)) {
-        racesMap.set(p.carrera.id, { id: p.carrera.id, nombre: p.carrera.nombre, ronda: p.carrera.ronda, tipo: p.carrera.tipo });
+        racesMap.set(p.carrera.id, { id: p.carrera.id, nombre: p.carrera.nombre, slug: p.carrera.slug, ronda: p.carrera.ronda, tipo: p.carrera.tipo });
       }
     });
     const races = [...racesMap.values()].sort((a, b) => a.ronda - b.ronda);
@@ -325,16 +329,20 @@ export default function PredictionAnalysis() {
       const wb = XLSX.utils.book_new();
 
       // Sheet 1: Predicción vs Resultado
-      const detailHeaders = ['Carrera', 'Ronda', 'Tipo', 'Usuario', 'Posición', 'Piloto Predicho', 'Piloto Real', 'Resultado', 'Puntos Totales'];
-      const detailRows = [];
+  const detailHeaders = [
+    t('predictionAnalysis.raceLabel'), t('predictionAnalysis.roundColumn'), t('predictionAnalysis.typeColumn'),
+    t('leaderboard.user'), t('common.position'), t('predictionAnalysis.predictedDriverColumn'),
+    t('predictionAnalysis.realDriverColumn'), t('predictionAnalysis.resultColumn'), t('predictionAnalysis.totalPointsColumn')
+  ];      
+  const detailRows = [];
       analysisData.forEach(({ race, official, userResults }) => {
         userResults.forEach(ur => {
           ur.slots.forEach(s => {
             const realDriver = official.find(o => o.pos === s.pos);
             detailRows.push([
-              race.nombre, race.ronda, race.tipo, ur.userName, s.pos,
+              getRaceName(race, t), race.ronda, race.tipo, ur.userName, s.pos,
               s.driverName, realDriver?.nombre || '?',
-              s.status === 'exact' ? '✅ EXACTO' : s.status === 'pilot-ok' ? '🟡 PILOTO OK' : '❌ FALLO',
+              s.status === 'exact' ? `✅ ${t('predictionAnalysis.exactCaps')}` : s.status === 'pilot-ok' ? `🟡 ${t('predictionAnalysis.pilotOkCaps')}` : `❌ ${t('predictionAnalysis.missCaps')}`,
               s.pos === 1 ? ur.puntos : ''
             ]);
           });
@@ -342,10 +350,15 @@ export default function PredictionAnalysis() {
       });
       const ws1 = XLSX.utils.aoa_to_sheet([detailHeaders, ...detailRows]);
       ws1['!cols'] = [{ wch: 28 }, { wch: 6 }, { wch: 8 }, { wch: 20 }, { wch: 9 }, { wch: 22 }, { wch: 22 }, { wch: 14 }, { wch: 8 }];
-      XLSX.utils.book_append_sheet(wb, ws1, 'Predicción vs Resultado');
+      XLSX.utils.book_append_sheet(wb, ws1, t('predictionAnalysis.sheet1Name'));
 
       // Sheet 2: Insights por Usuario
-      const insHeaders = ['Usuario', 'Puntos Total', 'Promedio/Carrera', 'Exactos Total', 'Prom Exactos', 'Piloto OK', 'Fallos', 'Mejor Carrera', 'Pts Mejor', 'Posición + Acertada', '% Acierto Pos', 'Top Pilotos Acertados'];
+      const insHeaders = [
+        t('leaderboard.user'), t('predictionAnalysis.totalPointsColumnShort'), t('predictionAnalysis.avgPerRaceColumn'),
+        t('predictionAnalysis.totalExactColumn'), t('predictionAnalysis.avgExactColumn'), t('predictionAnalysis.pilotOkColumn'),
+        t('predictionAnalysis.missesColumn'), t('predictionAnalysis.bestRaceColumn'), t('predictionAnalysis.bestPtsColumn'),
+        t('predictionAnalysis.bestPositionColumn'), t('predictionAnalysis.posHitPctColumn'), t('predictionAnalysis.topDriversColumn')
+      ];
       const insRows = insights.map(i => [
         i.userName, Math.round(i.totalPuntos), i.avgPuntos, i.totalExact, i.avgExact, i.totalPilotOk, i.totalMiss,
         i.bestRace.name, Math.round(i.bestRace.puntos),
@@ -354,33 +367,33 @@ export default function PredictionAnalysis() {
       ]);
       const ws2 = XLSX.utils.aoa_to_sheet([insHeaders, ...insRows]);
       ws2['!cols'] = [{ wch: 20 }, { wch: 12 }, { wch: 14 }, { wch: 12 }, { wch: 12 }, { wch: 10 }, { wch: 8 }, { wch: 22 }, { wch: 10 }, { wch: 16 }, { wch: 12 }, { wch: 60 }];
-      XLSX.utils.book_append_sheet(wb, ws2, 'Insights por Usuario');
+      XLSX.utils.book_append_sheet(wb, ws2, t('predictionAnalysis.sheet2Name'));
 
       // Sheet 3: Sistema de Puntos
       const scoreRows = [
-        ['SISTEMA DE PUNTOS - CARRERA'],
-        ['Posición', 'Puntos'],
+        [t('predictionAnalysis.scoringSystemRaceCaps')],
+        [t('common.position'), t('common.points')],
         ...scoringInfo.race.map(s => [s.pos + '°', s.pts]),
         [],
-        ['SISTEMA DE PUNTOS - SPRINT'],
-        ['Posición', 'Puntos'],
+        [t('predictionAnalysis.scoringSystemSprintCaps')],
+        [t('common.position'), t('common.points')],
         ...scoringInfo.sprint.map(s => [s.pos + '°', s.pts]),
         [],
-        ['LEYENDA DE COLORES'],
-        ['Símbolo', 'Significado'],
-        ['✅ EXACTO', 'Piloto correcto en la posición exacta predicha'],
-        ['🟡 PILOTO OK', 'Piloto aparece en el resultado oficial pero en una posición diferente'],
-        ['❌ FALLO', 'Piloto no aparece en el resultado oficial (fuera del top)'],
-        ['🟣 VUELTA RÁPIDA', 'Piloto que registró la vuelta más rápida de la carrera']
+        [t('predictionAnalysis.colorLegendCaps')],
+        [t('predictionAnalysis.symbolColumn'), t('predictionAnalysis.meaningColumn')],
+        [`✅ ${t('predictionAnalysis.exactCaps')}`, t('predictionAnalysis.legendExact')],
+        [`🟡 ${t('predictionAnalysis.pilotOkCaps')}`, t('predictionAnalysis.legendPilotOkFull')],
+        [`❌ ${t('predictionAnalysis.missCaps')}`, t('predictionAnalysis.legendMissFull')],
+        [`🟣 ${t('predictionAnalysis.fastestLapCaps')}`, t('predictionAnalysis.legendFastestLap')]
       ];
       if (groupInfo?.usa_sistema_dual) {
-        scoreRows.push([], ['SISTEMA DUAL'], ['Piloto correcto (sin posición exacta)', groupInfo.puntos_piloto_correcto + ' pts'], ['Bonus posición exacta', '+' + groupInfo.bonus_posicion_exacta + ' pts']);
+        scoreRows.push([], [t('predictionAnalysis.dualSystemCaps')], [t('predictionAnalysis.dualCorrectDriverLabel'), groupInfo.puntos_piloto_correcto + ' pts'], [t('predictionAnalysis.dualBonusLabel'), '+' + groupInfo.bonus_posicion_exacta + ' pts']);
       }
       const ws3 = XLSX.utils.aoa_to_sheet(scoreRows);
       ws3['!cols'] = [{ wch: 35 }, { wch: 60 }];
-      XLSX.utils.book_append_sheet(wb, ws3, 'Sistema de Puntos');
+      XLSX.utils.book_append_sheet(wb, ws3, t('scoringModal.title'));
 
-      XLSX.writeFile(wb, `PodioF1_Analisis_${groupInfo?.nombre || 'grupo'}_${new Date().toISOString().slice(0, 10)}.xlsx`);
+      XLSX.writeFile(wb, `PodioF1_Analisis_${groupInfo?.nombre || t('pointsHistogram.groupFallback')}_${new Date().toISOString().slice(0, 10)}.xlsx`);
     } catch (err) {
       console.error('Export error:', err);
     } finally {
@@ -393,7 +406,7 @@ export default function PredictionAnalysis() {
       <>
         <style>{FONTS + CSS}</style>
         <div data-theme={theme} className="analysis-page">
-          <div className="analysis-back-btn">← Volver al grupo</div>
+          <BackButton className="analysis-back-btn">← {t('predictionAnalysis.backToGroup')}</BackButton>
           <StatsTabBar active="analysis" groupId={groupId} />
           <div className="analysis-skeleton" />
           <div className="analysis-skeleton" style={{ height: 200, marginTop: 24 }} />
@@ -406,62 +419,64 @@ export default function PredictionAnalysis() {
     <>
       <style>{FONTS + CSS}</style>
       <div data-theme={theme} className="analysis-page">
-        <button className="analysis-back-btn" onClick={() => navigate(`/group/${groupId}`)}>← Volver al grupo</button>
+      <BackButton className="analysis-back-btn" onClick={() => navigate(`/group/${groupId}`)}>← {t('predictionAnalysis.backToGroup')}</BackButton>
 
         <StatsTabBar active="analysis" groupId={groupId} />
 
         <div className="analysis-header">
           <div className="analysis-header-left">
-            <h1 className="analysis-title">📋 Análisis de Predicciones</h1>
-            <p className="analysis-subtitle">{groupInfo?.nombre} · Predicciones vs Resultados Oficiales</p>
+            <h1 className="analysis-title">📋 {t('predictionAnalysis.title')}</h1>
+            <p className="analysis-subtitle">{groupInfo?.nombre} · {t('predictionAnalysis.subtitle')}</p>
           </div>
           {analysisData.length > 0 && (
-            <button className="analysis-export-btn" onClick={handleExport} disabled={exporting}>
-              {exporting ? '⏳ Exportando...' : '📥 Exportar Análisis'}
-            </button>
+            <PaywallGate feature="export_excel" compact>
+              <button className="analysis-export-btn" onClick={handleExport} disabled={exporting}>
+                {exporting ? `⏳ ${t('pointsHistogram.exporting')}` : `📥 ${t('predictionAnalysis.exportAnalysis')}`}
+              </button>
+            </PaywallGate>
           )}
         </div>
 
         {/* LEGEND WITH COLOR SAMPLES */}
         <div className="legend-bar">
           <div className="legend-item">
-            <span className="pred-pill exact" style={{ padding: '2px 8px', fontSize: 10 }}>✅ 1° Piloto</span>
-            <span>Posición exacta</span>
+            <span className="pred-pill exact" style={{ padding: '2px 8px', fontSize: 10 }}>✅ {t('predictionAnalysis.legendExamplePos1')}</span>
+            <span>{t('predictionAnalysis.legendExact')}</span>
           </div>
           <div className="legend-item">
-            <span className="pred-pill pilot-ok" style={{ padding: '2px 8px', fontSize: 10 }}>🟡 3° Piloto</span>
-            <span>Piloto en resultado, otra posición</span>
+            <span className="pred-pill pilot-ok" style={{ padding: '2px 8px', fontSize: 10 }}>🟡 {t('predictionAnalysis.legendExamplePos3')}</span>
+            <span>{t('predictionAnalysis.legendPilotOk')}</span>
           </div>
           <div className="legend-item">
-            <span className="pred-pill miss" style={{ padding: '2px 8px', fontSize: 10 }}>❌ 5° Piloto</span>
-            <span>Piloto no está en resultado</span>
+            <span className="pred-pill miss" style={{ padding: '2px 8px', fontSize: 10 }}>❌ {t('predictionAnalysis.legendExamplePos5')}</span>
+            <span>{t('predictionAnalysis.legendMiss')}</span>
           </div>
           <div className="legend-item">
-            <span className="race-official-pill vr" style={{ padding: '2px 8px', fontSize: 10 }}>🟣 Vuelta Rápida</span>
-            <span>Vuelta más rápida</span>
+            <span className="race-official-pill vr" style={{ padding: '2px 8px', fontSize: 10 }}>🟣 {t('predictionAnalysis.legendFastestLap')}</span>
+            <span>{t('predictionAnalysis.legendFastestLapDesc')}</span>
           </div>
         </div>
 
         {/* SCORING SYSTEM */}
         <div className="analysis-panel">
-          <div className="analysis-panel-title">🏆 Sistema de Puntos</div>
+          <div className="analysis-panel-title">🏆 {t('scoringModal.title')}</div>
           <div style={{ marginBottom: 12 }}>
-            <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 }}>Carrera</div>
+            <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 }}>{t('predictionAnalysis.raceLabel')}</div>
             <div className="scoring-mini">
-              {scoringInfo.race.map(s => <span key={s.pos} className="scoring-pill">{s.pos}° = {s.pts} pts</span>)}
+              {scoringInfo.race.map(s => <span key={s.pos} className="scoring-pill">{s.pos}° = {s.pts} {t('common.pts')}</span>)}
             </div>
           </div>
           {scoringInfo.sprint.length > 0 && (
             <div style={{ marginBottom: 12 }}>
               <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 }}>⚡ Sprint</div>
               <div className="scoring-mini">
-                {scoringInfo.sprint.map(s => <span key={s.pos} className="scoring-pill">{s.pos}° = {s.pts} pts</span>)}
+                {scoringInfo.sprint.map(s => <span key={s.pos} className="scoring-pill">{s.pos}° = {s.pts} {t('common.pts')}</span>)}
               </div>
             </div>
           )}
           {groupInfo?.usa_sistema_dual && (
             <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 8, padding: '8px 12px', background: 'var(--bg3)', borderRadius: 8, border: '1px solid var(--border)' }}>
-              <strong style={{ color: 'var(--white)' }}>Sistema Dual:</strong> Piloto correcto = {groupInfo.puntos_piloto_correcto} pts · Bonus posición exacta = +{groupInfo.bonus_posicion_exacta} pts
+              <strong style={{ color: 'var(--white)' }}>{t('predictionAnalysis.dualSystemLabel')}:</strong> {t('predictionAnalysis.dualSystemDetail', { driverPts: groupInfo.puntos_piloto_correcto, bonusPts: groupInfo.bonus_posicion_exacta })}
             </div>
           )}
         </div>
@@ -469,20 +484,20 @@ export default function PredictionAnalysis() {
         {/* FILTERS */}
         <div className="analysis-controls">
           <div className="analysis-control-group">
-            <label>Carrera</label>
+            <label>{t('predictionAnalysis.raceLabel')}</label>
             <select className="analysis-select" value={filterRace} onChange={e => setFilterRace(e.target.value)} style={{ background: 'var(--bg3)' }}>
-              <option value="todas" style={{ background: 'var(--bg2)' }}>Todas las carreras</option>
+              <option value="todas" style={{ background: 'var(--bg2)' }}>{t('predictionAnalysis.allRaces')}</option>
               {races.map(r => (
                 <option key={r.id} value={r.id} style={{ background: 'var(--bg2)' }}>
-                  {r.tipo === 'sprint' ? '⚡ ' : ''}{r.nombre} (R{r.ronda})
+                  {r.tipo === 'sprint' ? '⚡ ' : ''}{getRaceName(r, t)} (R{r.ronda})
                 </option>
               ))}
             </select>
           </div>
           <div className="analysis-control-group">
-            <label>Usuario</label>
+            <label>{t('leaderboard.user')}</label>
             <select className="analysis-select" value={filterUser} onChange={e => setFilterUser(e.target.value)} style={{ background: 'var(--bg3)' }}>
-              <option value="todos" style={{ background: 'var(--bg2)' }}>Todos los usuarios</option>
+              <option value="todos" style={{ background: 'var(--bg2)' }}>{t('predictionAnalysis.allUsers')}</option>
               {users.map(u => (
                 <option key={u.id} value={u.id} style={{ background: 'var(--bg2)' }}>{u.nombre}</option>
               ))}
@@ -493,7 +508,7 @@ export default function PredictionAnalysis() {
         {/* INSIGHTS */}
         {filterUser === 'todos' && filterRace === 'todas' && insights.length > 0 && (
           <div className="analysis-panel">
-            <div className="analysis-panel-title">🔍 Insights por Usuario</div>
+            <div className="analysis-panel-title">🔍{t('predictionAnalysis.insightsTitle')}</div>
             <div className="insight-grid">
               {insights.map((ins, idx) => {
                 const medal = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : '';
@@ -504,25 +519,25 @@ export default function PredictionAnalysis() {
                       {ins.userName}
                     </div>
                     <div className="insight-row">
-                      <span className="insight-label">Puntos totales</span>
+                      <span className="insight-label">{t('predictionAnalysis.totalPoints')}</span>
                       <span className="insight-value" style={{ color: 'var(--red)' }}>{Math.round(ins.totalPuntos)}</span>
                     </div>
                     <div className="insight-row">
-                      <span className="insight-label">Promedio / carrera</span>
-                      <span className="insight-value">{ins.avgPuntos} pts</span>
+                      <span className="insight-label">{t('predictionAnalysis.avgPerRace')}</span>
+                      <span className="insight-value">{ins.avgPuntos} {t('common.pts')}</span>
                     </div>
                     <div className="insight-row">
-                      <span className="insight-label">Aciertos exactos</span>
-                      <span className="insight-value" style={{ color: 'var(--green)' }}>{ins.totalExact} ({ins.avgExact}/carrera)</span>
+                      <span className="insight-label">{t('predictionAnalysis.exactHits')}</span>
+                      <span className="insight-value" style={{ color: 'var(--green)' }}>{ins.totalExact} ({ins.avgExact}/{t('predictionAnalysis.raceSlash')})</span>
                     </div>
                     <div className="insight-row">
-                      <span className="insight-label">🎯 Posición + acertada</span>
+                      <span className="insight-label">🎯 {t('predictionAnalysis.bestPositionLabel')}</span>
                       <span className="insight-value">{ins.bestPosition ? `#${ins.bestPosition.pos} (${ins.bestPosition.pct}%)` : '-'}</span>
                     </div>
 
                     {/* TOP 3 PILOTOS ACERTADOS */}
                     <div style={{ marginTop: 8, paddingTop: 8, borderTop: '1px solid var(--border)' }}>
-                      <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 6 }}>🏎 Top Pilotos Acertados</div>
+                      <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 6 }}>🏎 {t('predictionAnalysis.topDriversTitle')}</div>
                       {ins.topDrivers.length > 0 ? ins.topDrivers.map((d, di) => (
                         <div key={di} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '3px 0', fontSize: 12 }}>
                           <span style={{ color: 'var(--white)', fontWeight: 600 }}>{di + 1}. {d.name}</span>
@@ -536,7 +551,7 @@ export default function PredictionAnalysis() {
                     </div>
 
                     <div className="insight-row" style={{ marginTop: 8 }}>
-                      <span className="insight-label">🏆 Mejor carrera</span>
+                      <span className="insight-label">🏆 {t('predictionAnalysis.bestRaceLabel')}</span>
                       <span className="insight-value">{ins.bestRace.name} ({Math.round(ins.bestRace.puntos)})</span>
                     </div>
                   </div>
@@ -550,17 +565,17 @@ export default function PredictionAnalysis() {
         {filteredData.length === 0 ? (
           <div className="analysis-panel" style={{ textAlign: 'center', padding: '60px 20px' }}>
             <div style={{ fontSize: 48, opacity: 0.3, marginBottom: 16 }}>📋</div>
-            <div style={{ color: 'var(--muted)', fontSize: 15 }}>No hay datos para los filtros seleccionados</div>
+            <div style={{ color: 'var(--muted)', fontSize: 15 }}>{t('predictionAnalysis.noDataForFilters')}</div>
           </div>
         ) : (
           filteredData.map(({ race, official, userResults }) => (
             <div key={race.id} className="race-block">
               <div className="race-block-header">
                 <div className="race-block-title">
-                  {race.tipo === 'sprint' ? '⚡ ' : '🏁 '}{race.nombre}
-                  <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--muted)', marginLeft: 8 }}>Ronda {race.ronda}</span>
+                  {race.tipo === 'sprint' ? '⚡ ' : '🏁 '}{getRaceName(race, t)}
+                  <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--muted)', marginLeft: 8 }}>{t('predictionAnalysis.roundLabel', { round: race.ronda })}</span>
                 </div>
-                <div className="race-block-subtitle">Resultado Oficial</div>
+                <div className="race-block-subtitle">{t('lastRace.officialResult')}</div>
                 <div className="race-official">
                   {official.map(o => (
                     <span key={o.pos} className={`race-official-pill ${o.vr ? 'vr' : ''}`}>
@@ -580,7 +595,7 @@ export default function PredictionAnalysis() {
                       </span>
                     </div>
                     <span className="user-pred-score" style={{ color: ur.puntos > 0 ? 'var(--green)' : 'var(--muted)' }}>
-                      {Math.round(ur.puntos)} pts
+                      {Math.round(ur.puntos)} {t('common.pts')}
                     </span>
                   </div>
                   <div className="user-pred-grid">

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "501533970409",
+    "project_id": "podiof1",
+    "storage_bucket": "podiof1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:501533970409:android:6a54109ee99834dc9d0578",
+        "android_client_info": {
+          "package_name": "com.podiof1.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEm-4mZ8cwR9B8xscV0GDoHPTVTXoKWEY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

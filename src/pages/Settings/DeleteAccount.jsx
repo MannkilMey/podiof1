@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../stores/authStore';
 import { useThemeStore } from '../../stores/themeStore';
 import { supabase } from '../../lib/supabase';
+import { useTranslation } from '../../i18n';
+import BackButton from '../../components/BackButton'; 
+
 
 const CSS = `
 .delete-page {
@@ -79,13 +82,14 @@ const CSS = `
 }
 `;
 
-const CONFIRM_TEXT = 'ELIMINAR';
 
 export default function DeleteAccount() {
   const navigate = useNavigate();
   const theme = useThemeStore((state) => state.theme);
   const user = useAuthStore((state) => state.user);
   const signOut = useAuthStore((state) => state.signOut);
+  const { t } = useTranslation();  
+  const CONFIRM_TEXT = t('deleteAccount.confirmWord');  
   
   const [step, setStep] = useState(1); // 1: info, 2: confirm, 3: done
   const [confirmInput, setConfirmInput] = useState('');
@@ -113,7 +117,7 @@ export default function DeleteAccount() {
       }, 3000);
     } catch (err) {
       console.error('Error deleting account:', err);
-      setError(err.message || 'Error al eliminar la cuenta. Intentá de nuevo o contactá a privacy@podiof1.com');
+      setError(err.message || t('deleteAccount.deleteError'));
     } finally {
       setLoading(false);
     }
@@ -126,21 +130,21 @@ export default function DeleteAccount() {
         
         {step === 1 && (
           <>
-            <button className="delete-back" onClick={() => navigate(-1)}>← Volver</button>
-            <h1 className="delete-title">Eliminar mi Cuenta</h1>
+            <BackButton className="delete-back" onClick={() => navigate(-1)}>← {t('common.back')}</BackButton>
+            <h1 className="delete-title">{t('deleteAccount.title')}</h1>
             <div className="delete-subtitle">
-              Antes de continuar, por favor leé detenidamente lo que implica eliminar tu cuenta.
+              {t('deleteAccount.subtitle')}
             </div>
 
             <div className="delete-warning">
-              <div className="delete-warning-title">⚠️ Esta acción es irreversible</div>
+              <div className="delete-warning-title">⚠️ {t('deleteAccount.irreversibleWarning')}</div>
               <ul className="delete-warning-list">
-                <li>Tu perfil y datos personales serán eliminados permanentemente</li>
-                <li>Serás removido de todos tus grupos</li>
-                <li>Tus predicciones serán anonimizadas</li>
-                <li>Tus badges y logros se perderán</li>
-                <li>No podrás recuperar tu cuenta ni tus datos</li>
-                <li>Si sos admin de un grupo, el grupo quedará sin administrador</li>
+                <li>{t('deleteAccount.warning1')}</li>
+                <li>{t('deleteAccount.warning2')}</li>
+                <li>{t('deleteAccount.warning3')}</li>
+                <li>{t('deleteAccount.warning4')}</li>
+                <li>{t('deleteAccount.warning5')}</li>
+                <li>{t('deleteAccount.warning6')}</li>
               </ul>
             </div>
 
@@ -148,34 +152,33 @@ export default function DeleteAccount() {
               className="delete-btn danger" 
               onClick={() => setStep(2)}
             >
-              Entiendo, quiero continuar
+              {t('deleteAccount.understandContinue')}
             </button>
             <button 
               className="delete-btn cancel" 
               onClick={() => navigate(-1)}
             >
-              Cancelar, mantener mi cuenta
+              {t('deleteAccount.cancelKeepAccount')}
             </button>
           </>
         )}
 
         {step === 2 && (
           <>
-            <button className="delete-back" onClick={() => setStep(1)}>← Volver</button>
-            <h1 className="delete-title">Confirmar Eliminación</h1>
+            <BackButton className="delete-back" onClick={() => setStep(1)}>← {t('common.back')}</BackButton>
+            <h1 className="delete-title">{t('deleteAccount.confirmTitle')}</h1>
             <div className="delete-subtitle">
-              Para confirmar, escribí <strong style={{ color: 'var(--red)' }}>ELIMINAR</strong> en 
-              el campo de abajo.
+              {t('deleteAccount.confirmInstructionPrefix')} <strong style={{ color: 'var(--red)' }}>{CONFIRM_TEXT}</strong> {t('deleteAccount.confirmInstructionSuffix')}
             </div>
 
             <div className="delete-confirm-box">
               <div style={{ fontSize: 14, color: 'var(--muted)', textAlign: 'center' }}>
-                Cuenta: <strong style={{ color: 'var(--white)' }}>{user?.email}</strong>
+                {t('deleteAccount.accountLabel')}: <strong style={{ color: 'var(--white)' }}>{user?.email}</strong>
               </div>
               <input
                 type="text"
                 className="delete-input"
-                placeholder="Escribí ELIMINAR"
+                placeholder={t('deleteAccount.confirmPlaceholder', { word: CONFIRM_TEXT })}
                 value={confirmInput}
                 onChange={e => setConfirmInput(e.target.value.toUpperCase())}
                 autoFocus
@@ -197,13 +200,13 @@ export default function DeleteAccount() {
               disabled={confirmInput !== CONFIRM_TEXT || loading}
               onClick={handleDelete}
             >
-              {loading ? 'Eliminando cuenta...' : '🗑️ Eliminar mi cuenta permanentemente'}
+              {loading ? t('deleteAccount.deleting') : `🗑️ ${t('deleteAccount.deletePermanentlyBtn')}`}
             </button>
             <button 
               className="delete-btn cancel" 
               onClick={() => { setStep(1); setConfirmInput(''); }}
             >
-              Cancelar
+              {t('common.cancel')}
             </button>
           </>
         )}
@@ -211,12 +214,11 @@ export default function DeleteAccount() {
         {step === 3 && (
           <div className="delete-success">
             <div className="delete-success-icon">👋</div>
-            <div className="delete-success-title">Cuenta Eliminada</div>
+            <div className="delete-success-title">{t('deleteAccount.accountDeletedTitle')}</div>
             <div className="delete-success-text">
-              Tu cuenta y todos los datos asociados han sido eliminados. 
-              Serás redirigido en unos segundos.
+              {t('deleteAccount.accountDeletedText')}
               <br/><br/>
-              Si fue un error o necesitás ayuda, contactá a{' '}
+              {t('deleteAccount.contactPrefix')}{' '}
               <a href="mailto:privacy@podiof1.com" style={{ color: 'var(--red)' }}>
                 privacy@podiof1.com
               </a>

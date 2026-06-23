@@ -1,4 +1,4 @@
-const CACHE_NAME = 'podiof1-v1';
+const CACHE_NAME = 'podiof1-v5';
 const STATIC_ASSETS = [
   '/',
   '/manifest.json'

@@ -5,6 +5,9 @@ import { useThemeStore } from '../../stores/themeStore';
 import { supabase } from '../../lib/supabase';
 import { subHours } from 'date-fns';
 import { canPredictRaceSync } from '../../utils/canPredictRace';  
+import { useTranslation, getDateLocale, getRaceName } from '../../i18n';
+import BackButton from '../../components/BackButton';
+
 
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap');`;
 
@@ -404,6 +407,7 @@ export default function RacesPage() {
   const navigate = useNavigate();
   const user = useAuthStore((state) => state.user);
   const theme = useThemeStore((state) => state.theme);
+  const { t, locale } = useTranslation(); 
 
   const [group, setGroup] = useState(null);
   const [races, setRaces] = useState([]);
@@ -512,16 +516,14 @@ export default function RacesPage() {
   };
 
   // ✅ FUNCIÓN ACTUALIZADA - Respeta predicciones_forzadas_abiertas
-  const getRaceStatus = (race) => {
+ const getRaceStatus = (race) => {
     const hasPrediction = !!predictions[race.id];
-    
-    // ✅ Usar helper que respeta predicciones_forzadas_abiertas
     const predictionStatus = canPredictRaceSync(race, group);
     const isOpen = predictionStatus.canPredict;
 
     if (race.estado === 'finalizada') {
       return {
-        label: 'Completada',
+        label: t('racesPage.statusCompleted'),
         badge: 'completed',
         canPredict: false,
         canEdit: false
@@ -530,7 +532,7 @@ export default function RacesPage() {
 
     if (!hasPrediction) {
       return {
-        label: isOpen ? 'Sin predecir' : 'Bloqueada',
+        label: isOpen ? t('racesPage.statusNotPredicted') : t('racesPage.statusLocked'),
         badge: isOpen ? null : 'locked',
         canPredict: isOpen,
         canEdit: false
@@ -538,10 +540,10 @@ export default function RacesPage() {
     }
 
     return {
-      label: 'Predicción enviada',
+      label: t('racesPage.statusPredicted'),
       badge: 'predicted',
       canPredict: false,
-      canEdit: isOpen  // ✅ Permite editar si predicciones están abiertas
+      canEdit: isOpen
     };
   };
 
@@ -555,7 +557,7 @@ export default function RacesPage() {
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('es', {
+    return date.toLocaleDateString(getDateLocale(locale), {
       weekday: 'short',
       day: 'numeric',
       month: 'short',
@@ -570,20 +572,20 @@ export default function RacesPage() {
     const predictionStatus = canPredictRaceSync(race, group);
     
     if (!predictionStatus.deadline) {
-      return 'Cerrado';
+      return t('racesPage.closed');
     }
 
     // ✅ Mostrar si es deadline forzado o normal
     const isForcedOpen = race.predicciones_forzadas_abiertas;
-    const prefix = isForcedOpen ? '🔓 Abierto hasta inicio:' : '⏰ Cierra:';
+    const prefix = isForcedOpen ? `🔓 ${t('racesPage.openUntilStart')}:` : `⏰ ${t('racesPage.closesAt')}:`;
     
-    return `${prefix} ${predictionStatus.deadline.toLocaleDateString('es', {
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    })}`;
-  };
+    return `${prefix} ${predictionStatus.deadline.toLocaleDateString(getDateLocale(locale), {
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  })}`;
+};
 
   if (loading) {
     return (
@@ -592,7 +594,7 @@ export default function RacesPage() {
         <div data-theme={theme} className="races-container">
           <div className="loading-state">
             <div style={{ fontSize: 48, marginBottom: 16 }}>🏎</div>
-            <div>Cargando carreras...</div>
+            <div>{t('racesPage.loading')}</div>
           </div>
         </div>
       </>
@@ -606,7 +608,7 @@ export default function RacesPage() {
         <div data-theme={theme} className="races-container">
           <div className="empty-state">
             <div className="empty-icon">⚠️</div>
-            <div className="empty-title">Grupo no encontrado</div>
+            <div className="empty-title">{t('racesPage.groupNotFound')}</div>
           </div>
         </div>
       </>
@@ -618,24 +620,24 @@ export default function RacesPage() {
       <style>{FONTS + CSS}</style>
       <div data-theme={theme} className="races-container">
         <div className="races-header">
-          <button className="back-btn" onClick={() => navigate(`/group/${groupId}`)}>
+          <BackButton className="back-btn" onClick={() => navigate(`/group/${groupId}`)}>
             ←
-          </button>
+          </BackButton>
           <div>
-            <h1 className="races-title">Carreras {group.temporada}</h1>
+            <h1 className="races-title">{t('racesPage.title')} {group.temporada}</h1>
           </div>
         </div>
 
         <p className="races-subtitle">
-          {group.nombre} • {races.length} carreras
+          {group.nombre} • {t('common.races')}: {races.length}
         </p>
 
         {races.length === 0 ? (
           <div className="empty-state">
             <div className="empty-icon">🏁</div>
-            <div className="empty-title">No hay carreras programadas</div>
+            <div className="empty-title">{t('racesPage.noRacesScheduled')}</div>
             <div className="empty-text">
-              Aún no se han agregado carreras para esta temporada
+              {t('racesPage.noRacesScheduledSub')}
             </div>
           </div>
         ) : (
@@ -656,7 +658,7 @@ export default function RacesPage() {
                   {/* Header */}
                   <div className="race-card-header">
                     <div className="race-info">
-                      <div className="race-round">Ronda {race.ronda || '?'}</div>                      <div className="race-name">{race.nombre}</div>
+                      <div className="race-round">{t('predictionAnalysis.roundLabel', { round: race.ronda || '?' })}</div>                      <div className="race-name">{getRaceName(race, t)}</div>
                       <div className="race-details">
                         <div className="race-detail-item">
                           <span>📍</span>
@@ -697,7 +699,7 @@ export default function RacesPage() {
                             handlePredict(race.id);
                           }}
                         >
-                          Predecir
+                          {t('racesPage.predictBtn')}
                         </button>
                       )}
                       
@@ -709,7 +711,7 @@ export default function RacesPage() {
                             handleEdit(race.id);
                           }}
                         >
-                          Editar Predicción
+                          {t('racesPage.editPredictionBtn')}
                         </button>
                       )}
 
@@ -719,7 +721,7 @@ export default function RacesPage() {
                           disabled
                           onClick={(e) => e.stopPropagation()}
                         >
-                          Bloqueada
+                          {t('racesPage.statusLocked')}
                         </button>
                       )}
                     </div>
@@ -729,12 +731,12 @@ export default function RacesPage() {
                   {hasResults && userPrediction && (
                     <div className="race-results">
                       <div className="results-title">
-                        📊 Resultados
+                        📊 {t('racesPage.resultsTitle')}
                       </div>
                       <div className="results-grid">
                         {/* Resultado Real */}
                         <div className="result-column">
-                          <div className="result-column-title">Resultado Real</div>
+                          <div className="result-column-title">{t('racesPage.realResultColumn')}</div>
                           <div className="result-list">
                             {raceResults.slice(0, group.cantidad_posiciones || 10).map((result, idx) => {
                               const driver = drivers[result.piloto_id];
@@ -747,7 +749,7 @@ export default function RacesPage() {
                                 >
                                   <div className="result-position">{idx + 1}°</div>
                                   <div className="result-driver">
-                                    {driver?.nombre_completo || 'Desconocido'}
+                                    {driver?.nombre_completo || t('common.unknown')}
                                   </div>
                                   {predictedCorrectly && <span className="result-check">✓</span>}
                                 </div>
@@ -758,7 +760,7 @@ export default function RacesPage() {
 
                         {/* Tu Predicción */}
                         <div className="result-column">
-                          <div className="result-column-title">Tu Predicción</div>
+                          <div className="result-column-title">{t('racesPage.yourPredictionColumn')}</div>
                           <div className="result-list">
                             {userPrediction.posiciones?.slice(0, group.cantidad_posiciones || 10).map((pilotoId, idx) => {
                               const driver = drivers[pilotoId];
@@ -772,7 +774,7 @@ export default function RacesPage() {
                                 >
                                   <div className="result-position">{idx + 1}°</div>
                                   <div className="result-driver">
-                                    {driver?.nombre_completo || 'Desconocido'}
+                                    {driver?.nombre_completo || t('common.unknown')}
                                   </div>
                                   <span className="result-check">{isCorrect ? '✓' : '✗'}</span>
                                 </div>
@@ -785,7 +787,7 @@ export default function RacesPage() {
                       {/* Puntos Obtenidos */}
                       {userScore !== undefined && (
                         <div className="points-earned">
-                          <div className="points-label">Puntos Obtenidos</div>
+                          <div className="points-label">{t('racesPage.pointsEarnedLabel')}</div>
                           <div className="points-value">{Math.round(userScore)}</div>
                         </div>
                       )}

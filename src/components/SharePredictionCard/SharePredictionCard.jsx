@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import html2canvas from 'html2canvas';
 import { useToastStore } from '../../stores/toastStore';
 import { useThemeStore } from '../../stores/themeStore';
+import { useTranslation } from '../../i18n';
 
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap');`;
 
@@ -473,6 +474,7 @@ export default function SharePredictionCard({ type, data, raceName, user, onClos
   const cardRef = useRef(null);
   const toast = useToastStore();
   const theme = useThemeStore((state) => state.theme);
+  const { t } = useTranslation();
   const [generating, setGenerating] = useState(false);
 
   // Normalizar type: "result" e "individual" son lo mismo
@@ -480,20 +482,20 @@ export default function SharePredictionCard({ type, data, raceName, user, onClos
 
   // Extraer userName del objeto user de Supabase
   const getUserName = () => {
-    if (!user) return 'Usuario';
-    
-    const nombre = user.user_metadata?.nombre || '';
-    const apellido = user.user_metadata?.apellido || '';
-    const fullName = `${nombre} ${apellido}`.trim();
-    
-    if (fullName) return fullName;
-    
-    if (user.email) {
-      return user.email.split('@')[0];
-    }
-    
-    return 'Usuario';
-  };
+  if (!user) return t('dashboard.defaultUserName');
+  
+  const nombre = user.user_metadata?.nombre || '';
+  const apellido = user.user_metadata?.apellido || '';
+  const fullName = `${nombre} ${apellido}`.trim();
+  
+  if (fullName) return fullName;
+  
+  if (user.email) {
+    return user.email.split('@')[0];
+  }
+  
+  return t('dashboard.defaultUserName');
+};
 
   const userName = getUserName();
 
@@ -519,7 +521,7 @@ export default function SharePredictionCard({ type, data, raceName, user, onClos
       return canvas.toDataURL('image/png');
     } catch (error) {
       console.error('Error generating image:', error);
-      toast.error('Error al generar imagen');
+      toast.error(t('sharePrediction.errorGeneratingImage'));
       return null;
     } finally {
       setGenerating(false);
@@ -535,7 +537,7 @@ export default function SharePredictionCard({ type, data, raceName, user, onClos
     link.href = imageData;
     link.click();
 
-    toast.success('¡Imagen descargada!');
+    toast.success(t('sharePrediction.imageDownloaded'));
   };
 
   const handleShare = async () => {
@@ -550,14 +552,18 @@ export default function SharePredictionCard({ type, data, raceName, user, onClos
       try {
         await navigator.share({
           files: [file],
-          title: `Mi ${normalizedType === 'prediction' ? 'predicción' : 'resultado'} en PodioF1`,
-          text: `¡Mira ${normalizedType === 'general' ? 'los resultados' : 'mi ' + (normalizedType === 'prediction' ? 'predicción' : 'resultado')} de ${raceName}!`
+          title: normalizedType === 'prediction' ? t('sharePrediction.shareTitlePrediction') : t('sharePrediction.shareTitleResult'),
+          text: normalizedType === 'general'
+            ? t('sharePrediction.shareTextGeneral', { race: raceName })
+            : normalizedType === 'prediction'
+            ? t('sharePrediction.shareTextPrediction', { race: raceName })
+            : t('sharePrediction.shareTextResult', { race: raceName })
         });
-        toast.success('¡Compartido exitosamente!');
+        toast.success(t('sharePrediction.sharedSuccess'));
       } catch (err) {
         if (err.name !== 'AbortError') {
           console.error('Error sharing:', err);
-          toast.error('Error al compartir');
+          toast.error(t('sharePrediction.errorSharing'));
         }
       }
     } else {
@@ -565,20 +571,19 @@ export default function SharePredictionCard({ type, data, raceName, user, onClos
     }
   };
 
-  const getCardTitle = () => {
-    if (normalizedType === 'prediction') return 'Mi Predicción';
-    if (normalizedType === 'individual') return 'Mi Resultado';
-    if (normalizedType === 'general') return 'Resultados Finales';
-    return 'Resultados';
+    const getCardTitle = () => {
+    if (normalizedType === 'prediction') return t('sharePrediction.cardTitlePrediction');
+    if (normalizedType === 'individual') return t('sharePrediction.cardTitleResult');
+    if (normalizedType === 'general') return t('sharePrediction.cardTitleFinalResults');
+    return t('sharePrediction.cardTitleResults');
   };
 
   const getModalTitle = () => {
-    if (normalizedType === 'prediction') return '📸 Compartir Predicción';
-    if (normalizedType === 'individual') return '📊 Compartir Resultado';
-    if (normalizedType === 'general') return '🏆 Compartir Resultados';
-    return '📤 Compartir';
+    if (normalizedType === 'prediction') return `📸 ${t('sharePrediction.modalTitlePrediction')}`;
+    if (normalizedType === 'individual') return `📊 ${t('sharePrediction.modalTitleResult')}`;
+    if (normalizedType === 'general') return `🏆 ${t('sharePrediction.modalTitleResults')}`;
+    return `📤 ${t('sharePrediction.modalTitleDefault')}`;
   };
-
   return (
     <>
       <style>{FONTS + CSS}</style>
@@ -620,22 +625,22 @@ export default function SharePredictionCard({ type, data, raceName, user, onClos
               // TIPO: RESULTADO INDIVIDUAL
               <>
                 <div className="result-position">
-                  <div className="position-label">Posición Final</div>
+                  <div className="position-label">{t('sharePrediction.finalPositionLabel')}</div>
                   <div className="position-value">{data.position}°</div>
-                  <div className="position-total">de {data.totalParticipants} participantes</div>
+                  <div className="position-total">{t('sharePrediction.ofParticipants', { count: data.totalParticipants })}</div>
                 </div>
 
                 <div className="result-stats">
                   <div className="stat-row">
-                    <div className="stat-label">Puntos</div>
+                    <div className="stat-label">{t('common.points')}</div>
                     <div className="stat-value highlight">{Math.round(data.points)}</div>
                   </div>
                   <div className="stat-row">
-                    <div className="stat-label">Aciertos Exactos</div>
+                    <div className="stat-label">{t('predictionAnalysis.totalExactColumn')}</div>
                     <div className="stat-value">{data.exactHits}/{data.totalDrivers}</div>
                   </div>
                   <div className="stat-row">
-                    <div className="stat-label">Precisión</div>
+                    <div className="stat-label">{t('racePredictions.accuracyLabel')}</div>
                     <div className="stat-value">{Math.round(data.accuracy || 0)}%</div>
                   </div>
                 </div>
@@ -644,18 +649,18 @@ export default function SharePredictionCard({ type, data, raceName, user, onClos
               // TIPO: RESULTADOS GENERALES
               <>
                 <div className="general-header">
-                  <div className="general-title">🏆 Ganador</div>
+                  <div className="general-title">🏆 {t('sharePrediction.winnerLabel')}</div>
                   <div className="general-winner">{data.topUser}</div>
-                  <div className="general-points">{Math.round(data.topPoints)} puntos</div>
+                  <div className="general-points">{t('common.pointsCount', { count: Math.round(data.topPoints) })}</div>
                 </div>
 
                 <div className="general-stats">
                   <div className="general-stat-row">
-                    <div className="stat-label">Participantes</div>
+                    <div className="stat-label">{t('sharePrediction.participantsLabel')}</div>
                     <div className="stat-value">{data.totalParticipants}</div>
                   </div>
                   <div className="general-stat-row">
-                    <div className="stat-label">Puntos Promedio</div>
+                    <div className="stat-label">{t('sharePrediction.avgPointsLabel')}</div>
                     <div className="stat-value">{Math.round(data.avgPoints)}</div>
                   </div>
                 </div>
@@ -663,7 +668,7 @@ export default function SharePredictionCard({ type, data, raceName, user, onClos
                 {data.officialResult && data.officialResult.length > 0 ? (
                   // ✅ MOSTRAR RESULTADO OFICIAL DE LA CARRERA
                   <div className="most-voted-section">
-                    <div className="most-voted-title">🏁 Resultado Oficial</div>
+                    <div className="most-voted-title">🏁{t('lastRace.officialResult')}</div>
                     {data.officialResult.map((result, idx) => (
                       <div key={idx} className="most-voted-item">
                         <div className="most-voted-pos">
@@ -679,7 +684,7 @@ export default function SharePredictionCard({ type, data, raceName, user, onClos
                 ) : data.mostVoted && data.mostVoted.length > 0 ? (
                   // Fallback: Mostrar más votados si no hay resultado oficial
                   <div className="most-voted-section">
-                    <div className="most-voted-title">Más Votados</div>
+                    <div className="most-voted-title">{t('sharePrediction.mostVotedLabel')}</div>
                     {data.mostVoted.map((vote, idx) => (
                       <div key={idx} className="most-voted-item">
                         <div className="most-voted-pos">P{vote.posicion}</div>
@@ -694,12 +699,12 @@ export default function SharePredictionCard({ type, data, raceName, user, onClos
             <div className="card-watermark">
               <div className="watermark-text">
                 {normalizedType === 'prediction' 
-                  ? 'Únete y predice tú también' 
+                  ? t('sharePrediction.watermarkPrediction')
                   : normalizedType === 'general'
-                  ? '¡Únete a la competencia!'
-                  : '¡Compite con tus amigos!'}
+                  ? t('sharePrediction.watermarkGeneral')
+                  : t('sharePrediction.watermarkDefault')}
               </div>
-              <div className="watermark-url">podiof1.com</div>
+              <div className="watermark-url">www.podiof1.com</div>
             </div>
           </div>
 
@@ -710,14 +715,14 @@ export default function SharePredictionCard({ type, data, raceName, user, onClos
               onClick={handleShare}
               disabled={generating}
             >
-              {generating ? '⏳ Generando...' : '📤 Compartir'}
+              {generating ? `⏳ ${t('sharePrediction.generatingLabel')}` : `📤 ${t('sharePrediction.shareBtn')}`}
             </button>
             <button 
               className="share-btn share-btn-secondary"
               onClick={handleDownload}
               disabled={generating}
             >
-              💾 Descargar
+              💾 {t('sharePrediction.downloadBtn')}
             </button>
           </div>
         </div>

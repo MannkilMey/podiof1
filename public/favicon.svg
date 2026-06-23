@@ -1,44 +1,28 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
-  <!-- Fondo circular rojo F1 -->
-  <circle cx="64" cy="64" r="60" fill="#E8002D"/>
-  
-  <!-- Borde blanco -->
-  <circle cx="64" cy="64" r="60" fill="none" stroke="#FFFFFF" stroke-width="4"/>
-  
-  <!-- Bandera a cuadros estilizada -->
-  <g transform="translate(30, 35)">
-    <!-- Cuadros superiores -->
-    <rect x="0" y="0" width="10" height="10" fill="#FFFFFF"/>
-    <rect x="10" y="0" width="10" height="10" fill="#1A1B1E"/>
-    <rect x="20" y="0" width="10" height="10" fill="#FFFFFF"/>
-    <rect x="30" y="0" width="10" height="10" fill="#1A1B1E"/>
-    <rect x="40" y="0" width="10" height="10" fill="#FFFFFF"/>
-    <rect x="50" y="0" width="10" height="10" fill="#1A1B1E"/>
-    <rect x="60" y="0" width="10" height="10" fill="#FFFFFF"/>
-    
-    <!-- Cuadros medios -->
-    <rect x="0" y="10" width="10" height="10" fill="#1A1B1E"/>
-    <rect x="10" y="10" width="10" height="10" fill="#FFFFFF"/>
-    <rect x="20" y="10" width="10" height="10" fill="#1A1B1E"/>
-    <rect x="30" y="10" width="10" height="10" fill="#FFFFFF"/>
-    <rect x="40" y="10" width="10" height="10" fill="#1A1B1E"/>
-    <rect x="50" y="10" width="10" height="10" fill="#FFFFFF"/>
-    <rect x="60" y="10" width="10" height="10" fill="#1A1B1E"/>
-    
-    <!-- Cuadros inferiores -->
-    <rect x="0" y="20" width="10" height="10" fill="#FFFFFF"/>
-    <rect x="10" y="20" width="10" height="10" fill="#1A1B1E"/>
-    <rect x="20" y="20" width="10" height="10" fill="#FFFFFF"/>
-    <rect x="30" y="20" width="10" height="10" fill="#1A1B1E"/>
-    <rect x="40" y="20" width="10" height="10" fill="#FFFFFF"/>
-    <rect x="50" y="20" width="10" height="10" fill="#1A1B1E"/>
-    <rect x="60" y="20" width="10" height="10" fill="#FFFFFF"/>
-    
-    <!-- Líneas de velocidad -->
-    <path d="M 5 40 L 65 40 M 10 45 L 60 45 M 15 50 L 55 50" 
-          stroke="#FFFFFF" 
-          stroke-width="2" 
-          stroke-linecap="round"
-          opacity="0.8"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1900 1900">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #0a0a0c;
+      }
+
+      .cls-2 {
+        fill: #00d4a0;
+      }
+
+      .cls-3 {
+        fill: #f0f0f0;
+      }
+
+      .cls-4 {
+        fill: #e8002d;
+      }
+    </style>
+  </defs>
+  <rect class="cls-1" x="244.18" y="244.18" width="1411.64" height="1411.64" rx="357.88" ry="357.88"/>
+  <g>
+    <path class="cls-4" d="M1107.97,588.21h-496.39l-74.28,131.23h572.25c99.61,0,183.47,78.67,185.24,178.28.53,30.18-6.36,58.79-19.03,83.99-.92,1.9-1.9,3.74-2.82,5.58l-3.02,5.25-125.79,219.55c157.88-15.42,281.63-148.75,281.89-310.57.33-172.38-145.74-313.32-318.05-313.32Z"/>
+    <path class="cls-3" d="M1107.91,966.58c36.24,0,65.62-29.38,65.62-65.62h0c0-36.24-29.38-65.62-65.62-65.62h-178.22c-114.63,0-220.93,61.94-277.43,161.68l-178.28,314.77h150.79l141.67-250.07c33.2-58.66,95.8-95.14,163.26-95.14h178.22Z"/>
+    <path class="cls-2" d="M904.73,1079.09c-19.58,0-37.65,10.5-47.34,27.51l-40.37,70.85h70.01l-75.98,134.32h150.72s128.94-226.77,133.33-232.68h-190.37Z"/>
   </g>
 </svg>

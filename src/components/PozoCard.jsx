@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
+import { useTranslation, getDateLocale } from '../i18n';
+
 
 const CURRENCY_SYMBOLS = {
   USD: '$', PYG: '₲', BRL: 'R$', ARS: '$', EUR: '€', GBP: '£'
@@ -14,18 +16,19 @@ const CURRENCY_FORMATS = {
   GBP: { decimals: 2, separator: ',' }
 };
 
-function formatMoney(amount, currency = 'USD') {
+function formatMoney(amount, currency = 'USD', dateLocale = 'es-PY') {
   const sym = CURRENCY_SYMBOLS[currency] || currency + ' ';
   const fmt = CURRENCY_FORMATS[currency] || { decimals: 2, separator: ',' };
   const num = Number(amount) || 0;
-  const formatted = num.toLocaleString('es-PY', {
+  const formatted = num.toLocaleString(dateLocale, {
     minimumFractionDigits: fmt.decimals,
     maximumFractionDigits: fmt.decimals
   });
   return `${sym} ${formatted}`;
 }
 
-export default function PozoCard({ groupId }) {
+export default function PozoCard({ groupId, leaderboard }) {
+  const { t, locale } = useTranslation();
   const [data, setData] = useState(null);
   const [members, setMembers] = useState(0);
   const [loaded, setLoaded] = useState(false);
@@ -99,10 +102,10 @@ export default function PozoCard({ groupId }) {
             fontWeight: 800, color: 'var(--white)', textTransform: 'uppercase',
             letterSpacing: 1, display: 'flex', alignItems: 'center', gap: 8
           }}>
-            💰 Pozo del Grupo
+            💰 {t('pozo.title')}
           </div>
           <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 4 }}>
-            {members} participantes · {formatMoney(montoPersona, moneda)} por persona
+            {t('pozo.participants', { count: members })} · {t('pozo.perPerson', { amount: formatMoney(montoPersona, moneda, getDateLocale(locale)) })}
           </div>
         </div>
         <div style={{
@@ -113,7 +116,7 @@ export default function PozoCard({ groupId }) {
             textAlign: 'right', 
             wordBreak: 'break-word'
         }}>
-          {formatMoney(total, moneda)}
+          {formatMoney(total, moneda, getDateLocale(locale))}
         </div>
       </div>
 
@@ -140,13 +143,13 @@ export default function PozoCard({ groupId }) {
                     fontFamily: "'Barlow Condensed', sans-serif", fontSize: 14,
                     fontWeight: 700, color: 'var(--white)'
                   }}>
-                    {pos}° lugar — {pct}%
+                    {t('pozo.place', { pos })} — {pct}%
                   </span>
                   <span style={{
                     fontFamily: "'Barlow Condensed', sans-serif", fontSize: 16,
                     fontWeight: 900, color: barColor
                   }}>
-                    {formatMoney(amount, moneda)}
+                    {formatMoney(amount, moneda, getDateLocale(locale))}
                   </span>
                 </div>
                 <div style={{
@@ -162,14 +165,72 @@ export default function PozoCard({ groupId }) {
           );
         })}
       </div>
-
+        {/* Projected winners */}
+      {leaderboard && leaderboard.length > 0 && (
+        <div style={{ marginBottom: 16 }}>
+          <div style={{
+            fontSize: 11, fontWeight: 700, letterSpacing: 1,
+            textTransform: 'uppercase', color: 'var(--muted)',
+            marginBottom: 10, display: 'flex', alignItems: 'center', gap: 6
+          }}>
+            🏆 {t('pozo.currentProjection')}
+            <span style={{
+              fontSize: 9, padding: '2px 6px', borderRadius: 4,
+              background: 'var(--bg3)', color: 'var(--muted)',
+              fontWeight: 600, letterSpacing: 0
+            }}>
+              {t('pozo.live')}
+            </span>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            {distEntries.map(([pos, pct]) => {
+              const posNum = Number(pos);
+              const user = leaderboard[posNum - 1];
+              const amount = (total * Number(pct)) / 100;
+              const medal = medals[pos] || `${pos}°`;
+              const barColor = barColors[pos] || 'var(--muted)';
+              
+              if (!user) return null;
+              
+              return (
+                <div key={`winner-${pos}`} style={{
+                  display: 'flex', alignItems: 'center', gap: 12,
+                  padding: '10px 14px', background: 'var(--bg3)',
+                  borderRadius: 8, border: `1px solid ${posNum === 1 ? 'rgba(201,168,76,0.3)' : 'var(--border)'}`,
+                  transition: 'all 0.2s'
+                }}>
+                  <span style={{ fontSize: 20, flexShrink: 0 }}>{medal}</span>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{
+                      fontSize: 14, fontWeight: 700, color: 'var(--white)',
+                      overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'
+                    }}>
+                      {user.nombre}
+                    </div>
+                    <div style={{ fontSize: 11, color: 'var(--muted)' }}>
+                      {t('common.pointsCount', { count: Math.round(user.puntos) })} · {t('common.exactCount', { count: user.exactos })}
+                    </div>
+                  </div>
+                  <div style={{
+                    fontFamily: "'Barlow Condensed', sans-serif",
+                    fontSize: 16, fontWeight: 900, color: barColor,
+                    flexShrink: 0
+                  }}>
+                    {formatMoney(amount, moneda, getDateLocale(locale))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
       {/* Disclaimer */}
       <div style={{
         background: 'var(--bg3)', border: '1px solid var(--border)',
         borderRadius: 8, padding: '10px 14px', fontSize: 10,
         color: 'var(--muted)', lineHeight: 1.5, textAlign: 'center'
       }}>
-        ⚠️ PodioF1 no gestiona, almacena ni transfiere dinero. El pozo es informativo y la gestión es responsabilidad de los participantes.
+        ⚠️{t('pozo.disclaimer')}
       </div>
     </div>
   );

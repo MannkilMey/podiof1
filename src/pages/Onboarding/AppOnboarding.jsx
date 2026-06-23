@@ -1,30 +1,31 @@
 import { useState, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useThemeStore } from '../../stores/themeStore';
+import { useTranslation } from '../../i18n';
 
-const SLIDES = [
+const getSlides = (t) => [
   {
     icon: '🏎',
-    title: 'Predecí la F1',
-    subtitle: 'Armá tu top 10 antes de cada carrera y demostrá que sabés más que tus amigos',
+    title: t('appOnboarding.slide1Title'),
+    subtitle: t('appOnboarding.slide1Sub'),
     accent: '#E8002D'
   },
   {
     icon: '👥',
-    title: 'Competí en Grupo',
-    subtitle: 'Creá grupos privados, invitá amigos y seguí el ranking en tiempo real',
+    title: t('appOnboarding.slide2Title'),
+    subtitle: t('appOnboarding.slide2Sub'),
     accent: '#00D4A0'
   },
   {
     icon: '🏆',
-    title: 'Ganá Badges',
-    subtitle: 'Desbloqueá logros, subí en el ranking y aspirá al podio de tu grupo',
+    title: t('appOnboarding.slide3Title'),
+    subtitle: t('appOnboarding.slide3Sub'),
     accent: '#C9A84C'
   },
   {
     icon: '🚀',
-    title: '¡Empezá Ahora!',
-    subtitle: 'Creá tu cuenta gratis y hacé tu primera predicción',
+    title: t('appOnboarding.slide4Title'),
+    subtitle: t('appOnboarding.slide4Sub'),
     accent: '#E8002D',
     isFinal: true
   }
@@ -33,6 +34,8 @@ const SLIDES = [
 export default function AppOnboarding() {
   const navigate = useNavigate();
   const theme = useThemeStore((state) => state.theme);
+  const { t } = useTranslation()
+  const SLIDES = getSlides(t);
   const [current, setCurrent] = useState(0);
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
@@ -83,7 +86,7 @@ export default function AppOnboarding() {
             fontFamily: "'Barlow', sans-serif"
           }}
         >
-          Saltar →
+          {t('common.skip')} →
         </button>
       )}
 
@@ -145,7 +148,7 @@ export default function AppOnboarding() {
                 boxShadow: '0 4px 20px rgba(232,0,45,0.3)'
               }}
             >
-              Crear Cuenta Gratis
+              {t('appOnboarding.createAccount')}
             </button>
             <button
               onClick={() => navigate('/login')}
@@ -160,7 +163,7 @@ export default function AppOnboarding() {
                 transition: 'all 0.2s'
               }}
             >
-              Ya Tengo Cuenta
+              {t('appOnboarding.haveAccount')}
             </button>
           </div>
         )}
@@ -202,7 +205,7 @@ export default function AppOnboarding() {
               display: 'flex', alignItems: 'center', gap: 6
             }}
           >
-            Siguiente →
+            {t('common.next')} →
           </button>
         )}
       </div>

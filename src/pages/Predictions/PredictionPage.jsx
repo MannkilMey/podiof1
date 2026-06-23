@@ -6,6 +6,8 @@ import { useToastStore } from '../../stores/toastStore';
 import { usePrediction } from '../../hooks/usePrediction';
 import { supabase } from '../../lib/supabase';
 import SharePredictionCard from '../../components/SharePredictionCard/SharePredictionCard';
+import { useTranslation, getDateLocale, getRaceName } from '../../i18n';
+import BackButton from '../../components/BackButton';
 import {
   DndContext,
   closestCenter,
@@ -592,6 +594,7 @@ export default function PredictionPage() {
   const theme = useThemeStore((state) => state.theme);
   const setTheme = useThemeStore((state) => state.setTheme);
   const toast = useToastStore();
+  const { t, locale } = useTranslation();
   
   const { drivers, group, race, existingPrediction, canPredict, loading, error } = usePrediction(
     groupId,
@@ -677,7 +680,7 @@ export default function PredictionPage() {
     if (!canPredict) return;
     
     if (selectedDrivers.length >= maxPositions) {
-      toast.error(`Solo puedes seleccionar ${maxPositions} pilotos`);
+      toast.error(t('prediction.maxDriversError', { max: maxPositions }));
       return;
     }
 
@@ -696,17 +699,17 @@ export default function PredictionPage() {
 
   const handleSave = async () => {
     if (selectedDrivers.length !== maxPositions) {
-      toast.error(`Debes seleccionar exactamente ${maxPositions} pilotos`);
+      toast.error(t('prediction.exactDriversError', { max: maxPositions }));
       return;
     }
 
     if (hasFastestLapDriver && !fastestLapDriver) {
-      toast.error('Selecciona el piloto con vuelta más rápida');
+      toast.error(t('prediction.selectFastestDriverError'));
       return;
     }
 
     if (hasFastestLapTeam && !fastestLapTeam) {
-      toast.error('Selecciona el equipo con vuelta más rápida');
+      toast.error(t('prediction.selectFastestTeamError'));
       return;
     }
 
@@ -734,7 +737,7 @@ export default function PredictionPage() {
           .eq('id', existingPrediction.id);
 
         if (updateError) throw updateError;
-        toast.success('¡Predicción actualizada exitosamente! 🏁');
+          toast.success(t('prediction.updatedSuccess'));
       } else {
         const { error: insertError } = await supabase
           .from('predictions')
@@ -746,7 +749,7 @@ export default function PredictionPage() {
           });
 
         if (insertError) throw insertError;
-        toast.success('¡Predicción guardada exitosamente! 🏁');
+        toast.success(t('prediction.savedSuccess'));
       }
 
       // 🆕 Mostrar modal de éxito en lugar de navegar inmediatamente
@@ -754,7 +757,7 @@ export default function PredictionPage() {
 
     } catch (err) {
       console.error('Error saving prediction:', err);
-      toast.error('Error al guardar predicción. Intenta de nuevo.');
+      toast.error(t('prediction.saveError'));
     } finally {
       setSaving(false);
     }
@@ -787,7 +790,7 @@ export default function PredictionPage() {
         <div data-theme={theme} className="prediction-page">
           <div style={{ textAlign: 'center', padding: '80px 20px', color: 'var(--muted)' }}>
             <div style={{ fontSize: 48, marginBottom: 16 }}>🏎</div>
-            <div>Cargando predicción...</div>
+            <div>{t('prediction.loading')}</div>
           </div>
         </div>
       </>
@@ -799,12 +802,12 @@ export default function PredictionPage() {
       <>
         <style>{FONTS + CSS_STYLES}</style>
         <div data-theme={theme} className="prediction-page">
-          <button className="back-btn" onClick={() => navigate(`/group/${groupId}`)}>
-            ← Volver al grupo
-          </button>
+          <BackButton className="back-btn" onClick={() => navigate(`/group/${groupId}`)}>
+          ← {t('prediction.backToGroup')}
+        </BackButton>
           <div style={{ textAlign: 'center', padding: '80px 20px', color: 'var(--red)' }}>
             <div style={{ fontSize: 48, marginBottom: 16 }}>⚠️</div>
-            <div>Error al cargar predicción</div>
+            <div>{t('prediction.loadError')}</div>
           </div>
         </div>
       </>
@@ -834,9 +837,9 @@ export default function PredictionPage() {
       <style>{FONTS + CSS_STYLES}</style>
       <div data-theme={theme} className="prediction-page">
         <div className="pred-header">
-          <button className="back-btn" onClick={() => navigate(`/group/${groupId}`)}>
-            ← Volver al grupo
-          </button>
+          <BackButton className="back-btn" onClick={() => navigate(`/group/${groupId}`)}>
+            ← {t('prediction.backToGroup')}
+          </BackButton>
           
           <div className="theme-toggle">
             <button 
@@ -854,9 +857,9 @@ export default function PredictionPage() {
           </div>
         </div>
 
-        <h1 className="prediction-title">{race.nombre}</h1>
+        <h1 className="prediction-title">{getRaceName(race, t)}</h1>
         <p className="prediction-subtitle">
-          {race.circuito} · {new Date(race.fecha_programada).toLocaleDateString('es', {
+          {race.circuito} · {new Date(race.fecha_programada).toLocaleDateString(getDateLocale(locale), {
             weekday: 'long',
             year: 'numeric',
             month: 'long',
@@ -866,16 +869,18 @@ export default function PredictionPage() {
         {/* ✅ NUEVO: Badge Sprint */}
           {isSprint && (
             <div className="sprint-badge-prediction">
-              ⚡ CARRERA SPRINT
+              ⚡ {t('prediction.sprintBadge')}
             </div>
           )}
 
           {/* ✅ NUEVO: Mostrar sistema de puntos Sprint */}
           {isSprint && (
             <div className="sprint-points-info">
-              <div className="sprint-points-title">Sistema de Puntos Sprint</div>
+              <div className="sprint-points-title">{t('prediction.sprintPointsTitle')}</div>
               <div className="sprint-points-list">
-                1º = 8 pts • 2º = 7 pts • 3º = 6 pts • 4º = 5 pts • 5º = 4 pts • 6º = 3 pts • 7º = 2 pts • 8º = 1 pt
+                {Object.entries(sistemaPuntos || {}).map(([pos, pts], i) => (
+                  <span key={pos}>{i > 0 && ' • '}{pos}º = {pts} pts</span>
+                ))}
               </div>
             </div>
           )}
@@ -883,7 +888,7 @@ export default function PredictionPage() {
         {!canPredict && (
           <div className="deadline-banner expired">
             <div className="deadline-text">
-              🔒 Las predicciones están cerradas para esta carrera
+              🔒 {t('prediction.predictionsClosedBanner')}
             </div>
           </div>
         )}
@@ -891,7 +896,7 @@ export default function PredictionPage() {
         {canPredict && existingPrediction && (
           <div className="deadline-banner">
             <div className="deadline-text">
-              ✏️ Editando tu predicción (puedes cambiarla hasta el deadline)
+              ✏️ {t('prediction.editingBanner')}
             </div>
           </div>
         )}
@@ -900,18 +905,18 @@ export default function PredictionPage() {
           <>
             <div className="instruction-box">
             <h3 className="instruction-title">
-              📝 Instrucciones {isSprint ? '(Sprint)' : ''}
+              📝 {t('prediction.instructionsTitle')} {isSprint ? `(${t('prediction.sprintLabel')})` : ''}
             </h3>
             <p className="instruction-text">
-              1. Selecciona {maxPositions} pilotos en el orden que crees que terminarán<br/>
-              2. Arrastra para reordenar<br/>
-              3. Haz clic en ✕ para quitar un piloto<br/>
-              4. Guarda antes de que cierre el plazo
+              1. {t('prediction.step1', { count: maxPositions })}<br/>
+              2. {t('prediction.step2')}<br/>
+              3. {t('prediction.step3')}<br/>
+              4. {t('prediction.step4')}
               {isSprint && (
                 <>
                   <br/>
                   <br/>
-                  ⚡ <strong>Sprint:</strong> Solo top {maxPositions} reciben puntos ({sistemaPuntos?.["1"]} pts para el ganador)
+                  ⚡ <strong>{t('prediction.sprintLabel')}:</strong> {t('prediction.sprintInstructionNote', { max: maxPositions, points: sistemaPuntos?.["1"] })}
                 </>
               )}
             </p>
@@ -920,12 +925,12 @@ export default function PredictionPage() {
             <div className="prediction-grid">
               <div className="drivers-list">
                 <div className="list-title">
-                  Tu Predicción ({selectedDrivers.length}/{maxPositions})
+                  {t('prediction.yourPrediction', { current: selectedDrivers.length, max: maxPositions })}
                 </div>
                 
                 {selectedDrivers.length === 0 ? (
                   <div style={{ textAlign: 'center', padding: '40px 20px', color: 'var(--muted)' }}>
-                    Selecciona pilotos de la lista de abajo
+                    {t('prediction.selectFromList')}
                   </div>
                 ) : (
                   <DndContext
@@ -971,7 +976,7 @@ export default function PredictionPage() {
               {needsMore && (
                 <div className="drivers-list">
                   <div className="list-title">
-                    Pilotos Disponibles
+                    {t('prediction.availableDrivers')}
                   </div>
                   {availableDrivers.map(driver => (
                     <div
@@ -993,16 +998,16 @@ export default function PredictionPage() {
 
             {(hasFastestLapDriver || hasFastestLapTeam) && (
               <div className="bonus-section">
-                <div className="list-title">🏁 Bonus Vuelta Más Rápida</div>
+                <div className="list-title">🏁 {t('prediction.fastestLapBonus')}</div>
                 <div className="bonus-grid">
                   {hasFastestLapDriver && (
                     <div className="bonus-select">
-                      <label className="bonus-label">Piloto</label>
+                      <label className="bonus-label">{t('standings.driver')}</label>
                       <select 
                         value={fastestLapDriver}
                         onChange={(e) => setFastestLapDriver(e.target.value)}
                       >
-                        <option value="">Seleccionar piloto...</option>
+                        <option value="">{t('prediction.selectDriverPlaceholder')}</option>
                         {drivers.map(d => (
                           <option key={d.id} value={d.id}>
                             #{d.numero} {d.nombre} ({d.equipo})
@@ -1014,12 +1019,12 @@ export default function PredictionPage() {
 
                   {hasFastestLapTeam && (
                     <div className="bonus-select">
-                      <label className="bonus-label">Escudería</label>
+                      <label className="bonus-label">{t('prediction.teamLabel')}</label>
                       <select
                         value={fastestLapTeam}
                         onChange={(e) => setFastestLapTeam(e.target.value)}
                       >
-                        <option value="">Seleccionar escudería...</option>
+                        <option value="">{t('prediction.selectTeamPlaceholder')}</option>
                         {teams.map((team) => (
                           <option key={team.id} value={team.id}>{team.nombre}</option>
                         ))}
@@ -1036,25 +1041,25 @@ export default function PredictionPage() {
                 onClick={handleSave}
                 disabled={selectedDrivers.length !== maxPositions || saving}
               >
-                {saving ? 'Guardando...' : existingPrediction ? 'Actualizar Predicción' : 'Guardar Predicción'}
+                {saving ? t('prediction.saving') : existingPrediction ? t('prediction.updateBtn') : t('prediction.saveBtn')}
               </button>
               <button
                 className="btn-cancel"
                 onClick={handleCancel}
                 disabled={saving}
               >
-                Cancelar
+                {t('common.cancel')}
               </button>
             </div>
           </>
         ) : (
           <div className="locked-message">
             <div className="locked-icon">🔒</div>
-            <h2>Predicciones Cerradas</h2>
-            <p>El plazo para predecir esta carrera ha expirado</p>
+            <h2>{t('prediction.closedTitle')}</h2>
+            <p>{t('prediction.closedSub')}</p>
             {existingPrediction && (
               <p style={{ marginTop: 20, color: 'var(--white)' }}>
-                ✅ Ya enviaste tu predicción
+                ✅ {t('prediction.alreadySubmitted')}
               </p>
             )}
           </div>
@@ -1066,23 +1071,22 @@ export default function PredictionPage() {
           <div data-theme={theme} className="success-modal-overlay">
           <div className="success-modal">
             <div className="success-icon">✅</div>
-            <h2 className="success-title">¡Predicción Guardada!</h2>
+            <h2 className="success-title">{t('prediction.successTitle')}</h2>
             <p className="success-message">
-              Tu predicción para {race.nombre} ha sido guardada exitosamente. 
-              Puedes compartirla con tus amigos o volver al dashboard.
+              {t('prediction.successMessage', { race: getRaceName(race, t) })}
             </p>
             <div className="success-actions">
               <button 
                 className="success-btn success-btn-share"
                 onClick={handleOpenShareModal}
               >
-                📸 Compartir mi Predicción
+                📸 {t('prediction.shareBtn')}
               </button>
               <button 
                 className="success-btn success-btn-dashboard"
                 onClick={handleGoToDashboard}
               >
-                🏁 Ir al Dashboard
+                🏁 {t('prediction.goToDashboardBtn')}
               </button>
             </div>
           </div>
@@ -1096,7 +1100,7 @@ export default function PredictionPage() {
           data={{
             drivers: selectedDrivers.map(d => ({ name: d.nombre }))
           }}
-          raceName={race.nombre}
+          raceName={getRaceName(race, t)}
           user={user}
           onClose={handleCloseShareModal}
         />

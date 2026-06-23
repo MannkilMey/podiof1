@@ -5,6 +5,9 @@ import { useThemeStore } from '../../stores/themeStore';
 import { supabase } from '../../lib/supabase';
 import * as XLSX from 'xlsx';
 import StatsTabBar from './StatsTabBar';
+import { useTranslation, getRaceName } from '../../i18n';
+import BackButton from '../../components/BackButton';
+import PaywallGate from '../../components/PaywallGate';
 
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600&family=Share+Tech+Mono&display=swap');`;
 
@@ -87,6 +90,7 @@ export default function DeepAnalytics() {
   const navigate = useNavigate();
   const theme = useThemeStore((state) => state.theme);
   const user = useAuthStore((state) => state.user);
+  const { t } = useTranslation();
 
   const [groupInfo, setGroupInfo] = useState(null);
   const [scores, setScores] = useState([]);
@@ -120,12 +124,12 @@ export default function DeepAnalytics() {
         supabase.from('scores').select(`
           puntos, aciertos_exactos, aciertos_piloto,
           usuario:usuario_id ( id, nombre, apellido ),
-          carrera:carrera_id ( id, nombre, ronda, tipo, estado )
+          carrera:carrera_id ( id, nombre, slug, ronda, tipo, estado )
         `).eq('grupo_id', groupId).order('created_at', { ascending: true }),
         supabase.from('predictions').select(`
           id, posiciones, puntos_obtenidos,
           usuario:usuario_id ( id, nombre, apellido ),
-          carrera:carrera_id ( id, nombre, ronda, tipo, estado )
+          carrera:carrera_id ( id, nombre, slug, ronda, tipo, estado )
         `).eq('grupo_id', groupId),
         supabase.from('drivers').select('id, nombre_completo, acronimo, openf1_driver_number')
       ]);
@@ -178,6 +182,7 @@ export default function DeepAnalytics() {
         racesMap.set(raceId, {
           id: raceId,
           nombre: s.carrera.nombre,
+          slug: s.carrera.slug,
           ronda: s.carrera.ronda,
           tipo: s.carrera.tipo,
           users: []
@@ -251,6 +256,7 @@ export default function DeepAnalytics() {
           raceId: race.id,
           raceName: race.nombre,
           ronda: race.ronda,
+          raceSlug: race.slug,
           tipo: race.tipo,
           userId: pred.usuario?.id,
           userName: `${pred.usuario?.nombre || ''} ${pred.usuario?.apellido || ''}`.trim(),
@@ -324,9 +330,9 @@ export default function DeepAnalytics() {
         if (idx === 0) us.wins++;
         if (idx < 3) us.podiums++;
         us.totalPuntos += u.puntos;
-        us.races.push({ name: race.nombre, puntos: u.puntos, position: idx + 1 });
-        if (u.puntos > us.bestRace.puntos) us.bestRace = { name: race.nombre, puntos: u.puntos };
-        if (u.puntos < us.worstRace.puntos) us.worstRace = { name: race.nombre, puntos: u.puntos };
+        us.races.push({ name: race.nombre, slug: race.slug, puntos: u.puntos, position: idx + 1 });
+        if (u.puntos > us.bestRace.puntos) us.bestRace = { name: race.nombre, slug: race.slug, puntos: u.puntos };
+        if (u.puntos < us.worstRace.puntos) us.worstRace = { name: race.nombre, slug: race.slug, puntos: u.puntos };
       });
     });
 
@@ -369,9 +375,13 @@ export default function DeepAnalytics() {
       const wb = XLSX.utils.book_new();
 
       // Sheet 1: Race Winners
-      const winHeaders = ['Carrera', 'Ronda', 'Tipo', '🥇 1°', 'Pts 1°', '🥈 2°', 'Pts 2°', '🥉 3°', 'Pts 3°', 'Promedio'];
+      const winHeaders = [
+        t('predictionAnalysis.raceLabel'), t('predictionAnalysis.roundColumn'), t('predictionAnalysis.typeColumn'),
+        '🥇 1°', t('deepAnalytics.pts1Column'), '🥈 2°', t('deepAnalytics.pts2Column'), '🥉 3°', t('deepAnalytics.pts3Column'),
+        t('deepAnalytics.averageLabel')
+      ];
       const winRows = raceWinners.map(r => [
-        r.nombre, r.ronda, r.tipo,
+        getRaceName(r, t), r.ronda, r.tipo,
         r.podium[0]?.nombre || '-', Math.round(r.podium[0]?.puntos || 0),
         r.podium[1]?.nombre || '-', Math.round(r.podium[1]?.puntos || 0),
         r.podium[2]?.nombre || '-', Math.round(r.podium[2]?.puntos || 0),
@@ -379,41 +389,52 @@ export default function DeepAnalytics() {
       ]);
       const ws1 = XLSX.utils.aoa_to_sheet([winHeaders, ...winRows]);
       ws1['!cols'] = [{ wch: 28 }, { wch: 6 }, { wch: 8 }, { wch: 20 }, { wch: 8 }, { wch: 20 }, { wch: 8 }, { wch: 20 }, { wch: 8 }, { wch: 10 }];
-      XLSX.utils.book_append_sheet(wb, ws1, 'Ganadores por Carrera');
+      XLSX.utils.book_append_sheet(wb, ws1, t('deepAnalytics.winnersByRace'));
 
       // Sheet 2: Pre-Race vs Real
-      const preHeaders = ['Carrera', 'Ronda', 'Usuario', 'Pts Pre-Carrera', 'Pts Reales', 'Diferencia', 'Exactos Pre-Carrera'];
+      const preHeaders = [
+        t('predictionAnalysis.raceLabel'), t('predictionAnalysis.roundColumn'), t('leaderboard.user'),
+        t('deepAnalytics.ptsPreRaceColumn'), t('deepAnalytics.ptsRealColumn'), t('deepAnalytics.differenceColumn'),
+        t('deepAnalytics.exactPreRaceColumn')
+      ];
       const preRows = preRaceData.map(p => [
-        p.raceName, p.ronda, p.userName, p.puntosPreCarrera, Math.round(p.puntosReales), Math.round(p.diferencia), p.exactosPreCarrera
+         getRaceName({ nombre: p.raceName, slug: p.raceSlug }, t), p.ronda, p.userName, p.puntosPreCarrera, Math.round(p.puntosReales), Math.round(p.diferencia), p.exactosPreCarrera
       ]);
       const ws2 = XLSX.utils.aoa_to_sheet([preHeaders, ...preRows]);
       ws2['!cols'] = [{ wch: 28 }, { wch: 6 }, { wch: 20 }, { wch: 16 }, { wch: 12 }, { wch: 12 }, { wch: 18 }];
-      XLSX.utils.book_append_sheet(wb, ws2, 'Pre-Carrera vs Real');
+      XLSX.utils.book_append_sheet(wb, ws2, t('deepAnalytics.preRaceVsReal'));
 
       // Sheet 3: Pilot Performance
-      const pilotHeaders = ['Piloto', 'Carreras', 'Variación Promedio', 'Mejor Subida', 'Peor Caída', 'Variación Total'];
+      const pilotHeaders = [
+        t('standings.driver'), t('common.races'), t('deepAnalytics.avgVariationColumn'),
+        t('deepAnalytics.bestGainColumn'), t('deepAnalytics.worstDropColumn'), t('deepAnalytics.totalVariationColumn')
+      ];
       const pilotRows = pilotPerformance.map(p => [
         p.nombre, p.racesCount, p.avgVariation, `+${p.bestGain}`, p.worstDrop, p.totalVariation
       ]);
       const ws3 = XLSX.utils.aoa_to_sheet([pilotHeaders, ...pilotRows]);
       ws3['!cols'] = [{ wch: 22 }, { wch: 10 }, { wch: 18 }, { wch: 14 }, { wch: 12 }, { wch: 16 }];
-      XLSX.utils.book_append_sheet(wb, ws3, 'Performance Pilotos');
+      XLSX.utils.book_append_sheet(wb, ws3, t('deepAnalytics.pilotPerformance'));
 
       // Sheet 4: User Stats
-      const usHeaders = ['Usuario', 'Victorias', 'Podios', 'Puntos Total', 'Promedio', 'Pts Pre-Carrera', 'Diferencia', 'Mejor Carrera', 'Peor Carrera', 'Tendencia'];
+      const usHeaders = [
+        t('leaderboard.user'), t('deepAnalytics.victoriesLabel'), t('deepAnalytics.podiumsLabel'),
+        t('predictionAnalysis.totalPointsColumnShort'), t('deepAnalytics.averageLabel'), t('deepAnalytics.ptsPreRaceColumn'),
+        t('deepAnalytics.differenceColumn'), t('predictionAnalysis.bestRaceColumn'), t('deepAnalytics.worstRaceColumn'),
+        t('deepAnalytics.trendLabel')
+      ];      
       const usRows = userStats.map(u => [
         u.nombre, u.wins, u.podiums, Math.round(u.totalPuntos), u.avg,
         u.totalPreRace, Math.round(u.preRaceDiff),
-        `${u.bestRace.name} (${Math.round(u.bestRace.puntos)})`,
-        `${u.worstRace.name} (${Math.round(u.worstRace.puntos)})`,
-        u.trend > 0 ? `↑ Mejorando (+${Math.round(u.trend)})` : u.trend < 0 ? `↓ Bajando (${Math.round(u.trend)})` : '= Estable'
+        `${getRaceName({ nombre: u.bestRace.name, slug: u.bestRace.slug }, t)} (${Math.round(u.bestRace.puntos)})`,
+        `${getRaceName({ nombre: u.worstRace.name, slug: u.worstRace.slug }, t)} (${Math.round(u.worstRace.puntos)})`,
+        u.trend > 0 ? t('deepAnalytics.trendUpDetail', { value: Math.round(u.trend) }) : u.trend < 0 ? t('deepAnalytics.trendDownDetail', { value: Math.round(u.trend) }) : t('deepAnalytics.trendStable')
       ]);
       const ws4 = XLSX.utils.aoa_to_sheet([usHeaders, ...usRows]);
       ws4['!cols'] = usHeaders.map(() => ({ wch: 18 }));
-      XLSX.utils.book_append_sheet(wb, ws4, 'Stats Usuarios');
+      XLSX.utils.book_append_sheet(wb, ws4, t('deepAnalytics.statsByPlayer'));
 
-      XLSX.writeFile(wb, `PodioF1_DeepAnalytics_${groupInfo?.nombre || 'grupo'}_${new Date().toISOString().slice(0, 10)}.xlsx`);
-    } catch (err) {
+      XLSX.writeFile(wb, `PodioF1_DeepAnalytics_${groupInfo?.nombre || t('pointsHistogram.groupFallback')}_${new Date().toISOString().slice(0, 10)}.xlsx`);    } catch (err) {
       console.error('Export error:', err);
     } finally {
       setExporting(false);
@@ -428,7 +449,7 @@ export default function DeepAnalytics() {
       <>
         <style>{FONTS + CSS}</style>
         <div data-theme={theme} className="deep-page">
-          <div className="deep-back-btn">← Volver al grupo</div>
+          <BackButton className="deep-back-btn">← {t('predictionAnalysis.backToGroup')}</BackButton>
           <StatsTabBar active="deep" groupId={groupId} />
           <div className="deep-skeleton" />
           <div className="deep-skeleton" style={{ height: 200, marginTop: 24 }} />
@@ -441,29 +462,31 @@ export default function DeepAnalytics() {
     <>
       <style>{FONTS + CSS}</style>
       <div data-theme={theme} className="deep-page">
-        <button className="deep-back-btn" onClick={() => navigate(`/group/${groupId}`)}>← Volver al grupo</button>
+        <BackButton className="deep-back-btn" onClick={() => navigate(`/group/${groupId}`)}>← {t('predictionAnalysis.backToGroup')}</BackButton>
 
         <StatsTabBar active="deep" groupId={groupId} />
 
         <div className="deep-header">
           <div className="deep-header-left">
-            <h1 className="deep-title">🔬 Deep Analytics</h1>
-            <p className="deep-subtitle">{groupInfo?.nombre} · Análisis avanzado de rendimiento</p>
+            <h1 className="deep-title">🔬 {t('deepAnalytics.title')}</h1>
+            <p className="deep-subtitle">{groupInfo?.nombre} · {t('deepAnalytics.subtitle')}</p>
           </div>
           {raceWinners.length > 0 && (
-            <button className="deep-export-btn" onClick={handleExport} disabled={exporting}>
-              {exporting ? '⏳ Exportando...' : '📥 Exportar Excel'}
-            </button>
+            <PaywallGate feature="export_excel" compact>
+              <button className="deep-export-btn" onClick={handleExport} disabled={exporting}>
+                {exporting ? `⏳ ${t('pointsHistogram.exporting')}` : `📥 ${t('pointsHistogram.exportExcel')}`}
+              </button>
+            </PaywallGate>
           )}
         </div>
 
         {/* SECTION TOGGLE */}
         <div className="section-toggle">
           {[
-            { key: 'winners', label: '🏆 Ganadores' },
-            { key: 'prerace', label: '📊 Pre-Carrera vs Real' },
-            { key: 'pilots', label: '🏎 Pilotos' },
-            { key: 'users', label: '👤 Jugadores' }
+            { key: 'winners', label: `🏆 ${t('deepAnalytics.winnersTab')}` },
+            { key: 'prerace', label: `📊 ${t('deepAnalytics.preRaceTab')}` },
+            { key: 'pilots', label: `🏎 ${t('deepAnalytics.pilotsTab')}` },
+            { key: 'users', label: `👤 ${t('deepAnalytics.playersTab')}` }
           ].map(s => (
             <button key={s.key} className={`section-toggle-btn ${activeSection === s.key ? 'active' : ''}`}
               onClick={() => setActiveSection(s.key)}>{s.label}</button>
@@ -475,16 +498,16 @@ export default function DeepAnalytics() {
         {/* ============================================ */}
         {activeSection === 'winners' && (
           <div className="deep-panel">
-            <div className="deep-panel-title">🏆 Ganadores por Carrera <span className="deep-panel-title-sub">({raceWinners.length} carreras)</span></div>
+            <div className="deep-panel-title">🏆 {t('deepAnalytics.winnersByRace')} <span className="deep-panel-title-sub">({raceWinners.length} {t('common.races')})</span></div>
             {raceWinners.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: 40, color: 'var(--muted)' }}>No hay carreras completadas</div>
+              <div style={{ textAlign: 'center', padding: 40, color: 'var(--muted)' }}>{t('deepAnalytics.noFinishedRaces')}</div>
             ) : (
               <div className="race-winner-grid">
                 {raceWinners.map(race => (
                   <div key={race.id} className="race-winner-card">
                     <div className="race-winner-card-header">
                       <div className="race-winner-card-name">
-                        {race.tipo === 'sprint' ? '⚡ ' : '🏁 '}{race.nombre}
+                        {race.tipo === 'sprint' ? '⚡ ' : '🏁 '}{getRaceName(race, t)}
                       </div>
                       <span className="race-winner-card-type" style={{
                         background: race.tipo === 'sprint' ? 'rgba(201,168,76,0.15)' : 'var(--red-dim)',
@@ -504,8 +527,8 @@ export default function DeepAnalytics() {
                       ))}
                     </div>
                     <div style={{ marginTop: 8, fontSize: 11, color: 'var(--muted)', display: 'flex', justifyContent: 'space-between' }}>
-                      <span>👥 {race.users.length} participantes</span>
-                      <span>Promedio: {race.avg} pts</span>
+                      <span>👥 {t('pozo.participants', { count: race.users.length })}</span>
+                      <span>{t('deepAnalytics.averageLabel')}: {race.avg} {t('common.pts')}</span>
                     </div>
                   </div>
                 ))}
@@ -516,7 +539,7 @@ export default function DeepAnalytics() {
             {userStats.length > 0 && (
               <div style={{ marginTop: 24 }}>
                 <div style={{ fontSize: 14, fontWeight: 800, color: 'var(--white)', fontFamily: "'Barlow Condensed'", textTransform: 'uppercase', letterSpacing: 1, marginBottom: 12 }}>
-                  🏅 Tabla de Victorias
+                  🏅 {t('deepAnalytics.winsTable')}
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                   {userStats.filter(u => u.wins > 0 || u.podiums > 0).map((u, i) => (
@@ -531,8 +554,8 @@ export default function DeepAnalytics() {
                       </span>
                       <span style={{ flex: 1, fontWeight: 700, fontSize: 14, color: 'var(--white)' }}>{u.nombre}</span>
                       <div style={{ display: 'flex', gap: 16, fontSize: 12 }}>
-                        <span style={{ color: 'var(--gold)' }}>🏆 {u.wins} victorias</span>
-                        <span style={{ color: 'var(--muted)' }}>🥉 {u.podiums} podios</span>
+                        <span style={{ color: 'var(--gold)' }}>🏆 {t('deepAnalytics.winsCount', { count: u.wins })}</span>
+                        <span style={{ color: 'var(--muted)' }}>🥉 {t('deepAnalytics.podiumsCount', { count: u.podiums })}</span>
                       </div>
                     </div>
                   ))}
@@ -548,21 +571,21 @@ export default function DeepAnalytics() {
         {activeSection === 'prerace' && (
           <div className="deep-panel">
             <div className="deep-panel-title">
-              📊 Puntos Pre-Carrera vs Reales
-              <span className="deep-panel-title-sub">¿Cuántos puntos hubieras sacado si la clasificación fuera el resultado?</span>
+              📊 {t('deepAnalytics.preRaceVsReal')}
+              <span className="deep-panel-title-sub">{t('deepAnalytics.preRaceExplain')}</span>
             </div>
             {preRaceData.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: 40, color: 'var(--muted)' }}>No hay datos de clasificación disponibles</div>
+              <div style={{ textAlign: 'center', padding: 40, color: 'var(--muted)' }}>{t('deepAnalytics.noQualifyingData')}</div>
             ) : (
               <div style={{ overflowX: 'auto', borderRadius: 12, border: '1px solid var(--border)' }}>
                 <table className="prerace-table">
                   <thead>
                     <tr>
-                      <th>Carrera</th>
-                      <th>Usuario</th>
-                      <th>Pts Pre-Carrera</th>
-                      <th>Pts Reales</th>
-                      <th>Diferencia</th>
+                      <th>{t('predictionAnalysis.raceLabel')}</th>
+                      <th>{t('leaderboard.user')}</th>
+                      <th>{t('deepAnalytics.ptsPreRaceColumn')}</th>
+                      <th>{t('deepAnalytics.ptsRealColumn')}</th>
+                      <th>{t('deepAnalytics.differenceColumn')}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -574,8 +597,8 @@ export default function DeepAnalytics() {
                             <td rowSpan={raceRows.length} style={{
                               fontWeight: 700, fontSize: 13, verticalAlign: 'top', borderRight: '1px solid var(--border)'
                             }}>
-                              {p.tipo === 'sprint' ? '⚡ ' : ''}{p.raceName}
-                              <div style={{ fontSize: 10, color: 'var(--muted)', fontWeight: 400 }}>Ronda {p.ronda}</div>
+                              {p.tipo === 'sprint' ? '⚡ ' : ''}{getRaceName({ nombre: p.raceName, slug: p.raceSlug }, t)}
+                              <div style={{ fontSize: 10, color: 'var(--muted)', fontWeight: 400 }}>{t('predictionAnalysis.roundLabel', { round: p.ronda })}</div>
                             </td>
                           )}
                           <td style={{ fontWeight: 600 }}>{p.userName}</td>
@@ -607,28 +630,28 @@ export default function DeepAnalytics() {
         {activeSection === 'pilots' && (
           <div className="deep-panel">
             <div className="deep-panel-title">
-              🏎 Performance de Pilotos
-              <span className="deep-panel-title-sub">Variación clasificación → resultado (+ = subió, - = bajó)</span>
+              🏎 {t('deepAnalytics.pilotPerformance')}
+              <span className="deep-panel-title-sub">{t('deepAnalytics.variationExplain')}</span>
             </div>
             {pilotPerformance.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: 40, color: 'var(--muted)' }}>No hay datos disponibles</div>
+              <div style={{ textAlign: 'center', padding: 40, color: 'var(--muted)' }}>{t('common.noData')}</div>
             ) : (
               <>
                 {/* Top climbers & droppers */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 20 }}>
                   <div style={{ background: 'var(--green-dim)', border: '1px solid rgba(0,212,160,0.3)', borderRadius: 10, padding: 16, textAlign: 'center' }}>
-                    <div style={{ fontSize: 11, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 6 }}>🚀 Mayor Escalador</div>
+                    <div style={{ fontSize: 11, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 6 }}>🚀 {t('deepAnalytics.topClimber')}</div>
                     <div style={{ fontFamily: "'Barlow Condensed'", fontSize: 22, fontWeight: 900, color: 'var(--green)' }}>
                       {pilotPerformance[0]?.nombre}
                     </div>
-                    <div style={{ fontSize: 13, color: 'var(--muted)' }}>+{pilotPerformance[0]?.avgVariation} posiciones promedio</div>
+                    <div style={{ fontSize: 13, color: 'var(--muted)' }}>{t('deepAnalytics.avgPositionsGained', { value: pilotPerformance[0]?.avgVariation })}</div>
                   </div>
                   <div style={{ background: 'var(--red-dim)', border: '1px solid rgba(232,0,45,0.3)', borderRadius: 10, padding: 16, textAlign: 'center' }}>
-                    <div style={{ fontSize: 11, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 6 }}>📉 Mayor Caída</div>
+                    <div style={{ fontSize: 11, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 6 }}>📉 {t('deepAnalytics.biggestDrop')}</div>
                     <div style={{ fontFamily: "'Barlow Condensed'", fontSize: 22, fontWeight: 900, color: 'var(--red)' }}>
                       {pilotPerformance[pilotPerformance.length - 1]?.nombre}
                     </div>
-                    <div style={{ fontSize: 13, color: 'var(--muted)' }}>{pilotPerformance[pilotPerformance.length - 1]?.avgVariation} posiciones promedio</div>
+                    <div style={{ fontSize: 13, color: 'var(--muted)' }}>{t('deepAnalytics.avgPositionsLost', { value: pilotPerformance[pilotPerformance.length - 1]?.avgVariation })}</div>
                   </div>
                 </div>
 
@@ -637,7 +660,7 @@ export default function DeepAnalytics() {
                     <div key={p.pilotoId} className="pilot-card">
                       <div style={{ flex: 1 }}>
                         <div className="pilot-name">{p.nombre}</div>
-                        <div className="pilot-stat">{p.racesCount} carreras · Mejor: +{p.bestGain} · Peor: {p.worstDrop}</div>
+                        <div className="pilot-stat">{t('deepAnalytics.pilotStatLine', { races: p.racesCount, best: p.bestGain, worst: p.worstDrop })}</div>
                       </div>
                       <div className="pilot-variation" style={{
                         color: Number(p.avgVariation) > 0 ? 'var(--green)' : Number(p.avgVariation) < 0 ? 'var(--red)' : 'var(--muted)'
@@ -657,9 +680,9 @@ export default function DeepAnalytics() {
         {/* ============================================ */}
         {activeSection === 'users' && (
           <div className="deep-panel">
-            <div className="deep-panel-title">👤 Stats por Jugador</div>
+            <div className="deep-panel-title">👤 {t('deepAnalytics.statsByPlayer')}</div>
             {userStats.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: 40, color: 'var(--muted)' }}>No hay datos disponibles</div>
+              <div style={{ textAlign: 'center', padding: 40, color: 'var(--muted)' }}>{t('common.noData')}</div>
             ) : (
               <div className="user-stats-grid">
                 {userStats.map((u, idx) => (
@@ -668,44 +691,44 @@ export default function DeepAnalytics() {
                       {idx === 0 ? '🥇 ' : idx === 1 ? '🥈 ' : idx === 2 ? '🥉 ' : ''}{u.nombre}
                     </div>
                     <div className="user-stat-row">
-                      <span className="user-stat-label">🏆 Victorias</span>
+                      <span className="user-stat-label">🏆 {t('deepAnalytics.victoriesLabel')}</span>
                       <span className="user-stat-value" style={{ color: 'var(--gold)' }}>{u.wins}</span>
                     </div>
                     <div className="user-stat-row">
-                      <span className="user-stat-label">🥉 Podios</span>
+                      <span className="user-stat-label">🥉 {t('deepAnalytics.podiumsLabel')}</span>
                       <span className="user-stat-value">{u.podiums}</span>
                     </div>
                     <div className="user-stat-row">
-                      <span className="user-stat-label">Puntos totales</span>
+                      <span className="user-stat-label">{t('predictionAnalysis.totalPoints')}</span>
                       <span className="user-stat-value" style={{ color: 'var(--red)' }}>{Math.round(u.totalPuntos)}</span>
                     </div>
                     <div className="user-stat-row">
-                      <span className="user-stat-label">Promedio / carrera</span>
-                      <span className="user-stat-value">{u.avg} pts</span>
+                      <span className="user-stat-label">{t('predictionAnalysis.avgPerRace')}</span>
+                      <span className="user-stat-value">{u.avg} {t('common.pts')}</span>
                     </div>
                     <div className="user-stat-row">
-                      <span className="user-stat-label">🏆 Mejor carrera</span>
-                      <span className="user-stat-value">{u.bestRace.name} ({Math.round(u.bestRace.puntos)})</span>
+                      <span className="user-stat-label">🏆 {t('predictionAnalysis.bestRaceLabel')}</span>
+                      <span className="user-stat-value">{getRaceName({ nombre: u.bestRace.name, slug: u.bestRace.slug }, t)} ({Math.round(u.bestRace.puntos)})</span>
                     </div>
                     <div className="user-stat-row">
-                      <span className="user-stat-label">😅 Peor carrera</span>
-                      <span className="user-stat-value">{u.worstRace.name} ({Math.round(u.worstRace.puntos)})</span>
+                      <span className="user-stat-label">😅 {t('deepAnalytics.worstRaceLabel')}</span>
+                      <span className="user-stat-value">{getRaceName({ nombre: u.worstRace.name, slug: u.worstRace.slug }, t)} ({Math.round(u.worstRace.puntos)})</span>
                     </div>
 
                     <div style={{ marginTop: 8, paddingTop: 8, borderTop: '1px solid var(--border)' }}>
                       <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 6 }}>
-                        📊 Pre-Carrera vs Real
+                        📊 {t('deepAnalytics.preRaceVsReal')}
                       </div>
                       <div className="user-stat-row">
-                        <span className="user-stat-label">Pts si clasif = resultado</span>
+                        <span className="user-stat-label">{t('deepAnalytics.ptsIfQualEqualsResult')}</span>
                         <span className="user-stat-value" style={{ color: 'var(--muted)' }}>{u.totalPreRace}</span>
                       </div>
                       <div className="user-stat-row">
-                        <span className="user-stat-label">Pts reales</span>
+                        <span className="user-stat-label">{t('deepAnalytics.ptsRealLabel')}</span>
                         <span className="user-stat-value" style={{ color: 'var(--green)' }}>{Math.round(u.totalReal)}</span>
                       </div>
                       <div className="user-stat-row">
-                        <span className="user-stat-label">Diferencia</span>
+                        <span className="user-stat-label">{t('deepAnalytics.differenceColumn')}</span>
                         <span className="user-stat-value" style={{
                           color: u.preRaceDiff > 0 ? 'var(--green)' : u.preRaceDiff < 0 ? 'var(--red)' : 'var(--muted)'
                         }}>
@@ -716,11 +739,11 @@ export default function DeepAnalytics() {
 
                     <div style={{ marginTop: 8, paddingTop: 8, borderTop: '1px solid var(--border)' }}>
                       <div className="user-stat-row">
-                        <span className="user-stat-label">📈 Tendencia</span>
+                        <span className="user-stat-label">📈 {t('deepAnalytics.trendLabel')}</span>
                         <span className="user-stat-value" style={{
                           color: u.trend > 0 ? 'var(--green)' : u.trend < 0 ? 'var(--red)' : 'var(--muted)'
                         }}>
-                          {u.trend > 0 ? '↑ Mejorando' : u.trend < 0 ? '↓ Bajando' : '= Estable'}
+                          {u.trend > 0 ? t('deepAnalytics.trendUp') : u.trend < 0 ? t('deepAnalytics.trendDown') : t('deepAnalytics.trendStable')}
                         </span>
                       </div>
                     </div>

@@ -1,13 +1,31 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from '../../i18n';
+import { useThemeStore } from '../../stores/themeStore';
+import { usePremium } from '../../hooks/usePremium';
+import { PremiumBadge, UpgradeModal } from '../../components/PaywallGate';
 
-const tabs = [
-  { key: 'charts', label: '📊 Gráficos', path: '' },
-  { key: 'analysis', label: '📋 Análisis', path: '/analysis' },
-  { key: 'deep', label: '🔬 Deep Analytics', path: '/deep' }
+const getTabs = (t) => [
+  { key: 'charts', label: `📊 ${t('stats.charts')}`, path: '', feature: null },
+  { key: 'analysis', label: `📋 ${t('stats.analysis')}`, path: '/analysis', feature: 'stats_advanced' },
+  { key: 'deep', label: `🔬 ${t('stats.deepAnalytics')}`, path: '/deep', feature: 'deep_analytics' }
 ];
 
 export default function StatsTabBar({ active, groupId }) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
+  const theme = useThemeStore((state) => state.theme);
+  const { checkFeature, prices } = usePremium();
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const tabs = getTabs(t);
+
+  const handleTabClick = (tab) => {
+    if (tab.feature && !checkFeature(tab.feature)) {
+      setShowUpgradeModal(true);
+      return;
+    }
+    navigate(`/group/${groupId}/stats${tab.path}`);
+  };
 
   return (
     <div style={{
@@ -24,7 +42,7 @@ export default function StatsTabBar({ active, groupId }) {
         return (
           <button
             key={tab.key}
-            onClick={() => navigate(`/group/${groupId}/stats${tab.path}`)}
+            onClick={() => handleTabClick(tab)}
             style={{
               padding: '12px 24px',
               background: 'transparent',
@@ -45,9 +63,14 @@ export default function StatsTabBar({ active, groupId }) {
             onMouseLeave={e => { if (!isActive) e.currentTarget.style.color = 'var(--muted)'; }}
           >
             {tab.label}
+            {tab.feature && <PremiumBadge feature={tab.feature} />}
           </button>
         );
       })}
+
+      {showUpgradeModal && (
+        <UpgradeModal onClose={() => setShowUpgradeModal(false)} prices={prices} theme={theme} />
+      )}
     </div>
   );
 }

@@ -4,6 +4,9 @@ import { useAuthStore } from '../../stores/authStore';
 import { useThemeStore } from '../../stores/themeStore';
 import { supabase } from '../../lib/supabase';
 import { toast } from 'sonner';
+import { useTranslation, getDateLocale } from '../../i18n';
+import BackButton from '../../components/BackButton';
+
 
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600&family=Share+Tech+Mono&display=swap');`;
 
@@ -96,21 +99,21 @@ body { background: var(--bg); color: var(--white); font-family: 'Barlow', sans-s
 }
 `;
 
-const CATEGORY_LABELS = {
-  todas: '🏠 Todas',
-  victorias: '🏆 Victorias',
-  rachas: '🔥 Rachas',
-  precision: '🎯 Precisión',
-  participacion: '📊 Participación',
-  especiales: '🏎 Especiales',
-  secretos: '🤫 Secretos'
-};
+const getCategoryLabels = (t) => ({
+  todas: t('badges.categories.todas'),
+  victorias: t('badges.categories.victorias'),
+  rachas: t('badges.categories.rachas'),
+  precision: t('badges.categories.precision'),
+  participacion: t('badges.categories.participacion'),
+  especiales: t('badges.categories.especiales'),
+  secretos: t('badges.categories.secretos'),
+});
 
 export default function Profile() {
   const navigate = useNavigate();
   const authUser = useAuthStore((state) => state.user);
   const theme = useThemeStore((state) => state.theme);
-
+  const { t, locale } = useTranslation(); 
   const [profileData, setProfileData] = useState(null);
   const [formData, setFormData] = useState({ nombre: '', apellido: '', fecha_nacimiento: '', piloto_favorito_id: '', escuderia_favorita_id: '' });
   const [allBadges, setAllBadges] = useState([]);
@@ -193,12 +196,12 @@ export default function Profile() {
         data: { nombre: formData.nombre, apellido: formData.apellido }
       });
 
-      setSuccess('Perfil actualizado correctamente');
-      toast.success('Perfil actualizado');
+      setSuccess(t('profile.updated'));
+      toast.success(t('profile.updated'));
     } catch (err) {
       console.error('Error:', err);
-      setError(err.message || 'Error al actualizar perfil');
-      toast.error('Error al actualizar perfil');
+      setError(err.message || t('profile.errorUpdating'));
+      toast.error(t('profile.errorUpdating'));
     } finally {
       setSaving(false);
     }
@@ -230,11 +233,11 @@ export default function Profile() {
   }, [allBadges, unlockedBadgeIds]);
 
   const formatDate = (dateStr) => {
-    if (!dateStr) return '';
-    const d = new Date(dateStr);
-    return d.toLocaleDateString('es-PY', { day: '2-digit', month: 'short', year: 'numeric' });
-  };
-
+  if (!dateStr) return '';
+  const d = new Date(dateStr);
+  return d.toLocaleDateString(getDateLocale(locale), { day: '2-digit', month: 'short', year: 'numeric' });
+};
+  const CATEGORY_LABELS = getCategoryLabels(t);
   // ============================================
   // RENDER
   // ============================================
@@ -243,8 +246,8 @@ export default function Profile() {
       <>
         <style>{FONTS + CSS}</style>
         <div data-theme={theme} className="profile-page">
-          <button className="profile-back">← Volver</button>
-          <h1 className="profile-page-title">Mi Perfil</h1>
+          <BackButton className="profile-back" onClick={() => navigate(-1)}>← {t('common.back')}</BackButton>
+          <h1 className="profile-page-title">{t('profile.title')}</h1>
           <div className="profile-skeleton" />
           <div className="profile-skeleton" style={{ height: 400 }} />
         </div>
@@ -257,8 +260,8 @@ export default function Profile() {
       <style>{FONTS + CSS}</style>
       <div data-theme={theme} className="profile-page">
 
-        <button className="profile-back" onClick={() => navigate(-1)}>← Volver</button>
-        <h1 className="profile-page-title">Mi Perfil</h1>
+        <button className="profile-back" onClick={() => navigate(-1)}>← {t('common.back')}</button>
+        <h1 className="profile-page-title">{t('profile.title')}</h1>
 
         {/* ============================================ */}
         {/* PROFILE CARD */}
@@ -270,13 +273,13 @@ export default function Profile() {
             </div>
             <div className="profile-avatar-info">
               <div className="profile-avatar-name">
-                {formData.nombre || formData.apellido ? `${formData.nombre} ${formData.apellido}`.trim() : 'Usuario'}
+               {formData.nombre || formData.apellido ? `${formData.nombre} ${formData.apellido}`.trim() : t('dashboard.defaultUserName')}
               </div>
               <div className="profile-avatar-email">{authUser?.email}</div>
               <div className="profile-avatar-badges-count">
-                <span className="profile-avatar-stat">🏅 <strong>{badgeStats.unlocked}</strong>/{badgeStats.total + allBadges.filter(b => b.es_secreto).length} badges</span>
+                <span className="profile-avatar-stat">🏅 <strong>{badgeStats.unlocked}</strong>/{badgeStats.total + allBadges.filter(b => b.es_secreto).length} {t('profile.badgesWord')}</span>
                 {badgeStats.secretsUnlocked > 0 && (
-                  <span className="profile-avatar-stat">🤫 <strong>{badgeStats.secretsUnlocked}</strong> secretos</span>
+                  <span className="profile-avatar-stat">🤫 <strong>{badgeStats.secretsUnlocked}</strong> {t('profile.secretsWord')}</span>
                 )}
               </div>
             </div>
@@ -288,55 +291,55 @@ export default function Profile() {
           <form onSubmit={handleSave}>
             <div className="form-row">
               <div className="form-group">
-                <label className="form-label">Nombre</label>
+                <label className="form-label">{t('profile.name')}</label>
                 <input type="text" className="form-input" value={formData.nombre}
                   onChange={e => setFormData({ ...formData, nombre: e.target.value })}
-                  placeholder="Tu nombre" disabled={saving} />
+                  placeholder={t('profile.namePlaceholder')} disabled={saving} />
               </div>
               <div className="form-group">
-                <label className="form-label">Apellido</label>
+                <label className="form-label">{t('profile.lastName')}</label>
                 <input type="text" className="form-input" value={formData.apellido}
                   onChange={e => setFormData({ ...formData, apellido: e.target.value })}
-                  placeholder="Tu apellido" disabled={saving} />
+                  placeholder={t('profile.lastNamePlaceholder')} disabled={saving} />
               </div>
             </div>
 
             <div className="form-row">
               <div className="form-group">
-                <label className="form-label">Fecha de Nacimiento</label>
+                <label className="form-label">{t('profile.birthDate')}</label>
                 <input type="date" className="form-input" value={formData.fecha_nacimiento}
                   onChange={e => setFormData({ ...formData, fecha_nacimiento: e.target.value })}
                   disabled={saving} max={new Date().toISOString().split('T')[0]} />
               </div>
               <div className="form-group">
-                <label className="form-label">Email</label>
+                <label className="form-label">{t('auth.email')}</label>
                 <input type="email" className="form-input" value={authUser?.email || ''} disabled />
               </div>
             </div>
 
             <div className="form-row">
               <div className="form-group">
-                <label className="form-label">🏎 Escudería Favorita</label>
+                <label className="form-label">🏎 {t('profile.favoriteTeam')}</label>
                 <select className="form-select" value={formData.escuderia_favorita_id}
                   onChange={e => setFormData({ ...formData, escuderia_favorita_id: e.target.value })}
                   disabled={saving}>
-                  <option value="">Seleccionar escudería...</option>
-                  {teams.map(t => <option key={t.id} value={t.id}>{t.nombre}</option>)}
+                  <option value="">{t('profile.selectTeam')}</option>
+                    {teams.map(team => <option key={team.id} value={team.id}>{team.nombre}</option>)}
                 </select>
               </div>
               <div className="form-group">
-                <label className="form-label">👤 Piloto Favorito</label>
+                <label className="form-label">👤 {t('profile.favoriteDriver')}</label>
                 <select className="form-select" value={formData.piloto_favorito_id}
                   onChange={e => setFormData({ ...formData, piloto_favorito_id: e.target.value })}
                   disabled={saving}>
-                  <option value="">Seleccionar piloto...</option>
+                  <option value="">{t('profile.selectDriver')}</option>
                   {drivers.map(d => <option key={d.id} value={d.id}>{d.nombre_completo}</option>)}
                 </select>
               </div>
             </div>
 
             <button type="submit" className="btn-save" disabled={saving}>
-              {saving ? 'Guardando...' : 'Guardar Cambios'}
+              {saving ? t('profile.saving') : t('profile.saveChanges')}
             </button>
           </form>
         </div>
@@ -346,14 +349,14 @@ export default function Profile() {
         {/* ============================================ */}
         <div className="profile-card">
           <div className="profile-card-title">
-            🏅 Mis Badges
-            <span className="profile-card-title-sub">({badgeStats.unlocked} desbloqueados)</span>
+            🏅 {t('profile.myBadges')}
+            <span className="profile-card-title-sub">({badgeStats.unlocked} {t('profile.unlocked')})</span>
           </div>
 
           {/* Progress bar */}
           <div style={{ marginBottom: 20 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'var(--muted)', marginBottom: 6 }}>
-              <span>Progreso general</span>
+              <span>{t('profile.generalProgress')}</span>
               <span style={{ fontFamily: "'Share Tech Mono'", color: 'var(--white)' }}>{badgeStats.pct}%</span>
             </div>
             <div style={{ height: 6, background: 'var(--bg3)', borderRadius: 3, overflow: 'hidden' }}>
@@ -387,21 +390,21 @@ export default function Profile() {
               return (
                 <div key={badge.id} className={`badge-card ${isUnlocked ? 'unlocked' : 'locked'}`}>
                   {isUnlocked && (
-                    <div className="badge-new-indicator" title="Desbloqueado" />
+                    <div className="badge-new-indicator" title={t('profile.unlockedTooltip')} />
                   )}
 
                   <span className="badge-icon">{isUnlocked || !isSecret ? badge.icono : '🔒'}</span>
 
                   <div className="badge-name">
-                    {isUnlocked || !isSecret ? badge.nombre : '???'}
+                    {isUnlocked || !isSecret ? t(`badges.items.${badge.key}.nombre`) : '???'}
                   </div>
 
                   <div className="badge-desc">
                     {isUnlocked
-                      ? badge.descripcion
+                      ? t(`badges.items.${badge.key}.descripcion`)
                       : isSecret
-                        ? 'Badge secreto — desbloquéalo para descubrir'
-                        : badge.descripcion
+                        ? t('badges.secretDesc')
+                        : t(`badges.items.${badge.key}.descripcion`)
                     }
                   </div>
 
@@ -412,7 +415,7 @@ export default function Profile() {
                     </div>
                   ) : (
                     <div className="badge-locked-label">
-                      {isSecret ? '🤫 Secreto' : '🔒 Bloqueado'}
+                      {isSecret ? t('badges.secret') : t('badges.locked')}
                     </div>
                   )}
                 </div>
@@ -422,7 +425,7 @@ export default function Profile() {
 
           {filteredBadges.length === 0 && (
             <div style={{ textAlign: 'center', padding: 40, color: 'var(--muted)' }}>
-              No hay badges en esta categoría
+              {t('profile.noBadgesInCategory')}
             </div>
           )}
         </div>

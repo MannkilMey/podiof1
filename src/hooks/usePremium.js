@@ -1,9 +1,14 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useAuthStore } from '../stores/authStore';
-import { supabase } from '../lib/supabase';
+import { usePremiumStore } from '../stores/premiumStore';
 
 /**
  * usePremium - Hook para verificar acceso premium
+ * 
+ * El estado real vive en usePremiumStore (Zustand), compartido globalmente
+ * entre todos los componentes durante la sesión de la app. Esto evita que
+ * cada componente que se monta (ej. cada PaywallGate) vuelva a pedirle
+ * el estado premium a Supabase — solo se consulta una vez por sesión.
  * 
  * Returns:
  *   isPremium      - true si el usuario tiene suscripción activa
@@ -17,84 +22,19 @@ import { supabase } from '../lib/supabase';
  */
 export function usePremium() {
   const user = useAuthStore((state) => state.user);
-  const [paywallEnabled, setPaywallEnabled] = useState(false);
-  const [subscription, setSubscription] = useState('free');
-  const [expiresAt, setExpiresAt] = useState(null);
-  const [premiumFeatures, setPremiumFeatures] = useState([]);
-  const [prices, setPrices] = useState({ monthly: 2.99, seasonal: 9.99, currency: 'USD' });
-  const [loading, setLoading] = useState(true);
+  const paywallEnabled = usePremiumStore((state) => state.paywallEnabled);
+  const subscription = usePremiumStore((state) => state.subscription);
+  const expiresAt = usePremiumStore((state) => state.expiresAt);
+  const premiumFeatures = usePremiumStore((state) => state.premiumFeatures);
+  const prices = usePremiumStore((state) => state.prices);
+  const loading = usePremiumStore((state) => state.loading);
+  const fetchPremiumStatus = usePremiumStore((state) => state.fetchPremiumStatus);
 
   useEffect(() => {
-    if (!user) {
-      setLoading(false);
-      return;
+    if (user?.id) {
+      fetchPremiumStatus(user.id);
     }
-
-    // Cache key to avoid refetching every render
-    const cacheKey = `premium_${user.id}`;
-    const cached = sessionStorage.getItem(cacheKey);
-    
-    if (cached) {
-      try {
-        const data = JSON.parse(cached);
-        setPaywallEnabled(data.paywallEnabled);
-        setSubscription(data.subscription);
-        setExpiresAt(data.expiresAt);
-        setPremiumFeatures(data.premiumFeatures);
-        setPrices(data.prices);
-        setLoading(false);
-        return;
-      } catch (e) {
-        sessionStorage.removeItem(cacheKey);
-      }
-    }
-
-    fetchPremiumStatus();
-  }, [user]);
-
-  async function fetchPremiumStatus() {
-    try {
-      const [settingsRes, userRes] = await Promise.all([
-        supabase.from('app_settings').select('key, value').in('key', ['paywall_enabled', 'premium_features', 'premium_price']),
-        supabase.from('users').select('subscription_status, subscription_expires_at').eq('id', user.id).single()
-      ]);
-
-      const settings = {};
-      (settingsRes.data || []).forEach(s => { settings[s.key] = s.value; });
-
-      const pwEnabled = settings.paywall_enabled === true;
-      const features = Array.isArray(settings.premium_features) ? settings.premium_features : [];
-      const priceData = settings.premium_price || { monthly: 2.99, seasonal: 9.99, currency: 'USD' };
-      
-      const userData = userRes.data || {};
-      const sub = userData.subscription_status || 'free';
-      const expires = userData.subscription_expires_at;
-
-      // Check if subscription is expired
-      const isExpired = expires && new Date(expires) < new Date();
-      const effectiveSub = isExpired ? 'free' : sub;
-
-      setPaywallEnabled(pwEnabled);
-      setSubscription(effectiveSub);
-      setExpiresAt(expires);
-      setPremiumFeatures(features);
-      setPrices(priceData);
-
-      // Cache for this session
-      const cacheData = {
-        paywallEnabled: pwEnabled,
-        subscription: effectiveSub,
-        expiresAt: expires,
-        premiumFeatures: features,
-        prices: priceData
-      };
-      sessionStorage.setItem(`premium_${user.id}`, JSON.stringify(cacheData));
-    } catch (err) {
-      console.error('Error fetching premium status:', err);
-    } finally {
-      setLoading(false);
-    }
-  }
+  }, [user?.id, fetchPremiumStatus]);
 
   const isPremium = useMemo(() => {
     return subscription === 'premium' || subscription === 'pro';

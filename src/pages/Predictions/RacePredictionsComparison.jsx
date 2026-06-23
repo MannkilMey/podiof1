@@ -7,6 +7,9 @@ import { supabase } from '../../lib/supabase';
 import { canPredictRace } from '../../utils/canPredictRace';
 import SharePredictionCard from '../../components/SharePredictionCard/SharePredictionCard';
 import * as XLSX from 'xlsx';
+import { useTranslation, getDateLocale, getRaceName } from '../../i18n';
+import BackButton from '../../components/BackButton';
+import PaywallGate from '../../components/PaywallGate';
 
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap');`;
 
@@ -666,6 +669,8 @@ export default function RacePredictionsComparison() {
   const user = useAuthStore((state) => state.user);
   const theme = useThemeStore((state) => state.theme);
   const toast = useToastStore();
+  const { t, locale } = useTranslation();
+
 
   const [race, setRace] = useState(null);
   const [group, setGroup] = useState(null);
@@ -789,7 +794,7 @@ export default function RacePredictionsComparison() {
           
           return {
             ...pred,
-            userName: `${pred.users?.nombre || ''} ${pred.users?.apellido || ''}`.trim() || pred.users?.email || 'Usuario',
+            userName: `${pred.users?.nombre || ''} ${pred.users?.apellido || ''}`.trim() || pred.users?.email || t('dashboard.defaultUserName'),
             userEmail: pred.users?.email || '',
             puntos: userScore?.puntos || 0,
             aciertos_exactos: userScore?.aciertos_exactos || 0,
@@ -820,7 +825,7 @@ export default function RacePredictionsComparison() {
 
     } catch (err) {
       console.error('Error loading data:', err);
-      toast.error('Error al cargar las predicciones');
+      toast.error(t('racePredictions.errorLoading'));
     } finally {
       setLoading(false);
     }
@@ -837,76 +842,65 @@ export default function RacePredictionsComparison() {
         : (group?.cantidad_posiciones || 10);
 
       // HOJA 1: Resultado Oficial
-      const officialSheet = officialResult.slice(0, maxPositions).map((result, idx) => ({
-        'Posición': idx + 1,
-        'Piloto': drivers[result.piloto_id] || 'Desconocido',
-        'Puntos F1': result.puntos_f1,
-        'Vuelta Rápida': result.vuelta_rapida ? 'Sí' : 'No'
-      }));
-      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(officialSheet), 'Resultado Oficial');
+    const officialSheet = officialResult.slice(0, maxPositions).map((result, idx) => ({
+      [t('common.position')]: idx + 1,
+      [t('standings.driver')]: drivers[result.piloto_id] || t('common.unknown'),
+      [t('racePredictions.f1PointsColumn')]: result.puntos_f1,
+      [t('racePredictions.fastestLapColumn')]: result.vuelta_rapida ? t('common.yes') : t('common.no')
+     }));
+     XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(officialSheet), t('lastRace.officialResult'));
 
       // HOJA 2: Ranking Usuarios
-      const rankingSheet = userRanking.map(user => ({
-        'Posición': user.position,
-        'Usuario': user.userName,
-        'Puntos': Math.round(user.puntos),
-        'Aciertos Exactos': user.aciertos_exactos,
-        'Piloto Correcto': user.aciertos_piloto
-      }));
-      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rankingSheet), 'Ranking Usuarios');
+     const rankingSheet = userRanking.map(user => ({
+      [t('common.position')]: user.position,
+      [t('leaderboard.user')]: user.userName,
+      [t('common.points')]: Math.round(user.puntos),
+      [t('predictionAnalysis.totalExactColumn')]: user.aciertos_exactos,
+      [t('racePredictions.correctDriverColumn')]: user.aciertos_piloto
+     }));
+     XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rankingSheet), t('racePredictions.userRankingSheet'));
 
       // HOJA 3: Votos por Posición
       const votesSheet = mostVotedByPosition.map(vote => ({
-        'Posición': `P${vote.posicion}`,
-        'Piloto': vote.piloto_nombre,
-        'Total Votos': vote.total_votos,
-        'Porcentaje': `${vote.porcentaje}%`
+        [t('common.position')]: `P${vote.posicion}`,
+        [t('standings.driver')]: vote.piloto_nombre,
+        [t('racePredictions.totalVotesColumn')]: vote.total_votos,
+        [t('racePredictions.percentageColumn')]: `${vote.porcentaje}%`
       }));
-      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(votesSheet), 'Votos por Posición');
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(votesSheet), t('racePredictions.votesByPositionSheet'));
 
       // ✅ HOJA 4 NUEVA: Predicciones Detalladas
       const predictionsSheet = [];
       predictions.forEach((pred, idx) => {
         // Fila de encabezado del usuario
         predictionsSheet.push({
-          'Pos. Ranking': idx + 1,
-          'Usuario': pred.userName,
-          'Puntos Totales': Math.round(pred.puntos),
-          'Aciertos Exactos': pred.aciertos_exactos,
-          'Pilotos Correctos': pred.aciertos_piloto,
-          'P1': '',
-          'P2': '',
-          'P3': '',
-          'P4': '',
-          'P5': '',
-          'P6': '',
-          'P7': '',
-          'P8': '',
-          'P9': '',
-          'P10': ''
-        });
+        [t('racePredictions.rankPosColumn')]: idx + 1,
+        [t('leaderboard.user')]: pred.userName,
+        [t('predictionAnalysis.totalPointsColumn')]: Math.round(pred.puntos),
+        [t('predictionAnalysis.totalExactColumn')]: pred.aciertos_exactos,
+        [t('racePredictions.correctDriversColumn')]: pred.aciertos_piloto,
+        'P1': '', 'P2': '', 'P3': '', 'P4': '', 'P5': '',
+        'P6': '', 'P7': '', 'P8': '', 'P9': '', 'P10': ''
+      });
 
-        // Fila con las predicciones
-        const predictionRow = {
-          'Pos. Ranking': '',
-          'Usuario': 'Predicción →',
-          'Puntos Totales': '',
-          'Aciertos Exactos': '',
-          'Pilotos Correctos': ''
-        };
+      const predictionRow = {
+        [t('racePredictions.rankPosColumn')]: '',
+        [t('leaderboard.user')]: t('racePredictions.predictionArrow'),
+        [t('predictionAnalysis.totalPointsColumn')]: '',
+        [t('predictionAnalysis.totalExactColumn')]: '',
+        [t('racePredictions.correctDriversColumn')]: ''
+      };
 
         pred.posiciones?.slice(0, maxPositions).forEach((pilotoId, position) => {
-          const driverName = drivers[pilotoId] || 'Desconocido';
+          const driverName = drivers[pilotoId] || t('common.unknown');
           const isCorrect = officialResult[position]?.piloto_id === pilotoId;
           predictionRow[`P${position + 1}`] = `${driverName}${isCorrect ? ' ✓' : ' ✗'}`;
         });
 
         predictionsSheet.push(predictionRow);
-
-        // Fila vacía de separación
         predictionsSheet.push({});
-      });
-      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(predictionsSheet), 'Predicciones Detalladas');
+        });
+        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(predictionsSheet), t('racePredictions.detailedPredictionsSheet'));
 
       // ✅ HOJA 5 NUEVA: Desglose de Puntos
       const breakdownSheet = predictions.map((pred, idx) => {
@@ -924,27 +918,27 @@ export default function RacePredictionsComparison() {
 
         const puntosPositions = totalPuntos - bonusVueltaRapida;
 
-        return {
-          'Ranking': idx + 1,
-          'Usuario': pred.userName,
-          'Puntos por Posiciones': Math.round(puntosPositions),
-          'Exactos': pred.aciertos_exactos,
-          'Correctos (no exactos)': pred.aciertos_piloto - pred.aciertos_exactos,
-          'Bonus Vuelta Rápida': Math.round(bonusVueltaRapida),
-          'TOTAL': Math.round(totalPuntos)
-        };
+       return {
+        [t('common.position')]: idx + 1,
+        [t('leaderboard.user')]: pred.userName,
+        [t('racePredictions.pointsByPositionsColumn')]: Math.round(puntosPositions),
+        [t('racePredictions.exactColumn')]: pred.aciertos_exactos,
+        [t('racePredictions.correctNotExactColumn')]: pred.aciertos_piloto - pred.aciertos_exactos,
+        [t('racePredictions.fastestLapBonusColumn')]: Math.round(bonusVueltaRapida),
+        [t('racePredictions.totalColumnCaps')]: Math.round(totalPuntos)
+      };
       });
-      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(breakdownSheet), 'Desglose de Puntos');
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(breakdownSheet), t('racePredictions.pointsBreakdownSheet'));
 
       // ✅ NOMBRE DE ARCHIVO CON TIPO
-      const tipoCarrera = isSprint ? 'Sprint' : 'Carrera';
-      const fileName = `${tipoCarrera}_${race.nombre.replace(/\s+/g, '_')}.xlsx`;
+      const tipoCarrera = isSprint ? t('racePredictions.sprintWord') : t('racePredictions.raceWord');
+      const fileName = `${tipoCarrera}_${getRaceName(race, t).replace(/\s+/g, '_')}.xlsx`;
       XLSX.writeFile(wb, fileName);
 
-      toast.success('Excel exportado correctamente');
+      toast.success(t('racePredictions.excelExported'));
     } catch (error) {
       console.error('Error exporting to Excel:', error);
-      toast.error('Error al exportar Excel');
+      toast.error(t('racePredictions.errorExporting'));
     }
   };
 
@@ -966,9 +960,9 @@ const maxPositions = isSprint
 const sistemaPuntos = isSprint
   ? (group?.sistema_puntos_sprint || {"1":8,"2":7,"3":6,"4":5,"5":4,"6":3,"7":2,"8":1})
   : group?.sistema_puntos;
-  const officialTop3 = officialResult.slice(0, Math.min(3, maxPositions)).map((result, idx) => ({
+ const officialTop3 = officialResult.slice(0, Math.min(3, maxPositions)).map((result, idx) => ({
     posicion: idx + 1,
-    piloto_nombre: drivers[result.piloto_id] || 'Desconocido',
+    piloto_nombre: drivers[result.piloto_id] || t('common.unknown'),
     vuelta_rapida: result.vuelta_rapida || false
   }));
 
@@ -1063,7 +1057,7 @@ const sistemaPuntos = isSprint
         <div data-theme={theme} className="predictions-comparison">
           <div className="loading-container">
             <div className="loading-spinner"></div>
-            <div className="loading-text">Cargando predicciones...</div>
+            <div className="loading-text">{t('racePredictions.loadingPredictions')}</div>
           </div>
         </div>
       </>
@@ -1075,16 +1069,16 @@ const sistemaPuntos = isSprint
       <>
         <style>{FONTS + CSS}</style>
         <div data-theme={theme} className="predictions-comparison">
-          <button className="back-btn" onClick={() => navigate(`/group/${groupId}/races`)}>
-            ← Volver
-          </button>
+        <BackButton className="back-btn" onClick={() => navigate(`/group/${groupId}/races`)}>
+          ← {t('common.back')}
+        </BackButton>
           <div className="empty-state">
             <div className="empty-icon">🔒</div>
-            <div className="empty-title">Predicciones no disponibles</div>
+            <div className="empty-title">{t('racePredictions.notAvailableTitle')}</div>
             <div className="empty-message">
-              Las predicciones se podrán ver después del cierre. 
+              {t('racePredictions.notAvailableMsg')}
               {race?.predicciones_forzadas_abiertas && (
-                <><br/>El administrador mantiene las predicciones abiertas.</>
+                <><br/>{t('racePredictions.adminKeepsOpen')}</>
               )}
             </div>
           </div>
@@ -1108,41 +1102,43 @@ const sistemaPuntos = isSprint
     <>
       <style>{FONTS + CSS}</style>
       <div data-theme={theme} className="predictions-comparison">
-        <button className="back-btn" onClick={() => navigate(`/group/${groupId}/races`)}>
-          ← Volver a Carreras
-        </button>
+        <BackButton className="back-btn" onClick={() => navigate(`/group/${groupId}/races`)}>
+          ← {t('racePredictions.backToRaces')}
+        </BackButton>
 
-        <div className="race-header">
-          <h1 className="race-title">{race.nombre}</h1>
-          <p className="race-subtitle">📍 {race.circuito} • 📅 {new Date(race.fecha_programada).toLocaleDateString('es')}</p>
-          <span className="race-status locked">
-            🔒 Predicciones cerradas - Resultados disponibles
-          </span>
-        </div>
+       <div className="race-header">
+        <h1 className="race-title">{getRaceName(race, t)}</h1>
+        <p className="race-subtitle">📍 {race.circuito} • 📅 {new Date(race.fecha_programada).toLocaleDateString(getDateLocale(locale))}</p>
+        <span className="race-status locked">
+          🔒 {t('racePredictions.predictionsClosedResultsAvailable')}
+        </span>
+      </div>
 
         <div className="action-buttons">
-          <button className="action-btn primary" onClick={exportToExcel}>
-            📥 Exportar a Excel
-          </button>
+          <PaywallGate feature="export_excel" compact>
+            <button className="action-btn primary" onClick={exportToExcel}>
+              📥 {t('pointsHistogram.exportExcel')}
+            </button>
+          </PaywallGate>
           <button className="action-btn" onClick={handleShareGeneralResults}>
-            🔗 Compartir Resultados
+            🔗 {t('racePredictions.shareResultsBtn')}
           </button>
           <button className="action-btn" onClick={() => setShowScoringModal(true)}>
-            ℹ️ Sistema de Puntos
+            ℹ️ {t('scoringModal.title')}
           </button>
         </div>
 
         {/* SECCIÓN 1: PILOTO MÁS VOTADO POR POSICIÓN */}
         {mostVotedByPosition.length > 0 && (
           <div className="most-voted-section">
-            <h2 className="section-title">🎯 Piloto Más Votado por Posición</h2>
+            <h2 className="section-title">🎯 {t('racePredictions.mostVotedTitle')}</h2>
             <div className="voted-positions-grid">
               {mostVotedByPosition.map((vote) => (
                 <div key={vote.posicion} className="voted-position-card">
                   <div className="position-label">P{vote.posicion}</div>
                   <div className="voted-driver-name">{vote.piloto_nombre}</div>
                   <div className="vote-stats">
-                    <span className="vote-count">{vote.total_votos} votos</span>
+                    <span className="vote-count">{t('racePredictions.votesCount', { count: vote.total_votos })}</span>
                     <span className="vote-percentage">{vote.porcentaje}%</span>
                   </div>
                 </div>
@@ -1154,7 +1150,7 @@ const sistemaPuntos = isSprint
         {/* SECCIÓN 2: RANKING DE USUARIOS */}
         {userRanking.length > 0 && (
           <div className="users-ranking-section">
-            <h2 className="section-title">🏆 Ranking de Usuarios</h2>
+            <h2 className="section-title">🏆 {t('racePredictions.userRankingTitle')}</h2>
             <div className="ranking-list">
               {userRanking.map((rankUser) => (
                 <div 
@@ -1167,16 +1163,16 @@ const sistemaPuntos = isSprint
                   <div className="ranking-user-info">
                     <div className="ranking-user-name">
                       {rankUser.userName}
-                      {rankUser.isCurrentUser && <span style={{marginLeft: 8, fontSize: 12, color: 'var(--green)'}}>✓ Tú</span>}
+                      {rankUser.isCurrentUser && <span style={{marginLeft: 8, fontSize: 12, color: 'var(--green)'}}>✓ {t('racePredictions.youTag')}</span>}
                     </div>
                     <div className="ranking-user-stats">
-                      <span>✓ {rankUser.aciertos_exactos} exactos</span>
-                      <span>🎯 {rankUser.aciertos_piloto} pilotos correctos</span>
+                      <span>✓ {t('common.exactCount', { count: rankUser.aciertos_exactos })}</span>
+                      <span>🎯 {t('racePredictions.correctDriversCount', { count: rankUser.aciertos_piloto })}</span>
                     </div>
                   </div>
                   <div className="ranking-points">
                     <div>{Math.round(rankUser.puntos)}</div>
-                    <div className="ranking-points-label">pts</div>
+                    <div className="ranking-points-label">{t('common.pts')}</div>
                   </div>
                 </div>
               ))}
@@ -1187,12 +1183,12 @@ const sistemaPuntos = isSprint
         {/* SECCIÓN 3: RESULTADO OFICIAL */}
         {officialResult.length > 0 && (
           <div className="official-result">
-            <h2 className="section-title">🏁 Resultado Oficial F1</h2>
+            <h2 className="section-title">🏁 {t('racePredictions.officialResultF1')}</h2>
             <div className="result-grid">
               {officialResult.slice(0, maxPositions).map((result, idx) => (
                 <div key={result.id} className="position-card">
                   <div className="position-number">{idx + 1}°</div>
-                  <div className="driver-name">{drivers[result.piloto_id] || 'Desconocido'}</div>
+                  <div className="driver-name">{drivers[result.piloto_id] || t('common.unknown')}</div>
                   {result.vuelta_rapida && <span className="fastest-lap-icon">🏎️</span>}
                 </div>
               ))}
@@ -1204,7 +1200,7 @@ const sistemaPuntos = isSprint
         {officialResult.length > 0 && (
           <div className="official-result" style={{marginTop: 16}}>
             <h3 className="section-title" style={{fontSize: 18, marginBottom: 12}}>
-              🏎️ Vuelta Más Rápida
+              🏎️ {t('racePredictions.fastestLapTitle')}
             </h3>
             <div style={{display: 'flex', gap: 16, flexWrap: 'wrap'}}>
               {(() => {
@@ -1214,16 +1210,16 @@ const sistemaPuntos = isSprint
                     <div style={{fontSize: 24}}>🏎️</div>
                     <div>
                       <div style={{fontSize: 12, color: 'var(--muted)', marginBottom: 4}}>
-                        PILOTO
+                        {t('racePredictions.driverLabelCaps')}
                       </div>
                       <div className="driver-name">
-                        {drivers[fastestDriver.piloto_id] || 'Desconocido'}
+                        {drivers[fastestDriver.piloto_id] || t('common.unknown')}
                       </div>
                     </div>
                   </div>
                 ) : (
                   <div style={{color: 'var(--muted)', fontSize: 14}}>
-                    No hay información de vuelta rápida
+                    {t('racePredictions.noFastestLapInfo')}
                   </div>
                 );
               })()}
@@ -1238,7 +1234,7 @@ const sistemaPuntos = isSprint
                   color: 'var(--green)',
                   fontWeight: 600
                 }}>
-                  +{group.puntos_vuelta_rapida_piloto} puntos bonus por acertar
+                  {t('racePredictions.fastestLapBonusNote', { points: group.puntos_vuelta_rapida_piloto })}
                 </div>
               )}
             </div>
@@ -1248,15 +1244,15 @@ const sistemaPuntos = isSprint
         {/* SECCIÓN 4: PREDICCIONES DETALLADAS */}
         <div className="predictions-section">
           <h2 className="section-title">
-            📝 Predicciones Detalladas ({predictions.length})
+            📝 {t('racePredictions.detailedPredictions')} ({predictions.length})
           </h2>
 
           {predictions.length === 0 ? (
             <div className="empty-state">
               <div className="empty-icon">📝</div>
-              <div className="empty-title">Sin predicciones</div>
+              <div className="empty-title">{t('racePredictions.noPredictionsTitle')}</div>
               <div className="empty-message">
-                Nadie realizó predicciones para esta carrera
+                {t('racePredictions.noPredictionsMsg')}
               </div>
             </div>
           ) : (
@@ -1280,22 +1276,22 @@ const sistemaPuntos = isSprint
                           <div className="user-name">{prediction.userName}</div>
                           <div style={{ display: 'flex', gap: 6, marginTop: 4 }}>
                             {isCurrentUser && (
-                              <span className="user-badge badge-you">✓ Tú</span>
+                              <span className="user-badge badge-you">✓ {t('racePredictions.youTag')}</span>
                             )}
                             {isBest && (
-                              <span className="user-badge badge-best">👑 Mejor</span>
+                              <span className="user-badge badge-best">👑 {t('racePredictions.bestTag')}</span>
                             )}
                           </div>
                         </div>
                       </div>
                       <div className="prediction-score">
                         <div className="score-value">{Math.round(prediction.puntos)}</div>
-                        <div className="score-label">Puntos</div>
+                        <div className="score-label">{t('common.points')}</div>
                       </div>
                     </div>
 
                     <div className="accuracy-bar">
-                      <div className="accuracy-label">Exactitud:</div>
+                      <div className="accuracy-label">{t('racePredictions.accuracyLabel')}:</div>
                       <div className="accuracy-track">
                         <div 
                           className="accuracy-fill" 
@@ -1312,8 +1308,8 @@ const sistemaPuntos = isSprint
                       display: 'flex',
                       gap: 16
                     }}>
-                      <span>✓ {prediction.aciertos_exactos} exactos</span>
-                      <span>🎯 {prediction.aciertos_piloto || 0} pilotos correctos</span>
+                      <span>✓ {t('common.exactCount', { count: prediction.aciertos_exactos })}</span>
+                      <span>🎯 {t('racePredictions.correctDriversCount', { count: prediction.aciertos_piloto || 0 })}</span>
                     </div>
 
                     {/* 🆕 DESGLOSE DE PUNTOS */}
@@ -1333,13 +1329,13 @@ const sistemaPuntos = isSprint
                         textTransform: 'uppercase',
                         letterSpacing: 1
                       }}>
-                        📊 Desglose de Puntos
+                        📊 {t('racePredictions.pointsBreakdownTitle')}
                       </div>
                       <div style={{display: 'flex', flexDirection: 'column', gap: 6}}>
                         {/* Puntos por posiciones */}
                         <div style={{display: 'flex', justifyContent: 'space-between'}}>
                           <span style={{color: 'var(--muted)'}}>
-                            Posiciones ({prediction.aciertos_exactos} exactos, {prediction.aciertos_piloto - prediction.aciertos_exactos} correctos)
+                            {t('racePredictions.positionsBreakdown', { exact: prediction.aciertos_exactos, correct: prediction.aciertos_piloto - prediction.aciertos_exactos })}
                           </span>
                           <span style={{color: 'var(--white)', fontWeight: 700}}>
                             {(() => {
@@ -1369,7 +1365,7 @@ const sistemaPuntos = isSprint
                               color: acerto ? 'var(--green)' : 'var(--muted)'
                             }}>
                               <span>
-                                {acerto ? '✓' : '✗'} Vuelta rápida piloto
+                                  {acerto ? '✓' : '✗'} {t('admin.fastestLap')}
                               </span>
                               <span style={{fontWeight: 700}}>
                                 {acerto ? `+${group.puntos_vuelta_rapida_piloto}` : '0'}
@@ -1393,7 +1389,7 @@ const sistemaPuntos = isSprint
                           color: 'var(--white)',
                           fontSize: 15
                         }}>
-                          <span>TOTAL</span>
+                          <span>{t('racePredictions.totalColumnCaps')}</span>
                           <span>{Math.round(prediction.puntos || 0)}</span>
                         </div>
                       </div>
@@ -1417,7 +1413,7 @@ const sistemaPuntos = isSprint
                           textTransform: 'uppercase',
                           letterSpacing: 1
                         }}>
-                          🏎️ Predicción Vuelta Rápida
+                          🏎️ {t('racePredictions.fastestLapPredictionTitle')}
                         </div>
                         <div style={{
                           display: 'flex',
@@ -1436,7 +1432,7 @@ const sistemaPuntos = isSprint
                               color: 'var(--white)',
                               fontWeight: 600
                             }}>
-                              {drivers[prediction.vuelta_rapida_piloto_id] || 'Desconocido'}
+                              {drivers[prediction.vuelta_rapida_piloto_id] || t('common.unknown')}
                             </span>
                           </div>
                           {(() => {
@@ -1452,7 +1448,7 @@ const sistemaPuntos = isSprint
                                 fontWeight: 700,
                                 fontSize: 12
                               }}>
-                                {acerto ? '✓ ACERTÓ' : '✗ FALLÓ'}
+                                {acerto ? `✓ ${t('racePredictions.hitCaps')}` : `✗ ${t('racePredictions.missCaps')}`}
                               </span>
                             );
                           })()}
@@ -1473,7 +1469,7 @@ const sistemaPuntos = isSprint
                               {position + 1}°
                             </div>
                             <div className="predicted-driver">
-                              {drivers[pilotoId] || 'Desconocido'}
+                              {drivers[pilotoId] || t('common.unknown')}
                             </div>
                             <div className="prediction-icon">
                               {isCorrect ? '✓' : '✗'}
@@ -1488,7 +1484,7 @@ const sistemaPuntos = isSprint
                         className="share-result-btn"
                         onClick={() => handleShareResult(prediction, idx + 1)}
                       >
-                        📸 Compartir mi Resultado
+                        📸 {t('racePredictions.shareMyResultBtn')}
                       </button>
                     )}
                   </div>
@@ -1531,7 +1527,7 @@ const sistemaPuntos = isSprint
               color: 'var(--white)',
               marginBottom: 20
             }}>
-              📊 Sistema de Puntos - {group?.nombre}
+              📊 {t('scoringModal.title')} - {group?.nombre}
             </h2>
 
             {/* Sistema base */}
@@ -1542,7 +1538,7 @@ const sistemaPuntos = isSprint
                 color: 'var(--white)',
                 marginBottom: 12
               }}>
-                🏆 Puntos por Posición
+                🏆 {t('scoringModal.pointsByPosition')}
               </h3>
               <div style={{
                 display: 'grid',
@@ -1571,7 +1567,7 @@ const sistemaPuntos = isSprint
             {/* Bonus exacto */}
             <div style={{marginBottom: 20}}>
               <h3 style={{fontSize: 16, fontWeight: 700, color: 'var(--white)', marginBottom: 8}}>
-                🎯 Bonus Posición Exacta
+                🎯 {t('scoringModal.exactPositionBonus')}
               </h3>
               <div style={{
                 background: 'var(--green-dim)',
@@ -1581,7 +1577,7 @@ const sistemaPuntos = isSprint
                 color: 'var(--green)',
                 fontWeight: 600
               }}>
-                +{group?.bonus_posicion_exacta || 0} puntos adicionales por acertar posición exacta
+                {t('racePredictions.exactBonusValueAlt', { points: group?.bonus_posicion_exacta || 0 })}
               </div>
             </div>
 
@@ -1589,7 +1585,7 @@ const sistemaPuntos = isSprint
             {group?.usa_sistema_dual && (
               <div style={{marginBottom: 20}}>
                 <h3 style={{fontSize: 16, fontWeight: 700, color: 'var(--white)', marginBottom: 8}}>
-                  ✓ Piloto Correcto (sin posición exacta)
+                  ✓ {t('scoringModal.correctDriverNoExact')}
                 </h3>
                 <div style={{
                   background: 'var(--bg3)',
@@ -1598,7 +1594,7 @@ const sistemaPuntos = isSprint
                   padding: 12,
                   color: 'var(--muted)'
                 }}>
-                  +{group?.puntos_piloto_correcto || 0} puntos si el piloto termina en top {group?.cantidad_posiciones}
+                {t('scoringModal.correctDriverNoExactValue', { points: group?.puntos_piloto_correcto || 0, top: group?.cantidad_posiciones })}
                 </div>
               </div>
             )}
@@ -1607,7 +1603,7 @@ const sistemaPuntos = isSprint
             {group?.bonus_vuelta_rapida_piloto && (
               <div style={{marginBottom: 20}}>
                 <h3 style={{fontSize: 16, fontWeight: 700, color: 'var(--white)', marginBottom: 8}}>
-                  🏎️ Bonus Vuelta Rápida
+                  🏎️ {t('scoringModal.fastestLapDriver')}
                 </h3>
                 <div style={{
                   background: 'var(--bg3)',
@@ -1616,7 +1612,7 @@ const sistemaPuntos = isSprint
                   padding: 12,
                   color: 'var(--muted)'
                 }}>
-                  +{group?.puntos_vuelta_rapida_piloto || 0} puntos por acertar el piloto con vuelta más rápida
+                  {t('racePredictions.fastestLapBonusValueAlt', { points: group?.puntos_vuelta_rapida_piloto || 0 })}
                 </div>
               </div>
             )}
@@ -1637,12 +1633,12 @@ const sistemaPuntos = isSprint
                 textTransform: 'uppercase',
                 letterSpacing: 1
               }}>
-                📝 Ejemplo de Cálculo
+                📝 {t('scoringModal.exampleRaceTitle')}
               </h3>
               <div style={{fontSize: 13, color: 'var(--muted)', lineHeight: 1.6}}>
-                • Aciertas P1 exacto: {group?.sistema_puntos?.['1'] || 0} + {group?.bonus_posicion_exacta || 0} = {(group?.sistema_puntos?.['1'] || 0) + (group?.bonus_posicion_exacta || 0)} pts<br/>
-                • Aciertas piloto en P2 pero termina P4: {group?.puntos_piloto_correcto || 0} pts<br/>
-                • Aciertas vuelta rápida: +{group?.puntos_vuelta_rapida_piloto || 0} pts
+                • {t('scoringModal.exampleExactP1', { base: group?.sistema_puntos?.['1'] || 0, bonus: group?.bonus_posicion_exacta || 0, total: (group?.sistema_puntos?.['1'] || 0) + (group?.bonus_posicion_exacta || 0) })}<br/>
+                • {t('scoringModal.exampleDriverOnly', { points: group?.puntos_piloto_correcto || 0 })}<br/>
+                • {t('scoringModal.exampleFastestLap', { points: group?.puntos_vuelta_rapida_piloto || 0 })}
               </div>
             </div>
 
@@ -1660,7 +1656,7 @@ const sistemaPuntos = isSprint
               cursor: 'pointer',
               marginTop: 20
             }} onClick={() => setShowScoringModal(false)}>
-              CERRAR
+              {t('scoringModal.closeBtn')}
             </button>
           </div>
         </div>
@@ -1670,7 +1666,7 @@ const sistemaPuntos = isSprint
         <SharePredictionCard
           type={shareData.type || "result"}
           data={shareData}
-          raceName={race.nombre}
+          raceName={getRaceName(race, t)}
           user={user}
           onClose={() => setShowShareModal(false)}
         />

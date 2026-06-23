@@ -5,6 +5,7 @@ import { useAuthStore } from './stores/authStore';
 import ToastContainer from './components/Toast';
 import AppOnboarding from './pages/Onboarding/AppOnboarding';
 import { isNative } from './hooks/usePlatform';
+import { useTranslation } from './i18n';
 
 // Public Pages
 import Landing from './pages/Landing/Landing';
@@ -47,6 +48,7 @@ import DeepAnalytics from './pages/Stats/DeepAnalytics';
 function ProtectedRoute({ children }) {
   const user = useAuthStore((state) => state.user);
   const loading = useAuthStore((state) => state.loading);
+  const { t } = useTranslation();
 
   if (loading) {
     return (
@@ -61,7 +63,7 @@ function ProtectedRoute({ children }) {
       }}>
         <div style={{ textAlign: 'center' }}>
           <div style={{ fontSize: 48, marginBottom: 16 }}>🏎</div>
-          <div>Cargando...</div>
+          <div>{t('common.loading')}</div>
         </div>
       </div>
     );
@@ -91,7 +93,7 @@ function PublicRoute({ children }) {
       }}>
         <div style={{ textAlign: 'center' }}>
           <div style={{ fontSize: 48, marginBottom: 16 }}>🏎</div>
-          <div>Cargando...</div>
+          <div>{t('common.loading')}</div>
         </div>
       </div>
     );

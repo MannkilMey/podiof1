@@ -9,6 +9,7 @@ import GroupDashboard from './GroupDashboard';
 import OnboardingModal from '../../components/OnboardingModal';
 import InstallPrompt from '../../components/InstallPrompt';
 import { usePushNotifications } from '../../hooks/usePushNotifications';
+import { useTranslation, getDateLocale } from '../../i18n';
 
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600&family=Share+Tech+Mono&display=swap');`;
 
@@ -485,11 +486,11 @@ html, body {
 }
 `;
 
-const TIPO_LABEL = { 
-  f1_oficial: "Oficial F1", 
-  puntos_fijos_10_15: "Puntaje Fijo", 
-  personalizado: "Personalizado" 
-};
+const getTipoLabel = (tipo, t) => ({
+  f1_oficial: t('dashboard.groupTypeOfficial'),
+  puntos_fijos_10_15: t('dashboard.groupTypeFixedPoints'),
+  personalizado: t('dashboard.groupTypeCustom'),
+}[tipo]);
 
 // ============================================
 // MODAL CREAR GRUPO
@@ -519,6 +520,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const user = useAuthStore((state) => state.user);
+  const { t } = useTranslation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -592,7 +594,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
 
       if (memberError) throw memberError;
 
-      toast.success(`¡Grupo "${formData.nombre}" creado! Código: ${code}`);
+      toast.success(t('createGroup.groupCreated', { name: formData.nombre, code }));
       onSuccess();
       onClose();
     } catch (err) {
@@ -793,7 +795,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
               marginTop: '6px',
               lineHeight: '1.5'
             }}>
-              Las predicciones se cerrarán {formData.horas_cierre_prediccion} horas antes del inicio de cada carrera
+              {t('createGroup.deadlineHint', { hours: formData.horas_cierre_prediccion })}
             </div>
           </div>
 
@@ -942,7 +944,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
                 lineHeight: '1.7'
               }}>
                 <div style={{ color: colors.text, marginBottom: '8px' }}>
-                  <strong>Ejemplo:</strong> Predecir Verstappen en 1° lugar
+                  <strong>{t('createGroup.dualExampleLabel')}</strong> {t('createGroup.dualExampleText', { driver: 'Verstappen', position: 1 })}
                 </div>
                 <div style={{ color: colors.muted }}>
                   • Si llega <strong style={{ color: colors.text }}>2°</strong> → 5 puntos (piloto correcto)
@@ -1064,7 +1066,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
                   background: colors.bg3, borderRadius: '8px',
                   fontSize: '11px', color: colors.muted, lineHeight: '1.5', textAlign: 'center'
                 }}>
-                  ⚠️ PodioF1 no gestiona, almacena ni transfiere dinero. El pozo es informativo y la gestión es responsabilidad de los participantes.
+                  ⚠️ {t('pozo.disclaimer')}
                 </div>
               </div>
             )}
@@ -1206,6 +1208,7 @@ function JoinGroupModal({ isOpen, onClose, onSuccess, theme }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const user = useAuthStore((state) => state.user);
+  const { t } = useTranslation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -1247,7 +1250,7 @@ function JoinGroupModal({ isOpen, onClose, onSuccess, theme }) {
 
       if (joinError) throw joinError;
 
-      toast.success(`¡Te uniste al grupo "${group.nombre}"!`);
+      toast.success(t('joinGroup.joined', { name: group.nombre }));
       onSuccess();
       onClose();
     } catch (err) {
@@ -1378,6 +1381,7 @@ function JoinGroupModal({ isOpen, onClose, onSuccess, theme }) {
 // VISTA DE TODOS LOS GRUPOS
 // ============================================
 function GroupsView({ groups, onCreateGroup, onJoinGroup, onSelectGroup }) {
+  const { t } = useTranslation();
   return (
     <>
       <div style={{ textAlign: 'center', marginBottom: 24 }}>
@@ -1407,13 +1411,13 @@ function GroupsView({ groups, onCreateGroup, onJoinGroup, onSelectGroup }) {
             textTransform: 'uppercase',
             color: 'var(--muted)',
             marginBottom: 12
-          }}>Mis grupos · {groups.length} activos</div>
+          }}>{t('dashboard.myGroups')} · {groups.length} {t('dashboard.active')}</div>
           <div className="groups-grid">
             {groups.map(g => (
               <div key={g.id} className="group-card" onClick={() => onSelectGroup(g)}>
                 <div className="group-card-name">{g.nombre}</div>
                 <div className="gc-chips">
-                  <span className="gc-chip">{TIPO_LABEL[g.tipo]}</span>
+                  <span className="gc-chip">{getTipoLabel(g.tipo, t)}</span>
                   <span className="gc-chip">T{g.temporada}</span>
                   {g.isAdmin && <span className="gc-chip admin">Admin</span>}
                 </div>
@@ -1452,6 +1456,7 @@ export default function Dashboard() {
   const [showJoinModal, setShowJoinModal] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [userIsSuperAdmin, setUserIsSuperAdmin] = useState(false);
+  const { t } = useTranslation();
   
   const user = useAuthStore((state) => state.user);
   const signOut = useAuthStore((state) => state.signOut);
@@ -1560,19 +1565,19 @@ export default function Dashboard() {
               <div 
                 className={`theme-opt ${theme === "dark" ? "active" : ""}`} 
                 onClick={() => setTheme("dark")} 
-                title="Oscuro"
+                title={t('dashboard.themeDark')}
               >
                 🌙
               </div>
               <div 
-                className={`theme-opt ${theme === "light" ? "active" : ""}`} 
-                onClick={() => setTheme("light")} 
-                title="Claro"
+                  className={`theme-opt ${theme === "light" ? "active" : ""}`} 
+                  onClick={() => setTheme("light")} 
+                  title={t('dashboard.themeLight')}
               >
                 ☀️
               </div>
             </div>
-            <div className="icon-btn" title="Notificaciones">🔔</div>
+            <div className="icon-btn" title={t('nav.notifications')}>🔔</div>
             
 
             {/* USER MENU */}
@@ -1580,7 +1585,7 @@ export default function Dashboard() {
               <div 
                 className="nav-avatar" 
                 onClick={() => setShowUserMenu(!showUserMenu)}
-                title="Mi cuenta"
+                title={t('dashboard.myAccount')}
               >
                 {user?.user_metadata?.nombre?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase() || 'U'}
               </div>
@@ -1589,7 +1594,7 @@ export default function Dashboard() {
                 <div className="user-menu-dropdown">
                   <div className="user-menu-header">
                     <div className="user-menu-name">
-                      {user?.user_metadata?.nombre || 'Usuario'}
+                      {user?.user_metadata?.nombre || t('dashboard.defaultUserName')}
                     </div>
                     <div className="user-menu-email">{user?.email}</div>
                   </div>
@@ -1602,7 +1607,7 @@ export default function Dashboard() {
                     }}
                   >
                     <span>👤</span>
-                    <span>Mi perfil</span>
+                    <span>{t('nav.profile')}</span>
                   </button>
 
                   <button 
@@ -1613,7 +1618,7 @@ export default function Dashboard() {
                     }}
                   >
                     <span>⚙️</span>
-                    <span>Configuración</span>
+                    <span>{t('nav.settings')}</span>
                   </button>
                   
                   {userIsSuperAdmin && (
@@ -1627,7 +1632,7 @@ export default function Dashboard() {
                         }}
                       >
                         <span>👑</span>
-                        <span>Panel de Admin</span>
+                        <span>{t('nav.adminPanel')}</span>
                       </button>
                     </>
                   )}
@@ -1639,7 +1644,7 @@ export default function Dashboard() {
                     onClick={handleSignOut}
                   >
                     <span>🚪</span>
-                    <span>Cerrar sesión</span>
+                    <span>{t('nav.signOut')}</span>
                   </button>
                 </div>
               )}
@@ -1664,7 +1669,7 @@ export default function Dashboard() {
             className={`group-bar-all ${!groupId ? 'active' : ''}`}
             onClick={handleBackToAll}
           >
-            ⊞ Todos los grupos
+            ⊞ {t('nav.allGroups')}
           </div>
         </div>
 
