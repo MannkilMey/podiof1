@@ -353,22 +353,26 @@ prediction: {
   // ============================================
   // POZO (PRIZE POOL)
   // ============================================
-  pozo: {
-    title: 'Group Prize Pool',
+ 
+  podioPoints: {
+    title: 'Podio Points',
+    enable: 'Enable PodioPoints',
+    enableSub: "Activates a special points system for the group, split among the season's top finishers.",
+    amountPerPerson: 'Value per person',
+    referenceUnit: 'Reference unit',
+    distribution: 'PodioPoints Split',
+    disclaimer: "PodioF1 doesn't handle or transfer real money.",
+    estimatedTotal: 'Estimated total',
+    saveConfig: 'Save configuration',
+    configSaved: 'PodioPoints configuration saved',
     participants: '{{count}} participants',
     perPerson: '{{amount}} per person',
-    place: '{{pos}} place',
-    disclaimer: 'PodioF1 does not manage, store or transfer money. The prize pool is informational and management is the responsibility of participants.',
-    enable: 'Enable Group Prize Pool',
-    enableSub: 'Shows the accumulated amount and prize distribution. PodioF1 does not manage money, informational only.',
-    amountPerPerson: 'Amount per person',
-    currency: 'Currency',
-    distribution: 'Prize distribution',
-    saveConfig: 'Save Prize Pool Settings',
-    configSaved: 'Prize pool settings saved',
-    estimatedTotal: 'Estimated total',
+    place: 'Place {{pos}}',
     currentProjection: 'Current Projection',
-    live: 'LIVE'
+    live: 'LIVE',
+    webOnlyConfig: 'This configuration is available from the web version.',
+    configDescription: "Configure the group's informative points system. PodioF1 does not manage money, it only displays the information.",
+    errorSavingPot: 'Error saving PodioPoints configuration'
   },
 
   // ============================================
@@ -411,6 +415,12 @@ prediction: {
     namePlaceholder: 'My F1 Group',
     dualExampleCase1: 'If they finish 2nd → 5 points (correct driver)',
     dualExampleCase2: 'If they finish 1st → 25 + 10 = 35 points (exact + bonus)',
+    dist602515: '🥇 60% · 🥈 25% · 🥉 15%',
+    dist503020: '🥇 50% · 🥈 30% · 🥉 20%',
+    dist702010: '🥇 70% · 🥈 20% · 🥉 10%',
+    dist100: '🥇 100%',
+    officialScoringTitle: 'Official F1 Scoring System',
+    groupLimitReachedToast: 'You have reached the free plan limit of 1 created group.',
   },
 
   // ============================================
@@ -424,7 +434,10 @@ prediction: {
     joinBtn: 'Join',
     invalidCode: 'Invalid invite code',
     alreadyMember: 'You are already a member of this group',
-    joined: 'You joined the group "{{name}}"!'
+    joined: 'You joined the group "{{name}}"!',
+    pendingApproval: "Request sent to {{name}}. The admin needs to approve your join request.",
+    memberLimitReached: "This group reached the free plan's member limit",
+    loginRequired: 'You need to sign in to join the group', alreadyMemberInfo: "You're already a member of this group", alreadyRequestedInfo: "You've already requested to join this group. Wait for approval.", errorJoining: 'Error joining the group. Try again.', invalidOrExpiredCode: 'Invalid or expired invite code', invalidLinkTitle: 'Invalid Link', groupNotFoundFallback: 'Group could not be found', backToHome: 'Back to Home', invitedSubtitle: "You've been invited to join this predictions group", groupLabel: 'Group', approvalLabel: 'Approval', approvalRequired: 'Required', approvalAutomatic: 'Automatic', joiningBtn: 'Joining...', joinBtnFull: 'Join Group'
   },
 
   // ============================================
@@ -557,7 +570,30 @@ prediction: {
     badgeUnlocked: '🏅 New badge unlocked!',
     badgeUnlockedBody: 'You unlocked "{{badge}}" in {{group}}.',
     weeklyReminder: '📅 Weekly summary',
-    weeklyReminderBody: "You're in position {{position}} in {{group}}. Keep competing!"
+    weeklyReminderBody: "You're in position {{position}} in {{group}}. Keep competing!",
+    markAllRead: 'Mark all as read', empty: 'No notifications yet', dismiss: 'Dismiss',
+    types: {
+      solicitudGrupo: { titulo: 'New group request', mensaje: '{{nombre}} wants to join "{{grupo}}"' },
+      grupoAprobado: { titulo: 'Request approved!', mensaje: 'Your request to join "{{grupo}}" was approved' },
+      grupoRechazado: { titulo: 'Request rejected', mensaje: 'Your request to join "{{grupo}}" was rejected' },
+      badgeDesbloqueado: { titulo: 'New achievement unlocked!', mensaje: 'You earned the "{{badge}}" badge' },
+      overrideActivado: { titulo: 'Predictions reopened', mensaje: 'The admin of "{{grupo}}" extended the deadline to predict {{carrera}}' },
+      interesComodines: {
+        titulo: 'Wildcard interest',
+        positivo: '{{nombre}} is interested in activating wildcards in "{{grupo}}"',
+        negativo: '{{nombre}} is not interested in wildcards in "{{grupo}}"'
+      }
+    }
+  },
+  wildcardInterest: {
+    title: '🎁 Wildcards — Coming soon',
+    explanationGlobal: '🔸 Global: pick an extra driver. If they finish inside the Top, you earn 5 points.',
+    explanationPosicional: '🔸 Positional: pick an extra driver and an exact position. Nail it for 8 points; land in the Top in another spot for 2.',
+    question: 'Would this feature interest your group?',
+    yesBtn: "Yes, I'd like to activate them",
+    noBtn: 'Not interested',
+    thanksToast: 'Thanks for your answer!',
+    errorToast: "We couldn't save your answer"
   },
 
   // ============================================
@@ -625,8 +661,17 @@ prediction: {
     loadingRaces: 'Loading races...',
     noRacesScheduled: 'No scheduled or finished races',
     enablePot: 'Enable Pot',
-    manageResultsSubLong: "Manually enter race results (ideal for Sprints or when OpenF1 doesn't have data)."
+    manageResultsSubLong: "Manually enter race results (ideal for Sprints or when OpenF1 doesn't have data).",
+    transferOwnership: 'Transfer Ownership',
+    confirmTransferTitle: 'Transfer group ownership?',
+    confirmTransferMsg: '{{name}} will become the new owner of the group and will remain an admin. This action cannot be undone directly.',
+    titleTransferred: 'Ownership transferred successfully',
+    errorTransferring: 'Error transferring ownership',
+    errorTransferRecipientLimit: "This person has already reached their group limit on the free plan. They need PolePass to receive ownership.",
+    joinSettingsTitle: 'Join Requests', requireApprovalLabel: 'Require Approval to Join', requireApprovalSub: 'If enabled, new members stay pending until an admin approves them.', approvalEnabledToast: 'New members now require approval', approvalDisabledToast: 'New members join automatically', errorSavingApproval: 'Error saving approval setting',
+    errorCannotToggleCreatorAdmin: "You can't change the group owner's admin role."
   },
+
   pointsHistogram: {
   projectedLabel: 'Forecast',
   unnamedRace: 'Unnamed',
@@ -826,31 +871,31 @@ raceDetailPage: {
 },
 races: {
   gp: {
-    australia: { nombre: 'Gran Premio de Australia' },
-    china: { nombre: 'Gran Premio de China' },
-    japan: { nombre: 'Gran Premio de Japón' },
-    bahrain: { nombre: 'Gran Premio de Baréin' },
-    saudi_arabia: { nombre: 'Gran Premio de Arabia Saudita' },
-    miami: { nombre: 'Gran Premio de Miami' },
-    emilia_romagna: { nombre: 'Gran Premio de Emilia Romaña' },
-    monaco: { nombre: 'Gran Premio de Mónaco' },
-    spain: { nombre: 'Gran Premio de España' },
-    spain_madrid: { nombre: 'Gran Premio de España (Madrid)' },
-    canada: { nombre: 'Gran Premio de Canadá' },
-    austria: { nombre: 'Gran Premio de Austria' },
-    great_britain: { nombre: 'Gran Premio de Gran Bretaña' },
-    belgium: { nombre: 'Gran Premio de Bélgica' },
-    hungary: { nombre: 'Gran Premio de Hungría' },
-    netherlands: { nombre: 'Gran Premio de Países Bajos' },
-    italy: { nombre: 'Gran Premio de Italia' },
-    azerbaijan: { nombre: 'Gran Premio de Azerbaiyán' },
-    singapore: { nombre: 'Gran Premio de Singapur' },
-    usa: { nombre: 'Gran Premio de Estados Unidos' },
-    mexico: { nombre: 'Gran Premio de México' },
-    brazil: { nombre: 'Gran Premio de Brasil' },
-    las_vegas: { nombre: 'Gran Premio de Las Vegas' },
-    qatar: { nombre: 'Gran Premio de Qatar' },
-    abu_dhabi: { nombre: 'Gran Premio de Abu Dabi' },
+    australia: { nombre: 'Australian Grand Prix' },
+    china: { nombre: 'Chinese Grand Prix' },
+    japan: { nombre: 'Japanese Grand Prix' },
+    bahrain: { nombre: 'Bahrain Grand Prix' },
+    saudi_arabia: { nombre: 'Saudi Arabian Grand Prix' },
+    miami: { nombre: 'Miami Grand Prix' },
+    emilia_romagna: { nombre: 'Emilia Romagna Grand Prix' },
+    monaco: { nombre: 'Monaco Grand Prix' },
+    spain: { nombre: 'Spanish Grand Prix' },
+    spain_madrid: { nombre: 'Spanish Grand Prix (Madrid)' },
+    canada: { nombre: 'Canadian Grand Prix' },
+    austria: { nombre: 'Austrian Grand Prix' },
+    great_britain: { nombre: 'British Grand Prix' },
+    belgium: { nombre: 'Belgian Grand Prix' },
+    hungary: { nombre: 'Hungarian Grand Prix' },
+    netherlands: { nombre: 'Dutch Grand Prix' },
+    italy: { nombre: 'Italian Grand Prix' },
+    azerbaijan: { nombre: 'Azerbaijan Grand Prix' },
+    singapore: { nombre: 'Singapore Grand Prix' },
+    usa: { nombre: 'United States Grand Prix' },
+    mexico: { nombre: 'Mexico City Grand Prix' },
+    brazil: { nombre: 'São Paulo Grand Prix' },
+    las_vegas: { nombre: 'Las Vegas Grand Prix' },
+    qatar: { nombre: 'Qatar Grand Prix' },
+    abu_dhabi: { nombre: 'Abu Dhabi Grand Prix' },
   }
 },
 settings: {
@@ -887,6 +932,7 @@ deleteAccount: {
   accountDeletedTitle: 'Account Deleted',
   accountDeletedText: 'Your account and all associated data have been deleted. You will be redirected in a few seconds.',
   contactPrefix: 'If this was a mistake or you need help, contact',
+  errorSoleAdmin: "You're the sole admin of one or more groups with other members. Transfer ownership before deleting your account."
 },
 racePredictions: {
   errorLoading: 'Error loading predictions',
@@ -946,8 +992,8 @@ groupDetail: {
   errorLoadingGroup: 'Error loading the group',
   errorLoadingRaces: 'Error loading races',
   errorLoadingStats: 'Error loading statistics',
-  predictionsOpenedAllGroups: '✅ Predictions opened (ALL groups)',
-  predictionsClosedAllGroups: '🔒 Predictions closed (ALL groups)',
+  predictionsOpenedAllGroups: '✅ Predictions opened for this group',
+  predictionsClosedAllGroups:  '🔒 Predictions closed for this group',
   errorChangingStatus: 'Error changing status',
   memberRemovedToast: '{{name}} has been removed from the group',
   errorRemovingMember: 'Error removing the member',
@@ -1002,7 +1048,7 @@ paywallGate: {
     stats_advanced: { title: 'Advanced Analysis', description: 'Access detailed stats, comparisons, and deep prediction analysis.' },
     deep_analytics: { title: 'Deep Analytics', description: 'Race winners, pre-race points, driver performance, and more.' },
     export_excel: { title: 'Export to Excel', description: 'Download your data in Excel format for offline analysis.' },
-    unlimited_groups: { title: 'Unlimited Groups', description: 'Join as many groups as you want, with no limit.' },
+    unlimited_groups: { title: 'Unlimited Groups', description: 'Create and join as many groups as you want, with no limit.' },
     no_ads: { title: 'No Ads', description: 'Enjoy the app without banners or interruptions.' },
     custom_profile: { title: 'Custom Profile', description: 'Customize your profile with exclusive colors and styles.' },
     badge_supporter: { title: 'Supporter Badge', description: 'Exclusive badge showing your support for PodioF1.' }
@@ -1035,6 +1081,7 @@ superAdmin: {
   confirmEnableTitle: 'Enable the paywall?',
   confirmEnableMsg: 'This will immediately block premium features for ALL non-subscribed users across the entire app.',
   confirmEnableBtn: 'Yes, enable',
+  racesTab: 'Races', errorLoadingRaces: 'Error loading races', fastestLapGenericNote: "Assign the fastest lap for each race. This affects bonus scoring in groups that have that benefit enabled."
 },
 sharePrediction: {
   errorGeneratingImage: 'Error generating image',

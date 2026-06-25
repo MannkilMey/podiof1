@@ -4,7 +4,6 @@ import { useAuthStore } from '../../stores/authStore';
 import { useThemeStore } from '../../stores/themeStore';
 import { useToastStore } from '../../stores/toastStore';
 import { supabase } from '../../lib/supabase';
-import { canPredictRace } from '../../utils/canPredictRace';
 import SharePredictionCard from '../../components/SharePredictionCard/SharePredictionCard';
 import * as XLSX from 'xlsx';
 import { useTranslation, getDateLocale, getRaceName } from '../../i18n';
@@ -684,6 +683,8 @@ export default function RacePredictionsComparison() {
 
   const [showShareModal, setShowShareModal] = useState(false);
   const [shareData, setShareData] = useState(null);
+  const [isForcedOpen, setIsForcedOpen] = useState(false);
+
   
   // 🆕 Estado para modal de sistema de puntos
   const [showScoringModal, setShowScoringModal] = useState(false);
@@ -696,7 +697,6 @@ export default function RacePredictionsComparison() {
     try {
       setLoading(true);
 
-      // Cargar grupo
       const { data: groupData, error: groupError } = await supabase
         .from('groups')
         .select('*')
@@ -706,7 +706,6 @@ export default function RacePredictionsComparison() {
       if (groupError) throw groupError;
       setGroup(groupData);
 
-      // Cargar información de la carrera
       const { data: raceData, error: raceError } = await supabase
         .from('races')
         .select('*')
@@ -716,10 +715,18 @@ export default function RacePredictionsComparison() {
       if (raceError) throw raceError;
       setRace(raceData);
 
-      // Verificar si mostrar predicciones
-      const predictionStatus = canPredictRace(raceData, groupData);
-      const canStillPredict = predictionStatus.canPredict;
+      const { data: statusData } = await supabase
+        .rpc('get_prediction_status', { p_grupo_id: groupId, p_carrera_id: raceId });
+      const canStillPredict = statusData?.[0]?.can_predict || false;
       setShowPredictions(!canStillPredict);
+      setIsForcedOpen(statusData?.[0]?.is_forced_open || false);
+
+      // 🔒 Si las predicciones siguen abiertas (deadline normal o override de grupo),
+      // no pedimos nada sensible — ni siquiera llega por la red.
+      if (canStillPredict) {
+        setLoading(false);
+        return;
+      }
 
       // Cargar pilotos
       const { data: driversData } = await supabase
@@ -757,15 +764,7 @@ export default function RacePredictionsComparison() {
       // Cargar predicciones
       const { data: predictionsData, error: predictionsError } = await supabase
         .from('predictions')
-        .select(`
-          *,
-          users:usuario_id (
-            id,
-            nombre,
-            apellido,
-            email
-          )
-        `)
+        .select('*')
         .eq('grupo_id', groupId)
         .eq('carrera_id', raceId);
 
@@ -773,6 +772,12 @@ export default function RacePredictionsComparison() {
         console.error('Error loading predictions:', predictionsError);
         throw predictionsError;
       }
+
+      // 🔒 Nombres vía función segura (RLS ya no permite leer 'users' directo)
+      const predUserIds = [...new Set((predictionsData || []).map(p => p.usuario_id).filter(Boolean))];
+      const { data: profiles } = await supabase.rpc('get_public_names', { p_user_ids: predUserIds });
+      const nameById = {};
+      (profiles || []).forEach(p => { nameById[p.id] = p; });
 
       // Cargar scores por separado
       const { data: scoresData } = await supabase
@@ -791,11 +796,13 @@ export default function RacePredictionsComparison() {
       const transformedPredictions = predictionsData
         ?.map(pred => {
           const userScore = scoresMap[pred.usuario_id];
+          const profile = nameById[pred.usuario_id] || {};
           
           return {
             ...pred,
-            userName: `${pred.users?.nombre || ''} ${pred.users?.apellido || ''}`.trim() || pred.users?.email || t('dashboard.defaultUserName'),
-            userEmail: pred.users?.email || '',
+            userName: `${profile.nombre || ''} ${profile.apellido || ''}`.trim() || t('dashboard.defaultUserName'),
+            userNombre: profile.nombre || '',
+            userApellido: profile.apellido || '',
             puntos: userScore?.puntos || 0,
             aciertos_exactos: userScore?.aciertos_exactos || 0,
             aciertos_piloto: userScore?.aciertos_piloto || 0
@@ -1077,7 +1084,7 @@ const sistemaPuntos = isSprint
             <div className="empty-title">{t('racePredictions.notAvailableTitle')}</div>
             <div className="empty-message">
               {t('racePredictions.notAvailableMsg')}
-              {race?.predicciones_forzadas_abiertas && (
+              {isForcedOpen && (
                 <><br/>{t('racePredictions.adminKeepsOpen')}</>
               )}
             </div>
@@ -1270,7 +1277,7 @@ const sistemaPuntos = isSprint
                     <div className="prediction-header">
                       <div className="user-info">
                         <div className="user-avatar">
-                          {getInitials(prediction.users?.nombre, prediction.users?.apellido)}
+                          {getInitials(prediction.userNombre, prediction.userApellido)}
                         </div>
                         <div>
                           <div className="user-name">{prediction.userName}</div>

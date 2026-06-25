@@ -10,6 +10,11 @@ import OnboardingModal from '../../components/OnboardingModal';
 import InstallPrompt from '../../components/InstallPrompt';
 import { usePushNotifications } from '../../hooks/usePushNotifications';
 import { useTranslation, getDateLocale } from '../../i18n';
+import { isNative } from '../../hooks/usePlatform';
+import { usePremium } from '../../hooks/usePremium';
+import { UpgradeModal } from '../../components/PaywallGate';
+import NotificationsBell from '../../components/NotificationsBell';
+
 
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600&family=Share+Tech+Mono&display=swap');`;
 
@@ -514,13 +519,13 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
     pozo_habilitado: false,
     pozo_monto_por_persona: 0,
     pozo_moneda: 'USD',
-    pozo_distribucion: '60-25-15'
+    pozo_distribucion: '60-25-15',
+    requiere_aprobacion: false    
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const user = useAuthStore((state) => state.user);
   const { t } = useTranslation();
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -575,7 +580,8 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
                 };
                 return presets[formData.pozo_distribucion] || { "1": 60, "2": 25, "3": 15 };
               })()
-            : { "1": 60, "2": 25, "3": 15 }
+            : { "1": 60, "2": 25, "3": 15 },
+            requiere_aprobacion: formData.requiere_aprobacion
         })
         .select()
         .single();
@@ -618,7 +624,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
   };
 
   return (
-    <div style={{
+    <div data-theme={theme} style={{
       position: 'fixed',
       top: 0,
       left: 0,
@@ -797,6 +803,37 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
               {t('createGroup.deadlineHint', { hours: formData.horas_cierre_prediccion })}
             </div>
           </div>
+          {/* 👥 Aprobación de Miembros */}
+            <div style={{
+              background: colors.bg3,
+              border: `1px solid ${colors.border}`,
+              borderRadius: '12px',
+              padding: '18px',
+              marginBottom: '20px'
+            }}>
+              <label style={{
+                display: 'flex',
+                alignItems: 'flex-start',
+                gap: '12px',
+                cursor: 'pointer',
+                fontSize: '14px'
+              }}>
+                <input
+                  type="checkbox"
+                  checked={formData.requiere_aprobacion}
+                  onChange={(e) => setFormData({ ...formData, requiere_aprobacion: e.target.checked })}
+                  style={{ width: '18px', height: '18px', cursor: 'pointer', marginTop: '2px', flexShrink: 0 }}
+                />
+                <div>
+                  <div style={{ fontWeight: '700', marginBottom: '6px', color: colors.text }}>
+                    👥 {t('admin.requireApprovalLabel')}
+                  </div>
+                  <div style={{ color: colors.muted, fontSize: '13px', lineHeight: '1.6' }}>
+                    {t('admin.requireApprovalSub')}
+                  </div>
+                </div>
+              </label>
+            </div>
 
           {/* ✅ NUEVO: Incluir Sprints */}
           <div style={{
@@ -893,7 +930,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
               textTransform: 'uppercase',
               color: colors.muted,
               marginBottom: '8px'
-            }}>Sistema de Puntaje F1 Oficial</div>
+            }}>{t('createGroup.officialScoringTitle')}</div>
             <div style={{ fontSize: '13px', color: colors.muted, lineHeight: '1.6' }}>
               1° = 25 pts · 2° = 18 pts · 3° = 15 pts · 4° = 12 pts · 5° = 10 pts<br/>
               6° = 8 pts · 7° = 6 pts · 8° = 4 pts · 9° = 2 pts · 10° = 1 pt
@@ -978,10 +1015,10 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
               />
               <div>
                 <div style={{ fontWeight: '700', marginBottom: '6px', color: colors.text }}>
-                  💰 {t('pozo.enable')}
+                  🏁 {t('podioPoints.enable')}
                 </div>
                 <div style={{ color: colors.muted, fontSize: '13px', lineHeight: '1.6' }}>
-                  {t('pozo.enableSub')}
+                  {t('podioPoints.enableSub')}
                 </div>
               </div>
             </label>
@@ -993,13 +1030,14 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
                 borderRadius: '10px',
                 padding: '14px'
               }}>
+                {!isNative ? (
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '12px' }}>
                   <div>
                     <label style={{
                       display: 'block', fontSize: '11px', fontWeight: '600',
                       letterSpacing: '1px', textTransform: 'uppercase',
                       color: colors.muted, marginBottom: '6px'
-                    }}>{t('pozo.amountPerPerson')}</label>
+                    }}>{t('podioPoints.amountPerPerson')}</label>
                     <input
                       type="number"
                       min="0"
@@ -1018,7 +1056,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
                       display: 'block', fontSize: '11px', fontWeight: '600',
                       letterSpacing: '1px', textTransform: 'uppercase',
                       color: colors.muted, marginBottom: '6px'
-                    }}>{t('pozo.currency')}</label>
+                    }}>{t('podioPoints.referenceUnit')}</label>
                     <select
                       value={formData.pozo_moneda}
                       onChange={(e) => setFormData({ ...formData, pozo_moneda: e.target.value })}
@@ -1028,21 +1066,28 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
                         borderRadius: '8px', color: colors.text, fontSize: '14px', cursor: 'pointer'
                       }}
                     >
-                      <option value="USD" style={{ background: colors.bg }}>🇺🇸 USD (Dólar)</option>
-                      <option value="PYG" style={{ background: colors.bg }}>🇵🇾 PYG (Guaraní)</option>
-                      <option value="BRL" style={{ background: colors.bg }}>🇧🇷 BRL (Real)</option>
-                      <option value="ARS" style={{ background: colors.bg }}>🇦🇷 ARS (Peso Arg)</option>
-                      <option value="EUR" style={{ background: colors.bg }}>🇪🇺 EUR (Euro)</option>
+                      <option value="USD" style={{ background: colors.bg }}>{t('currencies.USD')}</option>
+                      <option value="PYG" style={{ background: colors.bg }}>{t('currencies.PYG')}</option>
+                      <option value="BRL" style={{ background: colors.bg }}>{t('currencies.BRL')}</option>
+                      <option value="ARS" style={{ background: colors.bg }}>{t('currencies.ARS')}</option>
+                      <option value="EUR" style={{ background: colors.bg }}>{t('currencies.EUR')}</option>
                     </select>
                   </div>
-                </div>
+                </div>) : (
+                  <div style={{
+                    padding: 12, background: colors.bg2, borderRadius: 8,
+                    border: `1px solid ${colors.border}`, fontSize: 13, color: colors.muted, marginBottom: 12
+                  }}>
+                    ℹ️ {t('podioPoints.webOnlyConfig')}
+                  </div>
+                )}
 
                 <div>
                   <label style={{
                     display: 'block', fontSize: '11px', fontWeight: '600',
                     letterSpacing: '1px', textTransform: 'uppercase',
                     color: colors.muted, marginBottom: '6px'
-                  }}>{t('pozo.distribution')}</label>
+                  }}>{t('podioPoints.distribution')}</label>
                   <select
                     value={formData.pozo_distribucion}
                     onChange={(e) => setFormData({ ...formData, pozo_distribucion: e.target.value })}
@@ -1064,7 +1109,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
                   background: colors.bg3, borderRadius: '8px',
                   fontSize: '11px', color: colors.muted, lineHeight: '1.5', textAlign: 'center'
                 }}>
-                  ⚠️ {t('pozo.disclaimer')}
+                  ⚠️ {t('podioPoints.disclaimer')}
                 </div>
               </div>
             )}
@@ -1243,12 +1288,21 @@ function JoinGroupModal({ isOpen, onClose, onSuccess, theme }) {
           grupo_id: group.id,
           usuario_id: user.id,
           es_admin: false,
-          estado: 'aprobado'
+          estado: group.requiere_aprobacion ? 'pendiente' : 'aprobado'
         });
 
-      if (joinError) throw joinError;
+      if (joinError) {
+        if (joinError.message?.includes('FREE_MEMBER_LIMIT_REACHED')) {
+          throw new Error(t('joinGroup.memberLimitReached'));
+        }
+        throw joinError;
+      }
 
-      toast.success(t('joinGroup.joined', { name: group.nombre }));
+      if (group.requiere_aprobacion) {
+        toast.success(t('joinGroup.pendingApproval', { name: group.nombre }));
+      } else {
+        toast.success(t('joinGroup.joined', { name: group.nombre }));
+      }
       onSuccess();
       onClose();
     } catch (err) {
@@ -1271,7 +1325,7 @@ function JoinGroupModal({ isOpen, onClose, onSuccess, theme }) {
   };
 
   return (
-    <div style={{
+    <div data-theme={theme} style={{
       position: 'fixed',
       top: 0,
       left: 0,
@@ -1452,6 +1506,8 @@ export default function Dashboard() {
   const setTheme = useThemeStore((state) => state.setTheme);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showJoinModal, setShowJoinModal] = useState(false);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const { checkFeature, prices } = usePremium();  
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [userIsSuperAdmin, setUserIsSuperAdmin] = useState(false);
   const { t } = useTranslation();
@@ -1514,7 +1570,19 @@ export default function Dashboard() {
     navigate('/login', { replace: true });
   };
 
-  const handleCreateGroup = () => {
+  const handleCreateGroup = async () => {
+    if (!checkFeature('unlimited_groups')) {
+      const { count } = await supabase
+        .from('groups')
+        .select('id', { count: 'exact', head: true })
+        .eq('creador_id', user.id);
+
+      if ((count || 0) >= 1) {
+        toast.error(t('dashboard.groupLimitReachedToast'));
+        setShowUpgradeModal(true);
+        return;
+      }
+    }
     setShowCreateModal(true);
   };
 
@@ -1575,7 +1643,7 @@ export default function Dashboard() {
                 ☀️
               </div>
             </div>
-            <div className="icon-btn" title={t('nav.notifications')}>🔔</div>
+            <NotificationsBell />
             
 
             {/* USER MENU */}
@@ -1701,6 +1769,9 @@ export default function Dashboard() {
       />
       <OnboardingModal />
       <InstallPrompt />
+      {showUpgradeModal && (
+        <UpgradeModal onClose={() => setShowUpgradeModal(false)} prices={prices} theme={theme} />
+      )}
     </>
   );
 }

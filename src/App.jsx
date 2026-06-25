@@ -129,7 +129,6 @@ export default function App() {
             path="/landing" 
             element={
               <PublicRoute>
-                {console.log('isNative:', isNative)}
                 {isNative ? <AppOnboarding /> : <Landing />}
               </PublicRoute>
             } 
@@ -178,7 +177,7 @@ export default function App() {
               </ProtectedRoute>
             } 
           />
-          <Route path="/admin/race/:raceId/results" element={<ManualResults />} />
+          <Route path="/admin/race/:raceId/results" element={<ProtectedRoute><ManualResults /></ProtectedRoute>} />
           <Route 
             path="/settings" 
             element={

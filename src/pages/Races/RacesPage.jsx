@@ -4,7 +4,6 @@ import { useAuthStore } from '../../stores/authStore';
 import { useThemeStore } from '../../stores/themeStore';
 import { supabase } from '../../lib/supabase';
 import { subHours } from 'date-fns';
-import { canPredictRaceSync } from '../../utils/canPredictRace';  
 import { useTranslation, getDateLocale, getRaceName } from '../../i18n';
 import BackButton from '../../components/BackButton';
 
@@ -415,6 +414,7 @@ export default function RacesPage() {
   const [results, setResults] = useState({});
   const [scores, setScores] = useState({});
   const [drivers, setDrivers] = useState({});
+  const [raceStatusMap, setRaceStatusMap] = useState({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -458,8 +458,15 @@ export default function RacesPage() {
       const { data: racesData, error: racesError } = await racesQuery
         .order('fecha_programada', { ascending: true });
 
-      if (racesError) throw racesError;  // ✅ ESTO FALTABA
+      if (racesError) throw racesError;
       setRaces(racesData || []);
+
+      // 🔒 Estado de predicción unificado — respeta override por grupo en group_races
+      const { data: statusData } = await supabase
+        .rpc('get_group_races_status', { p_grupo_id: groupId });
+      const statusMap = {};
+      (statusData || []).forEach(s => { statusMap[s.carrera_id] = s; });
+      setRaceStatusMap(statusMap);
   
 
       // Cargar predicciones del usuario para este grupo
@@ -518,8 +525,7 @@ export default function RacesPage() {
   // ✅ FUNCIÓN ACTUALIZADA - Respeta predicciones_forzadas_abiertas
  const getRaceStatus = (race) => {
     const hasPrediction = !!predictions[race.id];
-    const predictionStatus = canPredictRaceSync(race, group);
-    const isOpen = predictionStatus.canPredict;
+    const isOpen = raceStatusMap[race.id]?.can_predict || false;
 
     if (race.estado === 'finalizada') {
       return {
@@ -568,24 +574,24 @@ export default function RacesPage() {
   };
 
   // ✅ FUNCIÓN MEJORADA - Muestra deadline correcto
-  const getDeadlineText = (race) => {
-    const predictionStatus = canPredictRaceSync(race, group);
-    
-    if (!predictionStatus.deadline) {
-      return t('racesPage.closed');
-    }
+    const getDeadlineText = (race) => {
+      const status = raceStatusMap[race.id];
+      
+      if (!status?.deadline) {
+        return t('racesPage.closed');
+      }
 
-    // ✅ Mostrar si es deadline forzado o normal
-    const isForcedOpen = race.predicciones_forzadas_abiertas;
-    const prefix = isForcedOpen ? `🔓 ${t('racesPage.openUntilStart')}:` : `⏰ ${t('racesPage.closesAt')}:`;
-    
-    return `${prefix} ${predictionStatus.deadline.toLocaleDateString(getDateLocale(locale), {
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  })}`;
-};
+      const isForcedOpen = status.is_forced_open;
+      const prefix = isForcedOpen ? `🔓 ${t('racesPage.openUntilStart')}:` : `⏰ ${t('racesPage.closesAt')}:`;
+      const deadlineDate = new Date(status.deadline);
+      
+      return `${prefix} ${deadlineDate.toLocaleDateString(getDateLocale(locale), {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    })}`;
+  };
 
   if (loading) {
     return (

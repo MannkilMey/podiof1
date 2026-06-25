@@ -101,43 +101,51 @@ export default function PredictionAnalysis() {
   }, [groupId]);
 
   async function fetchData() {
-    setLoading(true);
-    try {
-      const [groupRes, predsRes, driversRes] = await Promise.all([
-        supabase.from('groups').select('id, nombre, temporada, cantidad_posiciones, sistema_puntos, sistema_puntos_sprint, incluir_sprints, usa_sistema_dual, puntos_piloto_correcto, bonus_posicion_exacta').eq('id', groupId).single(),
-       supabase.from('predictions').select(`
-          id, posiciones, puntos_obtenidos,
-          usuario:usuario_id ( id, nombre, apellido ),
-          carrera:carrera_id ( id, nombre, slug, ronda, tipo, estado )
-        `).eq('grupo_id', groupId).order('created_at', { ascending: true }),
-        supabase.from('drivers').select('id, nombre_completo, acronimo')
-      ]);
+      setLoading(true);
+      try {
+        const [groupRes, predsRes, driversRes] = await Promise.all([
+          supabase.from('groups').select('id, nombre, temporada, cantidad_posiciones, sistema_puntos, sistema_puntos_sprint, incluir_sprints, usa_sistema_dual, puntos_piloto_correcto, bonus_posicion_exacta').eq('id', groupId).single(),
+          // 🔒 !inner + filtro de estado: una carrera no finalizada nunca sale del servidor
+          supabase.from('predictions').select(`
+            id, usuario_id, posiciones, puntos_obtenidos,
+            carrera:carrera_id!inner ( id, nombre, slug, ronda, tipo, estado )
+          `).eq('grupo_id', groupId).eq('carrera.estado', 'finalizada').order('created_at', { ascending: true }),
+          supabase.from('drivers').select('id, nombre_completo, acronimo')
+        ]);
 
-      const gData = groupRes.data;
-      setGroupInfo(gData);
+        const gData = groupRes.data;
+        setGroupInfo(gData);
 
-      const driversMap = {};
-      (driversRes.data || []).forEach(d => { driversMap[d.id] = d; });
-      setDrivers(driversMap);
+        const driversMap = {};
+        (driversRes.data || []).forEach(d => { driversMap[d.id] = d; });
+        setDrivers(driversMap);
 
-      const finishedPreds = (predsRes.data || []).filter(p => p.carrera?.estado === 'finalizada');
-      setPredictions(finishedPreds);
+        const predsData = predsRes.data || [];
 
-      const raceIds = [...new Set(finishedPreds.map(p => p.carrera?.id).filter(Boolean))];
-      if (raceIds.length > 0) {
-        const { data: results } = await supabase
-          .from('race_results')
-          .select('carrera_id, piloto_id, posicion_final, vuelta_rapida, puntos_f1')
-          .in('carrera_id', raceIds)
-          .order('posicion_final', { ascending: true });
-        setRaceResults(results || []);
+        // 🔒 Nombres vía función segura (RLS ya no permite leer 'users' directo)
+        const userIds = [...new Set(predsData.map(p => p.usuario_id).filter(Boolean))];
+        const { data: profiles } = await supabase.rpc('get_public_names', { p_user_ids: userIds });
+        const nameById = {};
+        (profiles || []).forEach(p => { nameById[p.id] = p; });
+
+        const finishedPreds = predsData.map(p => ({ ...p, usuario: { id: p.usuario_id, ...nameById[p.usuario_id] } }));
+        setPredictions(finishedPreds);
+
+        const raceIds = [...new Set(finishedPreds.map(p => p.carrera?.id).filter(Boolean))];
+        if (raceIds.length > 0) {
+          const { data: results } = await supabase
+            .from('race_results')
+            .select('carrera_id, piloto_id, posicion_final, vuelta_rapida, puntos_f1')
+            .in('carrera_id', raceIds)
+            .order('posicion_final', { ascending: true });
+          setRaceResults(results || []);
+        }
+      } catch (err) {
+        console.error('Error fetching analysis data:', err);
+      } finally {
+        setLoading(false);
       }
-    } catch (err) {
-      console.error('Error fetching analysis data:', err);
-    } finally {
-      setLoading(false);
     }
-  }
 
   const { races, users, analysisData, insights } = useMemo(() => {
     if (!predictions.length || !Object.keys(drivers).length) {
@@ -422,7 +430,7 @@ export default function PredictionAnalysis() {
       <BackButton className="analysis-back-btn" onClick={() => navigate(`/group/${groupId}`)}>← {t('predictionAnalysis.backToGroup')}</BackButton>
 
         <StatsTabBar active="analysis" groupId={groupId} />
-
+        <PaywallGate feature="stats_advanced">
         <div className="analysis-header">
           <div className="analysis-header-left">
             <h1 className="analysis-title">📋 {t('predictionAnalysis.title')}</h1>
@@ -611,6 +619,7 @@ export default function PredictionAnalysis() {
             </div>
           ))
         )}
+        </PaywallGate>
       </div>
     </>
   );

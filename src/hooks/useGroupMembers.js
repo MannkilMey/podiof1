@@ -6,7 +6,7 @@ export function useGroupMembers(groupId) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const loadMembers = async () => {
+ const loadMembers = async () => {
     if (!groupId) {
       setLoading(false);
       return;
@@ -16,40 +16,23 @@ export function useGroupMembers(groupId) {
       setLoading(true);
       setError(null);
 
+      // 🔒 Vía función segura — el email solo viaja si el solicitante es admin real de este grupo
       const { data, error: fetchError } = await supabase
-        .from('group_members')
-        .select(`
-          id,
-          usuario_id,
-          es_admin,
-          estado,
-          joined_at,
-          users!inner(
-            id,
-            nombre,
-            apellido,
-            email
-          )
-        `)
-        .eq('grupo_id', groupId)
-        .order('joined_at', { ascending: true });
+        .rpc('get_group_members_full', { p_grupo_id: groupId });
 
       if (fetchError) throw fetchError;
 
-      // Transformar datos y obtener puntos
+      const sorted = (data || []).sort((a, b) => new Date(a.joined_at) - new Date(b.joined_at));
+
       const transformedMembers = await Promise.all(
-        (data || []).map(async (member) => {
-          // Obtener puntos y exactos del usuario en este grupo
+        sorted.map(async (member) => {
           const { data: scores } = await supabase
             .from('scores')
             .select('puntos, aciertos_exactos')
             .eq('grupo_id', groupId)
             .eq('usuario_id', member.usuario_id);
 
-          // Sumar puntos totales
           const totalPoints = scores?.reduce((sum, s) => sum + parseFloat(s.puntos || 0), 0) || 0;
-          
-          // Sumar aciertos exactos de todas las carreras
           const totalExactos = scores?.reduce((sum, s) => sum + parseInt(s.aciertos_exactos || 0), 0) || 0;
 
           return {
@@ -58,10 +41,10 @@ export function useGroupMembers(groupId) {
             isAdmin: member.es_admin,
             status: member.estado,
             joinedAt: member.joined_at,
-            name: member.users.nombre,
-            lastName: member.users.apellido,
-            email: member.users.email,
-            fullName: `${member.users.nombre} ${member.users.apellido}`.trim(),
+            name: member.nombre,
+            lastName: member.apellido,
+            email: member.email,
+            fullName: `${member.nombre || ''} ${member.apellido || ''}`.trim(),
             puntos: Math.round(totalPoints),
             exactos: totalExactos
           };

@@ -117,11 +117,15 @@ export default function DeleteAccount() {
       }, 3000);
     } catch (err) {
       console.error('Error deleting account:', err);
-      setError(err.message || t('deleteAccount.deleteError'));
-    } finally {
-      setLoading(false);
-    }
-  };
+      if (err.message?.includes('SOLE_ADMIN_BLOCKING_DELETION')) {
+        setError(t('deleteAccount.errorSoleAdmin'));
+      } else {
+        setError(err.message || t('deleteAccount.deleteError'));
+      }
+    }finally {
+          setLoading(false);
+        }
+      };
 
   return (
     <>

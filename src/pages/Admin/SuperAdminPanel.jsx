@@ -4,7 +4,7 @@ import { useAuthStore } from '../../stores/authStore';
 import { useThemeStore } from '../../stores/themeStore';
 import { useToastStore } from '../../stores/toastStore';
 import { supabase } from '../../lib/supabase';
-import { useTranslation, getDateLocale } from '../../i18n';
+import { useTranslation, getDateLocale, getRaceName } from '../../i18n';
 import BackButton from '../../components/BackButton';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
 
@@ -123,6 +123,8 @@ const CSS = `
   gap: 8px;
   border-bottom: 2px solid var(--border);
   margin-bottom: 24px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .tab-btn {
@@ -139,6 +141,7 @@ const CSS = `
   cursor: pointer;
   transition: all 0.2s ease;
   margin-bottom: -2px;
+  white-space: nowrap;
 }
 
 .tab-btn.active {
@@ -335,6 +338,112 @@ input:disabled + .toggle-slider {
   font-weight: 600;
 }
 
+.admin-section {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.section-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--white);
+  margin-bottom: 16px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--muted);
+}
+
+.fastest-lap-section {
+  margin-top: 24px;
+}
+
+.race-fastest-card {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.race-fastest-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.race-fastest-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--white);
+}
+
+.race-fastest-date {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.fastest-lap-controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.fastest-lap-select {
+  flex: 1;
+  padding: 10px 14px;
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  color: var(--white);
+  font-size: 14px;
+  cursor: pointer;
+  font-family: 'Barlow', sans-serif;
+}
+
+.btn-clear-fastest {
+  padding: 10px 16px;
+  background: transparent;
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  color: var(--muted);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.current-fastest {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: rgba(0, 212, 160, 0.1);
+  border: 1px solid rgba(0, 212, 160, 0.3);
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+.current-fastest-icon {
+  font-size: 16px;
+}
+
+.current-fastest-text {
+  color: var(--green);
+  font-weight: 700;
+}
+
 @media (max-width: 768px) {
   .super-admin-panel {
     padding: 16px;
@@ -383,6 +492,14 @@ export default function SuperAdminPanel() {
   const [savingPaywall, setSavingPaywall] = useState(false);
   const [confirmPaywallEnable, setConfirmPaywallEnable] = useState(false);
 
+  // 🆕 Races tab state
+  const [allRaces, setAllRaces] = useState([]);
+  const [loadingRaces, setLoadingRaces] = useState(true);
+  const [racesLoaded, setRacesLoaded] = useState(false);
+  const [raceResultsMap, setRaceResultsMap] = useState({});
+  const [fastestLaps, setFastestLaps] = useState({});
+  const [savingFastestLap, setSavingFastestLap] = useState(null);
+
   useEffect(() => {
     checkSuperAdmin();
   }, [user]);
@@ -392,6 +509,13 @@ export default function SuperAdminPanel() {
       loadData();
     }
   }, [isSuperAdmin]);
+
+  // 🆕 Carga perezosa de la pestaña de carreras
+  useEffect(() => {
+    if (activeTab === 'races' && isSuperAdmin && !racesLoaded) {
+      loadRacesData();
+    }
+  }, [activeTab, isSuperAdmin]);
 
   const checkSuperAdmin = async () => {
     if (!user) return;
@@ -451,24 +575,16 @@ export default function SuperAdminPanel() {
         totalRaces: racesCount.count || 0
       });
 
-      // Users
-      const { data: usersData } = await supabase
-        .from('users')
-        .select('*')
-        .order('created_at', { ascending: false });
-
+      // 🔒 Usuarios vía función segura con chequeo de super admin real
+      const { data: usersData } = await supabase.rpc('get_all_users_admin');
       setUsers(usersData || []);
 
-      // Groups with creator info
-      const { data: groupsData } = await supabase
-        .from('groups')
-        .select(`
-          *,
-          creator:users!groups_creador_id_fkey(nombre, apellido, email)
-        `)
-        .order('created_at', { ascending: false });
-
-      setGroups(groupsData || []);
+      // 🔒 Grupos + creador, mismo patrón
+      const { data: groupsData } = await supabase.rpc('get_all_groups_admin');
+      setGroups((groupsData || []).map(g => ({
+        ...g,
+        creator: { nombre: g.creator_nombre, apellido: g.creator_apellido, email: g.creator_email }
+      })));
 
       // Paywall setting
       await loadPaywallSetting();
@@ -479,6 +595,101 @@ export default function SuperAdminPanel() {
     } finally {
       setLoading(false);
     }
+  };
+
+  // 🆕 Cargar carreras + resultados existentes para la pestaña de Carreras
+  const loadRacesData = async () => {
+    setLoadingRaces(true);
+    try {
+      const { data: racesData, error: racesError } = await supabase
+        .from('races')
+        .select('*')
+        .in('estado', ['programada', 'finalizada'])
+        .order('fecha_programada', { ascending: false });
+
+      if (racesError) throw racesError;
+      setAllRaces(racesData || []);
+
+      const finishedIds = (racesData || [])
+        .filter(r => r.estado === 'finalizada')
+        .map(r => r.id);
+
+      if (finishedIds.length > 0) {
+        const { data: resultsData, error: resultsError } = await supabase
+          .from('race_results')
+          .select(`
+            *,
+            drivers:piloto_id ( id, nombre_completo, acronimo, numero )
+          `)
+          .in('carrera_id', finishedIds)
+          .order('posicion_final', { ascending: true });
+
+        if (resultsError) throw resultsError;
+
+        const resultsByRace = {};
+        const fastestByRace = {};
+        resultsData?.forEach(result => {
+          if (!resultsByRace[result.carrera_id]) resultsByRace[result.carrera_id] = [];
+          resultsByRace[result.carrera_id].push(result);
+          if (result.vuelta_rapida) fastestByRace[result.carrera_id] = result.piloto_id;
+        });
+        setRaceResultsMap(resultsByRace);
+        setFastestLaps(fastestByRace);
+      }
+
+      setRacesLoaded(true);
+    } catch (err) {
+      console.error('Error loading races data:', err);
+      toast.error(t('superAdmin.errorLoadingRaces'));
+    } finally {
+      setLoadingRaces(false);
+    }
+  };
+
+  // 🆕 Guardar / limpiar vuelta rápida de una carrera y recalcular puntos
+  const handleSaveFastestLap = async (raceId, pilotoId) => {
+    setSavingFastestLap(raceId);
+    try {
+      const { error: clearError } = await supabase
+        .from('race_results')
+        .update({ vuelta_rapida: false })
+        .eq('carrera_id', raceId);
+      if (clearError) throw clearError;
+
+      if (pilotoId) {
+        const { error: setError } = await supabase
+          .from('race_results')
+          .update({ vuelta_rapida: true })
+          .eq('carrera_id', raceId)
+          .eq('piloto_id', pilotoId);
+        if (setError) throw setError;
+      }
+
+      setFastestLaps(prev => ({ ...prev, [raceId]: pilotoId || null }));
+
+      const { data: recalcData, error: recalcError } = await supabase
+        .rpc('calcular_puntos_carrera', { p_carrera_id: raceId });
+
+      if (recalcError) {
+        console.error('Error recalculando puntos:', recalcError);
+        toast.warning(pilotoId ? t('admin.fastestLapSavedNoRecalc') : t('admin.fastestLapCleared'));
+      } else {
+        toast.success(
+          pilotoId
+            ? t('admin.fastestLapSavedRecalc', { count: recalcData?.[0]?.predicciones_calculadas || 0 })
+            : t('admin.fastestLapClearedRecalc')
+        );
+      }
+    } catch (err) {
+      console.error('Error saving fastest lap:', err);
+      toast.error(t('admin.errorSavingFastestLap'));
+    } finally {
+      setSavingFastestLap(null);
+    }
+  };
+
+  const handleClearFastestLap = async (raceId) => {
+    await handleSaveFastestLap(raceId, null);
   };
 
   const handleTogglePaywallRequest = () => {
@@ -521,6 +732,11 @@ export default function SuperAdminPanel() {
   const filteredGroups = groups.filter(g =>
     g.nombre?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     g.creator?.nombre?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // 🆕 Carreras finalizadas, sin sprint, con resultados cargados (para la sección de vuelta rápida)
+  const finishedNonSprintRaces = allRaces.filter(
+    r => r.estado === 'finalizada' && r.tipo !== 'sprint' && raceResultsMap[r.id]?.length > 0
   );
 
   if (loading) {
@@ -592,6 +808,12 @@ export default function SuperAdminPanel() {
               onClick={() => setActiveTab('groups')}
             >
               🏁 {t('superAdmin.statGroups')}
+            </button>
+            <button 
+              className={`tab-btn ${activeTab === 'races' ? 'active' : ''}`}
+              onClick={() => setActiveTab('races')}
+            >
+              🏎️ {t('superAdmin.racesTab')}
             </button>
             <button 
               className={`tab-btn ${activeTab === 'settings' ? 'active' : ''}`}
@@ -685,6 +907,137 @@ export default function SuperAdminPanel() {
                 </tbody>
               </table>
             </div>
+          )}
+
+          {/* 🆕 Races Tab — ingreso de resultados + vuelta rápida */}
+          {activeTab === 'races' && (
+            <>
+              {/* Sección 1 — Ingresar/Editar Resultados */}
+              <div className="admin-section">
+                <h2 className="section-title">📊 {t('admin.manageResults')}</h2>
+                <p style={{ color: 'var(--muted)', fontSize: 14, marginBottom: 20, lineHeight: 1.6 }}>
+                  {t('admin.manageResultsSubLong')}
+                </p>
+
+                {loadingRaces ? (
+                  <div style={{ color: 'var(--muted)', padding: 20 }}>{t('admin.loadingRaces')}</div>
+                ) : allRaces.length === 0 ? (
+                  <div className="empty-state">{t('admin.noRacesScheduled')}</div>
+                ) : (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                    {allRaces.map(race => (
+                      <div
+                        key={race.id}
+                        style={{
+                          background: 'var(--bg3)', border: '1px solid var(--border)', borderRadius: 12,
+                          padding: 20, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16
+                        }}
+                      >
+                        <div style={{ flex: 1 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                            {race.tipo === 'sprint' && (
+                              <span style={{
+                                background: 'linear-gradient(135deg, #FFB800, #FF8C00)', color: '#000',
+                                fontWeight: 900, padding: '4px 10px', borderRadius: 8, fontSize: 11, letterSpacing: 1
+                              }}>
+                                {t('admin.sprint')}
+                              </span>
+                            )}
+                            <span style={{ fontFamily: 'Barlow Condensed', fontSize: 18, fontWeight: 800, color: 'var(--white)' }}>
+                              {getRaceName(race, t)}
+                            </span>
+                          </div>
+                          <div style={{ fontSize: 13, color: 'var(--muted)', display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+                            <span>📍 {race.circuito}</span>
+                            <span>📅 {new Date(race.fecha_programada).toLocaleDateString(getDateLocale(locale), { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+                            <span style={{ color: race.estado === 'finalizada' ? 'var(--green)' : 'var(--muted)', fontWeight: race.estado === 'finalizada' ? 700 : 400 }}>
+                              {race.estado === 'finalizada' ? t('admin.finished') : `⏳ ${t('common.scheduled')}`}
+                            </span>
+                          </div>
+                        </div>
+
+                        <button
+                          onClick={() => navigate(`/admin/race/${race.id}/results`)}
+                          style={{
+                            padding: '10px 20px',
+                            background: race.estado === 'finalizada' ? 'transparent' : 'linear-gradient(135deg, var(--red), #FF3355)',
+                            border: race.estado === 'finalizada' ? '2px solid var(--border2)' : 'none',
+                            borderRadius: 10, color: race.estado === 'finalizada' ? 'var(--white)' : 'white',
+                            fontFamily: 'Barlow Condensed', fontSize: 13, fontWeight: 800, letterSpacing: 1,
+                            textTransform: 'uppercase', cursor: 'pointer', minWidth: 140
+                          }}
+                        >
+                          {race.estado === 'finalizada' ? `✏️ ${t('admin.editResults')}` : `➕ ${t('admin.enterResults')}`}
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Sección 2 — Vuelta Rápida (solo carreras finalizadas, sin sprints) */}
+              {!loadingRaces && finishedNonSprintRaces.length > 0 && (
+                <div className="admin-section fastest-lap-section">
+                  <h2 className="section-title">
+                    🏁 {t('admin.fastestLap')} ({finishedNonSprintRaces.length} {finishedNonSprintRaces.length === 1 ? t('admin.raceFinishedSingular') : t('admin.raceFinishedPlural')})
+                  </h2>
+                  <p style={{ color: 'var(--muted)', fontSize: 14, marginBottom: 20, lineHeight: 1.6 }}>
+                    {t('superAdmin.fastestLapGenericNote')}
+                  </p>
+
+                  {finishedNonSprintRaces.map(race => {
+                    const results = raceResultsMap[race.id] || [];
+                    const currentFastest = fastestLaps[race.id];
+                    const currentDriver = results.find(r => r.piloto_id === currentFastest);
+                    const isSaving = savingFastestLap === race.id;
+
+                    return (
+                      <div key={race.id} className="race-fastest-card">
+                        <div className="race-fastest-header">
+                          <div>
+                            <div className="race-fastest-title">{getRaceName(race, t)}</div>
+                            <div className="race-fastest-date">
+                              📍 {race.circuito} • 📅 {new Date(race.fecha_programada).toLocaleDateString(getDateLocale(locale), { day: 'numeric', month: 'long', year: 'numeric' })}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="fastest-lap-controls">
+                          <select
+                            className="fastest-lap-select"
+                            value={currentFastest || ''}
+                            onChange={(e) => handleSaveFastestLap(race.id, e.target.value || null)}
+                            disabled={isSaving}
+                          >
+                            <option value="">{t('admin.selectFastestDriver')}</option>
+                            {results.map(result => (
+                              <option key={result.piloto_id} value={result.piloto_id}>
+                                P{result.posicion_final} • #{result.drivers?.numero} {result.drivers?.nombre_completo}
+                              </option>
+                            ))}
+                          </select>
+
+                          {currentFastest && (
+                            <button className="btn-clear-fastest" onClick={() => handleClearFastestLap(race.id)} disabled={isSaving}>
+                              🗑️ {t('admin.clearBtn')}
+                            </button>
+                          )}
+                        </div>
+
+                        {currentDriver && (
+                          <div className="current-fastest">
+                            <span className="current-fastest-icon">⚡</span>
+                            <span className="current-fastest-text">
+                              {t('admin.currentFastestLabel')}: #{currentDriver.drivers?.numero} {currentDriver.drivers?.nombre_completo}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </>
           )}
 
           {/* Settings Tab — Paywall toggle */}

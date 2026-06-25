@@ -56,17 +56,17 @@ export function useLastRace(groupId, temporada) {
         // 4. Obtener TODAS las predicciones del grupo para esa carrera
         const { data: predictionsData } = await supabase
           .from('predictions')
-          .select(`
-            id,
-            usuario_id,
-            posiciones,
-            users:usuario_id (
-              nombre,
-              apellido
-            )
-          `)
+          .select('id, usuario_id, posiciones')
           .eq('grupo_id', groupId)
           .eq('carrera_id', race.id);
+
+        // 4b. 🔒 Nombres vía función segura (RLS ya no permite leer 'users' directo)
+        const uniqueUserIds = [...new Set((predictionsData || []).map(p => p.usuario_id).filter(Boolean))];
+        const { data: profiles } = await supabase.rpc('get_public_names', { p_user_ids: uniqueUserIds });
+        const nameById = {};
+        (profiles || []).forEach(p => {
+          nameById[p.id] = p;
+        });
 
         // 5. Obtener scores de cada usuario en esa carrera
         const { data: scoresData } = await supabase
@@ -81,11 +81,14 @@ export function useLastRace(groupId, temporada) {
         });
 
         // Combinar predicciones con scores
-        const predictionsWithScores = predictionsData?.map(pred => ({
-          ...pred,
-          puntos: scoresMap[pred.usuario_id] || 0,
-          nombre: `${pred.users?.nombre || ''} ${pred.users?.apellido || ''}`.trim() || 'Usuario'
-        })) || [];
+        const predictionsWithScores = predictionsData?.map(pred => {
+          const profile = nameById[pred.usuario_id] || {};
+          return {
+            ...pred,
+            puntos: scoresMap[pred.usuario_id] || 0,
+            nombre: `${profile.nombre || ''} ${profile.apellido || ''}`.trim() || 'Usuario'
+          };
+        }) || [];
 
         // Ordenar por puntos
         predictionsWithScores.sort((a, b) => b.puntos - a.puntos);

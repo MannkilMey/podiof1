@@ -4,6 +4,7 @@ import { useAuthStore } from '../../stores/authStore';
 import { useThemeStore } from '../../stores/themeStore';
 import { useToastStore } from '../../stores/toastStore';
 import { supabase } from '../../lib/supabase';
+import { useTranslation } from '../../i18n';
 
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap');`;
 
@@ -170,6 +171,7 @@ export default function JoinGroup() {
   const user = useAuthStore((state) => state.user);
   const theme = useThemeStore((state) => state.theme);
   const toast = useToastStore();
+  const { t } = useTranslation();
 
   const [group, setGroup] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -192,7 +194,7 @@ export default function JoinGroup() {
       setGroup(data);
     } catch (err) {
       console.error('Error loading group:', err);
-      setError('Código de invitación inválido o expirado');
+      setError(t('joinGroup.invalidOrExpiredCode'));
     } finally {
       setLoading(false);
     }
@@ -200,7 +202,7 @@ export default function JoinGroup() {
 
   const handleJoin = async () => {
     if (!user) {
-      toast.info('Debes iniciar sesión para unirte al grupo');
+      toast.info(t('joinGroup.loginRequired'));
       navigate('/login');
       return;
     }
@@ -214,15 +216,15 @@ export default function JoinGroup() {
         .select('id, estado')
         .eq('grupo_id', group.id)
         .eq('usuario_id', user.id)
-        .single();
+        .maybeSingle();
 
       if (existingMember) {
         if (existingMember.estado === 'aprobado') {
-          toast.info('Ya eres miembro de este grupo');
+          toast.info(t('joinGroup.alreadyMemberInfo'));
           navigate(`/group/${group.id}`);
           return;
         } else if (existingMember.estado === 'pendiente') {
-          toast.info('Ya solicitaste unirte a este grupo. Espera la aprobación.');
+          toast.info(t('joinGroup.alreadyRequestedInfo'));
           navigate('/');
           return;
         }
@@ -238,18 +240,23 @@ export default function JoinGroup() {
           es_admin: false
         });
 
-      if (insertError) throw insertError;
+      if (insertError) {
+        if (insertError.message?.includes('FREE_MEMBER_LIMIT_REACHED')) {
+          throw new Error(t('joinGroup.memberLimitReached'));
+        }
+        throw insertError;
+      }
 
       if (group.requiere_aprobacion) {
-        toast.success('Solicitud enviada. Espera la aprobación del admin.');
+        toast.success(t('joinGroup.pendingApproval', { name: group.nombre }));
         navigate('/');
       } else {
-        toast.success(`¡Te uniste a ${group.nombre}! 🎉`);
+        toast.success(t('joinGroup.joined', { name: group.nombre }));
         navigate(`/group/${group.id}`);
       }
     } catch (err) {
       console.error('Error joining group:', err);
-      toast.error('Error al unirse al grupo. Intenta de nuevo.');
+      toast.error(err.message || t('joinGroup.errorJoining'));
     } finally {
       setJoining(false);
     }
@@ -262,7 +269,7 @@ export default function JoinGroup() {
         <div data-theme={theme} className="join-page">
           <div className="join-container">
             <div className="join-icon">🏎</div>
-            <div>Cargando...</div>
+            <div>{t('common.loading')}</div>
           </div>
         </div>
       </>
@@ -276,12 +283,12 @@ export default function JoinGroup() {
         <div data-theme={theme} className="join-page">
           <div className="join-container">
             <div className="join-icon">❌</div>
-            <h1 className="join-title">Link Inválido</h1>
+            <h1 className="join-title">{t('joinGroup.invalidLinkTitle')}</h1>
             <p className="join-subtitle">
-              {error || 'No se pudo encontrar el grupo'}
+              {error || t('joinGroup.groupNotFoundFallback')}
             </p>
             <button className="btn-back" onClick={() => navigate('/')}>
-              Volver al Inicio
+              {t('joinGroup.backToHome')}
             </button>
           </div>
         </div>
@@ -295,28 +302,24 @@ export default function JoinGroup() {
       <div data-theme={theme} className="join-page">
         <div className="join-container">
           <div className="join-icon">🏁</div>
-          <h1 className="join-title">Unirse al Grupo</h1>
+          <h1 className="join-title">{t('joinGroup.title')}</h1>
           <p className="join-subtitle">
-            Has sido invitado a unirte a este grupo de predicciones
+            {t('joinGroup.invitedSubtitle')}
           </p>
 
           <div className="group-info">
             <div className="info-row">
-              <span className="info-label">Grupo</span>
+              <span className="info-label">{t('joinGroup.groupLabel')}</span>
               <span className="info-value">{group.nombre}</span>
             </div>
             <div className="info-row">
-              <span className="info-label">Temporada</span>
+              <span className="info-label">{t('admin.season')}</span>
               <span className="info-value">{group.temporada}</span>
             </div>
             <div className="info-row">
-              <span className="info-label">Miembros</span>
-              <span className="info-value">{group.max_miembros || '∞'}</span>
-            </div>
-            <div className="info-row">
-              <span className="info-label">Aprobación</span>
+              <span className="info-label">{t('joinGroup.approvalLabel')}</span>
               <span className="info-value">
-                {group.requiere_aprobacion ? 'Requerida' : 'Automática'}
+                {group.requiere_aprobacion ? t('joinGroup.approvalRequired') : t('joinGroup.approvalAutomatic')}
               </span>
             </div>
           </div>
@@ -326,11 +329,11 @@ export default function JoinGroup() {
             onClick={handleJoin}
             disabled={joining}
           >
-            {joining ? 'Uniéndose...' : 'Unirse al Grupo'}
+            {joining ? t('joinGroup.joiningBtn') : t('joinGroup.joinBtnFull')}
           </button>
 
           <button className="btn-back" onClick={() => navigate('/')}>
-            Cancelar
+            {t('common.cancel')}
           </button>
         </div>
       </div>

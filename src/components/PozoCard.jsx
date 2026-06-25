@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { useTranslation, getDateLocale } from '../i18n';
+import { isNative } from '../hooks/usePlatform';
 
 
 const CURRENCY_SYMBOLS = {
@@ -102,12 +103,14 @@ export default function PozoCard({ groupId, leaderboard }) {
             fontWeight: 800, color: 'var(--white)', textTransform: 'uppercase',
             letterSpacing: 1, display: 'flex', alignItems: 'center', gap: 8
           }}>
-            💰 {t('pozo.title')}
+            🏁 {t('podioPoints.title')}
           </div>
           <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 4 }}>
-            {t('pozo.participants', { count: members })} · {t('pozo.perPerson', { amount: formatMoney(montoPersona, moneda, getDateLocale(locale)) })}
+             {t('podioPoints.participants', { count: members })}
+             {!isNative && ` · ${t('podioPoints.perPerson', { amount: formatMoney(montoPersona, moneda, getDateLocale(locale)) })}`}
           </div>
         </div>
+        {!isNative && (
         <div style={{
             fontFamily: "'Barlow Condensed', sans-serif",
             fontSize: 'clamp(22px, 5vw, 36px)',
@@ -118,6 +121,7 @@ export default function PozoCard({ groupId, leaderboard }) {
         }}>
           {formatMoney(total, moneda, getDateLocale(locale))}
         </div>
+        )}
       </div>
 
       {/* Distribution */}
@@ -143,14 +147,16 @@ export default function PozoCard({ groupId, leaderboard }) {
                     fontFamily: "'Barlow Condensed', sans-serif", fontSize: 14,
                     fontWeight: 700, color: 'var(--white)'
                   }}>
-                    {t('pozo.place', { pos })} — {pct}%
+                    {t('podioPoints.place', { pos })} — {pct}%
                   </span>
+                  {!isNative && (
                   <span style={{
                     fontFamily: "'Barlow Condensed', sans-serif", fontSize: 16,
                     fontWeight: 900, color: barColor
                   }}>
                     {formatMoney(amount, moneda, getDateLocale(locale))}
                   </span>
+                  )}
                 </div>
                 <div style={{
                   height: 6, background: 'var(--bg3)', borderRadius: 3, overflow: 'hidden'
@@ -173,13 +179,13 @@ export default function PozoCard({ groupId, leaderboard }) {
             textTransform: 'uppercase', color: 'var(--muted)',
             marginBottom: 10, display: 'flex', alignItems: 'center', gap: 6
           }}>
-            🏆 {t('pozo.currentProjection')}
+            🏆 {t('podioPoints.currentProjection')}
             <span style={{
               fontSize: 9, padding: '2px 6px', borderRadius: 4,
               background: 'var(--bg3)', color: 'var(--muted)',
               fontWeight: 600, letterSpacing: 0
             }}>
-              {t('pozo.live')}
+              {t('podioPoints.live')}
             </span>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -211,6 +217,7 @@ export default function PozoCard({ groupId, leaderboard }) {
                       {t('common.pointsCount', { count: Math.round(user.puntos) })} · {t('common.exactCount', { count: user.exactos })}
                     </div>
                   </div>
+                  {!isNative && (
                   <div style={{
                     fontFamily: "'Barlow Condensed', sans-serif",
                     fontSize: 16, fontWeight: 900, color: barColor,
@@ -218,6 +225,7 @@ export default function PozoCard({ groupId, leaderboard }) {
                   }}>
                     {formatMoney(amount, moneda, getDateLocale(locale))}
                   </div>
+                  )}
                 </div>
               );
             })}
@@ -230,7 +238,7 @@ export default function PozoCard({ groupId, leaderboard }) {
         borderRadius: 8, padding: '10px 14px', fontSize: 10,
         color: 'var(--muted)', lineHeight: 1.5, textAlign: 'center'
       }}>
-        ⚠️{t('pozo.disclaimer')}
+        ⚠️{t('podioPoints.disclaimer')}
       </div>
     </div>
   );

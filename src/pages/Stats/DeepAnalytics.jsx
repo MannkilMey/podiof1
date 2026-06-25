@@ -121,30 +121,40 @@ export default function DeepAnalytics() {
       setGroupInfo(gData);
 
       const [scoresRes, predsRes, driversRes] = await Promise.all([
-        supabase.from('scores').select(`
-          puntos, aciertos_exactos, aciertos_piloto,
-          usuario:usuario_id ( id, nombre, apellido ),
-          carrera:carrera_id ( id, nombre, slug, ronda, tipo, estado )
-        `).eq('grupo_id', groupId).order('created_at', { ascending: true }),
-        supabase.from('predictions').select(`
-          id, posiciones, puntos_obtenidos,
-          usuario:usuario_id ( id, nombre, apellido ),
-          carrera:carrera_id ( id, nombre, slug, ronda, tipo, estado )
-        `).eq('grupo_id', groupId),
-        supabase.from('drivers').select('id, nombre_completo, acronimo, openf1_driver_number')
-      ]);
+          // 🔒 !inner + filtro de estado: una carrera no finalizada nunca sale del servidor
+          supabase.from('scores').select(`
+            usuario_id, puntos, aciertos_exactos, aciertos_piloto,
+            carrera:carrera_id!inner ( id, nombre, slug, ronda, tipo, estado )
+          `).eq('grupo_id', groupId).eq('carrera.estado', 'finalizada').order('created_at', { ascending: true }),
+          // 🔒 idem — las predicciones de carreras abiertas nunca llegan a la red
+          supabase.from('predictions').select(`
+            id, usuario_id, posiciones, puntos_obtenidos,
+            carrera:carrera_id!inner ( id, nombre, slug, ronda, tipo, estado )
+          `).eq('grupo_id', groupId).eq('carrera.estado', 'finalizada'),
+          supabase.from('drivers').select('id, nombre_completo, acronimo, openf1_driver_number')
+        ]);
 
-      setScores(scoresRes.data || []);
+        const scoresData = scoresRes.data || [];
+        const predsData = predsRes.data || [];
 
-      const finishedPreds = (predsRes.data || []).filter(p => p.carrera?.estado === 'finalizada');
-      setPredictions(finishedPreds);
+        // 🔒 Nombres vía función segura (RLS ya no permite leer 'users' directo)
+        const allUserIds = [...new Set([
+          ...scoresData.map(s => s.usuario_id),
+          ...predsData.map(p => p.usuario_id)
+        ].filter(Boolean))];
+        const { data: profiles } = await supabase.rpc('get_public_names', { p_user_ids: allUserIds });
+        const nameById = {};
+        (profiles || []).forEach(p => { nameById[p.id] = p; });
 
-      const driversMap = {};
-      (driversRes.data || []).forEach(d => { driversMap[d.id] = d; });
-      setDrivers(driversMap);
+        setScores(scoresData.map(s => ({ ...s, usuario: { id: s.usuario_id, ...nameById[s.usuario_id] } })));
+        setPredictions(predsData.map(p => ({ ...p, usuario: { id: p.usuario_id, ...nameById[p.usuario_id] } })));
+
+        const driversMap = {};
+        (driversRes.data || []).forEach(d => { driversMap[d.id] = d; });
+        setDrivers(driversMap);
 
       // Fetch qualifying + race results for finished races
-      const raceIds = [...new Set(finishedPreds.map(p => p.carrera?.id).filter(Boolean))];
+      const raceIds = [...new Set(predsData.map(p => p.carrera?.id).filter(Boolean))];
       if (raceIds.length > 0) {
         const [qualRes, resultRes] = await Promise.all([
           supabase.from('qualifying_results').select('carrera_id, piloto_id, posicion, tiempo').in('carrera_id', raceIds).order('posicion'),
@@ -465,13 +475,13 @@ export default function DeepAnalytics() {
         <BackButton className="deep-back-btn" onClick={() => navigate(`/group/${groupId}`)}>← {t('predictionAnalysis.backToGroup')}</BackButton>
 
         <StatsTabBar active="deep" groupId={groupId} />
-
+        <PaywallGate feature="deep_analytics">
         <div className="deep-header">
           <div className="deep-header-left">
             <h1 className="deep-title">🔬 {t('deepAnalytics.title')}</h1>
             <p className="deep-subtitle">{groupInfo?.nombre} · {t('deepAnalytics.subtitle')}</p>
           </div>
-          {raceWinners.length > 0 && (
+                {raceWinners.length > 0 && (
             <PaywallGate feature="export_excel" compact>
               <button className="deep-export-btn" onClick={handleExport} disabled={exporting}>
                 {exporting ? `⏳ ${t('pointsHistogram.exporting')}` : `📥 ${t('pointsHistogram.exportExcel')}`}
@@ -527,7 +537,7 @@ export default function DeepAnalytics() {
                       ))}
                     </div>
                     <div style={{ marginTop: 8, fontSize: 11, color: 'var(--muted)', display: 'flex', justifyContent: 'space-between' }}>
-                      <span>👥 {t('pozo.participants', { count: race.users.length })}</span>
+                      <span>👥 {t('podioPoints.participants', { count: race.users.length })}</span>
                       <span>{t('deepAnalytics.averageLabel')}: {race.avg} {t('common.pts')}</span>
                     </div>
                   </div>
@@ -753,6 +763,7 @@ export default function DeepAnalytics() {
             )}
           </div>
         )}
+        </PaywallGate>
       </div>
     </>
   );

@@ -353,22 +353,26 @@ prediction: {
   // ============================================
   // POZO (PRIZE POOL)
   // ============================================
-  pozo: {
-    title: 'Bolão do Grupo',
+  
+  podioPoints: {
+    title: 'PodioPoints',
+    enable: 'Ativar PodioPoints',
+    enableSub: 'Ativa um sistema de pontos especial para o grupo, distribuído entre os primeiros colocados da temporada.',
+    amountPerPerson: 'Valor por pessoa',
+    referenceUnit: 'Unidade de referência',
+    distribution: 'Divisão PodioPoints',
+    disclaimer: 'O PodioF1 não gerencia nem transfere dinheiro real.',
+    estimatedTotal: 'Total estimado',
+    saveConfig: 'Salvar configuração',
+    configSaved: 'Configuração de PodioPoints salva',
     participants: '{{count}} participantes',
     perPerson: '{{amount}} por pessoa',
-    place: '{{pos}}° lugar',
-    disclaimer: 'PodioF1 não gerencia, armazena ou transfere dinheiro. O bolão é informativo e a gestão é responsabilidade dos participantes.',
-    enable: 'Habilitar Bolão do Grupo',
-    enableSub: 'Mostra o valor acumulado e a distribuição de prêmios. PodioF1 não gerencia dinheiro, apenas informativo.',
-    amountPerPerson: 'Valor por pessoa',
-    currency: 'Moeda',
-    distribution: 'Distribuição de prêmios',
-    saveConfig: 'Salvar Configuração do Bolão',
-    configSaved: 'Configuração do bolão salva',
-    estimatedTotal: 'Total estimado',
+    place: 'Posição {{pos}}',
     currentProjection: 'Projeção Atual',
-    live: 'EM TEMPO REAL'
+    live: 'EM TEMPO REAL',
+    webOnlyConfig: 'Esta configuração está disponível na versão web.',
+    onfigDescription: 'Configure o sistema de pontos informativo do grupo. O PodioF1 não gerencia dinheiro, apenas exibe a informação.',
+    errorSavingPot: 'Erro ao salvar a configuração do PodioPoints'
   },
 
   // ============================================
@@ -411,6 +415,12 @@ prediction: {
     namePlaceholder: 'Meu Grupo F1',
     dualExampleCase1: 'Se chegar em 2° → 5 pontos (piloto correto)',
     dualExampleCase2: 'Se chegar em 1° → 25 + 10 = 35 pontos (exato + bônus)',
+    dist602515: '🥇 60% · 🥈 25% · 🥉 15%',
+    dist503020: '🥇 50% · 🥈 30% · 🥉 20%',
+    dist702010: '🥇 70% · 🥈 20% · 🥉 10%',
+    dist100: '🥇 100%',
+    officialScoringTitle: 'Sistema de Pontuação F1 Oficial',
+    groupLimitReachedToast: 'Você atingiu o limite de 1 grupo criado no plano gratuito.',
   },
 
   // ============================================
@@ -424,7 +434,11 @@ prediction: {
     joinBtn: 'Entrar',
     invalidCode: 'Código de convite inválido',
     alreadyMember: 'Você já é membro deste grupo',
-    joined: 'Você entrou no grupo "{{name}}"!'
+    joined: 'Você entrou no grupo "{{name}}"!',
+    pendingApproval: 'Solicitação enviada para {{name}}. O administrador precisa aprovar sua entrada.',
+    memberLimitReached: 'Este grupo atingiu o limite de membros do plano gratuito',
+    loginRequired: 'Você precisa fazer login para entrar no grupo', alreadyMemberInfo: 'Você já é membro deste grupo', alreadyRequestedInfo: 'Você já solicitou entrar neste grupo. Aguarde a aprovação.', errorJoining: 'Erro ao entrar no grupo. Tente novamente.', invalidOrExpiredCode: 'Código de convite inválido ou expirado', invalidLinkTitle: 'Link Inválido', groupNotFoundFallback: 'Não foi possível encontrar o grupo', backToHome: 'Voltar ao Início', invitedSubtitle: 'Você foi convidado a entrar neste grupo de previsões', groupLabel: 'Grupo', approvalLabel: 'Aprovação', approvalRequired: 'Necessária', approvalAutomatic: 'Automática', joiningBtn: 'Entrando...', joinBtnFull: 'Entrar no Grupo'
+
   },
 
   // ============================================
@@ -557,7 +571,30 @@ prediction: {
     badgeUnlocked: '🏅 Novo badge desbloqueado!',
     badgeUnlockedBody: 'Você desbloqueou "{{badge}}" em {{group}}.',
     weeklyReminder: '📅 Resumo semanal',
-    weeklyReminderBody: 'Você está na posição {{position}} em {{group}}. Continue competindo!'
+    weeklyReminderBody: 'Você está na posição {{position}} em {{group}}. Continue competindo!',
+    markAllRead: 'Marcar todas como lidas', empty: 'Você não tem notificações', dismiss: 'Descartar',
+    types: {
+      solicitudGrupo: { titulo: 'Nova solicitação de grupo', mensaje: '{{nombre}} quer entrar em "{{grupo}}"' },
+      grupoAprobado: { titulo: 'Solicitação aprovada!', mensaje: 'Sua solicitação para entrar em "{{grupo}}" foi aprovada' },
+      grupoRechazado: { titulo: 'Solicitação rejeitada', mensaje: 'Sua solicitação para entrar em "{{grupo}}" foi rejeitada' },
+      badgeDesbloqueado: { titulo: 'Nova conquista desbloqueada!', mensaje: 'Você conquistou o badge "{{badge}}"' },
+      overrideActivado: { titulo: 'Previsões reabertas', mensaje: 'O admin de "{{grupo}}" estendeu o prazo para prever {{carrera}}' },
+      interesComodines: {
+        titulo: 'Interesse em comodins',
+        positivo: '{{nombre}} está interessado em ativar os comodins em "{{grupo}}"',
+        negativo: '{{nombre}} não está interessado nos comodins em "{{grupo}}"'
+      }
+    }
+  },
+  wildcardInterest: {
+    title: '🎁 Comodins — Em breve',
+    explanationGlobal: '🔸 Global: escolha um piloto extra. Se terminar dentro do Top, você ganha 5 pontos.',
+    explanationPosicional: '🔸 Posicional: escolha um piloto extra e uma posição exata. Acertando, 8 pontos; entrando no Top em outra posição, 2.',
+    question: 'Essa função interessaria seu grupo?',
+    yesBtn: 'Sim, eu gostaria de ativá-los',
+    noBtn: 'Não me interessam',
+    thanksToast: 'Obrigado pela sua resposta!',
+    errorToast: 'Não foi possível registrar sua resposta'
   },
 
   // ============================================
@@ -625,9 +662,17 @@ prediction: {
     loadingRaces: 'Carregando corridas...',
     noRacesScheduled: 'Não há corridas programadas ou finalizadas',
     enablePot: 'Habilitar Pozo',
-    manageResultsSubLong: 'Insira os resultados das corridas manualmente (ideal para Sprints ou quando o OpenF1 não tem dados).'
+    manageResultsSubLong: 'Insira os resultados das corridas manualmente (ideal para Sprints ou quando o OpenF1 não tem dados).',
+    transferOwnership: 'Transferir Titularidade',
+    confirmTransferTitle: 'Transferir a titularidade do grupo?',
+    confirmTransferMsg: '{{name}} se tornará o novo titular do grupo e continuará como administrador. Esta ação não pode ser desfeita diretamente.',
+    titleTransferred: 'Titularidade transferida com sucesso',
+    errorTransferring: 'Erro ao transferir a titularidade',
+    errorTransferRecipientLimit: 'Esta pessoa já atingiu o limite de grupos do plano gratuito. Ela precisa do PolePass para receber a titularidade.', 
+    joinSettingsTitle: 'Solicitações de Entrada', requireApprovalLabel: 'Exigir Aprovação para Entrar', requireApprovalSub: 'Se ativado, novos membros ficam pendentes até que um admin os aprove.', approvalEnabledToast: 'Novos membros agora precisam de aprovação', approvalDisabledToast: 'Novos membros entram automaticamente', errorSavingApproval: 'Erro ao salvar a configuração de aprovação',
+    errorCannotToggleCreatorAdmin: 'Não é possível alterar o papel de administrador do titular do grupo.'
   },
-    pointsHistogram: {
+  pointsHistogram: {
   projectedLabel: 'Projeção',
   unnamedRace: 'Sem nome',
   backToGroup: 'Voltar ao grupo',
@@ -887,6 +932,7 @@ deleteAccount: {
   accountDeletedTitle: 'Conta Excluída',
   accountDeletedText: 'Sua conta e todos os dados associados foram excluídos. Você será redirecionado em alguns segundos.',
   contactPrefix: 'Se foi um erro ou você precisa de ajuda, contate',
+  errorSoleAdmin: 'Você é o único administrador de um ou mais grupos com outros membros. Transfira a titularidade antes de excluir sua conta.'
 },
 racePredictions: {
   errorLoading: 'Erro ao carregar as previsões',
@@ -946,8 +992,8 @@ groupDetail: {
   errorLoadingGroup: 'Erro ao carregar o grupo',
   errorLoadingRaces: 'Erro ao carregar corridas',
   errorLoadingStats: 'Erro ao carregar estatísticas',
-  predictionsOpenedAllGroups: '✅ Previsões abertas (TODOS os grupos)',
-  predictionsClosedAllGroups: '🔒 Previsões fechadas (TODOS os grupos)',
+  predictionsOpenedAllGroups: '✅ Previsões abertas para este grupo',
+  predictionsClosedAllGroups: '🔒 Previsões fechadas para este grupo',
   errorChangingStatus: 'Erro ao alterar status',
   memberRemovedToast: '{{name}} foi removido do grupo',
   errorRemovingMember: 'Erro ao remover o membro',
@@ -1002,7 +1048,7 @@ paywallGate: {
     stats_advanced: { title: 'Análise Avançada', description: 'Acesse estatísticas detalhadas, comparações e análise profunda de previsões.' },
     deep_analytics: { title: 'Deep Analytics', description: 'Vencedores por corrida, pontos pré-corrida, desempenho de pilotos e mais.' },
     export_excel: { title: 'Exportar para Excel', description: 'Baixe seus dados em formato Excel para análise offline.' },
-    unlimited_groups: { title: 'Grupos Ilimitados', description: 'Entre em quantos grupos quiser, sem limite.' },
+    unlimited_groups: { title: 'Grupos Ilimitados', description: 'Crie e entre em quantos grupos quiser, sem limite.'},
     no_ads: { title: 'Sem Publicidade', description: 'Aproveite o app sem banners ou interrupções.' },
     custom_profile: { title: 'Perfil Personalizado', description: 'Personalize seu perfil com cores e estilos exclusivos.' },
     badge_supporter: { title: 'Badge Supporter', description: 'Badge exclusivo que mostra seu apoio ao PodioF1.' }
@@ -1035,6 +1081,7 @@ superAdmin: {
   confirmEnableTitle: 'Ativar o paywall?',
   confirmEnableMsg: 'Isso bloqueará imediatamente os recursos premium para TODOS os usuários sem assinatura em todo o app.',
   confirmEnableBtn: 'Sim, ativar',
+  racesTab: 'Corridas', errorLoadingRaces: 'Erro ao carregar as corridas', fastestLapGenericNote: 'Atribua a volta mais rápida de cada corrida. Isso afeta a pontuação bônus nos grupos que têm esse benefício ativado.'
 },
 sharePrediction: {
   errorGeneratingImage: 'Erro ao gerar imagem',

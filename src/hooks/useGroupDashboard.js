@@ -50,7 +50,8 @@ export function useGroupDashboard(groupId, userId) {
           .maybeSingle();
 
         // 4. Verificar si el usuario ya predijo
-        let userHasPredicted = false;
+          let userHasPredicted = false;
+        let predictionStatus = null;
         if (nextRace) {
           const { data: prediction } = await supabase
             .from('predictions')
@@ -61,6 +62,11 @@ export function useGroupDashboard(groupId, userId) {
             .maybeSingle();
 
           userHasPredicted = !!prediction;
+
+          // 🔒 Estado unificado — respeta override por grupo en group_races
+          const { data: statusData } = await supabase
+            .rpc('get_prediction_status', { p_grupo_id: groupId, p_carrera_id: nextRace.id });
+          predictionStatus = statusData?.[0] || null;
         }
 
         // 5. ✅ NUEVO: Obtener scores CON tipo de carrera
@@ -70,10 +76,16 @@ export function useGroupDashboard(groupId, userId) {
             usuario_id,
             carrera_id,
             puntos,
-            users (nombre, apellido),
             races:carrera_id (tipo)
           `)
           .eq('grupo_id', groupId);
+
+        const uniqueUserIds = [...new Set((scores || []).map(s => s.usuario_id).filter(Boolean))];
+        const { data: profiles } = await supabase.rpc('get_public_names', { p_user_ids: uniqueUserIds });
+        const nameMap = {};
+        (profiles || []).forEach(p => {
+          nameMap[p.id] = `${p.nombre || ''} ${p.apellido || ''}`.trim();
+        });
 
         // ✅ NUEVO: Agrupar puntos por usuario Y por tipo
         const userScoresTotal = {};
@@ -88,7 +100,7 @@ export function useGroupDashboard(groupId, userId) {
           if (!userScoresTotal[s.usuario_id]) {
             userScoresTotal[s.usuario_id] = {
               userId: s.usuario_id,
-              nombre: `${s.users.nombre || ''} ${s.users.apellido || ''}`.trim(),
+              nombre: nameMap[s.usuario_id] || '',
               puntos: 0,
               exactos: 0
             };
@@ -100,7 +112,7 @@ export function useGroupDashboard(groupId, userId) {
             if (!userScoresRaces[s.usuario_id]) {
               userScoresRaces[s.usuario_id] = {
                 userId: s.usuario_id,
-                nombre: `${s.users.nombre || ''} ${s.users.apellido || ''}`.trim(),
+                nombre: nameMap[s.usuario_id] || '',
                 puntos: 0,
                 exactos: 0
               };
@@ -113,7 +125,7 @@ export function useGroupDashboard(groupId, userId) {
             if (!userScoresSprints[s.usuario_id]) {
               userScoresSprints[s.usuario_id] = {
                 userId: s.usuario_id,
-                nombre: `${s.users.nombre || ''} ${s.users.apellido || ''}`.trim(),
+                nombre: nameMap[s.usuario_id] || '',
                 puntos: 0,
                 exactos: 0
               };
@@ -204,10 +216,12 @@ export function useGroupDashboard(groupId, userId) {
         setData({
           group: { ...group, isAdmin },
           nextRace: nextRace ? {
-            ...nextRace,
-            userHasPredicted,
-            deadlineHours: group.horas_cierre_prediccion || 2
-          } : null,
+          ...nextRace,
+          userHasPredicted,
+          deadlineHours: group.horas_cierre_prediccion || 2,
+          canPredict: predictionStatus?.can_predict || false,
+          deadline: predictionStatus?.deadline || null
+        } : null,
           leaderboard: leaderboardTotal, // Legacy (retrocompatibilidad)
           leaderboardTotal,
           leaderboardRaces,

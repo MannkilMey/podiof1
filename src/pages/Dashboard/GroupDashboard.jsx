@@ -18,6 +18,11 @@ import PozoCard from '../../components/PozoCard';
 import { isNative } from '../../hooks/usePlatform';
 import { useTranslation, getDateLocale, getRaceName, CURRENCY_DECIMALS } from '../../i18n';
 import BackButton from '../../components/BackButton'; 
+import { usePremium } from '../../hooks/usePremium';
+import { UpgradeModal } from '../../components/PaywallGate';
+import WildcardInterestCard from '../../components/WildcardInterestCard';
+
+
 import {
   BarChart,
   Bar,
@@ -426,12 +431,14 @@ function HeroBanner({ group, nextRace, navigate, groupId, onShowScoringModal }) 
   const { t, locale } = useTranslation();
   const toast = useToastStore();
   const raceDate = nextRace ? new Date(nextRace.fecha_programada) : new Date();
-  const deadlineDate = nextRace ? subHours(raceDate, nextRace.deadlineHours || 2) : new Date();
+  const deadlineDate = nextRace?.deadline
+  ? new Date(nextRace.deadline)
+  : nextRace ? subHours(raceDate, nextRace.deadlineHours || 2) : new Date();
   
   const countdownToRace = useCountdown(raceDate);
   const countdownToDeadline = useCountdown(deadlineDate);
   
-  const canPredict = nextRace && !countdownToDeadline.expired && !countdownToRace.expired;
+  const canPredict = nextRace?.canPredict || false;
 
   const handleShareGroup = () => {
     const inviteLink = `${window.location.origin}/join/${group.codigo_invitacion}`;
@@ -1260,32 +1267,41 @@ function StatsPreviewTab({ groupId, temporada, navigate }) {
     setLoading(true);
     try {
       const { data, error } = await supabase
-        .from('scores')
-        .select(`
-          puntos,
-          aciertos_exactos,
-          usuario:usuario_id ( id, nombre, apellido ),
-          carrera:carrera_id ( nombre, ronda, tipo )
-        `)
-        .eq('grupo_id', groupId)
-        .order('created_at', { ascending: true });
+      .from('scores')
+      .select(`
+        usuario_id,
+        puntos,
+        aciertos_exactos,
+        carrera:carrera_id ( nombre, ronda, tipo )
+      `)
+      .eq('grupo_id', groupId)
+      .order('created_at', { ascending: true });
 
-      if (error) throw error;
-      if (!data || data.length === 0) {
-        setLoading(false);
-        return;
+    if (error) throw error;
+    if (!data || data.length === 0) {
+      setLoading(false);
+      return;
+    }
+
+    // 🔒 Nombres vía función segura (RLS ya no permite leer 'users' directo)
+    const uniqueUserIds = [...new Set(data.map(s => s.usuario_id).filter(Boolean))];
+    const { data: profiles } = await supabase.rpc('get_public_names', { p_user_ids: uniqueUserIds });
+    const nameById = {};
+    (profiles || []).forEach(p => {
+      nameById[p.id] = p;
+    });
+
+    // Build user list
+    const usersMap = new Map();
+    data.forEach(s => {
+      if (!s.usuario_id) return;
+      const uid = s.usuario_id;
+      if (!usersMap.has(uid)) {
+        const profile = nameById[uid] || {};
+        const name = `${profile.nombre || ''} ${profile.apellido?.[0] || ''}`.trim();
+        usersMap.set(uid, { id: uid, name, color: PREVIEW_COLORS[usersMap.size % PREVIEW_COLORS.length] });
       }
-
-      // Build user list
-      const usersMap = new Map();
-      data.forEach(s => {
-        if (!s.usuario?.id) return;
-        const uid = s.usuario.id;
-        if (!usersMap.has(uid)) {
-          const name = `${s.usuario.nombre} ${s.usuario.apellido?.[0] || ''}`.trim();
-          usersMap.set(uid, { id: uid, name, color: PREVIEW_COLORS[usersMap.size % PREVIEW_COLORS.length] });
-        }
-      });
+    });
 
       const users = [...usersMap.values()];
       setUserNames(users);
@@ -1296,7 +1312,7 @@ function StatsPreviewTab({ groupId, temporada, navigate }) {
         const raceName = s.carrera?.nombre || '';
         const ronda = s.carrera?.ronda || 0;
         const tipo = s.carrera?.tipo || 'carrera';
-        const uInfo = usersMap.get(s.usuario?.id);
+        const uInfo = usersMap.get(s.usuario_id);
         if (!uInfo || !raceName) return;
 
         if (!racesMap.has(raceName)) {
@@ -1321,7 +1337,7 @@ function StatsPreviewTab({ groupId, temporada, navigate }) {
       // Top 3 users by total points
       const totals = new Map();
       data.forEach(s => {
-        const uInfo = usersMap.get(s.usuario?.id);
+        const uInfo = usersMap.get(s.usuario_id);
         if (!uInfo) return;
         if (!totals.has(uInfo.name)) {
           totals.set(uInfo.name, { name: uInfo.name, color: uInfo.color, puntos: 0, exactos: 0 });
@@ -1629,7 +1645,7 @@ const formatMoney = (amount, currency) => {
               <div style={{ fontSize: 11, color: 'var(--muted)' }}>
                 {Math.round(displayWinners[1].puntos_totales)} {t('common.pts')}
               </div>
-              {displayWinners[1].monto_ganado > 0 && (
+              {!isNative && displayWinners[1].monto_ganado > 0 && (
                 <div style={{ fontSize: 13, color: '#C0C0C0', fontWeight: 800, fontFamily: "'Barlow Condensed'", marginTop: 4 }}>
                   {formatMoney(displayWinners[1].monto_ganado, displayWinners[1].moneda)}
                 </div>
@@ -1654,7 +1670,7 @@ const formatMoney = (amount, currency) => {
               <div style={{ fontSize: 12, color: 'var(--muted)' }}>
                 {Math.round(displayWinners[0].puntos_totales)} {t('common.pts')} · {t('common.exactCount', { count: displayWinners[0].exactos_totales })}
               </div>
-              {displayWinners[0].monto_ganado > 0 && (
+              {!isNative && displayWinners[0].monto_ganado > 0 && (
                 <div style={{ fontSize: 16, color: '#FFD700', fontWeight: 900, fontFamily: "'Barlow Condensed'", marginTop: 6 }}>
                   {formatMoney(displayWinners[0].monto_ganado, displayWinners[0].moneda)}
                 </div>
@@ -1678,7 +1694,7 @@ const formatMoney = (amount, currency) => {
               <div style={{ fontSize: 11, color: 'var(--muted)' }}>
                 {Math.round(displayWinners[2].puntos_totales)} {t('common.pts')}
               </div>
-              {displayWinners[2].monto_ganado > 0 && (
+              {!isNative && displayWinners[2].monto_ganado > 0 && (
                 <div style={{ fontSize: 13, color: '#CD7F32', fontWeight: 800, fontFamily: "'Barlow Condensed'", marginTop: 4 }}>
                   {formatMoney(displayWinners[2].monto_ganado, displayWinners[2].moneda)}
                 </div>
@@ -1687,6 +1703,16 @@ const formatMoney = (amount, currency) => {
           </div>
         )}
       </div>
+       {!isNative && (
+        <div style={{
+          background: 'var(--bg3)', border: '1px solid var(--border)',
+          borderRadius: 8, padding: '10px 14px', fontSize: 10,
+          color: 'var(--muted)', lineHeight: 1.5, textAlign: 'center',
+          marginBottom: 16
+        }}>
+          ⚠️ {t('podioPoints.disclaimer')}
+        </div>
+      )}
 
       {/* Save button (admin only) */}
       {!saved && group?.isAdmin && (
@@ -1784,7 +1810,8 @@ export default function GroupDashboard() {
           leaderboard={leaderboardTotal} 
           group={group} 
         />
-
+        <WildcardInterestCard groupId={groupId} />
+        
         <div className="tabs-container">
           <div className="tabs-nav">
             <button className={`tab-btn ${activeTab === 'general' ? 'active' : ''}`} onClick={() => setActiveTab('general')}>

@@ -6,6 +6,7 @@ import { useThemeStore } from '../../stores/themeStore';
 import { toast } from 'sonner';
 import { useTranslation, getDateLocale, getRaceName } from '../../i18n';
 import BackButton from '../../components/BackButton';
+import { isNative } from '../../hooks/usePlatform';
 
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap');`;
 
@@ -518,44 +519,17 @@ export default function GroupAdminPanel() {
   const [loading, setLoading] = useState(true);
   const [confirmModal, setConfirmModal] = useState(null);
   
-  // 🆕 Estados para vuelta rápida
-  const [finishedRaces, setFinishedRaces] = useState([]);
-  const [raceResults, setRaceResults] = useState({});
-  const [fastestLaps, setFastestLaps] = useState({});
-  const [savingFastestLap, setSavingFastestLap] = useState(null);
-  const [allRacesData, setAllRacesData] = useState([]);
-  const [loadingRaces, setLoadingRaces] = useState(true);
   const [pozoData, setPozoData] = useState({ pozo_habilitado: false, pozo_monto_por_persona: 0, pozo_moneda: 'USD', pozo_distribucion: '60-25-15' });
   const [savingPozo, setSavingPozo] = useState(false);
+  const [requiereAprobacion, setRequiereAprobacion] = useState(false);
+  const [savingApproval, setSavingApproval] = useState(false);
+  const [memberLimitInfo, setMemberLimitInfo] = useState(null);
+
 
   useEffect(() => {
     loadGroupData();
   }, [groupId]);
 
-// ✅ NUEVO: Cargar carreras para sección de resultados
-  useEffect(() => {
-    const loadAllRaces = async () => {
-      if (!group?.temporada) return;
-      
-      try {
-        const { data, error } = await supabase
-          .from('races')
-          .select('*')
-          .eq('temporada', group.temporada)
-          .in('estado', ['programada', 'finalizada'])
-          .order('fecha_programada', { ascending: false });
-
-        if (error) throw error;
-        setAllRacesData(data || []);
-      } catch (err) {
-        console.error('Error loading races:', err);
-      } finally {
-        setLoadingRaces(false);
-      }
-    };
-
-    loadAllRaces();
-  }, [group?.temporada]);
 
   const loadGroupData = async () => {
     try {
@@ -567,6 +541,7 @@ export default function GroupAdminPanel() {
         .single();
 
       if (groupError) throw groupError;
+      setRequiereAprobacion(groupData.requiere_aprobacion || false);
       setGroup(groupData);
 
       // Verificar que el usuario es admin
@@ -598,51 +573,29 @@ export default function GroupAdminPanel() {
         return;
       }
 
-      // Cargar miembros aprobados
-      const { data: membersData, error: membersError } = await supabase
-        .from('group_members')
-        .select(`
-          id,
-          usuario_id,
-          es_admin,
-          estado,
-          users:usuario_id (
-            id,
-            email,
-            nombre,
-            apellido
-          )
-        `)
-        .eq('grupo_id', groupId)
-        .eq('estado', 'aprobado')
-        .order('joined_at', { ascending: true });
+      const { data: allMembersData, error: membersError } = await supabase
+        .rpc('get_group_members_full', { p_grupo_id: groupId });
 
       if (membersError) throw membersError;
-      setMembers(membersData || []);
 
-      // Cargar miembros pendientes
-      const { data: pendingData, error: pendingError } = await supabase
-        .from('group_members')
-        .select(`
-          id,
-          usuario_id,
-          estado,
-          users:usuario_id (
-            id,
-            email,
-            nombre,
-            apellido
-          )
-        `)
-        .eq('grupo_id', groupId)
-        .eq('estado', 'pendiente')
-        .order('joined_at', { ascending: true });
+      const sortedMembers = (allMembersData || []).sort(
+        (a, b) => new Date(a.joined_at) - new Date(b.joined_at)
+      );
 
-      if (pendingError) throw pendingError;
-      setPendingMembers(pendingData || []);
+      const toUiShape = (m) => ({
+        id: m.id,
+        usuario_id: m.usuario_id,
+        es_admin: m.es_admin,
+        estado: m.estado,
+        users: { id: m.usuario_id, email: m.email, nombre: m.nombre, apellido: m.apellido }
+      });
 
-      // 🆕 Cargar datos de vuelta rápida
-      await loadFastestLapsData(groupData);
+      setMembers(sortedMembers.filter(m => m.estado === 'aprobado').map(toUiShape));
+      setPendingMembers(sortedMembers.filter(m => m.estado === 'pendiente').map(toUiShape));
+
+      const { data: limitData } = await supabase.rpc('get_member_limit_info', { p_grupo_id: groupId });
+      setMemberLimitInfo(limitData?.[0] || null);
+    
 
     } catch (err) {
       console.error('Error loading group data:', err);
@@ -652,67 +605,7 @@ export default function GroupAdminPanel() {
     }
   };
 
-  // 🆕 Función para cargar datos de vuelta rápida
-  const loadFastestLapsData = async (groupData) => {
-    try {
-      const currentGroup = groupData || group;
-      if (!currentGroup) return;
 
-      // Cargar carreras finalizadas de la temporada
-      const { data: racesData, error: racesError } = await supabase
-        .from('races')
-        .select('*')
-        .eq('temporada', currentGroup.temporada)
-        .eq('estado', 'finalizada')
-        .order('fecha_programada', { ascending: false });
-
-      if (racesError) throw racesError;
-      setFinishedRaces(racesData || []);
-
-      if (!racesData || racesData.length === 0) return;
-
-      const raceIds = racesData.map(r => r.id);
-
-      // Cargar resultados de cada carrera
-      const { data: resultsData, error: resultsError } = await supabase
-        .from('race_results')
-        .select(`
-          *,
-          drivers:piloto_id (
-            id,
-            nombre_completo,
-            acronimo,
-            numero
-          )
-        `)
-        .in('carrera_id', raceIds)
-        .order('posicion_final', { ascending: true });
-
-      if (resultsError) throw resultsError;
-
-      // Organizar por carrera
-      const resultsByRace = {};
-      const fastestByRace = {};
-      
-      resultsData?.forEach(result => {
-        if (!resultsByRace[result.carrera_id]) {
-          resultsByRace[result.carrera_id] = [];
-        }
-        resultsByRace[result.carrera_id].push(result);
-        
-        // Guardar quién tiene vuelta rápida
-        if (result.vuelta_rapida) {
-          fastestByRace[result.carrera_id] = result.piloto_id;
-        }
-      });
-
-      setRaceResults(resultsByRace);
-      setFastestLaps(fastestByRace);
-
-    } catch (err) {
-      console.error('Error loading fastest laps data:', err);
-    }
-  };
 
   const handleApproveMember = async (memberId) => {
     try {
@@ -773,6 +666,11 @@ export default function GroupAdminPanel() {
   };
 
   const handleToggleAdmin = async (member) => {
+    
+      if (member.usuario_id === group.creador_id) {
+      toast.error(t('admin.errorCannotToggleCreatorAdmin'));
+      return;
+    }
     const action = member.es_admin ? t('admin.actionRemove') : t('admin.actionGrant');
     const actionCapitalized = member.es_admin ? t('admin.actionRemoveCap') : t('admin.actionGrantCap');
 
@@ -799,76 +697,58 @@ export default function GroupAdminPanel() {
       }
     });
   };
+  const handleToggleApproval = async (checked) => {
+  setSavingApproval(true);
+  try {
+    const { error } = await supabase.from('groups').update({ requiere_aprobacion: checked }).eq('id', groupId);
+    if (error) throw error;
+    setRequiereAprobacion(checked);
+    toast.success(checked ? t('admin.approvalEnabledToast') : t('admin.approvalDisabledToast'));
+  } catch (err) {
+    console.error('Error toggling approval requirement:', err);
+    toast.error(t('admin.errorSavingApproval'));
+  } finally {
+    setSavingApproval(false);
+  }
+};
 
   const handleCopyCode = () => {
     navigator.clipboard.writeText(group.codigo_invitacion);
     toast.success(t('admin.codeCopied'));
   };
 
-  // 🆕 Función para guardar vuelta rápida
-  const handleSaveFastestLap = async (raceId, pilotoId) => {
-  setSavingFastestLap(raceId);
-  try {
-    // 1. Limpiar vuelta_rapida anterior de esta carrera
-    const { error: clearError } = await supabase
-      .from('race_results')
-      .update({ vuelta_rapida: false })
-      .eq('carrera_id', raceId);
 
-    if (clearError) throw clearError;
+const handleTransferOwnership = async (member) => {
+  setConfirmModal({
+    title: t('admin.confirmTransferTitle'),
+    message: t('admin.confirmTransferMsg', { name: member.users?.nombre || member.users?.email }),
+    onConfirm: async () => {
+      try {
+        const { error } = await supabase.rpc('transferir_titularidad', {
+          p_grupo_id: groupId,
+          p_nuevo_titular_id: member.usuario_id
+        });
 
-    // 2. Establecer nuevo piloto con vuelta rápida
-    if (pilotoId) {
-      const { error: setError } = await supabase
-        .from('race_results')
-        .update({ vuelta_rapida: true })
-        .eq('carrera_id', raceId)
-        .eq('piloto_id', pilotoId);
+        if (error) {
+          if (error.message?.includes('RECIPIENT_GROUP_LIMIT_REACHED')) {
+            toast.error(t('admin.errorTransferRecipientLimit'));
+          } else {
+            throw error;
+          }
+          return;
+        }
 
-      if (setError) throw setError;
+        toast.success(t('admin.titleTransferred'));
+        loadGroupData();
+        setConfirmModal(null);
+      } catch (err) {
+        console.error('Error transferring ownership:', err);
+        toast.error(t('admin.errorTransferring'));
+      }
     }
-
-    // 3. Actualizar estado local
-    setFastestLaps(prev => ({
-      ...prev,
-      [raceId]: pilotoId || null
-    }));
-
-    // 4. ✅ Recalcular puntos llamando a la función SQL directamente
-    console.log('Recalculando puntos para carrera:', raceId);
-    
-    const { data: recalcData, error: recalcError } = await supabase
-      .rpc('calcular_puntos_carrera', {
-        p_carrera_id: raceId
-      });
-
-    if (recalcError) {
-      console.error('Error recalculando puntos:', recalcError);
-      toast.warning(
-        pilotoId 
-          ? t('admin.fastestLapSavedNoRecalc') 
-          : t('admin.fastestLapCleared')
-      );
-    } else {
-      console.log('✅ Puntos recalculados:', recalcData);
-      toast.success(
-        pilotoId 
-          ? t('admin.fastestLapSavedRecalc', { count: recalcData?.[0]?.predicciones_calculadas || 0 }) 
-          : t('admin.fastestLapClearedRecalc')
-      );
-    }
-
-  } catch (err) {
-    console.error('Error saving fastest lap:', err);
-    toast.error(t('admin.errorSavingFastestLap'));
-  } finally {
-    setSavingFastestLap(null);
-  }
+  });
 };
 
-const handleClearFastestLap = async (raceId) => {
-  await handleSaveFastestLap(raceId, null);
-};
 
   if (loading) {
     return (
@@ -880,6 +760,7 @@ const handleClearFastestLap = async (raceId) => {
       </>
     );
   }
+  const esElTitularActual = group?.creador_id === user.id;
 
   return (
     <>
@@ -920,6 +801,27 @@ const handleClearFastestLap = async (raceId) => {
             </div>
           </div>
         </div>
+        {/* Configuración de unión al grupo */}
+          <div className="admin-section">
+            <h2 className="section-title">👥 {t('admin.joinSettingsTitle')}</h2>
+            <label style={{
+              display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer',
+              padding: 16, background: 'var(--bg3)', borderRadius: 10,
+              border: `1px solid ${requiereAprobacion ? 'var(--gold)' : 'var(--border)'}`
+            }}>
+              <input
+                type="checkbox"
+                checked={requiereAprobacion}
+                disabled={savingApproval}
+                onChange={e => handleToggleApproval(e.target.checked)}
+                style={{ width: 18, height: 18, cursor: 'pointer' }}
+              />
+              <div>
+                <div style={{ fontWeight: 700, color: 'var(--white)', fontSize: 15 }}>{t('admin.requireApprovalLabel')}</div>
+                <div style={{ fontSize: 12, color: 'var(--muted)' }}>{t('admin.requireApprovalSub')}</div>
+              </div>
+            </label>
+          </div>
 
         {/* Solicitudes Pendientes */}
         {pendingMembers.length > 0 && (
@@ -964,7 +866,9 @@ const handleClearFastestLap = async (raceId) => {
 
         {/* Miembros Actuales */}
         <div className="admin-section">
-          <h2 className="section-title">{t('admin.currentMembers')} ({members.length})</h2>
+          <h2 className="section-title">
+            {t('admin.currentMembers')} ({members.length}{memberLimitInfo && !memberLimitInfo.es_ilimitado ? `/${memberLimitInfo.limite}` : ''})
+          </h2>
           <div className="members-list">
             {members.map(member => {
               const isCurrentUser = member.usuario_id === user.id;
@@ -988,7 +892,7 @@ const handleClearFastestLap = async (raceId) => {
                       </div>
                     </div>
                   </div>
-                  <div className="member-actions">
+                 <div className="member-actions">
                     {!isCreator && !isCurrentUser && (
                       <>
                         <button 
@@ -1005,6 +909,15 @@ const handleClearFastestLap = async (raceId) => {
                         </button>
                       </>
                     )}
+                    {esElTitularActual && !isCurrentUser && (
+                      <button 
+                        className="btn-action btn-make-admin"
+                        onClick={() => handleTransferOwnership(member)}
+                        title={t('admin.transferOwnership')}
+                      >
+                        👑 {t('admin.transferOwnership')}
+                      </button>
+                    )}
                   </div>
                 </div>
               );
@@ -1012,89 +925,13 @@ const handleClearFastestLap = async (raceId) => {
           </div>
         </div>
 
-        {/* 🆕 Vuelta Rápida */}
-        {group?.bonus_vuelta_rapida_piloto && finishedRaces.length > 0 && (
-          <div className="admin-section fastest-lap-section">
-            <h2 className="section-title">
-            🏁 {t('admin.fastestLap')} ({finishedRaces.length} {finishedRaces.length === 1 ? t('admin.raceFinishedSingular') : t('admin.raceFinishedPlural')})
-            </h2>
-            <p style={{ 
-              color: 'var(--muted)', 
-              fontSize: 14, 
-              marginBottom: 20,
-              lineHeight: 1.6 
-            }}>
-              {t('admin.fastestLapInstructions')} <strong style={{ color: 'var(--green)' }}>{t('admin.fastestLapExtraPoints', { points: group.puntos_vuelta_rapida_piloto })}</strong> {t('admin.fastestLapInPredictions')}
-            </p>
-
-            {finishedRaces.map(race => {
-              const results = raceResults[race.id] || [];
-              const currentFastest = fastestLaps[race.id];
-              const currentDriver = results.find(r => r.piloto_id === currentFastest);
-              const isSaving = savingFastestLap === race.id;
-
-              return (
-                <div key={race.id} className="race-fastest-card">
-                  <div className="race-fastest-header">
-                    <div>
-                      <div className="race-fastest-title">{getRaceName(race, t)}</div>
-                      <div className="race-fastest-date">
-                        📍 {race.circuito} •📅 {new Date(race.fecha_programada).toLocaleDateString(getDateLocale(locale), {
-                          day: 'numeric',
-                          month: 'long',
-                          year: 'numeric'
-                        })}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="fastest-lap-controls">
-                    <select 
-                      className="fastest-lap-select"
-                      value={currentFastest || ''}
-                      onChange={(e) => handleSaveFastestLap(race.id, e.target.value || null)}
-                      disabled={isSaving}
-                    >
-                      <option value="">{t('admin.selectFastestDriver')}</option>
-                      {results.map(result => (
-                        <option key={result.piloto_id} value={result.piloto_id}>
-                          P{result.posicion_final} • #{result.drivers?.numero} {result.drivers?.nombre_completo}
-                        </option>
-                      ))}
-                    </select>
-
-                    {currentFastest && (
-                      <button
-                        className="btn-clear-fastest"
-                        onClick={() => handleClearFastestLap(race.id)}
-                        disabled={isSaving}
-                      >
-                        🗑️ {t('admin.clearBtn')}
-                      </button>
-                    )}
-                  </div>
-
-                  {currentDriver && (
-                    <div className="current-fastest">
-                      <span className="current-fastest-icon">⚡</span>
-                      <span className="current-fastest-text">
-                        {t('admin.currentFastestLabel')}: #{currentDriver.drivers?.numero} {currentDriver.drivers?.nombre_completo}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-          
-          
-        )}
+       
 
         {/* 💰 CONFIGURACIÓN DEL POZO */}
         <div className="admin-section">
-          <h2 className="section-title">💰 {t('pozo.title')}</h2>
+          <h2 className="section-title">🏁 {t('podioPoints.title')}</h2>
           <p style={{ color: 'var(--muted)', fontSize: 14, marginBottom: 20, lineHeight: 1.6 }}>
-            {t('admin.pozoConfigInfo')}
+            {t('podioPoints.configDescription')}
           </p>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -1107,16 +944,17 @@ const handleClearFastestLap = async (raceId) => {
                 onChange={e => setPozoData({ ...pozoData, pozo_habilitado: e.target.checked })}
                 style={{ width: 18, height: 18, cursor: 'pointer' }} />
               <div>
-                <div style={{ fontWeight: 700, color: 'var(--white)', fontSize: 15 }}>{t('admin.enablePot')}</div>
-                <div style={{ fontSize: 12, color: 'var(--muted)' }}>{t('admin.potVisibleNote')}</div>
+                <div style={{ fontWeight: 700, color: 'var(--white)', fontSize: 15 }}>{t('podioPoints.enable')}</div>
+                <div style={{ fontSize: 12, color: 'var(--muted)' }}>{t('podioPoints.enableSub')}</div>
               </div>
             </label>
 
             {pozoData.pozo_habilitado && (
               <div style={{ background: 'var(--bg3)', border: '1px solid var(--border)', borderRadius: 12, padding: 20 }}>
+                {!isNative ? (
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
                   <div>
-                    <label className="info-label">{t('pozo.amountPerPerson')}</label>
+                    <label className="info-label">{t('podioPoints.amountPerPerson')}</label>
                     <input type="number" min="0" value={pozoData.pozo_monto_por_persona}
                       onChange={e => setPozoData({ ...pozoData, pozo_monto_por_persona: Number(e.target.value) })}
                       style={{
@@ -1126,7 +964,7 @@ const handleClearFastestLap = async (raceId) => {
                       }} />
                   </div>
                   <div>
-                    <label className="info-label">{t('pozo.currency')}</label>
+                    <label className="info-label">{t('podioPoints.referenceUnit')}</label>
                     <select value={pozoData.pozo_moneda}
                       onChange={e => setPozoData({ ...pozoData, pozo_moneda: e.target.value })}
                       className="fastest-lap-select">
@@ -1137,26 +975,33 @@ const handleClearFastestLap = async (raceId) => {
                       <option value="EUR">{t('currencies.EUR')}</option>
                     </select>
                   </div>
-                </div>
-
-                <div style={{ marginBottom: 16 }}>
-                  <label className="info-label">{t('pozo.distribution')}</label>
-                  <select value={pozoData.pozo_distribucion}
-                    onChange={e => setPozoData({ ...pozoData, pozo_distribucion: e.target.value })}
-                    className="fastest-lap-select">
-                    <option value="60-25-15">🥇 {t('createGroup.dist602515')}</option>
-                    <option value="50-30-20">🥈 {t('createGroup.dist503020')}</option>
-                    <option value="70-20-10">🥉 {t('createGroup.dist702010')}</option>
-                    <option value="100-0-0">🥇 {t('createGroup.dist100')} {t('createGroup.distAllToWinner')}</option>
-                  </select>
-                </div>
-
-                {pozoData.pozo_monto_por_persona > 0 && (
+                </div>) : (
                   <div style={{
                     padding: 12, background: 'var(--bg2)', borderRadius: 8,
                     border: '1px solid var(--border)', fontSize: 13, color: 'var(--muted)', marginBottom: 16
                   }}>
-                   {t('pozo.estimatedTotal')}: <strong style={{ color: 'var(--gold)', fontFamily: "'Barlow Condensed'", fontSize: 18 }}>
+                    ℹ️ {t('podioPoints.webOnlyConfig')}
+                  </div>
+                )}
+
+                <div style={{ marginBottom: 16 }}>
+                  <label className="info-label">{t('podioPoints.distribution')}</label>
+                  <select value={pozoData.pozo_distribucion}
+                    onChange={e => setPozoData({ ...pozoData, pozo_distribucion: e.target.value })}
+                    className="fastest-lap-select">
+                    <option value="60-25-15">{t('createGroup.dist602515')}</option>
+                    <option value="50-30-20">{t('createGroup.dist503020')}</option>
+                    <option value="70-20-10">{t('createGroup.dist702010')}</option>
+                    <option value="100-0-0">{t('createGroup.dist100')} {t('createGroup.distAllToWinner')}</option>
+                  </select>
+                </div>
+
+                {!isNative && pozoData.pozo_monto_por_persona > 0 && (
+                  <div style={{
+                    padding: 12, background: 'var(--bg2)', borderRadius: 8,
+                    border: '1px solid var(--border)', fontSize: 13, color: 'var(--muted)', marginBottom: 16
+                  }}>
+                   {t('podioPoints.estimatedTotal')}: <strong style={{ color: 'var(--gold)', fontFamily: "'Barlow Condensed'", fontSize: 18 }}>
                     {pozoData.pozo_moneda === 'PYG' ? '₲' : pozoData.pozo_moneda === 'BRL' ? 'R$' : '$'} {(pozoData.pozo_monto_por_persona * members.length).toLocaleString(getDateLocale(locale))}
                   </strong> {t('admin.potMembersBreakdown', { count: members.length, amount: pozoData.pozo_monto_por_persona.toLocaleString(getDateLocale(locale)) })}
                   </div>
@@ -1181,7 +1026,7 @@ const handleClearFastestLap = async (raceId) => {
                     pozo_distribucion: presets[pozoData.pozo_distribucion] || presets['60-25-15']
                   }).eq('id', groupId);
                   if (error) throw error;
-                  toast.success(t('pozo.configSaved'));
+                  toast.success(t('podioPoints.configSaved'));
                 } catch (err) {
                   console.error(err);
                   toast.error(t('admin.errorSavingPot'));
@@ -1193,143 +1038,11 @@ const handleClearFastestLap = async (raceId) => {
               className="btn-save-fastest"
               style={{ alignSelf: 'flex-start' }}
             >
-              {savingPozo ? t('admin.savingPot') : `💾 ${t('pozo.saveConfig')}`}
+              {savingPozo ? t('admin.savingPot') : `💾 ${t('podioPoints.saveConfig')}`}
             </button>
           </div>
         </div>
-            {/* 🆕 INGRESAR RESULTADOS MANUALMENTE */}
-            <div className="admin-section">
-              <h2 className="section-title">
-                📊 {t('admin.manageResults')}
-              </h2>
-              <p style={{ 
-                color: 'var(--muted)', 
-                fontSize: 14, 
-                marginBottom: 20,
-                lineHeight: 1.6 
-              }}>
-                  {t('admin.manageResultsSubLong')}
-                </p>
-
-              {loadingRaces ? (
-                <div style={{ color: 'var(--muted)', padding: 20 }}>{t('admin.loadingRaces')}</div>
-              ) : allRacesData.length === 0 ? (
-                <div className="empty-state">
-                  {t('admin.noRacesScheduled')}
-                </div>
-              ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                  {allRacesData.map(race => (
-                    <div 
-                      key={race.id}
-                      style={{
-                        background: 'var(--bg3)',
-                        border: '1px solid var(--border)',
-                        borderRadius: 12,
-                        padding: 20,
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        gap: 16
-                      }}
-                    >
-                      <div style={{ flex: 1 }}>
-                        <div style={{ 
-                          display: 'flex', 
-                          alignItems: 'center', 
-                          gap: 8,
-                          marginBottom: 8
-                        }}>
-                          {race.tipo === 'sprint' && (
-                            <span style={{
-                              background: 'linear-gradient(135deg, #FFB800, #FF8C00)',
-                              color: '#000',
-                              fontWeight: 900,
-                              padding: '4px 10px',
-                              borderRadius: 8,
-                              fontSize: 11,
-                              letterSpacing: 1
-                            }}>
-                              ⚡ SPRINT
-                            </span>
-                          )}
-                          <span style={{
-                            fontFamily: 'Barlow Condensed',
-                            fontSize: 18,
-                            fontWeight: 800,
-                            color: 'var(--white)'
-                          }}>
-                            {getRaceName(race, t)}
-                          </span>
-                        </div>
-                        
-                        <div style={{ 
-                          fontSize: 13, 
-                          color: 'var(--muted)',
-                          display: 'flex',
-                          gap: 16,
-                          flexWrap: 'wrap'
-                        }}>
-                          <span>📍 {race.circuito}</span>
-                         <span>📅 {new Date(race.fecha_programada).toLocaleDateString(getDateLocale(locale), {
-                          day: 'numeric',
-                          month: 'long',
-                          year: 'numeric'
-                        })}</span>
-                          <span style={{
-                            color: race.estado === 'finalizada' ? 'var(--green)' : 'var(--muted)',
-                            fontWeight: race.estado === 'finalizada' ? 700 : 400
-                          }}>
-                              {race.estado === 'finalizada' ? t('admin.finished') : `⏳ ${t('common.scheduled')}`}
-                          </span>
-                        </div>
-                      </div>
-
-                      <button
-                        onClick={() => navigate(`/admin/race/${race.id}/results`)}
-                        style={{
-                          padding: '10px 20px',
-                          background: race.estado === 'finalizada' 
-                            ? 'transparent' 
-                            : 'linear-gradient(135deg, var(--red), #FF3355)',
-                          border: race.estado === 'finalizada' 
-                            ? '2px solid var(--border2)' 
-                            : 'none',
-                          borderRadius: 10,
-                          color: race.estado === 'finalizada' ? 'var(--white)' : 'white',
-                          fontFamily: 'Barlow Condensed',
-                          fontSize: 13,
-                          fontWeight: 800,
-                          letterSpacing: 1,
-                          textTransform: 'uppercase',
-                          cursor: 'pointer',
-                          transition: 'all 0.2s',
-                          minWidth: 140
-                        }}
-                        onMouseOver={(e) => {
-                          if (race.estado === 'finalizada') {
-                            e.target.style.borderColor = 'var(--red)';
-                            e.target.style.color = 'var(--red)';
-                          } else {
-                            e.target.style.opacity = '0.9';
-                          }
-                        }}
-                        onMouseOut={(e) => {
-                          if (race.estado === 'finalizada') {
-                            e.target.style.borderColor = 'var(--border2)';
-                            e.target.style.color = 'var(--white)';
-                          } else {
-                            e.target.style.opacity = '1';
-                          }
-                        }}
-                      >
-                        {race.estado === 'finalizada' ? `✏️ ${t('admin.editResults')}` : `➕ ${t('admin.enterResults')}`}
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+           
         {/* Modal de Confirmación */}
         {confirmModal && (
           <div className="modal-overlay" onClick={() => setConfirmModal(null)}>

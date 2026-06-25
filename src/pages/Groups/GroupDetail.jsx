@@ -833,37 +833,39 @@ export default function GroupDetail() {
   };
 
   const handleToggleForcedPredictions = async (raceId, currentValue) => {
-    try {
-      const newValue = !currentValue;
-      
-      // ⚠️ TEMPORAL: Actualizar races directamente (afecta todos los grupos)
-      const { error } = await supabase
-        .from('races')
-        .update({ predicciones_forzadas_abiertas: newValue })
-        .eq('id', raceId);
+  try {
+    const newValue = !currentValue;
+    
+    const { error } = await supabase
+      .from('group_races')
+      .upsert({
+        grupo_id: groupId,
+        carrera_id: raceId,
+        predicciones_forzadas_abiertas: newValue
+      }, { onConflict: 'grupo_id,carrera_id' });
 
-      if (error) throw error;
+    if (error) throw error;
 
-      // Actualizar estado local inmediatamente
-      setRaces(prevRaces => 
-        prevRaces.map(race => 
-          race.id === raceId 
-            ? { ...race, predicciones_forzadas_abiertas: newValue }
-            : race
-        )
-      );
+    setRaces(prevRaces => 
+      prevRaces.map(race => 
+        race.id === raceId 
+          ? { ...race, predicciones_forzadas_abiertas: newValue }
+          : race
+      )
+    );
 
-      toast.success(
-        newValue 
-          ? t('groupDetail.predictionsOpenedAllGroups')
-          : t('groupDetail.predictionsClosedAllGroups')
-      );
-    } catch (err) {
-      console.error('Error toggling predictions:', err);
-      toast.error(t('groupDetail.errorChangingStatus'));
-      loadRaces();
-    }
-  };
+    toast.success(
+      newValue 
+        ? t('groupDetail.predictionsOpenedThisGroup')
+        : t('groupDetail.predictionsClosedThisGroup')
+    );
+  } catch (err) {
+    console.error('Error toggling predictions:', err);
+    toast.error(t('groupDetail.errorChangingStatus'));
+    loadRaces();
+  }
+};
+
 
   // Handlers existentes
   const handleRemoveMember = async () => {

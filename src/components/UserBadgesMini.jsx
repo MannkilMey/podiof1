@@ -91,7 +91,7 @@ export default function UserBadgesMini({ userId, grupoId, showAll = false, compa
 
   const visible = displayBadges.slice(0, maxShow);
   const remaining = displayBadges.length - maxShow;
-
+ 
   return (
     <>
       <style>{CSS}</style>

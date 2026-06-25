@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-import { canPredictRace } from '../utils/canPredictRace';
 
 export function usePrediction(groupId, raceId, userId) {
   const [data, setData] = useState({
@@ -36,18 +35,11 @@ export function usePrediction(groupId, raceId, userId) {
 
         if (raceError) throw raceError;
 
-        console.log('🔍 DIAGNÓSTICO usePrediction:');
-        console.log('Race completo:', race);
-        console.log('predicciones_forzadas_abiertas:', race.predicciones_forzadas_abiertas);
-        console.log('Group:', group);
+        // 🔒 Estado unificado vía función segura — misma fuente que RacesPage/RLS real
+        const { data: statusData } = await supabase
+          .rpc('get_prediction_status', { p_grupo_id: groupId, p_carrera_id: raceId });
 
-        // 🆕 canPredictRace ahora es async y acepta groupId
-        const predictionStatus = await canPredictRace(race, group, groupId);
-        console.log('Resultado canPredictRace:', predictionStatus);
-        console.log('canPredict final:', predictionStatus.canPredict);
-
-        const canPredict = predictionStatus.canPredict;
-
+        const canPredict = statusData?.[0]?.can_predict || false;
 
         // 4. Obtener pilotos de la temporada (con JOIN a drivers y teams)
         const { data: driversData, error: driversError } = await supabase

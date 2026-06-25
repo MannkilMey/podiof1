@@ -185,6 +185,7 @@ export default function PointsHistogram() {
   const [showForecast, setShowForecast] = useState(false);
   const [activeChart, setActiveChart] = useState('barras');
   const [exporting, setExporting] = useState(false);
+  const [profilesMap, setProfilesMap] = useState({});
 
   // ============================================
   // FETCH DATA — PARALLEL
@@ -209,8 +210,7 @@ export default function PointsHistogram() {
       // Step 2: parallel fetch scores + races (both depend on group data)
       const [scoresRes, racesRes] = await Promise.all([
         supabase.from('scores').select(`
-          puntos, aciertos_exactos, aciertos_piloto,
-          usuario:usuario_id ( id, nombre, apellido ),
+          usuario_id, puntos, aciertos_exactos, aciertos_piloto,
           carrera:carrera_id ( id, nombre, ronda, tipo, estado )
         `).eq('grupo_id', groupId).order('created_at', { ascending: true }),
         supabase.from('races').select('id, nombre, ronda, tipo, estado')
@@ -223,13 +223,20 @@ export default function PointsHistogram() {
       const scoresData = scoresRes.data || [];
       const racesData = racesRes.data || [];
 
+      // 🔒 Nombres vía función segura (RLS ya no permite leer 'users' directo)
+      const uniqueUserIds = [...new Set(scoresData.map(s => s.usuario_id).filter(Boolean))];
+      const { data: profiles } = await supabase.rpc('get_public_names', { p_user_ids: uniqueUserIds });
+      const nameById = {};
+      (profiles || []).forEach(p => { nameById[p.id] = p; });
+
       // Set all states together before loading ends
       setGroupInfo(gData);
       setAllRaces(racesData);
       setScores(scoresData);
+      setProfilesMap(nameById);
 
       const users = new Set();
-      scoresData.forEach(s => { if (s.usuario?.id) users.add(s.usuario.id); });
+      scoresData.forEach(s => { if (s.usuario_id) users.add(s.usuario_id); });
       setSelectedUsers(users);
     } catch (err) {
       console.error('Error fetching stats data:', err);
@@ -252,17 +259,18 @@ export default function PointsHistogram() {
 
     // Users
     const usersMap = new Map();
-    filtered.forEach(s => {
-      if (!s.usuario?.id) return;
-      const uid = s.usuario.id;
-      if (!usersMap.has(uid)) {
-        usersMap.set(uid, {
-          id: uid,
-          displayName: `${s.usuario.nombre} ${s.usuario.apellido?.[0] || ''}`.trim(),
-          color: USER_COLORS[usersMap.size % USER_COLORS.length]
-        });
-      }
-    });
+      filtered.forEach(s => {
+        if (!s.usuario_id) return;
+        const uid = s.usuario_id;
+        if (!usersMap.has(uid)) {
+          const profile = profilesMap[uid] || {};
+          usersMap.set(uid, {
+            id: uid,
+            displayName: `${profile.nombre || ''} ${profile.apellido?.[0] || ''}`.trim(),
+            color: USER_COLORS[usersMap.size % USER_COLORS.length]
+          });
+        }
+      });
     const userList = [...usersMap.values()];
 
     // Bar chart data
@@ -271,7 +279,7 @@ export default function PointsHistogram() {
       const raceName = s.carrera?.nombre || t('pointsHistogram.unnamedRace');
       const ronda = s.carrera?.ronda || 0;
       const tipo = s.carrera?.tipo || 'carrera';
-      const uInfo = usersMap.get(s.usuario?.id);
+      const uInfo = usersMap.get(s.usuario_id);
       if (!uInfo) return;
       if (!racesMap.has(raceName)) racesMap.set(raceName, { ronda, tipo });
       racesMap.get(raceName)[uInfo.displayName] = Number(s.puntos) || 0;
@@ -329,7 +337,7 @@ export default function PointsHistogram() {
     // Ranking
     const totalByUser = new Map();
     filtered.forEach(s => {
-      const uInfo = usersMap.get(s.usuario?.id);
+      const uInfo = usersMap.get(s.usuario_id);
       if (!uInfo) return;
       if (!totalByUser.has(uInfo.id)) {
         totalByUser.set(uInfo.id, { id: uInfo.id, name: uInfo.displayName, color: uInfo.color, puntos: 0, aciertos_exactos: 0, aciertos_piloto: 0, carreras: 0 });
@@ -348,7 +356,7 @@ export default function PointsHistogram() {
       stats: { totalCarreras: chartData.length, ranking: [...totalByUser.values()].sort((a, b) => b.puntos - a.puntos) },
       forecastData
     };
-  }, [scores, filterType, allRaces]);
+  }, [scores, filterType, allRaces, profilesMap]);
 
   // ============================================
   // USER FILTER
