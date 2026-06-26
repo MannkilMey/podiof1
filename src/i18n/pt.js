@@ -52,7 +52,8 @@ export default {
     signOut: 'Sair',
     notifications: 'Notificações',
     allGroups: 'Todos os grupos',
-    backToGroups: '← Voltar para todos os grupos'
+    backToGroups: '← Voltar para todos os grupos',
+    upgradeToPolePass: 'Faça upgrade para o PolePass',
   },
 
   // ============================================
@@ -482,7 +483,8 @@ prediction: {
       precision: '🎯 Precisão',
       participacion: '📊 Participação',
       especiales: '🏎 Especiais',
-      secretos: '🤫 Secretos'
+      secretos: '🤫 Secretos',
+      premium: 'PolePass'
     },
     locked: '🔒 Bloqueado',
     secret: '🤫 Secreto',
@@ -528,7 +530,11 @@ prediction: {
   perfect_race: { nombre: 'Previsão Perfeita', descripcion: 'Acerte as 10 posições em uma corrida' },
   zero_hero: { nombre: 'Do Zero ao Herói', descripcion: '0 pontos em uma corrida e ganhar a próxima' },
   rivals: { nombre: 'Rivalidade', descripcion: 'Empate em pontos exatos com outro usuário' },
-  last_to_first: { nombre: 'Ressurreição', descripcion: 'Passe de último a primeiro entre 2 corridas' }
+  last_to_first: { nombre: 'Ressurreição', descripcion: 'Passe de último a primeiro entre 2 corridas' },
+  polepass_member: {
+      nombre: 'PolePass Member',
+      descripcion: 'Você faz parte do PolePass'
+    }
 },
   },
 
@@ -1130,13 +1136,13 @@ sharePrediction: {
   // PREMIUM
   // ============================================
   premium: {
-    title: 'PodioF1 Premium',
+    title: 'PodioF1 PolePass',
     subtitle: 'Leve sua experiência para o próximo nível',
     subscribe: 'Assinar Agora',
     monthly: 'Mensal',
     seasonal: 'Temporada',
     perMonth: 'por mês',
-    popular: 'Popular',
+    popular: 'Mais escolhido',
     savings: 'Economize {{pct}}%',
     cancelAnytime: 'Cancele quando quiser · Sem compromisso',
     getPremium: 'Seja Premium',
@@ -1146,10 +1152,13 @@ sharePrediction: {
       '🔬 Deep Analytics com métricas de pilotos',
       '📥 Exportar dados para Excel',
       '👥 Grupos ilimitados',
-      '⭐ Badge exclusivo "Supporter"',
-      '🚫 Sem anúncios'
+      '⭐ Badge exclusivo de "Supporter"',
+      '🚫 Sem anúncios',
+      '🎁 Acesso aos comodins de previsão (em breve)'
     ]
   },
+  polePassAnnouncement: { title: '🎁 O PolePass está chegando', subtitle: 'Estatísticas avançadas, sem anúncios e comodins exclusivos', cta: 'Saiba mais' },
+
 
   // ============================================
   // CURRENCIES

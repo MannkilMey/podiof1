@@ -53,7 +53,8 @@ export default {
     signOut: 'Cerrar sesión',
     notifications: 'Notificaciones',
     allGroups: 'Todos los grupos',
-    backToGroups: '← Volver a todos los grupos'
+    backToGroups: '← Volver a todos los grupos',
+    upgradeToPolePass: 'Mejorate a PolePass',
   },
 
   // ============================================
@@ -480,7 +481,8 @@ prediction: {
       precision: '🎯 Precisión',
       participacion: '📊 Participación',
       especiales: '🏎 Especiales',
-      secretos: '🤫 Secretos'
+      secretos: '🤫 Secretos',
+      premium: 'PolePass'
     },
     locked: '🔒 Bloqueado',
     secret: '🤫 Secreto',
@@ -526,7 +528,11 @@ prediction: {
   perfect_race: { nombre: 'Predicción Perfecta', descripcion: 'Acertá las 10 posiciones en una carrera' },
   zero_hero: { nombre: 'De Cero a Héroe', descripcion: '0 puntos en una carrera y ganar la siguiente' },
   rivals: { nombre: 'Rivalidad', descripcion: 'Empatá en puntos exactos con otro usuario' },
-  last_to_first: { nombre: 'Resurrección', descripcion: 'Pasá de último a primero entre 2 carreras' }
+  last_to_first: { nombre: 'Resurrección', descripcion: 'Pasá de último a primero entre 2 carreras' },
+   polepass_member: {
+      nombre: 'PolePass Member',
+      descripcion: 'Sos parte de PolePass'
+    }
 },
   },
 
@@ -1133,15 +1139,15 @@ sharePrediction: {
   // PREMIUM
   // ============================================
   premium: {
-    title: 'PodioF1 Premium',
+    title: 'PodioF1 PolePass',
     subtitle: 'Llevá tu experiencia al siguiente nivel',
-    subscribe: 'Suscribirme Ahora',
+    subscribe: 'Suscribirme',
     monthly: 'Mensual',
     seasonal: 'Temporada',
     perMonth: 'por mes',
-    popular: 'Popular',
+    popular: 'Más elegido',
     savings: 'Ahorrás {{pct}}%',
-    cancelAnytime: 'Cancelá cuando quieras · Sin compromisos',
+    cancelAnytime: 'Cancelá cuando quieras · Sin compromiso',
     getPremium: 'Hacete Premium',
     from: 'Desde',
     benefits: [
@@ -1149,11 +1155,12 @@ sharePrediction: {
       '🔬 Deep Analytics con métricas de pilotos',
       '📥 Exportar datos a Excel',
       '👥 Grupos ilimitados',
-      '⭐ Badge exclusivo "Supporter"',
-      '🚫 Sin publicidad'
+      '⭐ Badge exclusivo de "Supporter"',
+      '🚫 Sin anuncios',
+      '🎁 Acceso a comodines de predicción (próximamente)'
     ]
   },
-
+  polePassAnnouncement: { title: '🎁 PolePass está en camino', subtitle: 'Estadísticas avanzadas, sin anuncios, y comodines exclusivos', cta: 'Conocer más' },
   // ============================================
   // CURRENCIES
   // ============================================

@@ -101,6 +101,7 @@ body { background: var(--bg); color: var(--white); font-family: 'Barlow', sans-s
 
 const getCategoryLabels = (t) => ({
   todas: t('badges.categories.todas'),
+  premium: t('badges.categories.premium'),
   victorias: t('badges.categories.victorias'),
   rachas: t('badges.categories.rachas'),
   precision: t('badges.categories.precision'),

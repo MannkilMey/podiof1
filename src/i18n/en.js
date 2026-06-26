@@ -52,7 +52,8 @@ export default {
     signOut: 'Sign Out',
     notifications: 'Notifications',
     allGroups: 'All groups',
-    backToGroups: '← Back to all groups'
+    backToGroups: '← Back to all groups',
+    upgradeToPolePass: 'Upgrade to PolePass'
   },
 
   // ============================================
@@ -481,7 +482,8 @@ prediction: {
       precision: '🎯 Precision',
       participacion: '📊 Participation',
       especiales: '🏎 Special',
-      secretos: '🤫 Secrets'
+      secretos: '🤫 Secrets',
+      premium: 'PolePass'
     },
     locked: '🔒 Locked',
     secret: '🤫 Secret',
@@ -527,7 +529,11 @@ prediction: {
   perfect_race: { nombre: 'Perfect Prediction', descripcion: 'Get all 10 positions right in a race' },
   zero_hero: { nombre: 'Zero to Hero', descripcion: '0 points in a race, then win the next' },
   rivals: { nombre: 'Rivalry', descripcion: 'Tie in exact points with another user' },
-  last_to_first: { nombre: 'Resurrection', descripcion: 'Go from last to first between 2 races' }
+  last_to_first: { nombre: 'Resurrection', descripcion: 'Go from last to first between 2 races' },
+  polepass_member: {
+      nombre: 'PolePass Member',
+      descripcion: "You're part of PolePass"
+    }
 },
   },
 
@@ -1130,7 +1136,7 @@ sharePrediction: {
   // PREMIUM
   // ============================================
   premium: {
-    title: 'PodioF1 Premium',
+    title: 'PodioF1 PolePass',
     subtitle: 'Take your experience to the next level',
     subscribe: 'Subscribe Now',
     monthly: 'Monthly',
@@ -1147,10 +1153,11 @@ sharePrediction: {
       '📥 Export data to Excel',
       '👥 Unlimited groups',
       '⭐ Exclusive "Supporter" badge',
-      '🚫 No ads'
+      '🚫 No ads',
+      '🎁 Access to prediction wildcards (coming soon)'
     ]
   },
-
+  polePassAnnouncement: { title: '🎁 PolePass is coming', subtitle: 'Advanced stats, no ads, and exclusive wildcards', cta: 'Learn more' },
   // ============================================
   // CURRENCIES
   // ============================================

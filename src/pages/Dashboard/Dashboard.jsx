@@ -14,6 +14,8 @@ import { isNative } from '../../hooks/usePlatform';
 import { usePremium } from '../../hooks/usePremium';
 import { UpgradeModal } from '../../components/PaywallGate';
 import NotificationsBell from '../../components/NotificationsBell';
+import PolePassAnnouncementCard from '../../components/PolePassAnnouncementCard';
+
 
 
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600&family=Share+Tech+Mono&display=swap');`;
@@ -1444,7 +1446,8 @@ function GroupsView({ groups, onCreateGroup, onJoinGroup, onSelectGroup }) {
           🔗 {t('dashboard.joinWithCode')}
         </button>
       </div>
-
+      <PolePassAnnouncementCard />
+      
       {groups.length === 0 ? (
         <div className="empty-state">
           <div className="empty-icon">🏁</div>
@@ -1686,6 +1689,19 @@ export default function Dashboard() {
                     <span>⚙️</span>
                     <span>{t('nav.settings')}</span>
                   </button>
+                  <div className="user-menu-divider"></div>
+
+                    <button 
+                      className="user-menu-item"
+                      style={{ color: 'var(--gold)' }}
+                      onClick={() => {
+                        setShowUserMenu(false);
+                         navigate('/upgrade', { state: { origen: 'menu_usuario' } });
+                      }}
+                    >
+                      <span>👑</span>
+                      <span>{t('nav.upgradeToPolePass')}</span>
+                    </button>
                   
                   {userIsSuperAdmin && (
                     <>

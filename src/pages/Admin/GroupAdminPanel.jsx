@@ -504,6 +504,45 @@ html, body {
   color: var(--green);
   font-weight: 700;
 }
+@media (max-width: 768px) {
+  .admin-container {
+    padding: 16px;
+  }
+
+  .admin-header {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .admin-title {
+    font-size: 26px;
+  }
+
+  .group-info {
+    grid-template-columns: 1fr;
+  }
+
+  .member-card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+  }
+
+  .member-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .btn-action {
+    width: 100%;
+    padding: 12px 16px;
+    text-align: center;
+  }
+
+  .code-box {
+    flex-wrap: wrap;
+  }
+}
 `;
 
 export default function GroupAdminPanel() {

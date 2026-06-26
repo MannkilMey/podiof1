@@ -14,12 +14,15 @@ import HowItWorks from './pages/HowItWorks/HowItWorks';
 import PrivacyPolicy from './pages/Legal/PrivacyPolicy';
 import TermsOfService from './pages/Legal/TermsOfService';
 
+
+
 // Auth Pages
 import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
 import ForgotPassword from './pages/Auth/ForgotPassword';
 import ResetPassword from './pages/Auth/ResetPassword';
 import DeleteAccount from './pages/Settings/DeleteAccount';
+import UpgradePage from './pages/Upgrade/UpgradePage';
 
 
 // Main Pages
@@ -186,6 +189,8 @@ export default function App() {
               </ProtectedRoute>
             } 
           />
+          <Route path="/upgrade" element={<ProtectedRoute><UpgradePage /></ProtectedRoute>} />
+
           <Route path="/delete-account" element={<ProtectedRoute><DeleteAccount /></ProtectedRoute>} />
 
 

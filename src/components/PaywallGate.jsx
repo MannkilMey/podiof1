@@ -183,20 +183,24 @@ export default function PaywallGate({ feature, children, fallback, blur = true, 
 // ============================================
 // UPGRADE MODAL
 // ============================================
-export function UpgradeModal({ onClose, prices, theme }) {
+export function UpgradeModal({ onClose, prices, theme, asPage = false }) {
   const { t } = useTranslation();
   const benefits = t('premium.benefits');
 
-  return (
+   return (
     <div
       data-theme={theme}
-      style={{
+      style={asPage ? {
+        minHeight: '100vh', background: 'var(--bg)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        padding: 20
+      } : {
         position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
         background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(4px)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         zIndex: 2000, padding: 20
       }}
-      onClick={onClose}
+      onClick={asPage ? undefined : onClose}
     >
       <div style={{
         background: 'var(--bg2)', border: '1px solid var(--border)',
@@ -259,7 +263,7 @@ export function UpgradeModal({ onClose, prices, theme }) {
               </div>
               <div style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>{t('premium.monthly')}</div>
               <div style={{
-                fontFamily: "'Barlow Condensed'", fontSize: 28, fontWeight: 900, color: 'var(--gold)'
+                fontFamily: "'Nunito'", fontSize: 28, fontWeight: 900, color: 'var(--gold)'
               }}>
                 ${prices.monthly}
               </div>
@@ -273,7 +277,7 @@ export function UpgradeModal({ onClose, prices, theme }) {
             }}>
               <div style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>{t('premium.seasonal')}</div>
               <div style={{
-                fontFamily: "'Barlow Condensed'", fontSize: 28, fontWeight: 900, color: 'var(--white)'
+                fontFamily: "'Nunito'", fontSize: 28, fontWeight: 900, color: 'var(--white)'
               }}>
                 ${prices.seasonal}
               </div>
