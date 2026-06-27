@@ -738,22 +738,13 @@ export default function GroupDetail() {
     try {
       setLoadingStats(true);
 
-      // 1. Obtener miembros aprobados del grupo
+      // 1. Obtener miembros aprobados del grupo (vía función segura, no embed directo)
       const { data: membersData, error: membersError } = await supabase
-        .from('group_members')
-        .select(`
-          usuario_id,
-          users:usuario_id (
-            id,
-            nombre,
-            apellido,
-            email
-          )
-        `)
-        .eq('grupo_id', groupId)
-        .eq('estado', 'aprobado');
+        .rpc('get_group_members_full', { p_grupo_id: groupId });
 
       if (membersError) throw membersError;
+
+      const aprobados = (membersData || []).filter(m => m.estado === 'aprobado');
 
       // 2. Obtener predicciones de esta carrera
       const { data: predictionsData, error: predictionsError } = await supabase
@@ -778,9 +769,8 @@ export default function GroupDetail() {
       const hasPredicted = [];
       const missing = [];
 
-      (membersData || []).forEach(member => {
-        const user = member.users;
-        const fullName = `${user.nombre || ''} ${user.apellido || ''}`.trim() || user.email;
+      aprobados.forEach(member => {
+        const fullName = `${member.nombre || ''} ${member.apellido || ''}`.trim() || member.email;
         
         if (predictionMap[member.usuario_id]) {
           const pred = predictionMap[member.usuario_id];
@@ -803,12 +793,12 @@ export default function GroupDetail() {
         new Date(b.lastModified) - new Date(a.lastModified)
       );
 
-      setPredictionStats(prev => ({
+       setPredictionStats(prev => ({
         ...prev,
         [raceId]: {
           hasPredicted,
           missing,
-          total: membersData.length
+          total: aprobados.length
         }
       }));
 
