@@ -94,6 +94,7 @@ const CSS = `
   bottom: -20px;
   font-size: 200px;
   opacity: 0.03;
+  pointer-events: none;
 }
 
 .hero-header {
