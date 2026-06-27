@@ -6,6 +6,7 @@ import ToastContainer from './components/Toast';
 import AppOnboarding from './pages/Onboarding/AppOnboarding';
 import { isNative } from './hooks/usePlatform';
 import { useTranslation } from './i18n';
+import { StatusBar, Style } from '@capacitor/status-bar';
 
 // Public Pages
 import Landing from './pages/Landing/Landing';
@@ -13,6 +14,8 @@ import JoinGroup from './pages/Groups/JoinGroup';
 import HowItWorks from './pages/HowItWorks/HowItWorks';
 import PrivacyPolicy from './pages/Legal/PrivacyPolicy';
 import TermsOfService from './pages/Legal/TermsOfService';
+import SupportPage from './pages/Legal/SupportPage';
+
 
 
 
@@ -117,6 +120,13 @@ export default function App() {
     initialize();
   }, [initialize]);
 
+  
+   useEffect(() => {
+    if (!isNative) return;
+    StatusBar.setOverlaysWebView({ overlay: false });
+    StatusBar.setStyle({ style: Style.Dark }); // texto blanco de la hora/batería, combina con tu tema oscuro
+  }, []);
+
   return (
     <>
       <ToastContainer />
@@ -140,6 +150,7 @@ export default function App() {
           <Route path="/como-funciona" element={<HowItWorks />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/terms" element={<TermsOfService />} />
+          <Route path="/support" element={<SupportPage />} />
 
           
 

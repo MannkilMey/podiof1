@@ -1101,22 +1101,13 @@ export default function Landing() {
 
           {/* Footer */}
           <footer className="footer">
-            <p className="footer-text">
-              <strong>PodioF1</strong> - Predicciones Deportivas de Formula 1 • 
-              Fantasy F1 Gratis • Grupos Privados 
-            </p>
-            <p className="footer-text">
-              © 2026 PodioF1. Plataforma gratuita de predicciones deportivas.
-             
-            </p>
-            <p className="footer-text" style={{ marginTop: 16 }}>
-              Hecho con ❤️ para los fanáticos de F1 · <Link to="/register" className="footer-link">Crear cuenta gratis</Link>
-            </p>
-            <p className="footer-text" style={{ marginTop: 12, display: 'flex', gap: 16, justifyContent: 'center' }}>
-              <Link to="/privacy" className="footer-link">Política de Privacidad</Link>
-              <span style={{ color: 'var(--text-muted)' }}>·</span>
-              <Link to="/terms" className="footer-link">Términos y Condiciones</Link>
-            </p>
+            <p className="footer-text" style={{ marginTop: 12, display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
+            <Link to="/privacy" className="footer-link">Política de Privacidad</Link>
+            <span style={{ color: 'var(--text-muted)' }}>·</span>
+            <Link to="/terms" className="footer-link">Términos y Condiciones</Link>
+            <span style={{ color: 'var(--text-muted)' }}>·</span>
+            <Link to="/support" className="footer-link">Soporte</Link>
+          </p>
             
           </footer>
         </div>
