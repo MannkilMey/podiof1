@@ -26,6 +26,33 @@
   <meta name="apple-mobile-web-app-title" content="PodioF1" />
   <link rel="manifest" href="/manifest.json" />
   
+   <!-- Lee el tema guardado ANTES de que cargue React, para que el primer pintado ya sea correcto -->
+  <script>
+    (function() {
+      var theme = 'dark';
+      try {
+        var stored = localStorage.getItem('podiof1-theme');
+        if (stored) {
+          var parsed = JSON.parse(stored);
+          theme = (parsed.state && parsed.state.theme) || parsed.theme || 'dark';
+        }
+      } catch (e) {}
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
+
+  <!-- Fondo de seguridad — coincide con el data-theme real de <html>, no un color fijo -->
+  <style>
+    html, body, #root { margin: 0; padding: 0; min-height: 100%; }
+    html[data-theme="dark"], html[data-theme="dark"] body, html[data-theme="dark"] #root {
+      background: #0A0A0C;
+    }
+    html[data-theme="light"], html[data-theme="light"] body, html[data-theme="light"] #root {
+      background: #F5F6F8;
+    }
+  </style>
+
+  
   <!-- Icons -->
   <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png" />
   <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-72.png" />
@@ -34,5 +61,6 @@
 <body>
   <div id="root"></div>
   <script type="module" src="/src/main.jsx"></script>
+
 </body>
 </html>

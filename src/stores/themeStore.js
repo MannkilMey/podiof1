@@ -15,3 +15,11 @@ export const useThemeStore = create(
     }
   )
 );
+
+// Mantiene <html data-theme="..."> sincronizado con el store en todo momento —
+// así el fondo de seguridad de index.html siempre coincide con el tema real,
+// sin que ninguna pantalla particular tenga que ocuparse de esto.
+useThemeStore.subscribe((state) => {
+  document.documentElement.setAttribute('data-theme', state.theme);
+});
+document.documentElement.setAttribute('data-theme', useThemeStore.getState().theme);

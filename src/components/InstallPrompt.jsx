@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from '../i18n';
+import { isNative } from '../hooks/usePlatform';
 
 /**
  * InstallPrompt - Banner que sugiere instalar la PWA
@@ -18,7 +19,9 @@ export default function InstallPrompt() {
   const [isIOS, setIsIOS] = useState(false);
   const [isInstalled, setIsInstalled] = useState(false);
 
-  useEffect(() => {
+   useEffect(() => {
+    if (isNative) return;
+
     // Check if already installed
     if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
       setIsInstalled(true);

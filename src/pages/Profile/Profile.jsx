@@ -261,7 +261,7 @@ export default function Profile() {
       <style>{FONTS + CSS}</style>
       <div data-theme={theme} className="profile-page">
 
-        <button className="profile-back" onClick={() => navigate(-1)}>← {t('common.back')}</button>
+      <BackButton className="profile-back" onClick={() => navigate(-1)}>← {t('common.back')}</BackButton>
         <h1 className="profile-page-title">{t('profile.title')}</h1>
 
         {/* ============================================ */}
