@@ -809,7 +809,7 @@ export default function Landing() {
           <section className="hero">
             <div className="hero-badge">
               <span>🏁</span>
-              100% Gratis · Predicciones en Vivo
+              Predicciones en Vivo
             </div>
             <h1 className="hero-title">
               Predicciones Deportivas<br/>
