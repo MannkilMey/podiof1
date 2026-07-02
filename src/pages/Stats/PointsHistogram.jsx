@@ -33,32 +33,32 @@ const CSS = `
 }
 
 .stats-page { padding: 24px 28px; max-width: 1400px; margin: 0 auto; background: var(--bg); min-height: calc(100vh - 120px); }
-.stats-back-btn { background: transparent; border: none; color: var(--red); cursor: pointer; font-size: 14px; font-weight: 600; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; padding: 0; transition: opacity 0.2s; }
+.stats-back-btn { background: transparent; border: none; color: var(--red); cursor: pointer; font-size: var(--fs-body); font-weight: 600; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; padding: 0; transition: opacity 0.2s; }
 .stats-back-btn:hover { opacity: 0.7; }
 .stats-header { margin-bottom: 28px; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; }
 .stats-header-left { flex: 1; }
-.stats-title { font-family: 'Barlow Condensed', sans-serif; font-size: 36px; font-weight: 900; color: var(--white); margin-bottom: 6px; letter-spacing: 1px; }
-.stats-subtitle { color: var(--muted); font-size: 15px; }
+.stats-title { font-family: 'Barlow Condensed', sans-serif; font-size: var(--fs-display); font-weight: 900; color: var(--white); margin-bottom: 6px; letter-spacing: 1px; }
+.stats-subtitle { color: var(--muted); font-size: var(--fs-subtitle); }
 .stats-controls { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; align-items: flex-end; }
-.stats-control-group label { display: block; font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.stats-control-group label { display: block; font-size: var(--fs-label); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
 .stats-filter-bar { display: flex; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
-.stats-filter-btn { padding: 10px 16px; background: transparent; border: none; color: var(--muted); font-size: 13px; font-weight: 400; cursor: pointer; font-family: 'Barlow', sans-serif; transition: all 0.2s; white-space: nowrap; }
+.stats-filter-btn { padding: 10px 16px; background: transparent; border: none; color: var(--muted); font-size: var(--fs-small); font-weight: 400; cursor: pointer; font-family: 'Barlow', sans-serif; transition: all 0.2s; white-space: nowrap; }
 .stats-filter-btn.active { background: var(--red); color: white; font-weight: 700; }
-.stats-toggle-btn { padding: 10px 16px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; color: var(--muted); font-size: 13px; cursor: pointer; font-family: 'Barlow', sans-serif; transition: all 0.2s; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+.stats-toggle-btn { padding: 10px 16px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; color: var(--muted); font-size: var(--fs-small); cursor: pointer; font-family: 'Barlow', sans-serif; transition: all 0.2s; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
 .stats-toggle-btn.active { background: var(--green-dim); border-color: var(--green); color: var(--green); font-weight: 600; }
-.stats-export-btn { padding: 10px 16px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; color: var(--muted); font-size: 13px; cursor: pointer; font-family: 'Barlow', sans-serif; transition: all 0.2s; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+.stats-export-btn { padding: 10px 16px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; color: var(--muted); font-size: var(--fs-small); cursor: pointer; font-family: 'Barlow', sans-serif; transition: all 0.2s; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
 .stats-export-btn:hover { border-color: var(--green); color: var(--green); background: var(--green-dim); }
 .stats-panel { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 24px; margin-bottom: 24px; transition: all 0.3s; }
-.stats-panel-title { font-family: 'Barlow Condensed', sans-serif; font-size: 18px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--white); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.stats-panel-title-sub { font-size: 12px; font-weight: 500; color: var(--muted); text-transform: none; letter-spacing: 0; }
+.stats-panel-title { font-family: 'Barlow Condensed', sans-serif; font-size: var(--fs-subtitle); font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--white); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.stats-panel-title-sub { font-size: var(--fs-small); font-weight: 500; color: var(--muted); text-transform: none; letter-spacing: 0; }
 .user-chips-container { margin-bottom: 24px; }
 .user-chips-header { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
-.user-chips-label { font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
+.user-chips-label { font-size: var(--fs-label); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
 .user-chips-actions { display: flex; gap: 6px; }
-.user-chips-action-btn { background: transparent; border: 1px solid var(--border); border-radius: 6px; padding: 3px 10px; font-size: 11px; color: var(--muted); cursor: pointer; font-family: 'Barlow', sans-serif; transition: all 0.2s; }
+.user-chips-action-btn { background: transparent; border: 1px solid var(--border); border-radius: 6px; padding: 3px 10px; font-size: var(--fs-label); color: var(--muted); cursor: pointer; font-family: 'Barlow', sans-serif; transition: all 0.2s; }
 .user-chips-action-btn:hover { border-color: var(--red); color: var(--red); }
 .user-chips { display: flex; flex-wrap: wrap; gap: 8px; }
-.user-chip { display: flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; border: 2px solid transparent; font-family: 'Barlow', sans-serif; user-select: none; }
+.user-chip { display: flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 20px; font-size: var(--fs-small); font-weight: 500; cursor: pointer; transition: all 0.2s; border: 2px solid transparent; font-family: 'Barlow', sans-serif; user-select: none; }
 .user-chip.active { font-weight: 700; }
 .user-chip-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 .ranking-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; }
@@ -67,14 +67,14 @@ const CSS = `
 .ranking-card:not(.top3) { background: var(--bg3); }
 .ranking-position { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; width: 32px; text-align: center; flex-shrink: 0; }
 .ranking-info { flex: 1; min-width: 0; }
-.ranking-name { font-size: 14px; font-weight: 700; color: var(--white); margin-bottom: 4px; }
+.ranking-name { font-size: var(--fs-body); font-weight: 700; color: var(--white); margin-bottom: 4px; }
 .ranking-bar-bg { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; margin-bottom: 4px; }
 .ranking-bar-fill { height: 100%; border-radius: 2px; transition: width 0.5s ease; }
-.ranking-details { display: flex; gap: 12px; font-size: 11px; color: var(--muted); flex-wrap: wrap; }
+.ranking-details { display: flex; gap: 12px; font-size: var(--fs-label); color: var(--muted); flex-wrap: wrap; }
 .ranking-points { text-align: right; flex-shrink: 0; }
-.ranking-points-value { font-family: 'Barlow Condensed', sans-serif; font-size: 24px; font-weight: 900; color: var(--white); }
-.ranking-points-label { font-size: 10px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
-.forecast-legend { display: flex; align-items: center; gap: 16px; padding: 12px 16px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 16px; font-size: 12px; color: var(--muted); flex-wrap: wrap; }
+.ranking-points-value { font-family: 'Barlow Condensed', sans-serif; font-size: var(--fs-section-title); font-weight: 900; color: var(--white); }
+.ranking-points-label { font-size: var(--fs-label); color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+.forecast-legend { display: flex; align-items: center; gap: 16px; padding: 12px 16px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 16px; font-size: var(--fs-small); color: var(--muted); flex-wrap: wrap; }
 .forecast-legend-item { display: flex; align-items: center; gap: 6px; }
 .forecast-legend-swatch { width: 16px; height: 10px; border-radius: 2px; flex-shrink: 0; }
 .stats-empty { height: 300px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--muted); gap: 12px; }
@@ -84,14 +84,12 @@ const CSS = `
 
 @media (max-width: 900px) {
   .stats-page { padding: 16px; }
-  .stats-title { font-size: 28px; }
   .stats-controls { flex-direction: column; align-items: stretch; }
   .ranking-grid { grid-template-columns: 1fr; }
   .stats-header { flex-direction: column; }
 }
 @media (max-width: 768px) {
   .user-chips { gap: 6px; }
-  .user-chip { padding: 5px 10px; font-size: 12px; }
 }
 `;
 
@@ -116,16 +114,16 @@ function BarTooltip({ active, payload, label, theme }) {
 
   return (
     <div style={{ background: bg, border: `1px solid ${border}`, borderRadius: 12, padding: '14px 18px', boxShadow: '0 8px 30px rgba(0,0,0,0.3)', minWidth: 180, maxWidth: 280 }}>
-      <div style={{ fontFamily: "'Barlow Condensed'", fontSize: 14, fontWeight: 800, color: text, marginBottom: 10, letterSpacing: 0.5, textTransform: 'uppercase' }}>
-        {label}{isProjected && <span style={{ fontSize: 10, color: muted, fontWeight: 500, textTransform: 'none', marginLeft: 8 }}>({t('pointsHistogram.projectedLabel')})</span>}
+      <div style={{ fontFamily: "'Barlow Condensed'", fontSize: 'var(--fs-body)', fontWeight: 800, color: text, marginBottom: 10, letterSpacing: 0.5, textTransform: 'uppercase' }}>
+        {label}{isProjected && <span style={{ fontSize: 'var(--fs-label)', color: muted, fontWeight: 500, textTransform: 'none', marginLeft: 8 }}>({t('pointsHistogram.projectedLabel')})</span>}
       </div>
       {sorted.map((entry, i) => (
-        <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, padding: '3px 0', fontSize: 13 }}>
+        <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, padding: '3px 0', fontSize: 'var(--fs-small)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <div style={{ width: 10, height: 10, borderRadius: 3, background: entry.color || entry.fill, opacity: isProjected ? 0.5 : 1, flexShrink: 0 }} />
             <span style={{ color: muted }}>{entry.name}</span>
           </div>
-          <span style={{ fontFamily: "'Barlow Condensed'", fontWeight: 700, fontSize: 15, color: text }}>{Math.round(entry.value)} {t('common.pts')}</span>
+          <span style={{ fontFamily: "'Barlow Condensed'", fontWeight: 700, fontSize: 'var(--fs-subtitle)', color: text }}>{Math.round(entry.value)} {t('common.pts')}</span>
         </div>
       ))}
     </div>
@@ -143,20 +141,20 @@ function LineTooltip({ active, payload, label, theme }) {
 
   return (
     <div style={{ background: bg, border: `1px solid ${border}`, borderRadius: 12, padding: '14px 18px', boxShadow: '0 8px 30px rgba(0,0,0,0.3)', minWidth: 180, maxWidth: 280 }}>
-      <div style={{ fontFamily: "'Barlow Condensed'", fontSize: 14, fontWeight: 800, color: text, marginBottom: 10, letterSpacing: 0.5, textTransform: 'uppercase' }}>{label}</div>
+      <div style={{ fontFamily: "'Barlow Condensed'", fontSize: 'var(--fs-body)', fontWeight: 800, color: text, marginBottom: 10, letterSpacing: 0.5, textTransform: 'uppercase' }}>{label}</div>
       {sorted.map((entry, i) => {
         const prev = i < sorted.length - 1 ? sorted[i + 1].value : null;
         const diff = prev != null ? entry.value - prev : null;
         return (
-          <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, padding: '3px 0', fontSize: 13 }}>
+          <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, padding: '3px 0', fontSize: 'var(--fs-small)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <div style={{ width: 10, height: 10, borderRadius: 50, background: entry.stroke || entry.color, flexShrink: 0 }} />
               <span style={{ color: muted }}>{entry.name}</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <span style={{ fontFamily: "'Barlow Condensed'", fontWeight: 700, fontSize: 15, color: text }}>{Math.round(entry.value)}</span>
+              <span style={{ fontFamily: "'Barlow Condensed'", fontWeight: 700, fontSize: 'var(--fs-subtitle)', color: text }}>{Math.round(entry.value)}</span>
               {diff != null && sorted.length > 1 && i === 0 && (
-                <span style={{ fontSize: 10, color: 'var(--green)', fontWeight: 600 }}>+{Math.round(diff)}</span>
+                <span style={{ fontSize: 'var(--fs-label)', color: 'var(--green)', fontWeight: 600 }}>+{Math.round(diff)}</span>
               )}
             </div>
           </div>
@@ -424,7 +422,7 @@ export default function PointsHistogram() {
       ws3['!cols'] = [{ wch: 30 }, ...userList.map(() => ({ wch: 15 }))];
       XLSX.utils.book_append_sheet(wb, ws3, t('pointsHistogram.cumulativePoints'));
 
-      const fileName = `PodioF1_Stats_${groupInfo?.nombre || t('pointsHistogram.groupFallback')}_${new Date().toISOString().slice(0, 10)}.xlsx`;
+      const fileName = `Podio_Stats_${groupInfo?.nombre || t('pointsHistogram.groupFallback')}_${new Date().toISOString().slice(0, 10)}.xlsx`;
       XLSX.writeFile(wb, fileName);
     } catch (err) {
       console.error('Error exporting:', err);
@@ -550,7 +548,7 @@ export default function PointsHistogram() {
           <div className="forecast-legend">
             <div className="forecast-legend-item"><div className="forecast-legend-swatch" style={{ background: 'var(--red)' }} /><span>{t('pointsHistogram.realResult')}</span></div>
             <div className="forecast-legend-item"><div className="forecast-legend-swatch" style={{ background: 'var(--red)', opacity: 0.35, border: '1px dashed var(--muted)' }} /><span>{t('pointsHistogram.forecastWeighted')}</span></div>
-            <span style={{ fontSize: 11, fontStyle: 'italic' }}>{t('pointsHistogram.recentRacesWeight')}</span>
+            <span style={{ fontSize: 'var(--fs-label)', fontStyle: 'italic' }}>{t('pointsHistogram.recentRacesWeight')}</span>
           </div>
         )}
 
@@ -561,20 +559,20 @@ export default function PointsHistogram() {
             {combinedChartData.length === 0 || visibleUsers.length === 0 ? (
               <div className="stats-empty">
                 <span className="stats-empty-icon">📊</span>
-                <span style={{ fontSize: 15 }}>{scores.length === 0 ? t('pointsHistogram.noScores') : visibleUsers.length === 0 ? t('pointsHistogram.selectAtLeastOneUser') : t('pointsHistogram.noDataForFilter')}</span>
+                <span style={{ fontSize: 'var(--fs-subtitle)' }}>{scores.length === 0 ? t('pointsHistogram.noScores') : visibleUsers.length === 0 ? t('pointsHistogram.selectAtLeastOneUser') : t('pointsHistogram.noDataForFilter')}</span>
               </div>
             ) : (
               <ResponsiveContainer width="100%" height={Math.max(400, visibleUsers.length * 20 + 360)}>
                 <BarChart data={combinedChartData} margin={{ top: 10, right: 20, left: 0, bottom: 60 }} barCategoryGap="18%" barGap={2}>
                   <CartesianGrid strokeDasharray="3 3" stroke={tc.grid} vertical={false} />
-                  <XAxis dataKey="raceName" tick={{ fill: tc.muted, fontSize: 11, fontFamily: "'Barlow Condensed'", fontWeight: 600 }} tickLine={false} axisLine={{ stroke: tc.axis }} angle={-30} textAnchor="end" height={80} interval={0} />
+                  <XAxis dataKey="raceName" tick={{ fill: tc.muted, fontSize: 12, fontFamily: "'Barlow Condensed'", fontWeight: 600 }} tickLine={false} axisLine={{ stroke: tc.axis }} angle={-30} textAnchor="end" height={80} interval={0} />
                   <YAxis tick={{ fill: tc.muted, fontSize: 12, fontFamily: "'Share Tech Mono'" }} tickLine={false} axisLine={false}
                    label={{ value: t('common.points'), angle: -90, position: 'insideLeft', fill: tc.muted, fontSize: 12, fontFamily: "'Barlow Condensed'", fontWeight: 600 }} />
                   <Tooltip content={<BarTooltip theme={theme} />} />
-                  <Legend wrapperStyle={{ fontFamily: "'Barlow'", fontSize: 12, paddingTop: 16 }} iconType="square" iconSize={10} />
+                  <Legend wrapperStyle={{ fontFamily: "'Barlow'", fontSize: 'var(--fs-small)', paddingTop: 16 }} iconType="square" iconSize={10} />
                   {showForecast && chartData.length > 0 && (
                     <ReferenceLine x={chartData[chartData.length - 1]?.raceName} stroke={tc.refLine} strokeDasharray="5 5"
-                      label={{ value: t('pointsHistogram.realVsForecast'), position: 'top', fill: tc.refLabel, fontSize: 10, fontFamily: "'Barlow Condensed'" }} />
+                      label={{ value: t('pointsHistogram.realVsForecast'), position: 'top', fill: tc.refLabel, fontSize: 12, fontFamily: "'Barlow Condensed'" }} />
                   )}
                   {visibleUsers.map(u => <Bar key={u.id} dataKey={u.displayName} fill={u.color} radius={[4, 4, 0, 0]} maxBarSize={40} />)}
                 </BarChart>
@@ -593,17 +591,17 @@ export default function PointsHistogram() {
             {cumulativeData.length === 0 || visibleUsers.length === 0 ? (
               <div className="stats-empty">
                 <span className="stats-empty-icon">📈</span>
-                <span style={{ fontSize: 15 }}>{scores.length === 0 ? t('pointsHistogram.noScores') : t('pointsHistogram.selectAtLeastOneUser')}</span>
+                <span style={{ fontSize: 'var(--fs-subtitle)' }}>{scores.length === 0 ? t('pointsHistogram.noScores') : t('pointsHistogram.selectAtLeastOneUser')}</span>
               </div>
             ) : (
               <ResponsiveContainer width="100%" height={Math.max(400, visibleUsers.length * 15 + 360)}>
                 <LineChart data={cumulativeData} margin={{ top: 10, right: 20, left: 0, bottom: 60 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke={tc.grid} vertical={false} />
-                  <XAxis dataKey="raceName" tick={{ fill: tc.muted, fontSize: 11, fontFamily: "'Barlow Condensed'", fontWeight: 600 }} tickLine={false} axisLine={{ stroke: tc.axis }} angle={-30} textAnchor="end" height={80} interval={0} />
+                  <XAxis dataKey="raceName" tick={{ fill: tc.muted, fontSize: 12, fontFamily: "'Barlow Condensed'", fontWeight: 600 }} tickLine={false} axisLine={{ stroke: tc.axis }} angle={-30} textAnchor="end" height={80} interval={0} />
                   <YAxis tick={{ fill: tc.muted, fontSize: 12, fontFamily: "'Share Tech Mono'" }} tickLine={false} axisLine={false}
                     label={{ value: t('pointsHistogram.cumulativePtsLabel'), angle: -90, position: 'insideLeft', fill: tc.muted, fontSize: 12, fontFamily: "'Barlow Condensed'", fontWeight: 600 }} />
                   <Tooltip content={<LineTooltip theme={theme} />} />
-                  <Legend wrapperStyle={{ fontFamily: "'Barlow'", fontSize: 12, paddingTop: 16 }} iconType="line" iconSize={14} />
+                  <Legend wrapperStyle={{ fontFamily: "'Barlow'", fontSize: 'var(--fs-small)', paddingTop: 16 }} iconType="line" iconSize={14} />
                   {visibleUsers.map(u => (
                     <Line key={u.id} type="monotone" dataKey={u.displayName} stroke={u.color} strokeWidth={3}
                       dot={{ r: 4, fill: u.color, strokeWidth: 0 }}
@@ -627,7 +625,7 @@ export default function PointsHistogram() {
                 const isSelected = selectedUsers.has(u.id);
                 return (
                   <div key={u.name} className={`ranking-card ${i < 3 ? 'top3' : ''}`} style={{ opacity: isSelected ? 1 : 0.4 }} onClick={() => toggleUser(u.id)}>
-                    <div className="ranking-position" style={{ fontSize: i < 3 ? 22 : 14, color: i < 3 ? 'var(--white)' : 'var(--muted)' }}>{medal}</div>
+                    <div className="ranking-position" style={{ fontSize: i < 3 ? 'var(--fs-stat-secondary)' : 'var(--fs-body)', color: i < 3 ? 'var(--white)' : 'var(--muted)' }}>{medal}</div>
                     <div className="ranking-info">
                       <div className="ranking-name">{u.name}</div>
                       <div className="ranking-bar-bg"><div className="ranking-bar-fill" style={{ width: `${pct}%`, background: u.color }} /></div>
@@ -658,7 +656,7 @@ export default function PointsHistogram() {
                 const pct = (u.projectedTotal / maxP) * 100;
                 return (
                   <div key={u.name} className={`ranking-card ${i < 3 ? 'top3' : ''}`}>
-                    <div className="ranking-position" style={{ fontSize: i < 3 ? 22 : 14, color: i < 3 ? 'var(--white)' : 'var(--muted)' }}>{i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `#${i + 1}`}</div>
+                    <div className="ranking-position" style={{ fontSize: i < 3 ? 'var(--fs-stat-secondary)' : 'var(--fs-body)', color: i < 3 ? 'var(--white)' : 'var(--muted)' }}>{i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `#${i + 1}`}</div>
                     <div className="ranking-info">
                       <div className="ranking-name">{u.name}</div>
                       <div className="ranking-bar-bg"><div className="ranking-bar-fill" style={{ width: `${pct}%`, background: u.color }} /></div>

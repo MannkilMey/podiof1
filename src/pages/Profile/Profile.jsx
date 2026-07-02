@@ -29,35 +29,35 @@ body { background: var(--bg); color: var(--white); font-family: 'Barlow', sans-s
 .profile-card { padding: 16px 12px; }
 .form-input, .form-select { font-size: 16px; padding: 10px 12px; }
 .profile-page { padding: 24px 28px; max-width: 900px; margin: 0 auto; min-height: 100vh; }
-.profile-back { background: transparent; border: none; color: var(--red); cursor: pointer; font-size: 14px; font-weight: 600; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; padding: 0; transition: opacity 0.2s; }
+.profile-back { background: transparent; border: none; color: var(--red); cursor: pointer; font-size: var(--fs-body); font-weight: 600; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; padding: 0; transition: opacity 0.2s; }
 .profile-back:hover { opacity: 0.7; }
-.profile-page-title { font-family: 'Barlow Condensed', sans-serif; font-size: 36px; font-weight: 900; color: var(--white); margin-bottom: 28px; letter-spacing: 1px; }
-.profile-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 28px; margin-bottom: 24px; overflow: hidden; }.profile-card-title { font-family: 'Barlow Condensed', sans-serif; font-size: 18px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--white); margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
-.profile-card-title-sub { font-size: 12px; font-weight: 500; color: var(--muted); text-transform: none; letter-spacing: 0; }
+.profile-page-title { font-family: 'Barlow Condensed', sans-serif; font-size: var(--fs-display); font-weight: 900; color: var(--white); margin-bottom: 28px; letter-spacing: 1px; }
+.profile-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 28px; margin-bottom: 24px; overflow: hidden; }.profile-card-title { font-family: 'Barlow Condensed', sans-serif; font-size: var(--fs-subtitle); font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--white); margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+.profile-card-title-sub { font-size: var(--fs-small); font-weight: 500; color: var(--muted); text-transform: none; letter-spacing: 0; }
 .profile-avatar-row { display: flex; align-items: center; gap: 20px; margin-bottom: 28px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
-.profile-avatar-circle { width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, #E8002D, #FF6B35); display: flex; align-items: center; justify-content: center; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 28px; color: white; flex-shrink: 0; }
+.profile-avatar-circle { width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, #E8002D, #FF6B35); display: flex; align-items: center; justify-content: center; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: var(--fs-stat-secondary); color: white; flex-shrink: 0; }
 .profile-avatar-info { flex: 1; }
-.profile-avatar-name { font-family: 'Barlow Condensed', sans-serif; font-size: 22px; font-weight: 800; color: var(--white); margin-bottom: 2px; }
-.profile-avatar-email { color: var(--muted); font-size: 13px; }
+.profile-avatar-name { font-family: 'Barlow Condensed', sans-serif; font-size: var(--fs-stat-secondary); font-weight: 800; color: var(--white); margin-bottom: 2px; }
+.profile-avatar-email { color: var(--muted); font-size: var(--fs-small); }
 .profile-avatar-badges-count { display: flex; gap: 16px; margin-top: 6px; }
-.profile-avatar-stat { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 4px; }
-.profile-avatar-stat strong { color: var(--white); font-family: 'Barlow Condensed', sans-serif; font-size: 16px; font-weight: 800; }
+.profile-avatar-stat { font-size: var(--fs-small); color: var(--muted); display: flex; align-items: center; gap: 4px; }
+.profile-avatar-stat strong { color: var(--white); font-family: 'Barlow Condensed', sans-serif; font-size: var(--fs-subtitle); font-weight: 800; }
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .form-group { margin-bottom: 20px; }
-.form-label { display: block; font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
-.form-input, .form-select { width: 100%; padding: 12px 16px; background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; color: var(--white); font-size: 14px; font-family: 'Barlow', sans-serif; transition: border-color 0.2s; box-sizing: border-box; }
+.form-label { display: block; font-size: var(--fs-label); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.form-input, .form-select { width: 100%; padding: 12px 16px; background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; color: var(--white); font-size: 16px; font-family: 'Barlow', sans-serif; transition: border-color 0.2s; box-sizing: border-box; }
 .form-input:focus, .form-select:focus { outline: none; border-color: var(--red); }
 .form-input:disabled, .form-select:disabled { opacity: 0.5; cursor: not-allowed; }
 .form-select option { background: var(--bg2); color: var(--white); }
-.btn-save { padding: 12px 28px; background: linear-gradient(135deg, var(--red), #FF3355); border: none; border-radius: 10px; color: white; font-family: 'Barlow Condensed', sans-serif; font-size: 14px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: opacity 0.2s; }
+.btn-save { padding: 12px 28px; background: linear-gradient(135deg, var(--red), #FF3355); border: none; border-radius: 10px; color: white; font-family: 'Barlow Condensed', sans-serif; font-size: var(--fs-body); font-weight: 800; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: opacity 0.2s; }
 .btn-save:hover { opacity: 0.9; }
 .btn-save:disabled { opacity: 0.5; cursor: not-allowed; }
-.msg-error { background: var(--red-dim); border: 1px solid rgba(232,0,45,0.3); border-radius: 8px; padding: 12px; color: var(--red); font-size: 13px; margin-bottom: 16px; }
-.msg-success { background: rgba(0,212,160,0.1); border: 1px solid rgba(0,212,160,0.3); border-radius: 8px; padding: 12px; color: #00D4A0; font-size: 13px; margin-bottom: 16px; }
+.msg-error { background: var(--red-dim); border: 1px solid rgba(232,0,45,0.3); border-radius: 8px; padding: 12px; color: var(--red); font-size: var(--fs-small); margin-bottom: 16px; }
+.msg-success { background: rgba(0,212,160,0.1); border: 1px solid rgba(0,212,160,0.3); border-radius: 8px; padding: 12px; color: #00D4A0; font-size: var(--fs-small); margin-bottom: 16px; }
 
 /* BADGES */
 .badges-filter { display: flex; gap: 6px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 4px; -webkit-overflow-scrolling: touch; }
-.badges-filter-btn { padding: 6px 14px; background: var(--bg3); border: 1px solid var(--border); border-radius: 20px; color: var(--muted); font-size: 12px; font-weight: 600; cursor: pointer; font-family: 'Barlow', sans-serif; transition: all 0.2s; white-space: nowrap; }
+.badges-filter-btn { padding: 6px 14px; background: var(--bg3); border: 1px solid var(--border); border-radius: 20px; color: var(--muted); font-size: var(--fs-small); font-weight: 600; cursor: pointer; font-family: 'Barlow', sans-serif; transition: all 0.2s; white-space: nowrap; }
 .badges-filter-btn.active { background: var(--red-dim); border-color: var(--red); color: var(--red); }
 .badges-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
 .badge-card { background: var(--bg3); border: 1px solid var(--border); border-radius: 12px; padding: 16px; text-align: center; transition: all 0.25s; position: relative; overflow: hidden; }
@@ -66,11 +66,11 @@ body { background: var(--bg); color: var(--white); font-family: 'Barlow', sans-s
 .badge-card.locked { opacity: 0.45; }
 .badge-card.locked .badge-icon { filter: grayscale(1); }
 .badge-icon { font-size: 36px; margin-bottom: 8px; display: block; line-height: 1; }
-.badge-name { font-family: 'Barlow Condensed', sans-serif; font-size: 13px; font-weight: 700; color: var(--white); margin-bottom: 4px; letter-spacing: 0.3px; }
-.badge-desc { font-size: 10px; color: var(--muted); line-height: 1.4; }
-.badge-date { font-size: 9px; color: var(--gold); margin-top: 6px; font-family: 'Share Tech Mono', monospace; }
-.badge-locked-label { font-size: 9px; color: var(--muted); margin-top: 6px; font-style: italic; }
-.badge-category-tag { position: absolute; top: 8px; right: 8px; font-size: 8px; padding: 2px 6px; border-radius: 4px; background: var(--bg2); color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+.badge-name { font-family: 'Barlow Condensed', sans-serif; font-size: var(--fs-small); font-weight: 700; color: var(--white); margin-bottom: 4px; letter-spacing: 0.3px; }
+.badge-desc { font-size: var(--fs-label); color: var(--muted); line-height: 1.4; }
+.badge-date { font-size: var(--fs-label); color: var(--gold); margin-top: 6px; font-family: 'Share Tech Mono', monospace; }
+.badge-locked-label { font-size: var(--fs-label); color: var(--muted); margin-top: 6px; font-style: italic; }
+.badge-category-tag { position: absolute; top: 8px; right: 8px; font-size: var(--fs-label); padding: 2px 6px; border-radius: 4px; background: var(--bg2); color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
 .badge-new-indicator { position: absolute; top: 8px; left: 8px; width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 6px rgba(0,212,160,0.5); }
 
 .profile-skeleton { height: 200px; background: var(--bg3); border-radius: 12px; animation: pulse 1.5s ease-in-out infinite; margin-bottom: 24px; }
@@ -79,21 +79,16 @@ body { background: var(--bg); color: var(--white); font-family: 'Barlow', sans-s
 @media (max-width: 1024px) { .badges-grid { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 768px) {
   .profile-page { padding: 16px; }
-  .profile-page-title { font-size: 28px; }
   .profile-card { padding: 20px 16px; }
   .badges-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
   .badge-card { padding: 14px 10px; }
   .badge-icon { font-size: 30px; }
   .form-row { grid-template-columns: 1fr; }
-  .form-input, .form-select { font-size: 16px; }
   .profile-avatar-row { flex-direction: column; text-align: center; }
 }
 @media (max-width: 400px) {
   .badges-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-  .badge-card { padding: 12px 8px; }
   .badge-icon { font-size: 26px; }
-  .badge-name { font-size: 11px; }
-  .badge-desc { font-size: 9px; }
   .profile-card { padding: 16px 12px; }
   .form-input, .form-select { font-size: 16px; padding: 10px 12px; }
 }
@@ -116,7 +111,7 @@ export default function Profile() {
   const theme = useThemeStore((state) => state.theme);
   const { t, locale } = useTranslation(); 
   const [profileData, setProfileData] = useState(null);
-  const [formData, setFormData] = useState({ nombre: '', apellido: '', fecha_nacimiento: '', piloto_favorito_id: '', escuderia_favorita_id: '' });
+  const [formData, setFormData] = useState({ nombre: '', apellido: '', piloto_favorito_id: '', escuderia_favorita_id: '' });
   const [allBadges, setAllBadges] = useState([]);
   const [userBadges, setUserBadges] = useState([]);
   const [teams, setTeams] = useState([]);
@@ -153,7 +148,6 @@ export default function Profile() {
       setFormData({
         nombre: profile?.nombre || '',
         apellido: profile?.apellido || '',
-        fecha_nacimiento: profile?.fecha_nacimiento || '',
         piloto_favorito_id: profile?.piloto_favorito_id || '',
         escuderia_favorita_id: profile?.escuderia_favorita_id || ''
       });
@@ -180,7 +174,6 @@ export default function Profile() {
       const updates = {
         nombre: formData.nombre,
         apellido: formData.apellido,
-        fecha_nacimiento: formData.fecha_nacimiento || null,
         piloto_favorito_id: formData.piloto_favorito_id || null,
         escuderia_favorita_id: formData.escuderia_favorita_id || null
       };
@@ -305,18 +298,11 @@ export default function Profile() {
               </div>
             </div>
 
-            <div className="form-row">
-              <div className="form-group">
-                <label className="form-label">{t('profile.birthDate')}</label>
-                <input type="date" className="form-input" value={formData.fecha_nacimiento}
-                  onChange={e => setFormData({ ...formData, fecha_nacimiento: e.target.value })}
-                  disabled={saving} max={new Date().toISOString().split('T')[0]} />
-              </div>
+    
               <div className="form-group">
                 <label className="form-label">{t('auth.email')}</label>
                 <input type="email" className="form-input" value={authUser?.email || ''} disabled />
               </div>
-            </div>
 
             <div className="form-row">
               <div className="form-group">
@@ -356,7 +342,7 @@ export default function Profile() {
 
           {/* Progress bar */}
           <div style={{ marginBottom: 20 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'var(--muted)', marginBottom: 6 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--fs-label)', color: 'var(--muted)', marginBottom: 6 }}>
               <span>{t('profile.generalProgress')}</span>
               <span style={{ fontFamily: "'Share Tech Mono'", color: 'var(--white)' }}>{badgeStats.pct}%</span>
             </div>
@@ -412,7 +398,7 @@ export default function Profile() {
                   {isUnlocked ? (
                     <div className="badge-date">
                       ✅ {formatDate(unlockData?.date)}
-                      {unlockData?.grupo && <span style={{ display: 'block', fontSize: 8, opacity: 0.7 }}>{unlockData.grupo}</span>}
+                      {unlockData?.grupo && <span style={{ display: 'block', fontSize: 'var(--fs-label)', opacity: 0.7 }}>{unlockData.grupo}</span>}
                     </div>
                   ) : (
                     <div className="badge-locked-label">
@@ -430,6 +416,30 @@ export default function Profile() {
             </div>
           )}
         </div>
+
+          <div className="profile-card" style={{ borderColor: 'rgba(232,0,45,0.3)' }}>
+            <div className="profile-card-title" style={{ color: 'var(--red)' }}>
+              ⚠️ {t('profile.dangerZone')}
+            </div>
+            <p style={{ fontSize: 'var(--fs-small)', color: 'var(--muted)', marginBottom: 16, lineHeight: 1.6 }}>
+              {t('profile.deleteAccountDesc')}
+            </p>
+            <button
+              onClick={() => navigate('/delete-account')}
+              style={{
+                padding: '10px 20px', background: 'transparent',
+                border: '2px solid var(--red)', borderRadius: 8,
+                color: 'var(--red)', fontFamily: "'Barlow Condensed', sans-serif",
+                fontSize: 'var(--fs-small)', fontWeight: 800, letterSpacing: 1,
+                textTransform: 'uppercase', cursor: 'pointer', transition: 'all 0.2s'
+              }}
+              onMouseEnter={e => { e.currentTarget.style.background = 'var(--red-dim)'; }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
+            >
+              🗑️ {t('profile.deleteAccountBtn')}
+            </button>
+          </div>
+
       </div>
     </>
   );

@@ -15,16 +15,16 @@ const CSS = `
 }
 .delete-back {
   background: transparent; border: none; color: var(--red);
-  cursor: pointer; font-size: 14px; font-weight: 600;
+  cursor: pointer; font-size: var(--fs-body); font-weight: 600;
   margin-bottom: 24px; padding: 0;
 }
 .delete-title {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 32px; font-weight: 900; color: var(--white);
+  font-size: var(--fs-page-title); font-weight: 900; color: var(--white);
   margin-bottom: 8px;
 }
 .delete-subtitle {
-  font-size: 14px; color: var(--muted); margin-bottom: 32px; line-height: 1.6;
+  font-size: var(--fs-body); color: var(--muted); margin-bottom: 32px; line-height: 1.6;
 }
 .delete-warning {
   background: rgba(232,0,45,0.08); border: 1px solid rgba(232,0,45,0.3);
@@ -32,11 +32,11 @@ const CSS = `
 }
 .delete-warning-title {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 18px; font-weight: 800; color: var(--red);
+  font-size:var(--fs-subtitle); font-weight: 800; color: var(--red);
   margin-bottom: 12px;
 }
 .delete-warning-list {
-  padding-left: 20px; font-size: 14px; color: var(--muted); line-height: 1.8;
+  padding-left: 20px; font-size: var(--fs-body); color: var(--muted); line-height: 1.8;
 }
 .delete-confirm-box {
   background: var(--bg2); border: 1px solid var(--border);
@@ -51,7 +51,7 @@ const CSS = `
 .delete-input:focus { outline: none; border-color: var(--red); }
 .delete-btn {
   width: 100%; padding: 16px; border: none; border-radius: 10px;
-  font-family: 'Barlow Condensed', sans-serif; font-size: 16px;
+  font-family: 'Barlow Condensed', sans-serif; font-size: var(--fs-subtitle);
   font-weight: 800; letter-spacing: 1px; text-transform: uppercase;
   cursor: pointer; transition: all 0.2s; margin-bottom: 12px;
 }
@@ -72,13 +72,12 @@ const CSS = `
 .delete-success-icon { font-size: 64px; margin-bottom: 20px; }
 .delete-success-title {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 28px; font-weight: 900; color: var(--white);
+  font-size: var(--fs-stat-secondary); font-weight: 900; color: var(--white);
   margin-bottom: 12px;
 }
-.delete-success-text { font-size: 14px; color: var(--muted); line-height: 1.6; }
+.delete-success-text { font-size: var(--fs-body); color: var(--muted); line-height: 1.6; }
 @media (max-width: 768px) {
   .delete-page { padding: 20px 16px; }
-  .delete-title { font-size: 26px; }
 }
 `;
 
@@ -176,7 +175,7 @@ export default function DeleteAccount() {
             </div>
 
             <div className="delete-confirm-box">
-              <div style={{ fontSize: 14, color: 'var(--muted)', textAlign: 'center' }}>
+              <div style={{ fontSize: 'var(--fs-body)', color: 'var(--muted)', textAlign: 'center' }}>
                 {t('deleteAccount.accountLabel')}: <strong style={{ color: 'var(--white)' }}>{user?.email}</strong>
               </div>
               <input
@@ -192,7 +191,7 @@ export default function DeleteAccount() {
             {error && (
               <div style={{
                 background: 'rgba(232,0,45,0.1)', border: '1px solid rgba(232,0,45,0.3)',
-                borderRadius: 8, padding: 12, color: 'var(--red)', fontSize: 13,
+                borderRadius: 8, padding: 12, color: 'var(--red)', fontSize: 'var(--fs-small)',
                 marginBottom: 16
               }}>
                 {error}

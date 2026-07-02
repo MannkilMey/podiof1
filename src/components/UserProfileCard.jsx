@@ -94,7 +94,7 @@ export default function UserProfileCard({ userId }) {
           background: `linear-gradient(135deg, ${teamColor}, ${teamColor}88)`,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 800,
-          fontSize: 18, color: 'white', flexShrink: 0,
+          fontSize: 'var(--fs-subtitle)', color: 'white', flexShrink: 0,
           boxShadow: `0 2px 12px ${teamColor}33`
         }}>
           {initials || '?'}
@@ -102,7 +102,7 @@ export default function UserProfileCard({ userId }) {
 
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{
-            fontFamily: "'Barlow Condensed', sans-serif", fontSize: 20,
+            fontFamily: "'Barlow Condensed', sans-serif", fontSize: 'var(--fs-section-title)',
             fontWeight: 800, color: 'var(--white)', letterSpacing: 0.5,
             overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'
           }}>
@@ -110,18 +110,18 @@ export default function UserProfileCard({ userId }) {
           </div>
           <div style={{ display: 'flex', gap: 12, marginTop: 2, flexWrap: 'wrap' }}>
             {teamName && (
-              <span style={{ fontSize: 12, color: teamColor, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 4 }}>
+              <span style={{ fontSize: 'var(--fs-small)', color: teamColor, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 4 }}>
                 <span style={{ width: 8, height: 8, borderRadius: '50%', background: teamColor, flexShrink: 0 }} />
                 {teamName}
               </span>
             )}
             {driverName && (
-              <span style={{ fontSize: 12, color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: 4 }}>
+              <span style={{ fontSize: 'var(--fs-small)', color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: 4 }}>
                 🏎 {driverName}
               </span>
             )}
             {!teamName && !driverName && (
-              <span style={{ fontSize: 12, color: 'var(--muted)', fontStyle: 'italic' }}>
+              <span style={{ fontSize: 'var(--fs-small)', color: 'var(--muted)', fontStyle: 'italic' }}>
                 {t('profile.completeTap')}
               </span>
             )}

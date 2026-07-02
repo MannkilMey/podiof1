@@ -19,7 +19,7 @@ import { isNative } from '../../hooks/usePlatform';
 import { useTranslation, getDateLocale, getRaceName, CURRENCY_DECIMALS } from '../../i18n';
 import BackButton from '../../components/BackButton'; 
 import { usePremium } from '../../hooks/usePremium';
-import { UpgradeModal } from '../../components/PaywallGate';
+import PaywallGate, { UpgradeModal } from '../../components/PaywallGate';
 import WildcardInterestCard from '../../components/WildcardInterestCard';
 
 
@@ -40,7 +40,7 @@ const CSS = `
   --bg: #0A0A0C; --bg2: #111114; --bg3: #18181D; --bg4: #1E1E24;
   --border: rgba(255,255,255,0.07); --border2: rgba(255,255,255,0.13);
   --red: #E8002D; --red-dim: rgba(232,0,45,0.13);
-  --white: #F0F0F0; --muted: rgba(240,240,240,0.40);
+  --white: #F0F0F0; --muted: rgba(240,240,240,0.55);
   --gold: #C9A84C; --green: #00D4A0; --green-dim: rgba(0,212,160,0.15);
 }
 
@@ -65,7 +65,7 @@ const CSS = `
   border: none;
   color: var(--red);
   cursor: pointer;
-  font-size: 14px;
+  font-size: var(--fs-body);
   font-weight: 600;
   margin-bottom: 20px;
   display: flex;
@@ -106,7 +106,7 @@ const CSS = `
 
 .hero-title {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 36px;
+  font-size: var(--fs-page-title);
   font-weight: 900;
   color: var(--white);
   margin-bottom: 8px;
@@ -117,7 +117,7 @@ const CSS = `
   color: var(--red);
   padding: 6px 12px;
   border-radius: 20px;
-  font-size: 11px;
+  font-size: var(--fs-label);
   font-weight: 700;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -125,7 +125,7 @@ const CSS = `
 
 .next-race {
   color: var(--muted);
-  font-size: 18px;
+  font-size: var(--fs-subtitle);
   margin-bottom: 16px;
 }
 
@@ -149,7 +149,7 @@ const CSS = `
 }
 
 .countdown-label {
-  font-size: 11px;
+  font-size: var(--fs-label);
   color: var(--muted);
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -158,13 +158,13 @@ const CSS = `
 
 .countdown-time {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 28px;
+  font-size: var(--fs-stat-secondary);
   font-weight: 900;
   color: var(--white);
 }
 
 .countdown-date {
-  font-size: 12px;
+  font-size: var(--fs-small);
   color: var(--muted);
   margin-top: 4px;
 }
@@ -176,7 +176,7 @@ const CSS = `
   padding: 12px 16px;
   color: var(--red);
   font-weight: 600;
-  font-size: 14px;
+  font-size: var(--fs-body);
   animation: slideIn 0.3s ease-out;
 }
 
@@ -196,7 +196,7 @@ const CSS = `
   cursor: pointer;
   font-family: 'Barlow Condensed', sans-serif;
   font-weight: 700;
-  font-size: 14px;
+  font-size: var(--fs-body);
   letter-spacing: 1px;
   text-transform: uppercase;
   transition: all 0.2s ease;
@@ -234,20 +234,20 @@ const CSS = `
 }
 
 .stat-icon {
-  font-size: 32px;
+  font-size: var(--fs-page-title);
   margin-bottom: 8px;
 }
 
 .stat-value {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 48px;
+  font-size: var(--fs-display);
   font-weight: 900;
   color: var(--white);
   line-height: 1;
 }
 
 .stat-label {
-  font-size: 12px;
+  font-size: var(--fs-small);
   color: var(--muted);
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -274,7 +274,7 @@ const CSS = `
   padding: 12px 20px;
   color: var(--muted);
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 16px;
+  font-size: var(--fs-subtitle);
   font-weight: 700;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -336,7 +336,7 @@ const CSS = `
   background: var(--bg3);
   padding: 16px;
   text-align: left;
-  font-size: 11px;
+  font-size: var(--fs-label);
   color: var(--muted);
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -368,12 +368,12 @@ const CSS = `
 
 .position-cell {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 20px;
+  font-size: var(--fs-section-title);
   font-weight: 900;
 }
 
 .medal { 
-  font-size: 20px;
+  font-size: var(--fs-section-title);
   margin-right: 4px;
 }
 
@@ -398,16 +398,16 @@ const CSS = `
   }
   
   .hero-title {
-    font-size: 28px;
+    font-size: var(--fs-stat-secondary);
   }
   
   .countdown-time {
-    font-size: 20px;
+    font-size: var(--fs-section-title);
   }
   
   .tab-btn {
     padding: 10px 16px;
-    font-size: 14px;
+    font-size: var(--fs-body);
   }
   
   .leaderboard-table {
@@ -419,13 +419,33 @@ const CSS = `
   }
 
   .stat-value {
-    font-size: 36px;
+    font-size: var(--fs-page-title);
   }
 
   .stat-icon {
-    font-size: 24px;
+    font-size: var(--fs-section-title);
   }
 }
+    /* Agregar dentro del template CSS, en cualquier lugar */
+.seguro-ad-card {
+  background: linear-gradient(135deg, var(--bg2), rgba(201,168,76,0.06));
+  border: 1px solid var(--gold);
+  border-radius: 14px;
+  padding: 18px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(201,168,76,0.25); }
+  50% { box-shadow: 0 0 0 6px rgba(201,168,76,0); }
+}
+
+
 `;
 
 function HeroBanner({ group, nextRace, navigate, groupId, onShowScoringModal }) {
@@ -509,7 +529,19 @@ function HeroBanner({ group, nextRace, navigate, groupId, onShowScoringModal }) 
           >
             👥 {t('group.viewMembers')}
           </button>
-
+           
+          {group.beta_seguro_prediccion && (
+          <PaywallGate feature="seguro_prediccion" compact>
+            <button 
+              className="btn-admin"
+              onClick={() => navigate(`/group/${groupId}/seguro`)}
+              style={{ background: 'linear-gradient(135deg, var(--gold), #A67C00)', marginBottom: 0 }}
+            >
+              🛡️ {t('group.myInsurance')}
+            </button>
+          </PaywallGate>
+        )}
+        
           <button 
             className="btn-admin"
             onClick={() => navigate(`/group/${groupId}/stats`)}
@@ -520,6 +552,7 @@ function HeroBanner({ group, nextRace, navigate, groupId, onShowScoringModal }) 
           >
             📊 {t('group.statistics')}
           </button>
+         
           
           {group.isAdmin && (
             <>
@@ -565,7 +598,7 @@ function HeroBanner({ group, nextRace, navigate, groupId, onShowScoringModal }) 
                 borderRadius: 10,
                 color: 'var(--white)',
                 cursor: 'pointer',
-                fontSize: 14,
+                fontSize: 'var(--fs-body)',
                 fontWeight: 600,
                 display: 'flex',
                 alignItems: 'center',
@@ -653,6 +686,18 @@ function HeroBanner({ group, nextRace, navigate, groupId, onShowScoringModal }) 
         >
           📊 {t('group.statistics')}
         </button>
+
+        {group.beta_seguro_prediccion && (
+          <PaywallGate feature="seguro_prediccion" compact>
+            <button 
+              className="btn-admin"
+              onClick={() => navigate(`/group/${groupId}/seguro`)}
+              style={{ background: 'linear-gradient(135deg, var(--gold), #A67C00)', marginBottom: 0 }}
+            >
+              🛡️ {t('group.myInsurance')}
+            </button>
+          </PaywallGate>
+        )}
         
         {group.isAdmin && (
           <>
@@ -693,7 +738,7 @@ function HeroBanner({ group, nextRace, navigate, groupId, onShowScoringModal }) 
               color: 'white',
               fontWeight: 700,
               cursor: 'pointer',
-              fontSize: '13px',
+              fontSize: 'var(--fs-small)',
               transition: 'opacity 0.2s'
             }}
             onMouseOver={(e) => e.target.style.opacity = '0.9'}
@@ -788,7 +833,7 @@ function SeasonProgressBar({ temporada }) {
       }}>
         <div>
           <div style={{
-            fontSize: 11,
+            fontSize: 'var(--fs-label)',
             color: 'var(--muted)',
             textTransform: 'uppercase',
             letterSpacing: 1,
@@ -798,7 +843,7 @@ function SeasonProgressBar({ temporada }) {
           </div>
           <div style={{
             fontFamily: 'Barlow Condensed',
-            fontSize: 24,
+            fontSize: 'var(--fs-section-title)',
             fontWeight: 900,
             color: 'var(--white)'
           }}>
@@ -807,7 +852,7 @@ function SeasonProgressBar({ temporada }) {
         </div>
         <div style={{
           fontFamily: 'Barlow Condensed',
-          fontSize: 48,
+          fontSize: 'var(--fs-body)',
           fontWeight: 900,
           color: 'var(--red)'
         }}>
@@ -833,7 +878,7 @@ function SeasonProgressBar({ temporada }) {
       </div>
 
       <div style={{
-        fontSize: 12,
+        fontSize: 'var(--fs-small)',
         color: 'var(--muted)',
         marginTop: 8,
         textAlign: 'center'
@@ -923,7 +968,7 @@ function LeaderboardTab({ leaderboard, userId, groupId, type = 'total' }) {
                         <div style={{ padding: 20 }}>
                           <div style={{
                             fontFamily: 'Barlow Condensed',
-                            fontSize: 14,
+                            fontSize: 'var(--fs-body)',
                             fontWeight: 700,
                             color: 'var(--muted)',
                             textTransform: 'uppercase',
@@ -948,12 +993,12 @@ function LeaderboardTab({ leaderboard, userId, groupId, type = 'total' }) {
                                     : '1px solid var(--border)',
                                   borderRadius: 8,
                                   padding: 12,
-                                  fontSize: 13,
+                                  fontSize: 'var(--fs-small)',
                                   transition: 'all 0.2s ease'
                                 }}
                               >
                                 <div style={{
-                                  fontSize: 11,
+                                  fontSize: 'var(--fs-label)',
                                   color: 'var(--muted)',
                                   marginBottom: 4
                                 }}>
@@ -963,7 +1008,7 @@ function LeaderboardTab({ leaderboard, userId, groupId, type = 'total' }) {
                                 {race.estado === 'finalizada' ? (
                                   <div style={{
                                     fontFamily: 'Barlow Condensed',
-                                    fontSize: 20,
+                                    fontSize: 'var(--fs-section-title)',
                                     fontWeight: 900,
                                     color: race.puntos > 0 ? 'var(--green)' : 'var(--muted)'
                                   }}>
@@ -971,7 +1016,7 @@ function LeaderboardTab({ leaderboard, userId, groupId, type = 'total' }) {
                                   </div>
                                 ) : (
                                   <div style={{
-                                    fontSize: 12,
+                                    fontSize: 'var(--fs-small)',
                                     color: 'var(--muted)',
                                     fontStyle: 'italic'
                                   }}>
@@ -984,7 +1029,7 @@ function LeaderboardTab({ leaderboard, userId, groupId, type = 'total' }) {
                           {/* Badges del usuario */}
                           <div style={{ marginTop: 16, paddingTop: 16, borderTop: '1px solid var(--border)' }}>
                             <div style={{
-                              fontFamily: 'Barlow Condensed', fontSize: 14, fontWeight: 700,
+                              fontFamily: 'Barlow Condensed', fontSize: 'var(--fs-body)', fontWeight: 700,
                               color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8
                             }}>
                               🏅 {t('leaderboard.badges')}
@@ -998,7 +1043,7 @@ function LeaderboardTab({ leaderboard, userId, groupId, type = 'total' }) {
                             borderTop: '1px solid var(--border)',
                             display: 'flex',
                             gap: 24,
-                            fontSize: 13,
+                            fontSize: 'var(--fs-small)',
                             flexWrap: 'wrap'
                           }}>
                             <div>
@@ -1041,8 +1086,8 @@ function DriversStandingsTab({ standings, loading }) {
     return (
       <div style={{ padding: 40, textAlign: 'center', color: 'var(--muted)' }}>
         <div style={{ fontSize: 48, marginBottom: 16, opacity: 0.3 }}>🏁</div>
-        <div style={{ fontSize: 18, marginBottom: 8 }}>{t('standings.noDataTitle')}</div>
-        <div style={{ fontSize: 14 }}>{t('standings.noDataSub')}</div>
+        <div style={{ fontSize: 'var(--fs-subtitle)', marginBottom: 8 }}>{t('standings.noDataTitle')}</div>
+        <div style={{ fontSize: 'var(--fs-body)' }}>{t('standings.noDataSub')}</div>
       </div>
     );
   }
@@ -1059,14 +1104,14 @@ function DriversStandingsTab({ standings, loading }) {
               <td className="position-cell"><span className="medal">{getMedal(driver.position)}</span>{driver.position}</td>
               <td>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <span style={{ fontSize: 12, color: 'var(--muted)', fontFamily: 'monospace', minWidth: 30 }}>#{driver.numero}</span>
+                  <span style={{ fontSize: 'var(--fs-small)', color: 'var(--muted)', fontFamily: 'monospace', minWidth: 30 }}>#{driver.numero}</span>
                   <span style={{ fontWeight: 600 }}>{driver.nombre_completo || t('common.unknown')}</span>
-                  {driver.acronimo && <span style={{ fontSize: 11, color: 'var(--muted)', fontFamily: 'monospace', marginLeft: 4 }}>{driver.acronimo}</span>}
+                  {driver.acronimo && <span style={{ fontSize: 'var(--fs-label)', color: 'var(--muted)', fontFamily: 'monospace', marginLeft: 4 }}>{driver.acronimo}</span>}
                 </div>
               </td>
-              <td style={{ color: 'var(--muted)', fontSize: 14 }}>{driver.equipo || 'N/A'}</td>
+              <td style={{ color: 'var(--muted)', fontSize: 'var(--fs-body)' }}>{driver.equipo || 'N/A'}</td>
               <td style={{ textAlign: 'center', color: 'var(--muted)' }}>{driver.carreras}</td>
-              <td style={{ fontFamily: 'Barlow Condensed', fontSize: 18, fontWeight: 700 }}>{Math.round(driver.puntos)}</td>
+              <td style={{ fontFamily: 'Barlow Condensed', fontSize: 'var(--fs-subtitle)', fontWeight: 700 }}>{Math.round(driver.puntos)}</td>
             </tr>
           ))}
         </tbody>
@@ -1082,8 +1127,8 @@ function TeamsStandingsTab({ standings, loading }) {
     return (
       <div style={{ padding: 40, textAlign: 'center', color: 'var(--muted)' }}>
         <div style={{ fontSize: 48, marginBottom: 16, opacity: 0.3 }}>🏁</div>
-        <div style={{ fontSize: 18, marginBottom: 8 }}>{t('standings.noDataTitle')}</div>
-        <div style={{ fontSize: 14 }}>{t('standings.noDataSub')}</div>
+        <div style={{ fontSize: 'var(--fs-subtitle)', marginBottom: 8 }}>{t('standings.noDataTitle')}</div>
+        <div style={{ fontSize: 'var(--fs-body)' }}>{t('standings.noDataSub')}</div>
       </div>
     );
   }
@@ -1098,9 +1143,9 @@ function TeamsStandingsTab({ standings, loading }) {
           {standings.map(team => (
             <tr key={team.equipo_id}>
               <td className="position-cell"><span className="medal">{getMedal(team.position)}</span>{team.position}</td>
-              <td style={{ fontWeight: 600, fontSize: 15 }}>{team.nombre}</td>
+              <td style={{ fontWeight: 600, fontSize: 'var(--fs-subtitle)' }}>{team.nombre}</td>
               <td style={{ textAlign: 'center', color: 'var(--muted)' }}>{team.carreras}</td>
-              <td style={{ fontFamily: 'Barlow Condensed', fontSize: 18, fontWeight: 700 }}>{Math.round(team.puntos)}</td>
+              <td style={{ fontFamily: 'Barlow Condensed', fontSize: 'var(--fs-subtitle)', fontWeight: 700 }}>{Math.round(team.puntos)}</td>
             </tr>
           ))}
         </tbody>
@@ -1126,8 +1171,8 @@ function LastRaceTab({ groupId, temporada, userId, group, navigate }) {
     return (
       <div style={{ padding: 40, textAlign: 'center', color: 'var(--muted)' }}>
         <div style={{ fontSize: 48, marginBottom: 16, opacity: 0.3 }}>🏁</div>
-        <div style={{ fontSize: 18, marginBottom: 8 }}>{t('lastRace.noRaces')}</div>
-        <div style={{ fontSize: 14 }}>{t('lastRace.noRacesSub')}</div>
+        <div style={{ fontSize: 'var(--fs-subtitle)', marginBottom: 8 }}>{t('lastRace.noRaces')}</div>
+        <div style={{ fontSize: 'var(--fs-body)' }}>{t('lastRace.noRacesSub')}</div>
       </div>
     );
   }
@@ -1156,13 +1201,13 @@ function LastRaceTab({ groupId, temporada, userId, group, navigate }) {
         padding: '24px',
         marginBottom: '24px'
       }}>
-        <div style={{ fontSize: 12, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 }}>
+        <div style={{ fontSize: 'var(--fs-small)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 }}>
           {t('lastRace.lastCompleted')}
         </div>
-        <h2 style={{ fontFamily: 'Barlow Condensed', fontSize: 32, fontWeight: 900, color: 'var(--white)', marginBottom: 8 }}>
+        <h2 style={{ fontFamily: 'Barlow Condensed', fontSize: 'var(--fs-page-title)', fontWeight: 900, color: 'var(--white)', marginBottom: 8 }}>
           {getRaceName(lastRace, t)}
         </h2>
-        <div style={{ fontSize: 14, color: 'var(--muted)', display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+        <div style={{ fontSize: 'var(--fs-body)', color: 'var(--muted)', display: 'flex', gap: 16, flexWrap: 'wrap' }}>
           <span>📍 {lastRace.circuito}</span>
           <span>📅 {new Date(lastRace.fecha_programada).toLocaleDateString(getDateLocale(locale), { day: 'numeric', month: 'long', year: 'numeric' })}</span>          <span>👥 {t('lastRace.predictionsCount', { count: predictions.length })}</span>
         </div>
@@ -1173,7 +1218,7 @@ function LastRaceTab({ groupId, temporada, userId, group, navigate }) {
             width: '100%', padding: '14px 24px',
             background: 'linear-gradient(135deg, #00D4A0, #00A67E)',
             border: 'none', borderRadius: '10px', color: 'white',
-            fontFamily: 'Barlow Condensed', fontSize: 16, fontWeight: 800,
+            fontFamily: 'Barlow Condensed', fontSize: 'var(--fs-subtitle)', fontWeight: 800,
             letterSpacing: 1, textTransform: 'uppercase', cursor: 'pointer',
             transition: 'all 0.2s', marginTop: 16
           }}
@@ -1186,33 +1231,33 @@ function LastRaceTab({ groupId, temporada, userId, group, navigate }) {
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 16, marginBottom: 24 }}>
         <div style={{ background: 'var(--bg2)', border: '2px solid var(--green)', borderRadius: 12, padding: 20, textAlign: 'center' }}>
-          <div style={{ fontSize: 11, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 }}>🏆 {t('lastRace.bestPrediction')}</div>
-          <div style={{ fontFamily: 'Barlow Condensed', fontSize: 24, fontWeight: 900, color: 'var(--white)', marginBottom: 4 }}>{bestPrediction?.nombre || 'N/A'}</div>
-          <div style={{ fontSize: 14, color: 'var(--green)', fontWeight: 700 }}>{t('common.pointsCount', { count: Math.round(bestPrediction?.puntos || 0) })} • {t('common.exactCount', { count: calculateCorrect(bestPrediction?.posiciones) })}</div>
+          <div style={{ fontSize: 'var(--fs-label)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 }}>🏆 {t('lastRace.bestPrediction')}</div>
+          <div style={{ fontFamily: 'Barlow Condensed', fontSize: 'var(--fs-section-title)', fontWeight: 900, color: 'var(--white)', marginBottom: 4 }}>{bestPrediction?.nombre || 'N/A'}</div>
+          <div style={{ fontSize: 'var(--fs-body)', color: 'var(--green)', fontWeight: 700 }}>{t('common.pointsCount', { count: Math.round(bestPrediction?.puntos || 0) })} • {t('common.exactCount', { count: calculateCorrect(bestPrediction?.posiciones) })}</div>
         </div>
         <div style={{ background: 'var(--bg2)', border: '1px solid var(--border)', borderRadius: 12, padding: 20, textAlign: 'center' }}>
-          <div style={{ fontSize: 11, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 }}>📊 {t('lastRace.groupAverage')}</div>
-          <div style={{ fontFamily: 'Barlow Condensed', fontSize: 24, fontWeight: 900, color: 'var(--white)' }}>{t('common.pointsCount', { count: Math.round(avgPoints) })}</div>
+          <div style={{ fontSize: 'var(--fs-label)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 }}>📊 {t('lastRace.groupAverage')}</div>
+          <div style={{ fontFamily: 'Barlow Condensed', fontSize: 'var(--fs-section-title)', fontWeight: 900, color: 'var(--white)' }}>{t('common.pointsCount', { count: Math.round(avgPoints) })}</div>
         </div>
         {worstPrediction && (
           <div style={{ background: 'var(--bg2)', border: '1px solid rgba(232,0,45,0.3)', borderRadius: 12, padding: 20, textAlign: 'center' }}>
-            <div style={{ fontSize: 11, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 }}>😅 {t('lastRace.worstPrediction')}</div>
-            <div style={{ fontFamily: 'Barlow Condensed', fontSize: 24, fontWeight: 900, color: 'var(--white)', marginBottom: 4 }}>{worstPrediction.nombre}</div>
-            <div style={{ fontSize: 14, color: 'var(--red)', fontWeight: 700 }}>{t('common.pointsCount', { count: Math.round(worstPrediction.puntos) })}</div>
+            <div style={{ fontSize: 'var(--fs-label)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 }}>😅 {t('lastRace.worstPrediction')}</div>
+            <div style={{ fontFamily: 'Barlow Condensed', fontSize: 'var(--fs-section-title)', fontWeight: 900, color: 'var(--white)', marginBottom: 4 }}>{worstPrediction.nombre}</div>
+            <div style={{ fontSize: 'var(--fs-body)', color: 'var(--red)', fontWeight: 700 }}>{t('common.pointsCount', { count: Math.round(worstPrediction.puntos) })}</div>
           </div>
         )}
       </div>
 
       <div style={{ background: 'var(--bg2)', border: '1px solid var(--border)', borderRadius: 14, padding: 24, marginBottom: 24 }}>
-        <h3 style={{ fontFamily: 'Barlow Condensed', fontSize: 18, fontWeight: 800, color: 'var(--white)', marginBottom: 16, textTransform: 'uppercase', letterSpacing: 1 }}>🏁 {t('lastRace.officialResult')}</h3>
+        <h3 style={{ fontFamily: 'Barlow Condensed', fontSize: 'var(--fs-subtitle)', fontWeight: 800, color: 'var(--white)', marginBottom: 16, textTransform: 'uppercase', letterSpacing: 1 }}>🏁 {t('lastRace.officialResult')}</h3>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           {results.slice(0, group.cantidad_posiciones || 10).map((result, idx) => {
             const driver = drivers[result.piloto_id];
             return (
               <div key={result.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: 12, background: 'var(--bg3)', borderRadius: 8, border: '1px solid var(--border)' }}>
-                <span style={{ fontFamily: 'Barlow Condensed', fontSize: 20, fontWeight: 900, color: 'var(--white)', minWidth: 30 }}>{idx + 1}°</span>
+                <span style={{ fontFamily: 'Barlow Condensed', fontSize: 'var(--fs-section-title)', fontWeight: 900, color: 'var(--white)', minWidth: 30 }}>{idx + 1}°</span>
                 <span style={{ flex: 1, fontWeight: 600 }}>{driver ? driver.nombre_completo : t('common.unknown')}</span>
-                <span style={{ fontFamily: 'Barlow Condensed', fontSize: 16, fontWeight: 700, color: 'var(--muted)' }}>{result.puntos_f1} {t('common.pts')}</span>
+                <span style={{ fontFamily: 'Barlow Condensed', fontSize: 'var(--fs-subtitle)', fontWeight: 700, color: 'var(--muted)' }}>{result.puntos_f1} {t('common.pts')}</span>
               </div>
             );
           })}
@@ -1231,9 +1276,9 @@ function LastRaceTab({ groupId, temporada, userId, group, navigate }) {
                   <td className="position-cell">{idx === 0 && '🥇'}{idx === 1 && '🥈'}{idx === 2 && '🥉'}{idx + 1}</td>
                   <td>{pred.nombre}</td>
                   <td style={{ textAlign: 'center' }}>
-                    <span style={{ background: correctPredictions > 0 ? 'rgba(0,212,160,0.15)' : 'var(--bg3)', color: correctPredictions > 0 ? 'var(--green)' : 'var(--muted)', padding: '4px 12px', borderRadius: 12, fontWeight: 700, fontSize: 14 }}>{correctPredictions}</span>
+                    <span style={{ background: correctPredictions > 0 ? 'rgba(0,212,160,0.15)' : 'var(--bg3)', color: correctPredictions > 0 ? 'var(--green)' : 'var(--muted)', padding: '4px 12px', borderRadius: 12, fontWeight: 700, fontSize: 'var(--fs-body)' }}>{correctPredictions}</span>
                   </td>
-                  <td style={{ fontFamily: 'Barlow Condensed', fontSize: 18, fontWeight: 700 }}>{Math.round(pred.puntos)}</td>
+                  <td style={{ fontFamily: 'Barlow Condensed', fontSize: 'var(--fs-subtitle)', fontWeight: 700 }}>{Math.round(pred.puntos)}</td>
                 </tr>
               );
             })}
@@ -1369,8 +1414,8 @@ function StatsPreviewTab({ groupId, temporada, navigate }) {
     return (
       <div style={{ padding: 40, textAlign: 'center', color: 'var(--muted)' }}>
         <div style={{ fontSize: 48, marginBottom: 16, opacity: 0.3 }}>📊</div>
-        <div style={{ fontSize: 18, marginBottom: 8 }}>{t('standings.noDataTitle')}</div>
-        <div style={{ fontSize: 14, marginBottom: 24 }}>{t('stats.noDataSub')}</div>
+        <div style={{ fontSize: 'var(--fs-subtitle)', marginBottom: 8 }}>{t('standings.noDataTitle')}</div>
+        <div style={{ fontSize: 'var(--fs-body)', marginBottom: 24 }}>{t('stats.noDataSub')}</div>
         <button
           onClick={() => navigate(`/group/${groupId}/stats`)}
           style={{
@@ -1378,7 +1423,7 @@ function StatsPreviewTab({ groupId, temporada, navigate }) {
             background: 'linear-gradient(135deg, #C9A84C, #A67C00)',
             border: 'none', borderRadius: 10, color: 'white',
             fontFamily: "'Barlow Condensed', sans-serif",
-            fontSize: 14, fontWeight: 800, letterSpacing: 1,
+            fontSize: 'var(--fs-body)', fontWeight: 800, letterSpacing: 1,
             textTransform: 'uppercase', cursor: 'pointer', transition: 'all 0.2s'
           }}
           onMouseOver={(e) => e.target.style.opacity = '0.9'}
@@ -1414,12 +1459,12 @@ function StatsPreviewTab({ groupId, temporada, navigate }) {
             }}>
               <span style={{ fontSize: 24 }}>{medal}</span>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--white)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{u.name}</div>
-                <div style={{ fontSize: 11, color: 'var(--muted)' }}>🎯 {t('common.exactCount', { count: u.exactos })}</div>
+                <div style={{ fontSize: 'var(--fs-body)', fontWeight: 700, color: 'var(--white)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{u.name}</div>
+                <div style={{ fontSize: 'var(--fs-label)', color: 'var(--muted)' }}>🎯 {t('common.exactCount', { count: u.exactos })}</div>
               </div>
-              <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 22, fontWeight: 900, color: u.color }}>
+              <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 'var(--fs-stat-secondary)', fontWeight: 900, color: u.color }}>
                 {Math.round(u.puntos)}
-                <span style={{ fontSize: 10, color: 'var(--muted)', marginLeft: 2 }}>pts</span>
+                <span style={{ fontSize: 'var(--fs-label)', color: 'var(--muted)', marginLeft: 2 }}>pts</span>
               </div>
             </div>
           );
@@ -1434,7 +1479,7 @@ function StatsPreviewTab({ groupId, temporada, navigate }) {
       }}>
         <div style={{
           fontFamily: "'Barlow Condensed', sans-serif",
-          fontSize: 14, fontWeight: 800, color: 'var(--muted)',
+          fontSize: 'var(--fs-body)', fontWeight: 800, color: 'var(--muted)',
           textTransform: 'uppercase', letterSpacing: 1, marginBottom: 16
         }}>
          {t('stats.lastRaces', { count: chartData.length })}
@@ -1445,22 +1490,22 @@ function StatsPreviewTab({ groupId, temporada, navigate }) {
             <CartesianGrid strokeDasharray="3 3" stroke={gridColor} vertical={false} />
             <XAxis
               dataKey="raceName"
-              tick={{ fill: mutedColor, fontSize: 10, fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 600 }}
+              tick={{ fill: mutedColor, fontSize: 12, fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 600 }}
               tickLine={false}
               axisLine={{ stroke: axisColor }}
               angle={-20} textAnchor="end" height={50} interval={0}
             />
             <YAxis
-              tick={{ fill: mutedColor, fontSize: 10, fontFamily: "'Share Tech Mono', monospace" }}
+              tick={{ fill: mutedColor, fontSize: 12, fontFamily: "'Share Tech Mono', monospace" }}
               tickLine={false} axisLine={false} width={35}
             />
             <Tooltip
               contentStyle={{
                 background: theme === 'dark' ? '#18181D' : '#FFFFFF',
                 border: `1px solid ${theme === 'dark' ? 'rgba(255,255,255,0.13)' : 'rgba(0,0,0,0.15)'}`,
-                borderRadius: 10, fontSize: 12, fontFamily: "'Barlow', sans-serif"
+                borderRadius: 10, fontSize: 'var(--fs-small)', fontFamily: "'Barlow', sans-serif"
               }}
-              labelStyle={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 800, fontSize: 13, marginBottom: 6 }}
+              labelStyle={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 800, fontSize: 'var(--fs-small)', marginBottom: 6 }}
             />
             {userNames.map(u => (
               <Bar key={u.id} dataKey={u.name} fill={u.color} radius={[3, 3, 0, 0]} maxBarSize={28} />
@@ -1477,7 +1522,7 @@ function StatsPreviewTab({ groupId, temporada, navigate }) {
           background: 'linear-gradient(135deg, #C9A84C, #A67C00)',
           border: 'none', borderRadius: 10, color: 'white',
           fontFamily: "'Barlow Condensed', sans-serif",
-          fontSize: 16, fontWeight: 800, letterSpacing: 1,
+          fontSize: 'var(--fs-subtitle)', fontWeight: 800, letterSpacing: 1,
           textTransform: 'uppercase', cursor: 'pointer', transition: 'all 0.2s',
           display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8
         }}
@@ -1487,7 +1532,7 @@ function StatsPreviewTab({ groupId, temporada, navigate }) {
         📊 {t('stats.viewFull')}
       </button>
 
-      <div style={{ textAlign: 'center', marginTop: 12, fontSize: 12, color: 'var(--muted)' }}>
+      <div style={{ textAlign: 'center', marginTop: 12, fontSize: 'var(--fs-small)', color: 'var(--muted)' }}>
         {t('stats.filtersAndMore')}
       </div>
     </div>
@@ -1605,7 +1650,7 @@ const formatMoney = (amount, currency) => {
       <div style={{ fontSize: 64, marginBottom: 8 }}>🏆</div>
       
       <div style={{
-        fontFamily: "'Barlow Condensed', sans-serif", fontSize: 28,
+        fontFamily: "'Barlow Condensed', sans-serif", fontSize: 'var(--fs-stat-secondary)',
         fontWeight: 900, color: 'var(--gold)', letterSpacing: 1,
         textTransform: 'uppercase', marginBottom: 4
       }}>
@@ -1613,12 +1658,12 @@ const formatMoney = (amount, currency) => {
       </div>
       
       <div style={{
-        fontSize: 12, color: 'var(--muted)', marginBottom: 24,
+        fontSize: 'var(--fs-small)', color: 'var(--muted)', marginBottom: 24,
         display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6
       }}>
         <span style={{
           background: 'rgba(0,212,160,0.15)', color: 'var(--green)',
-          padding: '2px 8px', borderRadius: 4, fontSize: 10,
+          padding: '2px 8px', borderRadius: 4, fontSize: 'var(--fs-label)',
           fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase'
         }}>
           {t('seasonWinners.finalBadge')}
@@ -1640,14 +1685,14 @@ const formatMoney = (amount, currency) => {
               padding: '16px 12px', border: '1px solid var(--border)',
               borderBottom: 'none', minHeight: 80
             }}>
-              <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--white)', marginBottom: 4 }}>
+              <div style={{ fontSize: 'var(--fs-body)', fontWeight: 700, color: 'var(--white)', marginBottom: 4 }}>
                 {displayWinners[1].nombre}
               </div>
-              <div style={{ fontSize: 11, color: 'var(--muted)' }}>
+              <div style={{ fontSize: 'var(--fs-label)', color: 'var(--muted)' }}>
                 {Math.round(displayWinners[1].puntos_totales)} {t('common.pts')}
               </div>
               {!isNative && displayWinners[1].monto_ganado > 0 && (
-                <div style={{ fontSize: 13, color: '#C0C0C0', fontWeight: 800, fontFamily: "'Barlow Condensed'", marginTop: 4 }}>
+                <div style={{ fontSize: 'var(--fs-small)', color: '#C0C0C0', fontWeight: 800, fontFamily: "'Barlow Condensed'", marginTop: 4 }}>
                   {formatMoney(displayWinners[1].monto_ganado, displayWinners[1].moneda)}
                 </div>
               )}
@@ -1665,14 +1710,14 @@ const formatMoney = (amount, currency) => {
               borderBottom: 'none', minHeight: 100,
               boxShadow: '0 -4px 20px rgba(201,168,76,0.1)'
             }}>
-              <div style={{ fontSize: 16, fontWeight: 800, color: 'var(--gold)', marginBottom: 4 }}>
+              <div style={{ fontSize: 'var(--fs-subtitle)', fontWeight: 800, color: 'var(--gold)', marginBottom: 4 }}>
                 {displayWinners[0].nombre}
               </div>
-              <div style={{ fontSize: 12, color: 'var(--muted)' }}>
+              <div style={{ fontSize: 'var(--fs-small)', color: 'var(--muted)' }}>
                 {Math.round(displayWinners[0].puntos_totales)} {t('common.pts')} · {t('common.exactCount', { count: displayWinners[0].exactos_totales })}
               </div>
               {!isNative && displayWinners[0].monto_ganado > 0 && (
-                <div style={{ fontSize: 16, color: '#FFD700', fontWeight: 900, fontFamily: "'Barlow Condensed'", marginTop: 6 }}>
+                <div style={{ fontSize: 'var(--fs-subtitle)', color: '#FFD700', fontWeight: 900, fontFamily: "'Barlow Condensed'", marginTop: 6 }}>
                   {formatMoney(displayWinners[0].monto_ganado, displayWinners[0].moneda)}
                 </div>
               )}
@@ -1689,14 +1734,14 @@ const formatMoney = (amount, currency) => {
               padding: '14px 12px', border: '1px solid var(--border)',
               borderBottom: 'none', minHeight: 70
             }}>
-              <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--white)', marginBottom: 4 }}>
+              <div style={{ fontSize: 'var(--fs-body)', fontWeight: 700, color: 'var(--white)', marginBottom: 4 }}>
                 {displayWinners[2].nombre}
               </div>
-              <div style={{ fontSize: 11, color: 'var(--muted)' }}>
+              <div style={{ fontSize: 'var(--fs-label)', color: 'var(--muted)' }}>
                 {Math.round(displayWinners[2].puntos_totales)} {t('common.pts')}
               </div>
               {!isNative && displayWinners[2].monto_ganado > 0 && (
-                <div style={{ fontSize: 13, color: '#CD7F32', fontWeight: 800, fontFamily: "'Barlow Condensed'", marginTop: 4 }}>
+                <div style={{ fontSize: 'var(--fs-small)', color: '#CD7F32', fontWeight: 800, fontFamily: "'Barlow Condensed'", marginTop: 4 }}>
                   {formatMoney(displayWinners[2].monto_ganado, displayWinners[2].moneda)}
                 </div>
               )}
@@ -1707,7 +1752,7 @@ const formatMoney = (amount, currency) => {
        {!isNative && (
         <div style={{
           background: 'var(--bg3)', border: '1px solid var(--border)',
-          borderRadius: 8, padding: '10px 14px', fontSize: 10,
+          borderRadius: 8, padding: '10px 14px', fontSize: 'var(--fs-label)',
           color: 'var(--muted)', lineHeight: 1.5, textAlign: 'center',
           marginBottom: 16
         }}>
@@ -1722,7 +1767,7 @@ const formatMoney = (amount, currency) => {
           background: 'linear-gradient(135deg, #C9A84C, #A67C00)',
           border: 'none', borderRadius: 10, color: 'white',
           fontFamily: "'Barlow Condensed', sans-serif",
-          fontSize: 14, fontWeight: 800, letterSpacing: 1,
+          fontSize: 'var(--fs-body)', fontWeight: 800, letterSpacing: 1,
           textTransform: 'uppercase', cursor: 'pointer',
           transition: 'all 0.2s'
         }}>
@@ -1732,6 +1777,39 @@ const formatMoney = (amount, currency) => {
     </div>
   );
 }
+
+function SeguroComodinesCard({ group, groupId }) {
+  const navigate = useNavigate();
+  const { t } = useTranslation();
+  const [dismissed, setDismissed] = useState(() => sessionStorage.getItem(`seguro_card_dismissed_${groupId}`) === 'true');
+
+  if (dismissed || !group?.beta_seguro_prediccion) return null;
+  const handleDismiss = () => {
+    sessionStorage.setItem(`seguro_card_dismissed_${groupId}`, 'true');
+    setDismissed(true);
+  };
+
+  return (
+    <div className="seguro-ad-card">
+      <span style={{ fontSize: 28 }}>🛡️</span>
+      <div style={{ flex: 1, minWidth: 200 }}>
+        <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 800, fontSize: 'var(--fs-subtitle)', color: 'var(--white)' }}>
+          {t('seguroCard.tituloActivo')}
+        </div>
+        <div style={{ fontSize: 'var(--fs-small)', color: 'var(--muted)' }}>{t('seguroCard.subtituloActivo')}</div>
+      </div>
+      <button
+        onClick={() => navigate(`/group/${groupId}/seguro`)}
+        style={{ padding: '8px 16px', background: 'linear-gradient(135deg, var(--gold), #A67C00)', border: 'none', borderRadius: 8, color: 'white', fontWeight: 700, fontSize: 'var(--fs-small)', cursor: 'pointer', whiteSpace: 'nowrap' }}
+      >
+        {t('seguroCard.cta')}
+      </button>
+      <button onClick={handleDismiss} style={{ background: 'transparent', border: 'none', color: 'var(--muted)', cursor: 'pointer', fontSize: 16, padding: 4 }}>✕</button>
+    </div>
+  );
+}
+
+
 // ============================================
 // COMPONENTE PRINCIPAL
 // ============================================
@@ -1782,7 +1860,7 @@ export default function GroupDashboard() {
             <div style={{ textAlign: 'center', padding: '80px 20px', color: 'var(--red)' }}>
             <div style={{ fontSize: 48, marginBottom: 16 }}>⚠️</div>
             <div>{t('errors.loadingDashboard')}</div>
-            <div style={{ fontSize: 14, marginTop: 8 }}>{error}</div>
+            <div style={{ fontSize: 'var(--fs-body)', marginTop: 8 }}>{error}</div>
           </div>
         </div>
       </>
@@ -1812,6 +1890,8 @@ export default function GroupDashboard() {
           group={group} 
         />
         <WildcardInterestCard groupId={groupId} />
+        <SeguroComodinesCard group={group} groupId={groupId} />
+
         
         <div className="tabs-container">
           <div className="tabs-nav">
@@ -1847,7 +1927,7 @@ export default function GroupDashboard() {
                         borderRadius: 8,
                         color: leaderboardType === type ? 'var(--red)' : 'var(--muted)',
                         cursor: 'pointer',
-                        fontFamily: 'Barlow Condensed', fontSize: 14, fontWeight: 700,
+                        fontFamily: 'Barlow Condensed', fontSize: 'var(--fs-body)', fontWeight: 700,
                         letterSpacing: 1, textTransform: 'uppercase', transition: 'all 0.2s'
                       }}
                     >

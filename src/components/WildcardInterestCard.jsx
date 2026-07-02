@@ -65,17 +65,17 @@ export default function WildcardInterestCard({ groupId }) {
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
         <span style={{ fontSize: 24 }}>🎁</span>
-        <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 18, fontWeight: 800, color: 'var(--white)' }}>
+        <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 'var(--fs-subtitle)', fontWeight: 800, color: 'var(--white)' }}>
           {t('wildcardInterest.title')}
         </span>
       </div>
 
-      <p style={{ fontSize: 13, color: 'var(--muted)', lineHeight: 1.6, marginBottom: 16 }}>
+      <p style={{ fontSize: 'var(--fs-small)', color: 'var(--muted)', lineHeight: 1.6, marginBottom: 16 }}>
         {t('wildcardInterest.explanationGlobal')}<br/>
         {t('wildcardInterest.explanationPosicional')}
       </p>
 
-      <p style={{ fontSize: 13, color: 'var(--white)', fontWeight: 600, marginBottom: 16 }}>
+      <p style={{ fontSize: 'var(--fs-small)', color: 'var(--white)', fontWeight: 600, marginBottom: 16 }}>
         {t('wildcardInterest.question')}
       </p>
 
@@ -86,7 +86,7 @@ export default function WildcardInterestCard({ groupId }) {
           style={{
             padding: '10px 20px', background: 'linear-gradient(135deg, #C9A84C, #A67C00)',
             border: 'none', borderRadius: 10, color: 'white',
-            fontFamily: "'Barlow Condensed', sans-serif", fontSize: 13, fontWeight: 800,
+            fontFamily: "'Barlow Condensed', sans-serif", fontSize: 'var(--fs-small)', fontWeight: 800,
             letterSpacing: 0.5, textTransform: 'uppercase', cursor: 'pointer'
           }}
         >
@@ -98,7 +98,7 @@ export default function WildcardInterestCard({ groupId }) {
           style={{
             padding: '10px 20px', background: 'transparent',
             border: '1px solid var(--border2)', borderRadius: 10, color: 'var(--muted)',
-            fontFamily: "'Barlow Condensed', sans-serif", fontSize: 13, fontWeight: 800,
+            fontFamily: "'Barlow Condensed', sans-serif", fontSize: 'var(--fs-small)', fontWeight: 800,
             letterSpacing: 0.5, textTransform: 'uppercase', cursor: 'pointer'
           }}
         >

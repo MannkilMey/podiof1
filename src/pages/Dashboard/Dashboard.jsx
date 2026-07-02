@@ -88,7 +88,7 @@ html, body {
   align-items: center;
   gap: 10px;
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 22px;
+  font-size: var(--fs-stat-secondary);
   font-weight: 900;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -137,7 +137,7 @@ html, body {
   justify-content: center;
   font-family: 'Barlow Condensed', sans-serif;
   font-weight: 700;
-  font-size: 14px;
+  font-size: var(--fs-body);
   cursor: pointer;
   border: 2px solid var(--border);
   color: white;
@@ -184,13 +184,13 @@ html, body {
 
 .user-menu-name {
   font-weight: 700;
-  font-size: 15px;
+  font-size: var(--fs-subtitle);
   color: var(--white);
   margin-bottom: 4px;
 }
 
 .user-menu-email {
-  font-size: 13px;
+  font-size: var(--fs-small);
   color: var(--muted);
 }
 
@@ -202,7 +202,7 @@ html, body {
   color: var(--white);
   cursor: pointer;
   transition: background 0.2s;
-  font-size: 14px;
+  font-size: var(--fs-body);
   border: none;
   background: transparent;
   width: 100%;
@@ -240,7 +240,7 @@ html, body {
 .theme-opt { 
   padding: 6px 10px;
   cursor: pointer;
-  font-size: 15px;
+  font-size: var(--fs-subtitle);
   transition: background .2s;
   color: var(--muted); 
 }
@@ -267,7 +267,7 @@ html, body {
   gap: 7px;
   padding: 10px 16px;
   border-bottom: 3px solid transparent;
-  font-size: 13px;
+  font-size: var(--fs-small);
   font-weight: 500;
   cursor: pointer;
   white-space: nowrap;
@@ -283,7 +283,7 @@ html, body {
 .group-tab-dot.admin { background: var(--red); }
 
 .group-tab-badge { 
-  font-size: 10px;
+  font-size: var(--fs-label);
   font-weight: 700;
   background: var(--red-dim);
   color: var(--red);
@@ -296,7 +296,7 @@ html, body {
   align-items: center;
   gap: 6px;
   padding: 10px 16px;
-  font-size: 13px;
+  font-size: var(--fs-small);
   cursor: pointer;
   white-space: nowrap;
   color: var(--muted);
@@ -324,7 +324,7 @@ html, body {
 
 .empty-title { 
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 28px;
+  font-size: var(--fs-stat-secondary);
   font-weight: 800;
   margin-bottom: 12px;
   color: var(--white); 
@@ -332,7 +332,7 @@ html, body {
 
 .empty-text { 
   color: var(--muted);
-  font-size: 15px;
+  font-size: var(--fs-subtitle);
   margin-bottom: 32px;
   max-width: 400px;
   margin-left: auto;
@@ -346,7 +346,7 @@ html, body {
   border-radius: 10px;
   color: white;
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 16px;
+  font-size: var(--fs-subtitle);
   font-weight: 800;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -363,7 +363,7 @@ html, body {
   border-radius: 10px;
   color: var(--text-secondary);
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 14px;
+  font-size: var(--fs-body);
   font-weight: 700;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -399,7 +399,7 @@ html, body {
 
 .group-card-name { 
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 20px;
+  font-size: var(--fs-section-title);
   font-weight: 800;
   margin-bottom: 12px;
   color: var(--white); 
@@ -408,7 +408,7 @@ html, body {
 .gc-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
 
 .gc-chip { 
-  font-size: 11px;
+  font-size: var(--fs-label);
   color: var(--muted);
   background: var(--bg3);
   padding: 3px 9px;
@@ -428,13 +428,13 @@ html, body {
 
 .gc-stat-val { 
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 24px;
+  font-size: var(--fs-section-title);
   font-weight: 900;
   color: var(--white); 
 }
 
 .gc-stat-lbl { 
-  font-size: 10px;
+  font-size: var(--fs-label);
   color: var(--muted);
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -460,7 +460,7 @@ html, body {
 }
 
 .loading-text { 
-  font-size: 14px;
+  font-size: var(--fs-body);
   color: var(--muted);
   font-family: 'Barlow Condensed', sans-serif;
   letter-spacing: 2px;
@@ -476,17 +476,17 @@ html, body {
 
 @media(max-width: 768px) {
   .nav { padding: 0 10px; height: 48px; }
-  .nav-logo { font-size: 18px; gap: 6px; letter-spacing: 1px; }
-  .nav-logo-icon { width: 26px; height: 26px; font-size: 13px; border-radius: 4px; }
+  .nav-logo { gap: 6px; letter-spacing: 1px; }
+  .nav-logo-icon { width: 26px; height: 26px;  border-radius: 4px; }
   .nav-right { gap: 6px; }
-  .icon-btn { width: 30px; height: 30px; font-size: 13px; border-radius: 6px; }
-  .nav-avatar { width: 30px; height: 30px; font-size: 11px; }
+  .icon-btn { width: 30px; height: 30px;  border-radius: 6px; }
+  .nav-avatar { width: 30px; height: 30px;  }
   .theme-toggle { border-radius: 6px; }
-  .theme-opt { padding: 4px 7px; font-size: 12px; }
+  .theme-opt { padding: 4px 7px;  }
   .group-bar { padding: 0 10px; }
-  .group-tab { padding: 8px 10px; font-size: 12px; gap: 5px; }
+  .group-tab { padding: 8px 10px; gap: 5px; }
   .group-tab-dot { width: 5px; height: 5px; }
-  .group-bar-all { padding: 8px 10px; font-size: 12px; }
+  .group-bar-all { padding: 8px 10px;}
   .back-btn { display: none; }
   .main { padding: 12px; }
 }
@@ -654,12 +654,12 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
       }} onClick={(e) => e.stopPropagation()}>
         <h2 style={{
           fontFamily: "'Barlow Condensed', sans-serif",
-          fontSize: '28px',
+          fontSize: 'var(--fs-stat-secondary)',
           fontWeight: '900',
           marginBottom: '8px',
           color: colors.text
         }}>{t('createGroup.title')}</h2>
-        <p style={{ color: colors.muted, fontSize: '14px', marginBottom: '24px' }}>
+        <p style={{ color: colors.muted, fontSize: 'var(--fs-body)', marginBottom: '24px' }}>
           {t('createGroup.subtitle')}
         </p>
 
@@ -670,7 +670,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
             borderRadius: '8px',
             padding: '12px',
             color: '#E8002D',
-            fontSize: '13px',
+            fontSize: 'var(--fs-small)',
             marginBottom: '20px'
           }}>{error}</div>
         )}
@@ -680,7 +680,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
           <div style={{ marginBottom: '20px' }}>
             <label style={{
               display: 'block',
-              fontSize: '12px',
+              fontSize: 'var(--fs-small)',
               fontWeight: '600',
               letterSpacing: '1px',
               textTransform: 'uppercase',
@@ -700,7 +700,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
                 border: `1px solid ${colors.border}`,
                 borderRadius: '10px',
                 color: colors.text,
-                fontSize: '15px',
+                fontSize: 'var(--fs-subtitle)',
                 fontFamily: "'Barlow', sans-serif"
               }}
             />
@@ -711,7 +711,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
             <div>
               <label style={{
                 display: 'block',
-                fontSize: '12px',
+                fontSize: 'var(--fs-small)',
                 fontWeight: '600',
                 letterSpacing: '1px',
                 textTransform: 'uppercase',
@@ -728,7 +728,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
                   border: `1px solid ${colors.border}`,
                   borderRadius: '10px',
                   color: colors.text,
-                  fontSize: '15px',
+                  fontSize: 'var(--fs-subtitle)',
                   cursor: 'pointer'
                 }}
               >
@@ -739,7 +739,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
             <div>
               <label style={{
                 display: 'block',
-                fontSize: '12px',
+                fontSize: 'var(--fs-small)',
                 fontWeight: '600',
                 letterSpacing: '1px',
                 textTransform: 'uppercase',
@@ -756,7 +756,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
                   border: `1px solid ${colors.border}`,
                   borderRadius: '10px',
                   color: colors.text,
-                  fontSize: '15px',
+                  fontSize: 'var(--fs-subtitle)',
                   cursor: 'pointer'
                 }}
               >
@@ -771,7 +771,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
           <div style={{ marginBottom: '20px' }}>
             <label style={{
               display: 'block',
-              fontSize: '12px',
+              fontSize: 'var(--fs-small)',
               fontWeight: '600',
               letterSpacing: '1px',
               textTransform: 'uppercase',
@@ -788,7 +788,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
                 border: `1px solid ${colors.border}`,
                 borderRadius: '10px',
                 color: colors.text,
-                fontSize: '15px',
+                fontSize: 'var(--fs-subtitle)',
                 cursor: 'pointer'
               }}
             >
@@ -797,7 +797,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
               <option value={48} style={{ background: colors.bg }}>{t('createGroup.deadlineOptions.h48')}</option>
             </select>
             <div style={{
-              fontSize: '12px',
+              fontSize: 'var(--fs-small)',
               color: colors.muted,
               marginTop: '6px',
               lineHeight: '1.5'
@@ -818,7 +818,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
                 alignItems: 'flex-start',
                 gap: '12px',
                 cursor: 'pointer',
-                fontSize: '14px'
+                fontSize: 'var(--fs-body)'
               }}>
                 <input
                   type="checkbox"
@@ -830,7 +830,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
                   <div style={{ fontWeight: '700', marginBottom: '6px', color: colors.text }}>
                     👥 {t('admin.requireApprovalLabel')}
                   </div>
-                  <div style={{ color: colors.muted, fontSize: '13px', lineHeight: '1.6' }}>
+                  <div style={{ color: colors.muted, fontSize: 'var(--fs-small)', lineHeight: '1.6' }}>
                     {t('admin.requireApprovalSub')}
                   </div>
                 </div>
@@ -850,7 +850,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
               alignItems: 'flex-start',
               gap: '12px',
               cursor: 'pointer',
-              fontSize: '14px',
+              fontSize: 'var(--fs-body)',
               marginBottom: formData.incluir_sprints ? '16px' : '0'
             }}>
               <input
@@ -863,7 +863,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
                 <div style={{ fontWeight: '700', marginBottom: '6px', color: colors.text }}>
                   ⚡ {t('createGroup.includeSprints')}
                 </div>
-                <div style={{ color: colors.muted, fontSize: '13px', lineHeight: '1.6' }}>
+                <div style={{ color: colors.muted, fontSize: 'var(--fs-small)', lineHeight: '1.6' }}>
                   {t('createGroup.includeSprintsSub')}
                 </div>
               </div>
@@ -879,7 +879,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
                 <div style={{ marginBottom: '12px' }}>
                   <label style={{
                     display: 'block',
-                    fontSize: '12px',
+                    fontSize: 'var(--fs-small)',
                     fontWeight: '600',
                     letterSpacing: '1px',
                     textTransform: 'uppercase',
@@ -896,7 +896,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
                       border: `1px solid ${colors.border}`,
                       borderRadius: '8px',
                       color: colors.text,
-                      fontSize: '14px',
+                      fontSize: 'var(--fs-body)',
                       cursor: 'pointer'
                     }}
                   >
@@ -906,7 +906,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
                   </select>
                 </div>
 
-                <div style={{ fontSize: '13px', color: colors.muted, lineHeight: '1.7' }}>
+                <div style={{ fontSize: 'var(--fs-small)', color: colors.muted, lineHeight: '1.7' }}>
                   <div style={{ marginBottom: '4px', fontWeight: '600', color: colors.text }}>
                     {t('createGroup.sprintPoints')}:
                   </div>
@@ -926,14 +926,14 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
             marginBottom: '20px'
           }}>
             <div style={{
-              fontSize: '12px',
+              fontSize: 'var(--fs-small)',
               fontWeight: '700',
               letterSpacing: '1px',
               textTransform: 'uppercase',
               color: colors.muted,
               marginBottom: '8px'
             }}>{t('createGroup.officialScoringTitle')}</div>
-            <div style={{ fontSize: '13px', color: colors.muted, lineHeight: '1.6' }}>
+            <div style={{ fontSize: 'var(--fs-small)', color: colors.muted, lineHeight: '1.6' }}>
               1° = 25 pts · 2° = 18 pts · 3° = 15 pts · 4° = 12 pts · 5° = 10 pts<br/>
               6° = 8 pts · 7° = 6 pts · 8° = 4 pts · 9° = 2 pts · 10° = 1 pt
             </div>
@@ -952,7 +952,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
               alignItems: 'flex-start',
               gap: '12px',
               cursor: 'pointer',
-              fontSize: '14px',
+              fontSize: 'var(--fs-body)',
               marginBottom: formData.usa_sistema_dual ? '16px' : '0'
             }}>
               <input
@@ -965,7 +965,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
                 <div style={{ fontWeight: '700', marginBottom: '6px', color: colors.text }}>
                   {t('createGroup.dualScoring')}
                 </div>
-                <div style={{ color: colors.muted, fontSize: '13px', lineHeight: '1.6' }}>
+                <div style={{ color: colors.muted, fontSize: 'var(--fs-small)', lineHeight: '1.6' }}>
                   {t('createGroup.dualScoringSub')}
                 </div>
               </div>
@@ -977,7 +977,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
                 border: `1px solid ${colors.border}`,
                 borderRadius: '10px',
                 padding: '14px',
-                fontSize: '13px',
+                fontSize: 'var(--fs-small)',
                 lineHeight: '1.7'
               }}>
                 <div style={{ color: colors.text, marginBottom: '8px' }}>
@@ -1006,7 +1006,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
               alignItems: 'flex-start',
               gap: '12px',
               cursor: 'pointer',
-              fontSize: '14px',
+              fontSize: 'var(--fs-body)',
               marginBottom: formData.pozo_habilitado ? '16px' : '0'
             }}>
               <input
@@ -1019,7 +1019,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
                 <div style={{ fontWeight: '700', marginBottom: '6px', color: colors.text }}>
                   🏁 {t('podioPoints.enable')}
                 </div>
-                <div style={{ color: colors.muted, fontSize: '13px', lineHeight: '1.6' }}>
+                <div style={{ color: colors.muted, fontSize: 'var(--fs-small)', lineHeight: '1.6' }}>
                   {t('podioPoints.enableSub')}
                 </div>
               </div>
@@ -1036,7 +1036,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '12px' }}>
                   <div>
                     <label style={{
-                      display: 'block', fontSize: '11px', fontWeight: '600',
+                      display: 'block', fontSize: 'var(--fs-label)', fontWeight: '600',
                       letterSpacing: '1px', textTransform: 'uppercase',
                       color: colors.muted, marginBottom: '6px'
                     }}>{t('podioPoints.amountPerPerson')}</label>
@@ -1048,14 +1048,14 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
                       style={{
                         width: '100%', padding: '10px 14px',
                         background: colors.bg3, border: `1px solid ${colors.border}`,
-                        borderRadius: '8px', color: colors.text, fontSize: '14px',
+                        borderRadius: '8px', color: colors.text, fontSize: 'var(--fs-body)',
                         fontFamily: "'Share Tech Mono', monospace"
                       }}
                     />
                   </div>
                   <div>
                     <label style={{
-                      display: 'block', fontSize: '11px', fontWeight: '600',
+                      display: 'block', fontSize: 'var(--fs-label)', fontWeight: '600',
                       letterSpacing: '1px', textTransform: 'uppercase',
                       color: colors.muted, marginBottom: '6px'
                     }}>{t('podioPoints.referenceUnit')}</label>
@@ -1065,7 +1065,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
                       style={{
                         width: '100%', padding: '10px 14px',
                         background: colors.bg3, border: `1px solid ${colors.border}`,
-                        borderRadius: '8px', color: colors.text, fontSize: '14px', cursor: 'pointer'
+                        borderRadius: '8px', color: colors.text, fontSize: 'var(--fs-body)', cursor: 'pointer'
                       }}
                     >
                       <option value="USD" style={{ background: colors.bg }}>{t('currencies.USD')}</option>
@@ -1078,7 +1078,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
                 </div>) : (
                   <div style={{
                     padding: 12, background: colors.bg2, borderRadius: 8,
-                    border: `1px solid ${colors.border}`, fontSize: 13, color: colors.muted, marginBottom: 12
+                    border: `1px solid ${colors.border}`, fontSize: 'var(--fs-small)', color: colors.muted, marginBottom: 12
                   }}>
                     ℹ️ {t('podioPoints.webOnlyConfig')}
                   </div>
@@ -1086,7 +1086,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
 
                 <div>
                   <label style={{
-                    display: 'block', fontSize: '11px', fontWeight: '600',
+                    display: 'block', fontSize: 'var(--fs-label)', fontWeight: '600',
                     letterSpacing: '1px', textTransform: 'uppercase',
                     color: colors.muted, marginBottom: '6px'
                   }}>{t('podioPoints.distribution')}</label>
@@ -1096,7 +1096,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
                     style={{
                       width: '100%', padding: '10px 14px',
                       background: colors.bg3, border: `1px solid ${colors.border}`,
-                      borderRadius: '8px', color: colors.text, fontSize: '14px', cursor: 'pointer'
+                      borderRadius: '8px', color: colors.text, fontSize: 'var(--fs-body)', cursor: 'pointer'
                     }}
                   >
                     <option value="60-25-15" style={{ background: colors.bg }}>🥇 60% · 🥈 25% · 🥉 15%</option>
@@ -1109,7 +1109,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
                 <div style={{
                   marginTop: '12px', padding: '10px 12px',
                   background: colors.bg3, borderRadius: '8px',
-                  fontSize: '11px', color: colors.muted, lineHeight: '1.5', textAlign: 'center'
+                  fontSize: 'var(--fs-label)', color: colors.muted, lineHeight: '1.5', textAlign: 'center'
                 }}>
                   ⚠️ {t('podioPoints.disclaimer')}
                 </div>
@@ -1119,7 +1119,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
           {/* Bonus Vuelta Rápida */}
           <div style={{ marginBottom: '24px' }}>
             <div style={{
-              fontSize: '12px',
+              fontSize: 'var(--fs-small)',
               fontWeight: '700',
               letterSpacing: '1px',
               textTransform: 'uppercase',
@@ -1132,7 +1132,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
               alignItems: 'center',
               gap: '10px',
               cursor: 'pointer',
-              fontSize: '14px',
+              fontSize: 'var(--fs-body)',
               marginBottom: '8px',
               padding: '10px',
               background: formData.bonus_vuelta_rapida_piloto ? colors.redDim : 'transparent',
@@ -1154,7 +1154,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
               alignItems: 'center',
               gap: '10px',
               cursor: 'pointer',
-              fontSize: '14px',
+              fontSize: 'var(--fs-body)',
               padding: '10px',
               background: formData.bonus_vuelta_rapida_escuderia ? colors.redDim : 'transparent',
               borderRadius: '8px',
@@ -1171,7 +1171,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
             </label>
 
             <div style={{
-              fontSize: '12px',
+              fontSize: 'var(--fs-small)',
               color: colors.muted,
               marginTop: '8px',
               fontStyle: 'italic'
@@ -1195,7 +1195,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
                 borderRadius: '10px',
                 color: 'white',
                 fontFamily: "'Barlow Condensed', sans-serif",
-                fontSize: '16px',
+                fontSize: 'var(--fs-subtitle)',
                 fontWeight: '800',
                 letterSpacing: '2px',
                 textTransform: 'uppercase',
@@ -1219,7 +1219,7 @@ function CreateGroupModal({ isOpen, onClose, onSuccess, theme }) {
                 borderRadius: '10px',
                 color: colors.text,
                 fontFamily: "'Barlow Condensed', sans-serif",
-                fontSize: '14px',
+                fontSize: 'var(--fs-body)',
                 fontWeight: '700',
                 letterSpacing: '1px',
                 textTransform: 'uppercase',
@@ -1352,12 +1352,12 @@ function JoinGroupModal({ isOpen, onClose, onSuccess, theme }) {
       }} onClick={(e) => e.stopPropagation()}>
         <h2 style={{
           fontFamily: "'Barlow Condensed', sans-serif",
-          fontSize: '28px',
+          fontSize: 'var(--fs-stat-secondary)',
           fontWeight: '900',
           marginBottom: '8px',
           color: colors.text
         }}>{t('joinGroup.title')}</h2>
-        <p style={{ color: colors.muted, fontSize: '14px', marginBottom: '24px' }}>
+        <p style={{ color: colors.muted, fontSize: 'var(--fs-body)', marginBottom: '24px' }}>
           {t('joinGroup.subtitle')}
         </p>
 
@@ -1368,7 +1368,7 @@ function JoinGroupModal({ isOpen, onClose, onSuccess, theme }) {
             borderRadius: '8px',
             padding: '12px',
             color: '#E8002D',
-            fontSize: '13px',
+            fontSize: 'var(--fs-small)',
             marginBottom: '20px'
           }}>{error}</div>
         )}
@@ -1377,7 +1377,7 @@ function JoinGroupModal({ isOpen, onClose, onSuccess, theme }) {
           <div style={{ marginBottom: '24px' }}>
             <label style={{
               display: 'block',
-              fontSize: '12px',
+              fontSize: 'var(--fs-small)',
               fontWeight: '600',
               letterSpacing: '1px',
               textTransform: 'uppercase',
@@ -1398,7 +1398,7 @@ function JoinGroupModal({ isOpen, onClose, onSuccess, theme }) {
                 border: `2px solid ${colors.border}`,
                 borderRadius: '10px',
                 color: colors.text,
-                fontSize: '20px',
+                fontSize: 'var(--fs-section-title)',
                 fontFamily: "'Share Tech Mono', monospace",
                 letterSpacing: '4px',
                 textAlign: 'center',
@@ -1460,7 +1460,7 @@ function GroupsView({ groups, onCreateGroup, onJoinGroup, onSelectGroup }) {
         <>
           <div style={{ 
             fontFamily: "'Barlow Condensed', sans-serif",
-            fontSize: 11,
+            fontSize: 'var(--fs-label)',
             fontWeight: 700,
             letterSpacing: 3,
             textTransform: 'uppercase',
@@ -1627,7 +1627,7 @@ export default function Dashboard() {
         <nav className="nav">
           <div className="nav-logo">
             
-            Podio<span>F1</span>
+            Podio
           </div>
           <div className="nav-right">
             <div className="theme-toggle">

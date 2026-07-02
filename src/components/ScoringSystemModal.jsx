@@ -65,7 +65,7 @@ const ScoringSystemModal = ({ group, onClose }) => {
         {/* Header */}
         <h2 style={{
           fontFamily: 'Barlow Condensed',
-          fontSize: 28,
+          fontSize: 'var(--fs-stat-secondary)',
           fontWeight: 900,
           color: 'var(--white)',
           marginBottom: 8
@@ -73,7 +73,7 @@ const ScoringSystemModal = ({ group, onClose }) => {
           📊 {t('scoringModal.title')}
         </h2>
         <p style={{
-          fontSize: 16,
+          fontSize: 'var(--fs-subtitle)',
           color: 'var(--muted)',
           marginBottom: 24
         }}>
@@ -92,7 +92,7 @@ const ScoringSystemModal = ({ group, onClose }) => {
         }}>
           <h3 style={{
             fontFamily: 'Barlow Condensed',
-            fontSize: 22,
+            fontSize: 'var(--fs-stat-secondary)',
             fontWeight: 900,
             color: 'var(--white)',
             marginBottom: 16,
@@ -106,7 +106,7 @@ const ScoringSystemModal = ({ group, onClose }) => {
           {/* Sistema base */}
           <div style={{marginBottom: 20}}>
             <h4 style={{
-              fontSize: 14,
+              fontSize: 'var(--fs-body)',
               fontWeight: 700,
               color: 'var(--muted)',
               marginBottom: 12,
@@ -128,10 +128,10 @@ const ScoringSystemModal = ({ group, onClose }) => {
                   padding: 10,
                   textAlign: 'center'
                 }}>
-                  <div style={{fontSize: 11, color: 'var(--muted)', marginBottom: 4}}>
+                  <div style={{fontSize: 'var(--fs-label)', color: 'var(--muted)', marginBottom: 4}}>
                     P{pos}
                   </div>
-                  <div style={{fontSize: 18, fontWeight: 900, color: 'var(--gold)'}}>
+                  <div style={{fontSize: 'var(--fs-subtitle)', fontWeight: 900, color: 'var(--gold)'}}>
                     {pts}
                   </div>
                 </div>
@@ -142,7 +142,7 @@ const ScoringSystemModal = ({ group, onClose }) => {
           {/* Bonus exacto */}
           <div style={{marginBottom: 16}}>
             <h4 style={{
-              fontSize: 14,
+              fontSize: 'var(--fs-body)',
               fontWeight: 700,
               color: 'var(--muted)',
               marginBottom: 8,
@@ -158,7 +158,7 @@ const ScoringSystemModal = ({ group, onClose }) => {
               padding: 12,
               color: 'var(--green)',
               fontWeight: 600,
-              fontSize: 14
+              fontSize: 'var(--fs-body)'
             }}>
               {t('scoringModal.exactPositionBonusValue', { points: group.bonus_posicion_exacta || 0 })}
             </div>
@@ -168,7 +168,7 @@ const ScoringSystemModal = ({ group, onClose }) => {
           {group.usa_sistema_dual && (
             <div style={{marginBottom: 16}}>
               <h4 style={{
-                fontSize: 14,
+                fontSize: 'var(--fs-body)',
                 fontWeight: 700,
                 color: 'var(--muted)',
                 marginBottom: 8,
@@ -183,7 +183,7 @@ const ScoringSystemModal = ({ group, onClose }) => {
                 borderRadius: 10,
                 padding: 12,
                 color: 'var(--white)',
-                fontSize: 14
+                fontSize: 'var(--fs-body)'
               }}>
                {t('scoringModal.correctDriverNoExactValue', { points: group.puntos_piloto_correcto || 0, top: group.cantidad_posiciones })}
               </div>
@@ -194,7 +194,7 @@ const ScoringSystemModal = ({ group, onClose }) => {
           {group.bonus_vuelta_rapida_piloto && (
             <div style={{marginBottom: 16}}>
               <h4 style={{
-                fontSize: 14,
+                fontSize: 'var(--fs-body)',
                 fontWeight: 700,
                 color: 'var(--muted)',
                 marginBottom: 8,
@@ -209,7 +209,7 @@ const ScoringSystemModal = ({ group, onClose }) => {
                 borderRadius: 10,
                 padding: 12,
                 color: 'var(--white)',
-                fontSize: 14
+                fontSize: 'var(--fs-body)'
               }}>
                 {t('scoringModal.fastestLapDriverValue', { points: group.puntos_vuelta_rapida_piloto || 0 })}
               </div>
@@ -220,7 +220,7 @@ const ScoringSystemModal = ({ group, onClose }) => {
           {group.bonus_vuelta_rapida_escuderia && (
             <div style={{marginBottom: 0}}>
               <h4 style={{
-                fontSize: 14,
+                fontSize: 'var(--fs-body)',
                 fontWeight: 700,
                 color: 'var(--muted)',
                 marginBottom: 8,
@@ -235,7 +235,7 @@ const ScoringSystemModal = ({ group, onClose }) => {
                 borderRadius: 10,
                 padding: 12,
                 color: 'var(--white)',
-                fontSize: 14
+                fontSize: 'var(--fs-body)'
               }}>
                 {t('scoringModal.fastestLapTeamValue', { points: group.puntos_vuelta_rapida_escuderia || 0 })}
               </div>
@@ -256,7 +256,7 @@ const ScoringSystemModal = ({ group, onClose }) => {
           }}>
             <h3 style={{
               fontFamily: 'Barlow Condensed',
-              fontSize: 22,
+              fontSize: 'var(--fs-stat-secondary)',
               fontWeight: 900,
               color: '#FFB800',
               marginBottom: 16,
@@ -270,7 +270,7 @@ const ScoringSystemModal = ({ group, onClose }) => {
             {/* Sistema Sprint */}
             <div style={{marginBottom: 16}}>
               <h4 style={{
-                fontSize: 14,
+                fontSize: 'var(--fs-body)',
                 fontWeight: 700,
                 color: 'var(--muted)',
                 marginBottom: 12,
@@ -294,10 +294,10 @@ const ScoringSystemModal = ({ group, onClose }) => {
                     padding: 10,
                     textAlign: 'center'
                   }}>
-                    <div style={{fontSize: 11, color: 'var(--muted)', marginBottom: 4}}>
+                    <div style={{fontSize: 'var(--fs-label)', color: 'var(--muted)', marginBottom: 4}}>
                       P{pos}
                     </div>
-                    <div style={{fontSize: 18, fontWeight: 900, color: '#FFB800'}}>
+                    <div style={{fontSize: 'var(--fs-subtitle)', fontWeight: 900, color: '#FFB800'}}>
                       {pts}
                     </div>
                   </div>
@@ -311,7 +311,7 @@ const ScoringSystemModal = ({ group, onClose }) => {
               border: '1px solid var(--border)',
               borderRadius: 10,
               padding: 14,
-              fontSize: 13,
+              fontSize: 'var(--fs-small)',
               color: 'var(--muted)',
               lineHeight: 1.6
             }}>
@@ -334,7 +334,7 @@ const ScoringSystemModal = ({ group, onClose }) => {
           marginBottom: 20
         }}>
           <h3 style={{
-            fontSize: 14,
+            fontSize: 'var(--fs-body)',
             fontWeight: 700,
             color: 'var(--white)',
             marginBottom: 8,
@@ -343,7 +343,7 @@ const ScoringSystemModal = ({ group, onClose }) => {
           }}>
             📝 {t('scoringModal.exampleRaceTitle')}
           </h3>
-          <div style={{fontSize: 13, color: 'var(--muted)', lineHeight: 1.6}}>
+          <div style={{fontSize: 'var(--fs-small)', color: 'var(--muted)', lineHeight: 1.6}}>
             {t('scoringModal.exampleExactP1', { 
                 base: group.sistema_puntos?.['1'] || 0, 
                 bonus: group.bonus_posicion_exacta || 0, 
@@ -365,7 +365,7 @@ const ScoringSystemModal = ({ group, onClose }) => {
                 margin: '12px 0'
               }}></div>
               <h3 style={{
-                fontSize: 14,
+                fontSize: 'var(--fs-body)',
                 fontWeight: 700,
                 color: '#FFB800',
                 marginBottom: 8,
@@ -374,7 +374,7 @@ const ScoringSystemModal = ({ group, onClose }) => {
               }}>
                 ⚡ {t('scoringModal.exampleSprintTitle')}
               </h3>
-              <div style={{fontSize: 13, color: 'var(--muted)', lineHeight: 1.6}}>
+              <div style={{fontSize: 'var(--fs-small)', color: 'var(--muted)', lineHeight: 1.6}}>
                 •{t('scoringModal.exampleSprintExactP1', { 
                     base: 8, 
                     bonus: group.bonus_posicion_exacta || 0, 
@@ -396,7 +396,7 @@ const ScoringSystemModal = ({ group, onClose }) => {
           border: '1px solid var(--border)',
           borderRadius: 10,
           marginBottom: 20,
-          fontSize: 13,
+          fontSize: 'var(--fs-small)',
           color: 'var(--muted)',
           lineHeight: 1.5
         }}>
@@ -419,7 +419,7 @@ const ScoringSystemModal = ({ group, onClose }) => {
             borderRadius: 10,
             color: 'white',
             fontFamily: 'Barlow Condensed',
-            fontSize: 16,
+            fontSize: 'var(--fs-subtitle)',
             fontWeight: 800,
             cursor: 'pointer',
             transition: 'opacity 0.2s'

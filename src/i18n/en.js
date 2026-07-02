@@ -86,9 +86,9 @@ export default {
     accountCreated: 'Account created! You can now sign in 🏁',
     errorCreating: 'Error creating account',
     errorLogin: 'Error signing in',
-    subtitle: 'Compete with friends predicting F1',
+    subtitle: 'Compete with friends making sports predictions',
     createSubtitle: 'Create your account to compete',
-    seasonSubtitle: 'F1 Predictions · 2026 Season',
+    seasonSubtitle: 'Sports Predictions · 2026 Season',
     welcomeBack: 'Welcome back! 🏁',
     loginLoading: 'Signing in...',
     loginErrorDetail: 'Login failed. Check your credentials.',
@@ -124,8 +124,8 @@ export default {
   // LANDING
   // ============================================
   landing: {
-    hero: 'Free Formula 1 Predictions with Friends',
-    heroSub: 'Create your F1 prediction group, invite friends and compete by predicting each Grand Prix result.',
+    hero: 'Free Sports Predictions with Friends',
+    heroSub: 'Create your prediction group, invite friends and compete by predicting each race result.',
     freeTag: '100% Free · Live Predictions',
     startFree: 'Start Free',
     haveAccount: 'I Have an Account'
@@ -135,7 +135,7 @@ export default {
   // APP ONBOARDING
   // ============================================
   appOnboarding: {
-    slide1Title: 'Predict F1',
+    slide1Title: 'Make Predictions',
     slide1Sub: 'Build your top 10 before each race and prove you know more than your friends',
     slide2Title: 'Compete in Groups',
     slide2Sub: 'Create private groups, invite friends and follow the real-time ranking',
@@ -160,17 +160,13 @@ export default {
     active: 'active',
     admin: 'Admin',
     creator: 'Creator',
-    groupTypeOfficial: 'Oficial F1',
-    groupTypeOfficial: 'Official F1',
-    groupTypeFixedPoints: 'Fixed Points',
     groupTypeCustom: 'Custom',
     themeDark: 'Dark',
     themeLight: 'Light',
     myAccount: 'My account',
     defaultUserName: 'User',
-    groupTypeOfficial: 'Official F1',
-    groupTypeFixedPoints: 'Fixed Points',
-    groupTypeCustom: 'Custom'
+    groupTypeOfficial: 'Official System',
+    groupTypeFixedPoints: 'Fixed Points'
   },
   forgotPassword: {
   emailRequired: 'Please enter your email',
@@ -278,7 +274,9 @@ prediction: {
     seasonProgress: '{{year}} Season Progress',
     racesCount: '{{completed}} / {{total}} races',
     racesRemaining: '{{count}} races remaining',
-    seasonComplete: '✅ Season completed'
+    seasonComplete: '✅ Season completed',
+    myInsurance: 'My Insurance',
+    
   },
 
   // ============================================
@@ -362,7 +360,7 @@ prediction: {
     amountPerPerson: 'Value per person',
     referenceUnit: 'Reference unit',
     distribution: 'PodioPoints Split',
-    disclaimer: "PodioF1 doesn't handle or transfer real money.",
+    disclaimer: "Podio doesn't handle or transfer real money.",
     estimatedTotal: 'Estimated total',
     saveConfig: 'Save configuration',
     configSaved: 'PodioPoints configuration saved',
@@ -372,7 +370,7 @@ prediction: {
     currentProjection: 'Current Projection',
     live: 'LIVE',
     webOnlyConfig: 'This configuration is available from the web version.',
-    configDescription: "Configure the group's informative points system. PodioF1 does not manage money, it only displays the information.",
+    configDescription: "Configure the group's informative points system. Podio does not manage money, it only displays the information.",
     errorSavingPot: 'Error saving PodioPoints configuration'
   },
 
@@ -381,7 +379,7 @@ prediction: {
   // ============================================
   createGroup: {
     title: 'Create New Group',
-    subtitle: 'Set up your F1 prediction group',
+    subtitle: 'Set up your prediction group',
     name: 'Group Name',
     season: 'Season',
     positions: 'Positions to predict',
@@ -396,7 +394,7 @@ prediction: {
     includeSprintsSub: 'The 2026 season will have 6 Sprint races with special format and scoring',
     sprintPositions: 'Sprint Positions',
     sprintPoints: 'Sprint Scoring System',
-    scoringSystem: 'Official F1 Scoring System',
+    scoringSystem: 'Official Scoring System',
     dualScoring: 'Points for correct driver without exact position',
     dualScoringSub: 'Awards points when you guess the driver correctly even if not in the exact position, and gives an extra bonus when you get both right.',
     bonusOptions: 'Optional Bonuses (Races Only)',
@@ -409,18 +407,18 @@ prediction: {
     top3: 'Top 3',
     top5: 'Top 5',
     top10: 'Top 10',
-    top8Official: 'Top 8 (official F1)',
+    top8Official: 'Top 8 (official system)',
     distAllToWinner: '(all to the winner)',
     dualExampleLabel: 'Example:',
     dualExampleText: 'Predicting {{driver}} in {{position}} place',
-    namePlaceholder: 'My F1 Group',
+    namePlaceholder: 'My Prediction Group',
     dualExampleCase1: 'If they finish 2nd → 5 points (correct driver)',
     dualExampleCase2: 'If they finish 1st → 25 + 10 = 35 points (exact + bonus)',
     dist602515: '🥇 60% · 🥈 25% · 🥉 15%',
     dist503020: '🥇 50% · 🥈 30% · 🥉 20%',
     dist702010: '🥇 70% · 🥈 20% · 🥉 10%',
     dist100: '🥇 100%',
-    officialScoringTitle: 'Official F1 Scoring System',
+    officialScoringTitle: 'Official Scoring System',
     groupLimitReachedToast: 'You have reached the free plan limit of 1 created group.',
   },
 
@@ -468,8 +466,74 @@ prediction: {
     lastNamePlaceholder: 'Your last name',
     unlockedTooltip: 'Unlocked',
     badgesWord: 'badges',
-    secretsWord: 'secrets'
+    secretsWord: 'secrets',
+    dangerZone: 'Danger zone',
+    deleteAccountDesc: 'Once you delete your account, all your data will be permanently removed. This action cannot be undone.',
+    deleteAccountBtn: 'Delete my account'
   },
+  disclaimer: {
+  titleFull: '⚠️ Important Notice: Podio is a site for fun among friends',
+  titleCompact: 'Podio is FREE',
+  intro: 'Podio is a {{bold_start}}100% FREE{{bold_end}} race sports prediction platform to compete with friends.',
+  compactText: 'Just sports fun among friends',
+  noMoney: 'NO money involved',
+  noCashPrizes: 'NO cash prizes',
+  noPaymentRequired: 'NO payments required',
+  free: '100% Free',
+  funOnly: 'Just fun among friends',
+  sportsPredictions: 'Sports predictions'
+},
+howItWorks: {
+  title: 'How Podio Works',
+  subtitle: 'Learn to create your prediction group, invite your friends, and start competing in 5 simple steps.',
+  step1Title: 'Create Your Free Account',
+  step1Desc1: 'Sign up for Podio in under 1 minute. You only need your email and a password. No credit card required, no hidden costs, and no app to download.',
+  step1Desc2: 'After signing up, confirm your email and you\'ll be ready to create your first prediction group.',
+  step1TipLabel: '💡 Tip:',
+  step1Tip: 'Use an email you check often. Podio will send reminders before each race so you never miss making your prediction.',
+  step2Title: 'Create Your Prediction Group',
+  step2Desc1: 'Click "Create Group" and customize your league. Give your group a creative name (e.g., "Coffee Break Racers"). Choose the season and select your preferred scoring system.',
+  step2Desc2Label: 'Available scoring systems:',
+  step2SystemAccuracyLabel: 'Accuracy:',
+  step2SystemAccuracy: 'More points for exact position predictions',
+  step2SystemBalancedLabel: 'Balanced:',
+  step2SystemBalanced: 'Mix between accuracy and correct picks',
+  step2SystemLiberalLabel: 'Liberal:',
+  step2SystemLiberal: 'More points for correct picks, less for exact position',
+  step2TipLabel: '💡 Tip:',
+  step2Tip: 'If it\'s your first group, use the "Balanced" system. It\'s the fairest for beginners and experts alike. You can create multiple groups with different systems to see which you like best.',
+  step3Title: 'Invite Your Friends',
+  step3Desc1: 'Once your group is created, you\'ll get a unique invite code. Share it with your friends via WhatsApp, email, or social media. They just need to click the link, create an account (if they don\'t have one), and they\'ll automatically join your group.',
+  step3Desc2: 'There\'s no member limit. Invite 5 friends or 50, it\'s up to you. More participants means a more exciting competition.',
+  step3TipLabel: '💡 Tip:',
+  step3Tip: 'Invite people who actually follow the sport. Competition is more fun when everyone\'s engaged. You can create separate groups: one for experts and one for newcomers.',
+  step4Title: 'Make Your Prediction Before Each Race',
+  step4Desc1: 'Before each race, log into Podio and predict who will finish in the top 10. Drag and drop the participants into the order you think is right. Think strategically: who will dominate? Will there be surprises?',
+  step4Desc2: 'You have up to 2 hours before the race to make your prediction (this can be customized by the admin). You can edit your prediction as many times as you want before the deadline.',
+  step4TipLabel: '💡 Tip:',
+  step4Tip: 'Don\'t always go with the favorites. Sometimes an underdog can surprise everyone and earn you a lot of points if no one else predicted them. Check practice and qualifying before deciding.',
+  step5Title: 'Earn Points and Climb the Standings',
+  step5Desc1: 'After each race, Podio automatically calculates your points by comparing your prediction to the official result. You\'ll get an email with your score and see how you ranked in your group.',
+  step5Desc2Label: 'How points are awarded:',
+  step5Point1: 'Exact position prediction: Maximum points (e.g., 10 pts)',
+  step5Point2: 'Correct participant, wrong position: Partial points (e.g., 5 pts)',
+  step5Point3: 'Wrong participant: 0 points',
+  step5Desc3: 'The competition continues throughout the season. Who will be your group\'s champion by year\'s end? Who\'ll have the longest hit streak? Who\'ll pull off the most epic comeback?',
+  step5TipLabel: '💡 Tip:',
+  step5Tip: 'Don\'t get discouraged by a bad start. Anything can happen. A good streak of 3-4 races can put you at the top. Consistency wins championships.',
+  ctaTitle: 'Ready to Start?',
+  ctaSubtitle: 'Create your free account now and form your prediction group. The next race is just around the corner.',
+  ctaButton: '🏁 Create Free Account',
+  faqTitle: 'Frequently Asked Questions',
+  faq1Q: 'Can I change the scoring system after creating the group?',
+  faq1A: 'Only the admin can change the scoring system, and only before the season starts or if no predictions have been submitted yet.',
+  faq2Q: 'What happens if I forget to make my prediction?',
+  faq2A: 'You simply don\'t earn points for that race, but you stay in the competition. Podio sends reminders 24 hours and 2 hours before each race to help you not forget.',
+  faq3Q: 'Can I see others\' predictions before making mine?',
+  faq3A: 'No. Predictions stay hidden until the deadline closes. This ensures everyone makes their prediction independently and honestly.',
+  faq4Q: 'How are ties handled?',
+  faq4A: 'If two or more people have the same score at the end of the season, whoever has more exact hits (perfect position predictions) wins. If still tied, whoever has more correct picks wins.'
+},
 
   // ============================================
   // BADGES
@@ -549,8 +613,8 @@ prediction: {
     favoriteDriverSub: 'Support them in every race!',
     howWatch: '📺 How do you watch races?',
     howWatchSub: 'You can select multiple options',
-    howWatchOptions: ['Free TV', 'Cable/Satellite TV', 'F1 TV Pro', 'Streaming', 'At the circuit', 'Highlights after'],
-    sinceWhen: '📅 How long have you been following F1?',
+    howWatchOptions: ['Free TV', 'Cable/Satellite TV', 'Sports Streaming App', 'Streaming', 'At the circuit', 'Highlights after'],
+    sinceWhen: '📅 How long have you been following the sports?',
     sinceWhenSub: 'We want to know you better',
     sinceWhenOptions: ['Less than 1 year', '1-3 years', '3-5 years', '5-10 years', 'More than 10 years', 'My whole life'],
     hasVehicle: '🚗 Do you own a vehicle?',
@@ -659,7 +723,7 @@ prediction: {
     fastestLapInPredictions: 'in the predictions that included them.',
     clearBtn: 'Clear',
     currentFastestLabel: 'Fastest lap',
-    pozoConfigInfo: "Configure the group's informative pot. PodioF1 does not manage money, it only displays the information.",
+    pozoConfigInfo: "Configure the group's informative pot. Podio does not manage money, it only displays the information.",
     potVisibleNote: 'Members will see the amount and distribution on the dashboard',
     potMembersBreakdown: '({{count}} members × {{amount}})',
     savingPot: 'Saving...',
@@ -667,7 +731,7 @@ prediction: {
     loadingRaces: 'Loading races...',
     noRacesScheduled: 'No scheduled or finished races',
     enablePot: 'Enable Pot',
-    manageResultsSubLong: "Manually enter race results (ideal for Sprints or when OpenF1 doesn't have data).",
+    manageResultsSubLong: "Manually enter race results (ideal for Sprints or when OpenF doesn't have data).",
     transferOwnership: 'Transfer Ownership',
     confirmTransferTitle: 'Transfer group ownership?',
     confirmTransferMsg: '{{name}} will become the new owner of the group and will remain an admin. This action cannot be undone directly.',
@@ -677,6 +741,23 @@ prediction: {
     joinSettingsTitle: 'Join Requests', requireApprovalLabel: 'Require Approval to Join', requireApprovalSub: 'If enabled, new members stay pending until an admin approves them.', approvalEnabledToast: 'New members now require approval', approvalDisabledToast: 'New members join automatically', errorSavingApproval: 'Error saving approval setting',
     errorCannotToggleCreatorAdmin: "You can't change the group owner's admin role."
   },
+  support: {
+  backToHome: '← Back to home',
+  title: 'Support',
+  subtitle: 'Have a problem or a question? We\'re here to help.',
+  contactLabel: 'Write to us directly',
+  faqSectionTitle: 'Frequently Asked Questions',
+  faq1Q: 'How do I create a prediction group?',
+  faq1A: 'Open the app, tap "Create Group" on the main screen, and choose the name, number of positions to predict, and scoring system. An invite code is generated that you can share with your friends.',
+  faq2Q: 'How do I invite other people to my group?',
+  faq2A: 'From your group\'s admin panel, tap "Share Group" to copy the invite link, or share the code shown on the group screen directly.',
+  faq3Q: 'I forgot my password, what do I do?',
+  faq3A: 'On the sign-in screen, tap "Forgot your password?" and enter your email. You\'ll receive a link to create a new password.',
+  faq4Q: 'What happens if I don\'t submit my prediction on time?',
+  faq4A: 'Each group has a deadline before each race. If you don\'t submit your prediction before that time, you won\'t earn points for that race, but you can keep participating in the following ones.',
+  faq5Q: 'Does the app process payments or real money?',
+  faq5A: 'No. Podio does not process payments. The "PodioPoints" feature is just an informal agreement between group members, recorded in the app as a reference — the money itself is handled outside the app, between you.'
+},
 
   pointsHistogram: {
   projectedLabel: 'Forecast',
@@ -910,13 +991,13 @@ settings: {
   themeDescription: 'Choose between light or dark theme',
   information: 'Information',
   versionLabel: 'Version',
-  f1Season: 'Formula 1 {{year}}',
+  f1Season: 'Season {{year}}',
   languageLabel: 'Language',
   languageDescription: 'Choose the app language',
 },
 deleteAccount: {
   confirmWord: 'DELETE',
-  deleteError: 'Error deleting your account. Please try again or contact privacy@podiof1.com',
+  deleteError: 'Error deleting your account. Please try again or contact privacy@podio.lat',
   title: 'Delete My Account',
   subtitle: 'Before continuing, please carefully read what deleting your account involves.',
   irreversibleWarning: 'This action is irreversible',
@@ -942,7 +1023,7 @@ deleteAccount: {
 },
 racePredictions: {
   errorLoading: 'Error loading predictions',
-  f1PointsColumn: 'F1 Points',
+  f1PointsColumn: 'Official Points',
   fastestLapColumn: 'Fastest Lap',
   correctDriverColumn: 'Correct Driver',
   userRankingSheet: 'User Ranking',
@@ -975,7 +1056,7 @@ racePredictions: {
   userRankingTitle: 'User Ranking',
   youTag: 'You',
   correctDriversCount: '{{count}} correct drivers',
-  officialResultF1: 'Official F1 Result',
+  officialResultF1: 'Official Result',
   fastestLapTitle: 'Fastest Lap',
   driverLabelCaps: 'DRIVER',
   noFastestLapInfo: 'No fastest lap information available',
@@ -993,6 +1074,30 @@ racePredictions: {
   shareMyResultBtn: 'Share my Result',
   exactBonusValueAlt: '+{{points}} extra points for an exact position',
   fastestLapBonusValueAlt: '+{{points}} points for correctly predicting the fastest lap driver',
+  noPredictionLockTitle: 'You need to have predicted', 
+  noPredictionLockMsg: "To see everyone else's predictions, you need to have submitted your own for this race first."
+},
+seguroCard: {
+  tituloActivo: '🛡️ Prediction Insurance active in this group',
+  subtituloActivo: 'Set up your backup prediction in your profile.',
+  cta: 'Configure'
+},
+seguro: {
+  pageTitle: 'Prediction Insurance', loading: 'Loading...', loadError: 'Error loading',
+  statusActive: '🛡️ Insurance active', statusActiveSub: "It'll be used automatically if you don't predict in time",
+  statusInactive: 'Insurance inactive', statusInactiveSub: 'Set up your backup prediction and activate it',
+  creditsWord: 'credits', costPerUse: 'Cost: {{cost}} credits per use',
+  activateBtn: 'Activate Insurance', deactivateBtn: 'Deactivate',
+  instructionsTitle: 'Your backup prediction', instructionsText: "Set up your ideal Top {{max}}. If you don't submit your real prediction in time for a race, this one will be used automatically.",
+  yourBackup: 'Your backup ({{current}}/{{max}})', selectFromList: 'Pick drivers from the list on the right',
+  availableDrivers: 'Available drivers', fastestLapBonus: 'Fastest lap', selectDriverPlaceholder: 'Pick a driver',
+  saveBtn: 'Save backup', saving: 'Saving...', savedSuccess: 'Backup saved',
+  activatedSuccess: 'Insurance activated', deactivatedSuccess: 'Insurance deactivated',
+  exactDriversError: 'You need to pick exactly {{max}} drivers', selectFastestDriverError: 'Pick a driver for fastest lap',
+  needsPremiumError: 'You need an active PolePass to use Insurance', saveError: 'Error saving',
+  notEnabledForGroup: "Prediction Insurance isn't enabled for this group yet",
+  consentTitle: 'Activate your Insurance?', consentText: "If you don't submit your prediction in time for a race, we'll use this backup automatically and deduct {{cost}} credits from your balance.",
+  consentConfirm: 'Yes, activate'
 },
 groupDetail: {
   errorLoadingGroup: 'Error loading the group',
@@ -1021,7 +1126,7 @@ groupDetail: {
   administratorWord: 'Administrator',
   managePredictionsLabel: 'Manage Predictions',
   leaveGroupBtn: 'Leave Group',
-  f1OfficialValue: 'Official F1',
+  f1OfficialValue: 'Official System',
   hoursBefore: '{{hours}}h before',
   noMembersTitle: 'No members',
   noMembersMessage: 'Share the invite link so others can join',
@@ -1057,7 +1162,7 @@ paywallGate: {
     unlimited_groups: { title: 'Unlimited Groups', description: 'Create and join as many groups as you want, with no limit.' },
     no_ads: { title: 'No Ads', description: 'Enjoy the app without banners or interruptions.' },
     custom_profile: { title: 'Custom Profile', description: 'Customize your profile with exclusive colors and styles.' },
-    badge_supporter: { title: 'Supporter Badge', description: 'Exclusive badge showing your support for PodioF1.' }
+    badge_supporter: { title: 'Supporter Badge', description: 'Exclusive badge showing your support for Podio.' }
   }
 },
 superAdmin: {
@@ -1065,7 +1170,7 @@ superAdmin: {
   errorLoadingData: 'Error loading data',
   loadingPanel: 'Loading panel...',
   panelTitle: 'Super Admin Panel',
-  panelSubtitle: 'General administration of PodioF1',
+  panelSubtitle: 'General administration of Podio',
   statUsers: 'Users',
   statGroups: 'Groups',
   statPredictions: 'Predictions',
@@ -1092,8 +1197,8 @@ superAdmin: {
 sharePrediction: {
   errorGeneratingImage: 'Error generating image',
   imageDownloaded: 'Image downloaded!',
-  shareTitlePrediction: 'My prediction on PodioF1',
-  shareTitleResult: 'My result on PodioF1',
+  shareTitlePrediction: 'My prediction on Podio',
+  shareTitleResult: 'My result on Podio',
   shareTextGeneral: 'Check out the results for {{race}}!',
   shareTextPrediction: 'Check out my prediction for {{race}}!',
   shareTextResult: 'Check out my result for {{race}}!',
@@ -1124,7 +1229,7 @@ sharePrediction: {
   // PWA
   // ============================================
   pwa: {
-    installTitle: 'Install PodioF1',
+    installTitle: 'Install Podio',
     installSubAndroid: 'Quick access from your home screen',
     installSubIOS: 'Tap the share icon and then "Add to Home Screen"',
     installBtn: 'Install',
@@ -1136,7 +1241,7 @@ sharePrediction: {
   // PREMIUM
   // ============================================
   premium: {
-    title: 'PodioF1 PolePass',
+    title: 'Podio PolePass',
     subtitle: 'Take your experience to the next level',
     subscribe: 'Subscribe Now',
     monthly: 'Monthly',

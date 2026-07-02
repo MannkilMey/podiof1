@@ -45,7 +45,7 @@ body {
   border: none;
   color: var(--red);
   cursor: pointer;
-  font-size: 24px;
+  font-size: var(--fs-section-title);
   transition: opacity 0.2s;
 }
 
@@ -53,7 +53,7 @@ body {
 
 .settings-title {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 32px;
+  font-size: var(--fs-page-title);
   font-weight: 900;
   color: var(--white);
 }
@@ -68,7 +68,7 @@ body {
 
 .settings-section-title {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 18px;
+  font-size: var(--fs-subtitle);
   font-weight: 800;
   color: var(--white);
   margin-bottom: 16px;
@@ -97,7 +97,7 @@ body {
 }
 
 .setting-description {
-  font-size: 13px;
+  font-size: var(--fs-small);
   color: var(--muted);
 }
 
@@ -114,7 +114,7 @@ body {
   color: var(--muted);
   cursor: pointer;
   transition: all 0.2s;
-  font-size: 14px;
+  font-size: var(--fs-body);
 }
 
 .theme-btn.active {
@@ -179,7 +179,7 @@ export default function Settings() {
           <div className="setting-item">
             <div className="setting-info">
               <div className="setting-label">{t('settings.versionLabel')}</div>
-              <div className="setting-description">PodioF1 v1.0.0</div>
+              <div className="setting-description">Podio v1.0.0</div>
             </div>
           </div>
 

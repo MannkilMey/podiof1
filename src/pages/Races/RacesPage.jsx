@@ -57,7 +57,7 @@ html, body {
   border: none;
   color: var(--red);
   cursor: pointer;
-  font-size: 24px;
+  font-size: var(--fs-section-title);
   transition: opacity 0.2s;
 }
 
@@ -65,14 +65,14 @@ html, body {
 
 .races-title {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 32px;
+  font-size: var(--fs-page-title);
   font-weight: 900;
   color: var(--white);
 }
 
 .races-subtitle {
   color: var(--muted);
-  font-size: 14px;
+  font-size: var(--fs-body);
   margin-top: -24px;
   margin-bottom: 24px;
 }
@@ -114,7 +114,7 @@ html, body {
 }
 
 .race-round {
-  font-size: 11px;
+  font-size: var(--fs-label);
   color: var(--muted);
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -123,7 +123,7 @@ html, body {
 
 .race-name {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 24px;
+  font-size: var(--fs-section-title);
   font-weight: 800;
   color: var(--white);
   margin-bottom: 4px;
@@ -133,7 +133,7 @@ html, body {
   display: flex;
   gap: 16px;
   color: var(--muted);
-  font-size: 14px;
+  font-size: var(--fs-body);
   margin-top: 8px;
 }
 
@@ -150,7 +150,7 @@ html, body {
 }
 
 .race-badge {
-  font-size: 11px;
+  font-size: var(--fs-label);
   padding: 4px 10px;
   border-radius: 12px;
   font-weight: 700;
@@ -185,7 +185,7 @@ html, body {
   border-radius: 10px;
   color: white;
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 14px;
+  font-size: var(--fs-body);
   font-weight: 800;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -210,7 +210,7 @@ html, body {
   border-radius: 10px;
   color: var(--white);
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 14px;
+  font-size: var(--fs-body);
   font-weight: 800;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -229,7 +229,7 @@ html, body {
 }
 
 .countdown-small {
-  font-size: 12px;
+  font-size: var(--fs-small);
   color: var(--muted);
   margin-top: 4px;
 }
@@ -242,7 +242,7 @@ html, body {
 
 .results-title {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 16px;
+  font-size: var(--fs-subtitle);
   font-weight: 800;
   color: var(--white);
   margin-bottom: 16px;
@@ -264,7 +264,7 @@ html, body {
 }
 
 .result-column-title {
-  font-size: 12px;
+  font-size: var(--fs-small);
   color: var(--muted);
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -299,7 +299,7 @@ html, body {
 
 .result-position {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 20px;
+  font-size: var(--fs-section-title);
   font-weight: 900;
   color: var(--white);
   min-width: 30px;
@@ -307,7 +307,7 @@ html, body {
 
 .result-driver {
   flex: 1;
-  font-size: 14px;
+  font-size: var(--fs-body);
   color: var(--white);
   font-weight: 600;
 }
@@ -326,7 +326,7 @@ html, body {
 }
 
 .points-label {
-  font-size: 12px;
+  font-size: var(--fs-small);
   color: var(--muted);
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -335,7 +335,7 @@ html, body {
 
 .points-value {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 48px;
+  font-size: var(--fs-display);
   font-weight: 900;
   color: var(--green);
 }
@@ -359,7 +359,7 @@ html, body {
 
 .empty-title {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 24px;
+  font-size: var(--fs-section-title);
   font-weight: 800;
   color: var(--white);
   margin-bottom: 8px;
@@ -367,7 +367,7 @@ html, body {
 
 .empty-text {
   color: var(--muted);
-  font-size: 14px;
+  font-size: var(--fs-body);
 }
 
 @media (max-width: 768px) {

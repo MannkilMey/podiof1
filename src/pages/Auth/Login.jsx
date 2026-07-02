@@ -99,7 +99,7 @@ const CSS = `
 
 .logo-text {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 32px;
+  font-size: var(--fs-page-title);
   font-weight: 900;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -111,7 +111,7 @@ const CSS = `
 }
 
 .logo-subtitle {
-  font-size: 13px;
+  font-size: var(--fs-small);
   color: var(--muted);
   margin-top: 8px;
 }
@@ -122,7 +122,7 @@ const CSS = `
   border-radius: 8px;
   padding: 12px;
   color: var(--red);
-  font-size: 13px;
+  font-size: var(--fs-small);
   margin-bottom: 20px;
 }
 
@@ -132,7 +132,7 @@ const CSS = `
 
 .form-label {
   display: block;
-  font-size: 13px;
+  font-size: var(--fs-small);
   font-weight: 600;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -147,7 +147,7 @@ const CSS = `
   border: 1px solid var(--border);
   border-radius: 10px;
   color: var(--white);
-  font-size: 15px;
+  font-size: 16px;
   font-family: 'Barlow', sans-serif;
   transition: border-color 0.2s;
 }
@@ -167,7 +167,7 @@ const CSS = `
 }
 
 .forgot-link a {
-  font-size: 12px;
+  font-size: var(--fs-small);
   color: var(--red);
   text-decoration: none;
   font-weight: 600;
@@ -186,7 +186,7 @@ const CSS = `
   border-radius: 10px;
   color: white;
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 16px;
+  font-size: var(--fs-subtitle);
   font-weight: 800;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -212,7 +212,7 @@ const CSS = `
   text-align: center;
   margin: 24px 0;
   color: var(--muted);
-  font-size: 13px;
+  font-size: var(--fs-small);
   position: relative;
 }
 
@@ -235,7 +235,7 @@ const CSS = `
 
 .register-link {
   text-align: center;
-  font-size: 14px;
+  font-size:  var(--fs-body);
   color: var(--muted);
 }
 
@@ -326,9 +326,9 @@ export default function Login() {
         <div className="login-box">
           {/* Logo Area */}
           <div className="logo-area">
-            <img src="/logo.png" alt="PodioF1" style={{ width: 56, height: 56, borderRadius: 12, objectFit: 'cover' }} />
+            <img src="/logo.png" alt="Podio" style={{ width: 56, height: 56, borderRadius: 12, objectFit: 'cover' }} />
             <div className="logo-text">
-              Podio<span className="accent">F1</span>
+              Podio
             </div>
             <div className="logo-subtitle">
             {t('auth.seasonSubtitle')}

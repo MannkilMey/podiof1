@@ -22,10 +22,10 @@ export default function PolePassAnnouncementCard() {
     }}>
       <span style={{ fontSize: 28 }}>👑</span>
       <div style={{ flex: 1, minWidth: 200 }}>
-        <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 800, fontSize: 15, color: 'var(--white)' }}>
+        <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 800, fontSize: 'var(--fs-subtitle)', color: 'var(--white)' }}>
           {t('polePassAnnouncement.title')}
         </div>
-        <div style={{ fontSize: 12, color: 'var(--muted)' }}>
+        <div style={{ fontSize: 'var(--fs-small)', color: 'var(--muted)' }}>
           {t('polePassAnnouncement.subtitle')}
         </div>
       </div>
@@ -33,7 +33,7 @@ export default function PolePassAnnouncementCard() {
         onClick={() => navigate('/upgrade', { state: { origen: 'anuncio_dashboard' } })}
         style={{
           padding: '8px 16px', background: 'linear-gradient(135deg, var(--gold), #A67C00)',
-          border: 'none', borderRadius: 8, color: 'white', fontWeight: 700, fontSize: 12,
+          border: 'none', borderRadius: 8, color: 'white', fontWeight: 700, fontSize: 'var(--fs-small)',
           cursor: 'pointer', whiteSpace: 'nowrap'
         }}
       >

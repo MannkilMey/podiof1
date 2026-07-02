@@ -26,6 +26,7 @@ import ForgotPassword from './pages/Auth/ForgotPassword';
 import ResetPassword from './pages/Auth/ResetPassword';
 import DeleteAccount from './pages/Settings/DeleteAccount';
 import UpgradePage from './pages/Upgrade/UpgradePage';
+import SeguroPredictionPage from './pages/Seguro/SeguroPredictionPage';
 
 
 // Main Pages
@@ -191,6 +192,7 @@ export default function App() {
               </ProtectedRoute>
             } 
           />
+          <Route path="/group/:groupId/seguro" element={<ProtectedRoute><SeguroPredictionPage /></ProtectedRoute>} />
           <Route path="/admin/race/:raceId/results" element={<ProtectedRoute><ManualResults /></ProtectedRoute>} />
           <Route 
             path="/settings" 

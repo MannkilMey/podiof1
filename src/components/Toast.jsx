@@ -92,7 +92,7 @@ const TOAST_CSS = `
 
 .toast-message {
   color: var(--toast-text);
-  font-size: 14px;
+  font-size: var(--fs-body);
   font-weight: 500;
   line-height: 1.4;
 }

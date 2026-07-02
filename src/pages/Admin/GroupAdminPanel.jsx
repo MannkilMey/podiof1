@@ -53,7 +53,7 @@ html, body {
 
 .admin-title {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 32px;
+  font-size: var(--fs-page-title);
   font-weight: 900;
   color: var(--white);
 }
@@ -65,7 +65,7 @@ html, body {
   border-radius: 8px;
   color: var(--white);
   cursor: pointer;
-  font-size: 14px;
+  font-size: var(--fs-body);
   transition: all 0.2s;
   font-family: 'Barlow Condensed', sans-serif;
   font-weight: 700;
@@ -87,7 +87,7 @@ html, body {
 
 .section-title {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 20px;
+  font-size: var(--fs-section-title);
   font-weight: 800;
   color: var(--white);
   margin-bottom: 16px;
@@ -143,7 +143,7 @@ html, body {
 }
 
 .member-email {
-  font-size: 13px;
+  font-size: var(--fs-small);
   color: var(--muted);
 }
 
@@ -154,7 +154,7 @@ html, body {
 }
 
 .badge {
-  font-size: 10px;
+  font-size: var(--fs-label);
   padding: 2px 8px;
   border-radius: 10px;
   font-weight: 700;
@@ -180,7 +180,7 @@ html, body {
 .btn-action {
   padding: 8px 16px;
   border-radius: 8px;
-  font-size: 13px;
+  font-size: var(--fs-small);
   font-weight: 700;
   cursor: pointer;
   transition: all 0.2s;
@@ -253,7 +253,7 @@ html, body {
 }
 
 .info-label {
-  font-size: 12px;
+  font-size: var(--fs-small);
   color: var(--muted);
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -262,7 +262,7 @@ html, body {
 
 .info-value {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 20px;
+  font-size: var(--fs-section-title);
   font-weight: 800;
   color: var(--white);
 }
@@ -275,7 +275,7 @@ html, body {
 
 .code-value {
   font-family: 'Share Tech Mono', monospace;
-  font-size: 18px;
+  font-size: var(--fs-subtitle);
   letter-spacing: 3px;
   color: var(--red);
 }
@@ -287,7 +287,7 @@ html, body {
   border-radius: 6px;
   color: var(--red);
   cursor: pointer;
-  font-size: 12px;
+  font-size: var(--fs-small);
   font-weight: 700;
   transition: all 0.2s;
 }
@@ -322,7 +322,7 @@ html, body {
 
 .modal-title {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 24px;
+  font-size: var(--fs-section-title);
   font-weight: 800;
   color: var(--white);
   margin-bottom: 12px;
@@ -344,7 +344,7 @@ html, body {
   padding: 12px;
   border-radius: 8px;
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 14px;
+  font-size: var(--fs-body);
   font-weight: 700;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -395,13 +395,13 @@ html, body {
 
 .race-fastest-title {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 18px;
+  font-size: var(--fs-subtitle);
   font-weight: 800;
   color: var(--white);
 }
 
 .race-fastest-date {
-  font-size: 12px;
+  font-size: var(--fs-small);
   color: var(--muted);
 }
 
@@ -418,7 +418,7 @@ html, body {
   border: 1px solid var(--border2);
   border-radius: 8px;
   color: var(--white);
-  font-size: 14px;
+  font-size: 16px;
   font-family: 'Barlow', sans-serif;
   cursor: pointer;
   transition: all 0.2s;
@@ -446,7 +446,7 @@ html, body {
   border-radius: 8px;
   color: white;
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 13px;
+  font-size: var(--fs-small);
   font-weight: 800;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -471,7 +471,7 @@ html, body {
   border-radius: 8px;
   color: var(--muted);
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 13px;
+  font-size: var(--fs-small);
   font-weight: 800;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -493,7 +493,7 @@ html, body {
   background: rgba(0, 212, 160, 0.1);
   border: 1px solid rgba(0, 212, 160, 0.3);
   border-radius: 8px;
-  font-size: 13px;
+  font-size: var(--fs-small);
 }
 
 .current-fastest-icon {
@@ -514,10 +514,7 @@ html, body {
     gap: 12px;
   }
 
-  .admin-title {
-    font-size: 26px;
-  }
-
+  
   .group-info {
     grid-template-columns: 1fr;
   }
@@ -856,8 +853,8 @@ const handleTransferOwnership = async (member) => {
                 style={{ width: 18, height: 18, cursor: 'pointer' }}
               />
               <div>
-                <div style={{ fontWeight: 700, color: 'var(--white)', fontSize: 15 }}>{t('admin.requireApprovalLabel')}</div>
-                <div style={{ fontSize: 12, color: 'var(--muted)' }}>{t('admin.requireApprovalSub')}</div>
+                <div style={{ fontWeight: 700, color: 'var(--white)', fontSize: 'var(--fs-subtitle)' }}>{t('admin.requireApprovalLabel')}</div>
+                <div style={{ fontSize: 'var(--fs-small)', color: 'var(--muted)' }}>{t('admin.requireApprovalSub')}</div>
               </div>
             </label>
           </div>
@@ -969,7 +966,7 @@ const handleTransferOwnership = async (member) => {
         {/* 💰 CONFIGURACIÓN DEL POZO */}
         <div className="admin-section">
           <h2 className="section-title">🏁 {t('podioPoints.title')}</h2>
-          <p style={{ color: 'var(--muted)', fontSize: 14, marginBottom: 20, lineHeight: 1.6 }}>
+          <p style={{ color: 'var(--muted)', fontSize: 'var(--fs-body)', marginBottom: 20, lineHeight: 1.6 }}>
             {t('podioPoints.configDescription')}
           </p>
 
@@ -983,8 +980,8 @@ const handleTransferOwnership = async (member) => {
                 onChange={e => setPozoData({ ...pozoData, pozo_habilitado: e.target.checked })}
                 style={{ width: 18, height: 18, cursor: 'pointer' }} />
               <div>
-                <div style={{ fontWeight: 700, color: 'var(--white)', fontSize: 15 }}>{t('podioPoints.enable')}</div>
-                <div style={{ fontSize: 12, color: 'var(--muted)' }}>{t('podioPoints.enableSub')}</div>
+                <div style={{ fontWeight: 700, color: 'var(--white)', fontSize: 'var(--fs-subtitle)' }}>{t('podioPoints.enable')}</div>
+                <div style={{ fontSize: 'var(--fs-small)', color: 'var(--muted)' }}>{t('podioPoints.enableSub')}</div>
               </div>
             </label>
 
@@ -999,7 +996,7 @@ const handleTransferOwnership = async (member) => {
                       style={{
                         width: '100%', padding: '10px 14px', background: 'var(--bg2)',
                         border: '1px solid var(--border)', borderRadius: 8, color: 'var(--white)',
-                        fontSize: 14, fontFamily: "'Share Tech Mono', monospace", boxSizing: 'border-box'
+                        fontSize: 16, fontFamily: "'Share Tech Mono', monospace", boxSizing: 'border-box'
                       }} />
                   </div>
                   <div>
@@ -1017,7 +1014,7 @@ const handleTransferOwnership = async (member) => {
                 </div>) : (
                   <div style={{
                     padding: 12, background: 'var(--bg2)', borderRadius: 8,
-                    border: '1px solid var(--border)', fontSize: 13, color: 'var(--muted)', marginBottom: 16
+                    border: '1px solid var(--border)', fontSize: 'var(--fs-small)', color: 'var(--muted)', marginBottom: 16
                   }}>
                     ℹ️ {t('podioPoints.webOnlyConfig')}
                   </div>
@@ -1038,9 +1035,9 @@ const handleTransferOwnership = async (member) => {
                 {!isNative && pozoData.pozo_monto_por_persona > 0 && (
                   <div style={{
                     padding: 12, background: 'var(--bg2)', borderRadius: 8,
-                    border: '1px solid var(--border)', fontSize: 13, color: 'var(--muted)', marginBottom: 16
+                    border: '1px solid var(--border)', fontSize: 'var(--fs-small)', color: 'var(--muted)', marginBottom: 16
                   }}>
-                   {t('podioPoints.estimatedTotal')}: <strong style={{ color: 'var(--gold)', fontFamily: "'Barlow Condensed'", fontSize: 18 }}>
+                   {t('podioPoints.estimatedTotal')}: <strong style={{ color: 'var(--gold)', fontFamily: "'Barlow Condensed'", fontSize: 'var(--fs-section-title)' }}>
                     {pozoData.pozo_moneda === 'PYG' ? '₲' : pozoData.pozo_moneda === 'BRL' ? 'R$' : '$'} {(pozoData.pozo_monto_por_persona * members.length).toLocaleString(getDateLocale(locale))}
                   </strong> {t('admin.potMembersBreakdown', { count: members.length, amount: pozoData.pozo_monto_por_persona.toLocaleString(getDateLocale(locale)) })}
                   </div>

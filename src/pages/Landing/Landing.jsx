@@ -101,7 +101,7 @@ body {
   align-items: center;
   gap: 12px;
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 28px;
+  font-size: var(--fs-stat-secondary);
   font-weight: 900;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -163,7 +163,7 @@ body {
   border-radius: 10px;
   color: var(--text-primary);
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 15px;
+  font-size: var(--fs-subtitle);
   font-weight: 700;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -186,7 +186,7 @@ body {
   border-radius: 10px;
   color: white;
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 15px;
+  font-size: var(--fs-subtitle);
   font-weight: 800;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -230,7 +230,7 @@ body {
   border-radius: 50px;
   padding: 8px 20px;
   margin-bottom: 32px;
-  font-size: 14px;
+  font-size: var(--fs-body);
   font-weight: 600;
   color: #E8002D;
   letter-spacing: 1px;
@@ -248,7 +248,7 @@ body {
 
 .hero-title {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 72px;
+  font-size: var(--fs-display);
   font-weight: 900;
   line-height: 1.1;
   margin-bottom: 24px;
@@ -259,7 +259,7 @@ body {
 }
 
 .hero-subtitle {
-  font-size: 22px;
+  font-size: var(--fs-stat-secondary);
   color: var(--text-secondary);
   margin-bottom: 48px;
   line-height: 1.6;
@@ -283,7 +283,7 @@ body {
   border-radius: 12px;
   color: white;
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 18px;
+  font-size: var(--fs-subtitle);
   font-weight: 800;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -306,7 +306,7 @@ body {
   border-radius: 12px;
   color: var(--text-primary);
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 18px;
+  font-size: var(--fs-subtitle);
   font-weight: 700;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -347,7 +347,7 @@ body {
 
 .stat-number {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 48px;
+  font-size: var(--fs-display);
   font-weight: 900;
   color: #E8002D;
   margin-bottom: 8px;
@@ -355,7 +355,7 @@ body {
 
 .stat-label {
   color: var(--text-secondary);
-  font-size: 14px;
+  font-size: var(--fs-body);
   font-weight: 600;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -370,7 +370,7 @@ body {
 
 .section-title {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 48px;
+  font-size: var(--fs-display);
   font-weight: 900;
   text-align: center;
   margin-bottom: 60px;
@@ -408,7 +408,7 @@ body {
   align-items: center;
   justify-content: center;
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 32px;
+  font-size: var(--fs-page-title);
   font-weight: 900;
   color: white;
   margin: 0 auto 24px;
@@ -416,7 +416,7 @@ body {
 
 .step-title {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 24px;
+  font-size: var(--fs-stat-secondary);
   font-weight: 800;
   margin-bottom: 12px;
   color: var(--text-primary);
@@ -425,7 +425,7 @@ body {
 .step-description {
   color: var(--text-secondary);
   line-height: 1.6;
-  font-size: 15px;
+  font-size: var(--fs-subtitle);
 }
 
 /* Features Section */
@@ -470,7 +470,7 @@ body {
 
 .feature-title {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 24px;
+  font-size: var(--fs-stat-secondary);
   font-weight: 800;
   margin-bottom: 12px;
   color: var(--text-primary);
@@ -479,7 +479,7 @@ body {
 .feature-description {
   color: var(--text-secondary);
   line-height: 1.6;
-  font-size: 15px;
+  font-size: var(--fs-subtitle);
 }
 
 /* SEO Content Section */
@@ -491,7 +491,7 @@ body {
 
 .seo-section h2 {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 40px;
+  font-size: var(--fs-display);
   font-weight: 900;
   color: var(--text-primary);
   margin-bottom: 24px;
@@ -500,14 +500,14 @@ body {
 
 .seo-section h3 {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 28px;
+  font-size: var(--fs-stat-secondary);
   font-weight: 800;
   color: var(--text-primary);
   margin: 40px 0 16px 0;
 }
 
 .seo-section p {
-  font-size: 16px;
+  font-size: var(--fs-subtitle);
   line-height: 1.8;
   color: var(--text-secondary);
   margin-bottom: 20px;
@@ -527,7 +527,7 @@ body {
 .seo-list li {
   padding: 16px 0 16px 32px;
   position: relative;
-  font-size: 16px;
+  font-size: var(--fs-subtitle);
   line-height: 1.7;
   color: var(--text-secondary);
   border-left: 3px solid rgba(232, 0, 45, 0.2);
@@ -567,14 +567,14 @@ body {
 
 .faq-question {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 22px;
+  font-size: var(--fs-stat-secondary);
   font-weight: 800;
   color: var(--text-primary);
   margin-bottom: 12px;
 }
 
 .faq-answer {
-  font-size: 16px;
+  font-size: var(--fs-subtitle);
   line-height: 1.7;
   color: var(--text-secondary);
 }
@@ -592,14 +592,14 @@ body {
 
 .cta-title {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 42px;
+  font-size: var(--fs-display);
   font-weight: 900;
   color: white;
   margin-bottom: 16px;
 }
 
 .cta-subtitle {
-  font-size: 18px;
+  font-size: var(--fs-subtitle);
   color: rgba(255, 255, 255, 0.9);
   margin-bottom: 32px;
   line-height: 1.6;
@@ -612,7 +612,7 @@ body {
   border-radius: 12px;
   color: #E8002D;
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 18px;
+  font-size: var(--fs-subtitle);
   font-weight: 800;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -636,7 +636,7 @@ body {
 
 .footer-text {
   color: var(--text-muted);
-  font-size: 14px;
+  font-size: var(--fs-body);
   line-height: 1.8;
   margin-bottom: 8px;
 }
@@ -707,9 +707,6 @@ body {
     padding: 60px 20px 40px;
   }
 
-  .hero-title {
-    font-size: 36px;
-  }
 
   .hero-subtitle {
     font-size: 16px;
@@ -733,7 +730,6 @@ body {
     width: 100%;
     max-width: 400px;
     padding: 14px 24px;
-    font-size: 16px;
   }
 
   .section-title {
@@ -755,17 +751,13 @@ body {
     font-size: 28px;
   }
 
-  .cta-subtitle {
-    font-size: 15px;
-  }
+  
 
   .seo-section h2 {
     font-size: 28px;
   }
 
-  .seo-section h3 {
-    font-size: 22px;
-  }
+  
 
   .faq-item {
     padding: 20px;
@@ -796,8 +788,8 @@ export default function Landing() {
           <nav className="nav">
             <div className="nav-left">
               <Link to="/" className="nav-logo">
-               <img src="/logo.png" alt="PodioF1" style={{width: 56, height: 56, borderRadius: 12, objectFit: 'cover'}} />
-                Podio<span>F1</span>
+               <img src="/logo.png" alt="Podio" style={{width: 56, height: 56, borderRadius: 12, objectFit: 'cover'}} />
+                Podio
               </Link>
             </div>
             <div className="nav-right">
@@ -820,13 +812,13 @@ export default function Landing() {
               100% Gratis · Predicciones en Vivo
             </div>
             <h1 className="hero-title">
-              Predicciones de Formula 1<br/>
+              Predicciones Deportivas<br/>
               Gratis con Amigos
             </h1>
             <p className="hero-subtitle">
-              Crea tu grupo de predicciones F1, invita a tus amigos y compite 
-              prediciendo los resultados de cada Gran Premio. Sistema de puntos 
-              personalizable, clasificación en tiempo real, y 100% gratuito.
+              Crea tu grupo de predicciones, invita a tus amigos y compite 
+              prediciendo los resultados de cada carrera. Sistema de puntos 
+              personalizable, clasificación en tiempo real.
             </p>
             <div className="hero-cta">
               <Link to="/register" className="btn-hero-primary">
@@ -865,7 +857,7 @@ export default function Landing() {
                 <div className="step-number">1</div>
                 <h3 className="step-title">Crea tu Grupo</h3>
                 <p className="step-description">
-                  Regístrate gratis y crea un grupo privado de predicciones F1. 
+                  Regístrate gratis y crea un grupo privado de predicciones. 
                   Personaliza el sistema de puntos y las reglas según tus preferencias.
                 </p>
               </div>
@@ -873,8 +865,8 @@ export default function Landing() {
                 <div className="step-number">2</div>
                 <h3 className="step-title">Invita a tus Amigos</h3>
                 <p className="step-description">
-                  Comparte el código de invitación con tus amigos fanáticos de 
-                  Formula 1. Ellos se registran e ingresan automáticamente al grupo.
+                  Comparte el código de invitación con tus amigos.
+                  Ellos se registran e ingresan automáticamente al grupo.
                 </p>
               </div>
               <div className="step-card">
@@ -896,7 +888,7 @@ export default function Landing() {
                 <div className="feature-icon">👥</div>
                 <h3 className="feature-title">Grupos Privados</h3>
                 <p className="feature-description">
-                  Crea tu propio grupo de predicciones F1 con amigos, familia o colegas. 
+                  Crea tu propio grupo de predicciones con amigos, familia o colegas. 
                   Configura reglas personalizadas y sistemas de puntuación.
                 </p>
               </div>
@@ -923,7 +915,6 @@ export default function Landing() {
                 <div className="feature-icon">⚡</div>
                 <h3 className="feature-title">Resultados Automáticos</h3>
                 <p className="feature-description">
-                  Importación automática de resultados oficiales desde OpenF1 API. 
                   Los puntos se calculan y actualizan instantáneamente.
                 </p>
               </div>
@@ -942,7 +933,7 @@ export default function Landing() {
                 <h3 className="feature-title">Modo Oscuro/Claro</h3>
                 <p className="feature-description">
                   Interfaz moderna con tema oscuro y claro. Diseño inspirado 
-                  en la velocidad y elegancia de la Fórmula 1.
+                  en la velocidad y elegancia del automovilismo.
                 </p>
               </div>
             </div>
@@ -950,46 +941,31 @@ export default function Landing() {
 
           {/* SEO Content Section */}
           <section className="seo-section">
-            <h2>¿Qué es PodioF1?</h2>
+            <h2>¿Qué es Podio?</h2>
             <p>
-              <strong>PodioF1 es la mejor plataforma gratuita de predicciones deportivas 
-              de Formula 1</strong> donde puedes competir con tus amigos prediciendo los 
+              <strong>Podio es la mejor plataforma gratuita de predicciones deportivas 
+              de automovilismo</strong> donde puedes competir con tus amigos prediciendo los 
               resultados de cada carrera. Similar a apps de fantasy sports como ESPN Fantasy 
-              o Yahoo Fantasy, pero enfocado exclusivamente en Formula 1.
+              o Yahoo Fantasy, pero enfocado exclusivamente en carreras.
             </p>
             <p>
-              A diferencia de otras plataformas de fantasy F1, en PodioF1 puedes crear 
+              A diferencia de otras plataformas de fantasy, en Podio puedes crear 
               <strong> grupos privados completamente gratis</strong>, personalizar tu sistema 
               de puntos, y competir únicamente con tus amigos o compañeros de trabajo. No hay 
               riesgo de dinero real, no hay premios monetarios, solo diversión y competencia 
-              amistosa entre fanáticos de la F1.
-            </p>
-
-            <h3>¿Por Qué Elegir PodioF1?</h3>
-            <p>
-              Muchas apps de fantasy F1 requieren pago o tienen funciones bloqueadas detrás 
-              de suscripciones. <strong>PodioF1 es 100% gratuito sin restricciones</strong>. 
-              Todas las funciones están disponibles para todos los usuarios sin excepción.
-            </p>
-            <p>
-              No competirás contra miles de desconocidos. En PodioF1, creas tu grupo privado 
-              y compites solo con las personas que conoces. Esto hace la competencia más 
-              personal, divertida y emocionante durante toda la temporada de Formula 1.
+              amistosa entre fanáticos del automovilismo.
             </p>
 
             <h3>Características Principales</h3>
             <ul className="seo-list">
-              <li>
-                <strong>100% Gratuito:</strong> Sin costos ocultos, sin compras dentro de la app, 
-                sin suscripciones. Todo es gratis para siempre.
-              </li>
+             
               <li>
                 <strong>Grupos Privados:</strong> Compite solo con las personas que invites. 
                 Tu grupo es privado y solo tus invitados pueden unirse.
               </li>
               <li>
                 <strong>Sistema de Puntos Personalizable:</strong> Elige entre 3 sistemas de 
-                puntuación diferentes o crea el tuyo propio.
+                puntuación diferentes.
               </li>
               <li>
                 <strong>Clasificación en Tiempo Real:</strong> Ve cómo vas en el ranking después 
@@ -997,16 +973,9 @@ export default function Landing() {
               </li>
               <li>
                 <strong>Notificaciones por Email:</strong> Recibe recordatorios antes de cada 
-                carrera para no olvidar hacer tu predicción de Formula 1.
+                carrera para no olvidar hacer tu predicción.
               </li>
-              <li>
-                <strong>Sin Límite de Grupos:</strong> Crea o únete a tantos grupos como quieras. 
-                Compite en múltiples ligas de predicciones F1 simultáneamente.
-              </li>
-              <li>
-                <strong>Responsive Design:</strong> Funciona perfecto en celular, tablet y 
-                computadora. Haz tus predicciones desde cualquier dispositivo.
-              </li>
+             
               <li>
                 <strong>Sin Riesgo:</strong> No hay dinero real involucrado. Es pura diversión 
                 deportiva entre amigos.
@@ -1019,18 +988,10 @@ export default function Landing() {
             <h2 className="section-title">Preguntas Frecuentes</h2>
 
             <div className="faq-item">
-              <h3 className="faq-question">¿Es realmente gratis?</h3>
-              <p className="faq-answer">
-                Sí, PodioF1 es completamente gratuito. No hay costos ocultos, no hay compras 
-                dentro de la aplicación, y no hay suscripciones. Todo es gratis para siempre.
-              </p>
-            </div>
-
-            <div className="faq-item">
-              <h3 className="faq-question">¿Cómo creo un grupo de predicciones F1?</h3>
+              <h3 className="faq-question">¿Cómo creo un grupo de predicciones?</h3>
               <p className="faq-answer">
                 Después de registrarte, haz click en "Crear Grupo", dale un nombre a tu liga 
-                de predicciones F1, personaliza el sistema de puntos si quieres, y listo. 
+                de predicciones, personaliza el sistema de puntos si quieres, y listo. 
                 Recibirás un código de invitación para compartir con tus amigos.
               </p>
             </div>
@@ -1039,7 +1000,7 @@ export default function Landing() {
               <h3 className="faq-question">¿Cuántas personas pueden unirse a mi grupo?</h3>
               <p className="faq-answer">
                 No hay límite. Puedes invitar a tantos amigos como quieras a tu grupo de 
-                predicciones de Formula 1.
+                predicciones.
               </p>
             </div>
 
@@ -1055,13 +1016,13 @@ export default function Landing() {
             <div className="faq-item">
               <h3 className="faq-question">¿Hasta cuándo puedo hacer mi predicción?</h3>
               <p className="faq-answer">
-                Por defecto, las predicciones se cierran 2 horas antes de cada carrera de 
-                Formula 1. El administrador del grupo puede modificar este tiempo.
+                Por defecto, las predicciones se cierran 2 horas antes de cada carrera. 
+                El administrador del grupo puede modificar este tiempo.
               </p>
             </div>
 
             <div className="faq-item">
-              <h3 className="faq-question">¿Cómo se calculan los puntos en PodioF1?</h3>
+              <h3 className="faq-question">¿Cómo se calculan los puntos en Podio?</h3>
               <p className="faq-answer">
                 Hay tres sistemas de puntos disponibles: Exactitud (más puntos por posiciones 
                 exactas), Balanceado (mezcla de exactitud y aciertos de piloto), y Liberal 
@@ -1080,7 +1041,7 @@ export default function Landing() {
             <div className="faq-item">
               <h3 className="faq-question">¿Funciona en celular?</h3>
               <p className="faq-answer">
-                Sí, PodioF1 está optimizado para funcionar perfectamente en cualquier 
+                Sí, Podio está optimizado para funcionar perfectamente en cualquier 
                 dispositivo: celular (iPhone y Android), tablet, y computadora.
               </p>
             </div>
@@ -1092,7 +1053,7 @@ export default function Landing() {
           <section className="cta-section">
             <h2 className="cta-title">¿Listo para subir al podio?</h2>
             <p className="cta-subtitle">
-              Únete gratis y empieza a competir con tus amigos en la próxima carrera de Formula 1
+              Únete gratis y empieza a competir con tus amigos en la próxima carrera
             </p>
             <Link to="/register" className="btn-cta">
               Crear mi Cuenta Gratis →

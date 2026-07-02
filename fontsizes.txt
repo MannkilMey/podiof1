@@ -1,0 +1,1330 @@
+src/pages/Admin/GroupAdminPanel.jsx-55-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Admin/GroupAdminPanel.jsx:56:  font-size: 32px;
+--
+src/pages/Admin/GroupAdminPanel.jsx-67-  cursor: pointer;
+src/pages/Admin/GroupAdminPanel.jsx:68:  font-size: 14px;
+--
+src/pages/Admin/GroupAdminPanel.jsx-89-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Admin/GroupAdminPanel.jsx:90:  font-size: 20px;
+--
+src/pages/Admin/GroupAdminPanel.jsx-145-.member-email {
+src/pages/Admin/GroupAdminPanel.jsx:146:  font-size: 13px;
+--
+src/pages/Admin/GroupAdminPanel.jsx-156-.badge {
+src/pages/Admin/GroupAdminPanel.jsx:157:  font-size: 10px;
+--
+src/pages/Admin/GroupAdminPanel.jsx-182-  border-radius: 8px;
+src/pages/Admin/GroupAdminPanel.jsx:183:  font-size: 13px;
+--
+src/pages/Admin/GroupAdminPanel.jsx-255-.info-label {
+src/pages/Admin/GroupAdminPanel.jsx:256:  font-size: 12px;
+--
+src/pages/Admin/GroupAdminPanel.jsx-264-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Admin/GroupAdminPanel.jsx:265:  font-size: 20px;
+--
+src/pages/Admin/GroupAdminPanel.jsx-277-  font-family: 'Share Tech Mono', monospace;
+src/pages/Admin/GroupAdminPanel.jsx:278:  font-size: 18px;
+--
+src/pages/Admin/GroupAdminPanel.jsx-289-  cursor: pointer;
+src/pages/Admin/GroupAdminPanel.jsx:290:  font-size: 12px;
+--
+src/pages/Admin/GroupAdminPanel.jsx-324-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Admin/GroupAdminPanel.jsx:325:  font-size: 24px;
+--
+src/pages/Admin/GroupAdminPanel.jsx-346-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Admin/GroupAdminPanel.jsx:347:  font-size: 14px;
+--
+src/pages/Admin/GroupAdminPanel.jsx-397-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Admin/GroupAdminPanel.jsx:398:  font-size: 18px;
+--
+src/pages/Admin/GroupAdminPanel.jsx-403-.race-fastest-date {
+src/pages/Admin/GroupAdminPanel.jsx:404:  font-size: 12px;
+--
+src/pages/Admin/GroupAdminPanel.jsx-420-  color: var(--white);
+src/pages/Admin/GroupAdminPanel.jsx:421:  font-size: 14px;
+--
+src/pages/Admin/GroupAdminPanel.jsx-448-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Admin/GroupAdminPanel.jsx:449:  font-size: 13px;
+--
+src/pages/Admin/GroupAdminPanel.jsx-473-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Admin/GroupAdminPanel.jsx:474:  font-size: 13px;
+--
+src/pages/Admin/GroupAdminPanel.jsx-495-  border-radius: 8px;
+src/pages/Admin/GroupAdminPanel.jsx:496:  font-size: 13px;
+--
+src/pages/Admin/GroupAdminPanel.jsx-499-.current-fastest-icon {
+src/pages/Admin/GroupAdminPanel.jsx:500:  font-size: 16px;
+--
+src/pages/Admin/GroupAdminPanel.jsx-517-  .admin-title {
+src/pages/Admin/GroupAdminPanel.jsx:518:    font-size: 26px;
+--
+src/pages/Admin/ImportResults.jsx-40-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Admin/ImportResults.jsx:41:  font-size: 32px;
+--
+src/pages/Admin/ImportResults.jsx-48-  color: var(--muted);
+src/pages/Admin/ImportResults.jsx:49:  font-size: 16px;
+--
+src/pages/Admin/ImportResults.jsx-83-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Admin/ImportResults.jsx:84:  font-size: 20px;
+--
+src/pages/Admin/ImportResults.jsx-93-  flex-wrap: wrap;
+src/pages/Admin/ImportResults.jsx:94:  font-size: 13px;
+--
+src/pages/Admin/ImportResults.jsx-101-  border-radius: 6px;
+src/pages/Admin/ImportResults.jsx:102:  font-size: 11px;
+--
+src/pages/Admin/ImportResults.jsx-122-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Admin/ImportResults.jsx:123:  font-size: 18px;
+--
+src/pages/Admin/ImportResults.jsx-154-.session-details {
+src/pages/Admin/ImportResults.jsx:155:  font-size: 13px;
+--
+src/pages/Admin/ImportResults.jsx-168-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Admin/ImportResults.jsx:169:  font-size: 16px;
+--
+src/pages/Admin/ImportResults.jsx-193-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Admin/ImportResults.jsx:194:  font-size: 14px;
+--
+src/pages/Admin/ImportResults.jsx-214-  font-family: 'Monaco', 'Courier New', monospace;
+src/pages/Admin/ImportResults.jsx:215:  font-size: 12px;
+--
+src/pages/Admin/ManualResults.jsx-47-  cursor: pointer;
+src/pages/Admin/ManualResults.jsx:48:  font-size: 14px;
+--
+src/pages/Admin/ManualResults.jsx-61-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Admin/ManualResults.jsx:62:  font-size: 32px;
+--
+src/pages/Admin/ManualResults.jsx-69-  color: var(--muted);
+src/pages/Admin/ManualResults.jsx:70:  font-size: 14px;
+--
+src/pages/Admin/ManualResults.jsx-88-  margin-bottom: 12px;
+src/pages/Admin/ManualResults.jsx:89:  font-size: 13px;
+--
+src/pages/Admin/ManualResults.jsx-106-.info-label {
+src/pages/Admin/ManualResults.jsx:107:  font-size: 11px;
+--
+src/pages/Admin/ManualResults.jsx-113-.info-value {
+src/pages/Admin/ManualResults.jsx:114:  font-size: 16px;
+--
+src/pages/Admin/ManualResults.jsx-128-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Admin/ManualResults.jsx:129:  font-size: 20px;
+--
+src/pages/Admin/ManualResults.jsx-150-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Admin/ManualResults.jsx:151:  font-size: 24px;
+--
+src/pages/Admin/ManualResults.jsx-167-  color: var(--white);
+src/pages/Admin/ManualResults.jsx:168:  font-size: 14px;
+--
+src/pages/Admin/ManualResults.jsx-210-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Admin/ManualResults.jsx:211:  font-size: 18px;
+--
+src/pages/Admin/ManualResults.jsx-237-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Admin/ManualResults.jsx:238:  font-size: 18px;
+--
+src/pages/Admin/ManualResults.jsx-264-  margin-bottom: 24px;
+src/pages/Admin/ManualResults.jsx:265:  font-size: 14px;
+--
+src/pages/Admin/ManualResults.jsx-274-  margin-bottom: 24px;
+src/pages/Admin/ManualResults.jsx:275:  font-size: 13px;
+--
+src/pages/Admin/SuperAdminPanel.jsx-42-  cursor: pointer;
+src/pages/Admin/SuperAdminPanel.jsx:43:  font-size: 14px;
+--
+src/pages/Admin/SuperAdminPanel.jsx-63-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Admin/SuperAdminPanel.jsx:64:  font-size: 36px;
+--
+src/pages/Admin/SuperAdminPanel.jsx-70-  color: var(--muted);
+src/pages/Admin/SuperAdminPanel.jsx:71:  font-size: 14px;
+--
+src/pages/Admin/SuperAdminPanel.jsx-96-.stat-icon {
+src/pages/Admin/SuperAdminPanel.jsx:97:  font-size: 32px;
+--
+src/pages/Admin/SuperAdminPanel.jsx-102-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Admin/SuperAdminPanel.jsx:103:  font-size: 48px;
+--
+src/pages/Admin/SuperAdminPanel.jsx-109-.stat-label {
+src/pages/Admin/SuperAdminPanel.jsx:110:  font-size: 12px;
+--
+src/pages/Admin/SuperAdminPanel.jsx-136-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Admin/SuperAdminPanel.jsx:137:  font-size: 16px;
+--
+src/pages/Admin/SuperAdminPanel.jsx-167-  color: var(--white);
+src/pages/Admin/SuperAdminPanel.jsx:168:  font-size: 14px;
+--
+src/pages/Admin/SuperAdminPanel.jsx-191-  text-align: left;
+src/pages/Admin/SuperAdminPanel.jsx:192:  font-size: 11px;
+--
+src/pages/Admin/SuperAdminPanel.jsx-212-  border-radius: 6px;
+src/pages/Admin/SuperAdminPanel.jsx:213:  font-size: 11px;
+--
+src/pages/Admin/SuperAdminPanel.jsx-233-  color: white;
+src/pages/Admin/SuperAdminPanel.jsx:234:  font-size: 12px;
+--
+src/pages/Admin/SuperAdminPanel.jsx-267-  color: var(--white);
+src/pages/Admin/SuperAdminPanel.jsx:268:  font-size: 16px;
+--
+src/pages/Admin/SuperAdminPanel.jsx-272-.toggle-row-desc {
+src/pages/Admin/SuperAdminPanel.jsx:273:  font-size: 13px;
+--
+src/pages/Admin/SuperAdminPanel.jsx-336-  color: var(--red);
+src/pages/Admin/SuperAdminPanel.jsx:337:  font-size: 13px;
+--
+src/pages/Admin/SuperAdminPanel.jsx-350-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Admin/SuperAdminPanel.jsx:351:  font-size: 20px;
+--
+src/pages/Admin/SuperAdminPanel.jsx-383-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Admin/SuperAdminPanel.jsx:384:  font-size: 18px;
+--
+src/pages/Admin/SuperAdminPanel.jsx-389-.race-fastest-date {
+src/pages/Admin/SuperAdminPanel.jsx:390:  font-size: 12px;
+--
+src/pages/Admin/SuperAdminPanel.jsx-406-  color: var(--white);
+src/pages/Admin/SuperAdminPanel.jsx:407:  font-size: 14px;
+--
+src/pages/Admin/SuperAdminPanel.jsx-418-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Admin/SuperAdminPanel.jsx:419:  font-size: 13px;
+--
+src/pages/Admin/SuperAdminPanel.jsx-434-  border-radius: 8px;
+src/pages/Admin/SuperAdminPanel.jsx:435:  font-size: 13px;
+--
+src/pages/Admin/SuperAdminPanel.jsx-438-.current-fastest-icon {
+src/pages/Admin/SuperAdminPanel.jsx:439:  font-size: 16px;
+--
+src/pages/Admin/SuperAdminPanel.jsx-452-  .panel-title {
+src/pages/Admin/SuperAdminPanel.jsx:453:    font-size: 28px;
+--
+src/pages/Auth/ForgotPassword.jsx-52-  justify-content: center;
+src/pages/Auth/ForgotPassword.jsx:53:  font-size: 24px;
+--
+src/pages/Auth/ForgotPassword.jsx-57-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Auth/ForgotPassword.jsx:58:  font-size: 32px;
+--
+src/pages/Auth/ForgotPassword.jsx-70-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Auth/ForgotPassword.jsx:71:  font-size: 28px;
+--
+src/pages/Auth/ForgotPassword.jsx-81-  margin-bottom: 32px;
+src/pages/Auth/ForgotPassword.jsx:82:  font-size: 15px;
+--
+src/pages/Auth/ForgotPassword.jsx-91-  display: block;
+src/pages/Auth/ForgotPassword.jsx:92:  font-size: 13px;
+--
+src/pages/Auth/ForgotPassword.jsx-106-  color: #F0F0F0;
+src/pages/Auth/ForgotPassword.jsx:107:  font-size: 15px;
+--
+src/pages/Auth/ForgotPassword.jsx-124-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Auth/ForgotPassword.jsx:125:  font-size: 16px;
+--
+src/pages/Auth/ForgotPassword.jsx-147-  color: rgba(240, 240, 240, 0.6);
+src/pages/Auth/ForgotPassword.jsx:148:  font-size: 14px;
+--
+src/pages/Auth/ForgotPassword.jsx-169-  text-align: center;
+src/pages/Auth/ForgotPassword.jsx:170:  font-size: 14px;
+--
+src/pages/Auth/ForgotPassword.jsx-174-.success-icon {
+src/pages/Auth/ForgotPassword.jsx:175:  font-size: 48px;
+--
+src/pages/Auth/ForgotPassword.jsx-186-  text-align: center;
+src/pages/Auth/ForgotPassword.jsx:187:  font-size: 14px;
+--
+src/pages/Auth/Login.jsx-58-  cursor: pointer;
+src/pages/Auth/Login.jsx:59:  font-size: 16px;
+--
+src/pages/Auth/Login.jsx-95-  justify-content: center;
+src/pages/Auth/Login.jsx:96:  font-size: 32px;
+--
+src/pages/Auth/Login.jsx-101-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Auth/Login.jsx:102:  font-size: 32px;
+--
+src/pages/Auth/Login.jsx-113-.logo-subtitle {
+src/pages/Auth/Login.jsx:114:  font-size: 13px;
+--
+src/pages/Auth/Login.jsx-124-  color: var(--red);
+src/pages/Auth/Login.jsx:125:  font-size: 13px;
+--
+src/pages/Auth/Login.jsx-134-  display: block;
+src/pages/Auth/Login.jsx:135:  font-size: 13px;
+--
+src/pages/Auth/Login.jsx-149-  color: var(--white);
+src/pages/Auth/Login.jsx:150:  font-size: 15px;
+--
+src/pages/Auth/Login.jsx-169-.forgot-link a {
+src/pages/Auth/Login.jsx:170:  font-size: 12px;
+--
+src/pages/Auth/Login.jsx-188-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Auth/Login.jsx:189:  font-size: 16px;
+--
+src/pages/Auth/Login.jsx-214-  color: var(--muted);
+src/pages/Auth/Login.jsx:215:  font-size: 13px;
+--
+src/pages/Auth/Login.jsx-237-  text-align: center;
+src/pages/Auth/Login.jsx:238:  font-size: 14px;
+--
+src/pages/Auth/Register.jsx-58-  color: var(--white);
+src/pages/Auth/Register.jsx:59:  font-size: 14px;
+--
+src/pages/Auth/Register.jsx-88-  cursor: pointer;
+src/pages/Auth/Register.jsx:89:  font-size: 16px;
+--
+src/pages/Auth/Register.jsx-125-  justify-content: center;
+src/pages/Auth/Register.jsx:126:  font-size: 28px;
+--
+src/pages/Auth/Register.jsx-131-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Auth/Register.jsx:132:  font-size: 28px;
+--
+src/pages/Auth/Register.jsx-143-.logo-subtitle {
+src/pages/Auth/Register.jsx:144:  font-size: 13px;
+--
+src/pages/Auth/Register.jsx-154-  color: var(--red);
+src/pages/Auth/Register.jsx:155:  font-size: 13px;
+--
+src/pages/Auth/Register.jsx-171-  display: block;
+src/pages/Auth/Register.jsx:172:  font-size: 12px;
+--
+src/pages/Auth/Register.jsx-186-  color: var(--white);
+src/pages/Auth/Register.jsx:187:  font-size: 14px;
+--
+src/pages/Auth/Register.jsx-207-  color: var(--white);
+src/pages/Auth/Register.jsx:208:  font-size: 14px;
+--
+src/pages/Auth/Register.jsx-231-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Auth/Register.jsx:232:  font-size: 16px;
+--
+src/pages/Auth/Register.jsx-258-  color: var(--muted);
+src/pages/Auth/Register.jsx:259:  font-size: 13px;
+--
+src/pages/Auth/Register.jsx-281-  text-align: center;
+src/pages/Auth/Register.jsx:282:  font-size: 14px;
+--
+src/pages/Auth/Register.jsx-309-    left: 12px;
+src/pages/Auth/Register.jsx:310:    font-size: 12px;
+--
+src/pages/Auth/ResetPassword.jsx-51-  justify-content: center;
+src/pages/Auth/ResetPassword.jsx:52:  font-size: 24px;
+--
+src/pages/Auth/ResetPassword.jsx-56-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Auth/ResetPassword.jsx:57:  font-size: 32px;
+--
+src/pages/Auth/ResetPassword.jsx-69-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Auth/ResetPassword.jsx:70:  font-size: 28px;
+--
+src/pages/Auth/ResetPassword.jsx-80-  margin-bottom: 32px;
+src/pages/Auth/ResetPassword.jsx:81:  font-size: 15px;
+--
+src/pages/Auth/ResetPassword.jsx-89-  display: block;
+src/pages/Auth/ResetPassword.jsx:90:  font-size: 13px;
+--
+src/pages/Auth/ResetPassword.jsx-104-  color: #F0F0F0;
+src/pages/Auth/ResetPassword.jsx:105:  font-size: 15px;
+--
+src/pages/Auth/ResetPassword.jsx-115-.password-hint {
+src/pages/Auth/ResetPassword.jsx:116:  font-size: 12px;
+--
+src/pages/Auth/ResetPassword.jsx-156-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Auth/ResetPassword.jsx:157:  font-size: 16px;
+--
+src/pages/Auth/ResetPassword.jsx-183-  text-align: center;
+src/pages/Auth/ResetPassword.jsx:184:  font-size: 14px;
+--
+src/pages/Dashboard/Dashboard.jsx-90-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Dashboard/Dashboard.jsx:91:  font-size: 22px;
+--
+src/pages/Dashboard/Dashboard.jsx-107-  justify-content: center;
+src/pages/Dashboard/Dashboard.jsx:108:  font-size: 16px; 
+--
+src/pages/Dashboard/Dashboard.jsx-122-  cursor: pointer;
+src/pages/Dashboard/Dashboard.jsx:123:  font-size: 16px;
+--
+src/pages/Dashboard/Dashboard.jsx-139-  font-weight: 700;
+src/pages/Dashboard/Dashboard.jsx:140:  font-size: 14px;
+--
+src/pages/Dashboard/Dashboard.jsx-186-  font-weight: 700;
+src/pages/Dashboard/Dashboard.jsx:187:  font-size: 15px;
+--
+src/pages/Dashboard/Dashboard.jsx-192-.user-menu-email {
+src/pages/Dashboard/Dashboard.jsx:193:  font-size: 13px;
+--
+src/pages/Dashboard/Dashboard.jsx-204-  transition: background 0.2s;
+src/pages/Dashboard/Dashboard.jsx:205:  font-size: 14px;
+--
+src/pages/Dashboard/Dashboard.jsx-242-  cursor: pointer;
+src/pages/Dashboard/Dashboard.jsx:243:  font-size: 15px;
+--
+src/pages/Dashboard/Dashboard.jsx-269-  border-bottom: 3px solid transparent;
+src/pages/Dashboard/Dashboard.jsx:270:  font-size: 13px;
+--
+src/pages/Dashboard/Dashboard.jsx-285-.group-tab-badge { 
+src/pages/Dashboard/Dashboard.jsx:286:  font-size: 10px;
+--
+src/pages/Dashboard/Dashboard.jsx-298-  padding: 10px 16px;
+src/pages/Dashboard/Dashboard.jsx:299:  font-size: 13px;
+--
+src/pages/Dashboard/Dashboard.jsx-322-.empty-state { text-align: center; padding: 80px 20px; }
+src/pages/Dashboard/Dashboard.jsx:323:.empty-icon { font-size: 64px; margin-bottom: 20px; opacity: 0.3; }
+--
+src/pages/Dashboard/Dashboard.jsx-326-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Dashboard/Dashboard.jsx:327:  font-size: 28px;
+--
+src/pages/Dashboard/Dashboard.jsx-334-  color: var(--muted);
+src/pages/Dashboard/Dashboard.jsx:335:  font-size: 15px;
+--
+src/pages/Dashboard/Dashboard.jsx-348-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Dashboard/Dashboard.jsx:349:  font-size: 16px;
+--
+src/pages/Dashboard/Dashboard.jsx-365-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Dashboard/Dashboard.jsx:366:  font-size: 14px;
+--
+src/pages/Dashboard/Dashboard.jsx-401-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Dashboard/Dashboard.jsx:402:  font-size: 20px;
+--
+src/pages/Dashboard/Dashboard.jsx-410-.gc-chip { 
+src/pages/Dashboard/Dashboard.jsx:411:  font-size: 11px;
+--
+src/pages/Dashboard/Dashboard.jsx-430-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Dashboard/Dashboard.jsx:431:  font-size: 24px;
+--
+src/pages/Dashboard/Dashboard.jsx-436-.gc-stat-lbl { 
+src/pages/Dashboard/Dashboard.jsx:437:  font-size: 10px;
+--
+src/pages/Dashboard/Dashboard.jsx-454-.loading-box { text-align: center; }
+src/pages/Dashboard/Dashboard.jsx:455:.loading-icon { font-size: 48px; margin-bottom: 16px; animation: spin 2s linear infinite; }
+--
+src/pages/Dashboard/Dashboard.jsx-462-.loading-text { 
+src/pages/Dashboard/Dashboard.jsx:463:  font-size: 14px;
+--
+src/pages/Dashboard/Dashboard.jsx-478-  .nav { padding: 0 10px; height: 48px; }
+src/pages/Dashboard/Dashboard.jsx:479:  .nav-logo { font-size: 18px; gap: 6px; letter-spacing: 1px; }
+src/pages/Dashboard/Dashboard.jsx:480:  .nav-logo-icon { width: 26px; height: 26px; font-size: 13px; border-radius: 4px; }
+src/pages/Dashboard/Dashboard.jsx-481-  .nav-right { gap: 6px; }
+src/pages/Dashboard/Dashboard.jsx:482:  .icon-btn { width: 30px; height: 30px; font-size: 13px; border-radius: 6px; }
+src/pages/Dashboard/Dashboard.jsx:483:  .nav-avatar { width: 30px; height: 30px; font-size: 11px; }
+src/pages/Dashboard/Dashboard.jsx-484-  .theme-toggle { border-radius: 6px; }
+src/pages/Dashboard/Dashboard.jsx:485:  .theme-opt { padding: 4px 7px; font-size: 12px; }
+src/pages/Dashboard/Dashboard.jsx-486-  .group-bar { padding: 0 10px; }
+src/pages/Dashboard/Dashboard.jsx:487:  .group-tab { padding: 8px 10px; font-size: 12px; gap: 5px; }
+src/pages/Dashboard/Dashboard.jsx-488-  .group-tab-dot { width: 5px; height: 5px; }
+src/pages/Dashboard/Dashboard.jsx:489:  .group-bar-all { padding: 8px 10px; font-size: 12px; }
+--
+src/pages/Dashboard/GroupDashboard.jsx-67-  cursor: pointer;
+src/pages/Dashboard/GroupDashboard.jsx:68:  font-size: 14px;
+--
+src/pages/Dashboard/GroupDashboard.jsx-94-  bottom: -20px;
+src/pages/Dashboard/GroupDashboard.jsx:95:  font-size: 200px;
+--
+src/pages/Dashboard/GroupDashboard.jsx-108-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Dashboard/GroupDashboard.jsx:109:  font-size: 36px;
+--
+src/pages/Dashboard/GroupDashboard.jsx-119-  border-radius: 20px;
+src/pages/Dashboard/GroupDashboard.jsx:120:  font-size: 11px;
+--
+src/pages/Dashboard/GroupDashboard.jsx-127-  color: var(--muted);
+src/pages/Dashboard/GroupDashboard.jsx:128:  font-size: 18px;
+--
+src/pages/Dashboard/GroupDashboard.jsx-151-.countdown-label {
+src/pages/Dashboard/GroupDashboard.jsx:152:  font-size: 11px;
+--
+src/pages/Dashboard/GroupDashboard.jsx-160-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Dashboard/GroupDashboard.jsx:161:  font-size: 28px;
+--
+src/pages/Dashboard/GroupDashboard.jsx-166-.countdown-date {
+src/pages/Dashboard/GroupDashboard.jsx:167:  font-size: 12px;
+--
+src/pages/Dashboard/GroupDashboard.jsx-178-  font-weight: 600;
+src/pages/Dashboard/GroupDashboard.jsx:179:  font-size: 14px;
+--
+src/pages/Dashboard/GroupDashboard.jsx-198-  font-weight: 700;
+src/pages/Dashboard/GroupDashboard.jsx:199:  font-size: 14px;
+--
+src/pages/Dashboard/GroupDashboard.jsx-236-.stat-icon {
+src/pages/Dashboard/GroupDashboard.jsx:237:  font-size: 32px;
+--
+src/pages/Dashboard/GroupDashboard.jsx-242-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Dashboard/GroupDashboard.jsx:243:  font-size: 48px;
+--
+src/pages/Dashboard/GroupDashboard.jsx-249-.stat-label {
+src/pages/Dashboard/GroupDashboard.jsx:250:  font-size: 12px;
+--
+src/pages/Dashboard/GroupDashboard.jsx-276-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Dashboard/GroupDashboard.jsx:277:  font-size: 16px;
+--
+src/pages/Dashboard/GroupDashboard.jsx-338-  text-align: left;
+src/pages/Dashboard/GroupDashboard.jsx:339:  font-size: 11px;
+--
+src/pages/Dashboard/GroupDashboard.jsx-370-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Dashboard/GroupDashboard.jsx:371:  font-size: 20px;
+--
+src/pages/Dashboard/GroupDashboard.jsx-375-.medal { 
+src/pages/Dashboard/GroupDashboard.jsx:376:  font-size: 20px;
+--
+src/pages/Dashboard/GroupDashboard.jsx-400-  .hero-title {
+src/pages/Dashboard/GroupDashboard.jsx:401:    font-size: 28px;
+--
+src/pages/Dashboard/GroupDashboard.jsx-404-  .countdown-time {
+src/pages/Dashboard/GroupDashboard.jsx:405:    font-size: 20px;
+--
+src/pages/Dashboard/GroupDashboard.jsx-409-    padding: 10px 16px;
+src/pages/Dashboard/GroupDashboard.jsx:410:    font-size: 14px;
+--
+src/pages/Dashboard/GroupDashboard.jsx-421-  .stat-value {
+src/pages/Dashboard/GroupDashboard.jsx:422:    font-size: 36px;
+--
+src/pages/Dashboard/GroupDashboard.jsx-425-  .stat-icon {
+src/pages/Dashboard/GroupDashboard.jsx:426:    font-size: 24px;
+--
+src/pages/Groups/GroupDetail.jsx-54-  cursor: pointer;
+src/pages/Groups/GroupDetail.jsx:55:  font-size: 14px;
+--
+src/pages/Groups/GroupDetail.jsx-76-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Groups/GroupDetail.jsx:77:  font-size: 36px;
+--
+src/pages/Groups/GroupDetail.jsx-86-  flex-wrap: wrap;
+src/pages/Groups/GroupDetail.jsx:87:  font-size: 14px;
+--
+src/pages/Groups/GroupDetail.jsx-109-  font-weight: 700;
+src/pages/Groups/GroupDetail.jsx:110:  font-size: 14px;
+--
+src/pages/Groups/GroupDetail.jsx-157-.info-label {
+src/pages/Groups/GroupDetail.jsx:158:  font-size: 11px;
+--
+src/pages/Groups/GroupDetail.jsx-166-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Groups/GroupDetail.jsx:167:  font-size: 24px;
+--
+src/pages/Groups/GroupDetail.jsx-187-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Groups/GroupDetail.jsx:188:  font-size: 24px;
+--
+src/pages/Groups/GroupDetail.jsx-237-  justify-content: center;
+src/pages/Groups/GroupDetail.jsx:238:  font-size: 20px;
+--
+src/pages/Groups/GroupDetail.jsx-247-.member-name {
+src/pages/Groups/GroupDetail.jsx:248:  font-size: 16px;
+--
+src/pages/Groups/GroupDetail.jsx-254-.member-email {
+src/pages/Groups/GroupDetail.jsx:255:  font-size: 13px;
+--
+src/pages/Groups/GroupDetail.jsx-268-  border-radius: 12px;
+src/pages/Groups/GroupDetail.jsx:269:  font-size: 11px;
+--
+src/pages/Groups/GroupDetail.jsx-300-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Groups/GroupDetail.jsx:301:  font-size: 20px;
+--
+src/pages/Groups/GroupDetail.jsx-306-.stat-label {
+src/pages/Groups/GroupDetail.jsx:307:  font-size: 10px;
+--
+src/pages/Groups/GroupDetail.jsx-330-  transition: all 0.2s;
+src/pages/Groups/GroupDetail.jsx:331:  font-size: 16px;
+--
+src/pages/Groups/GroupDetail.jsx-369-  color: var(--muted);
+src/pages/Groups/GroupDetail.jsx:370:  font-size: 14px;
+--
+src/pages/Groups/GroupDetail.jsx-378-.empty-icon {
+src/pages/Groups/GroupDetail.jsx:379:  font-size: 64px;
+--
+src/pages/Groups/GroupDetail.jsx-384-.empty-title {
+src/pages/Groups/GroupDetail.jsx:385:  font-size: 18px;
+--
+src/pages/Groups/GroupDetail.jsx-391-.empty-message {
+src/pages/Groups/GroupDetail.jsx:392:  font-size: 14px;
+--
+src/pages/Groups/GroupDetail.jsx-428-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Groups/GroupDetail.jsx:429:  font-size: 28px;
+--
+src/pages/Groups/GroupDetail.jsx-435-.modal-subtitle {
+src/pages/Groups/GroupDetail.jsx:436:  font-size: 14px;
+--
+src/pages/Groups/GroupDetail.jsx-466-.race-item-name {
+src/pages/Groups/GroupDetail.jsx:467:  font-size: 16px;
+--
+src/pages/Groups/GroupDetail.jsx-473-.race-item-date {
+src/pages/Groups/GroupDetail.jsx:474:  font-size: 13px;
+--
+src/pages/Groups/GroupDetail.jsx-478-.race-item-status {
+src/pages/Groups/GroupDetail.jsx:479:  font-size: 12px;
+--
+src/pages/Groups/GroupDetail.jsx-570-  .group-title {
+src/pages/Groups/GroupDetail.jsx:571:    font-size: 28px;
+--
+src/pages/Groups/JoinGroup.jsx-59-.join-icon {
+src/pages/Groups/JoinGroup.jsx:60:  font-size: 64px;
+--
+src/pages/Groups/JoinGroup.jsx-65-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Groups/JoinGroup.jsx:66:  font-size: 36px;
+--
+src/pages/Groups/JoinGroup.jsx-73-  color: var(--muted);
+src/pages/Groups/JoinGroup.jsx:74:  font-size: 16px;
+--
+src/pages/Groups/JoinGroup.jsx-100-  color: var(--muted);
+src/pages/Groups/JoinGroup.jsx:101:  font-size: 13px;
+--
+src/pages/Groups/JoinGroup.jsx-108-  font-weight: 600;
+src/pages/Groups/JoinGroup.jsx:109:  font-size: 15px;
+--
+src/pages/Groups/JoinGroup.jsx-119-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Groups/JoinGroup.jsx:120:  font-size: 18px;
+--
+src/pages/Groups/JoinGroup.jsx-147-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Groups/JoinGroup.jsx:148:  font-size: 18px;
+--
+src/pages/Groups/JoinGroup.jsx-162-  color: var(--red);
+src/pages/Groups/JoinGroup.jsx:163:  font-size: 14px;
+--
+src/pages/HowItWorks/HowItWorks.jsx-38-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/HowItWorks/HowItWorks.jsx:39:  font-size: 48px;
+--
+src/pages/HowItWorks/HowItWorks.jsx-45-.hiw-subtitle {
+src/pages/HowItWorks/HowItWorks.jsx:46:  font-size: 18px;
+--
+src/pages/HowItWorks/HowItWorks.jsx-66-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/HowItWorks/HowItWorks.jsx:67:  font-size: 120px;
+--
+src/pages/HowItWorks/HowItWorks.jsx-74-.hiw-step-icon {
+src/pages/HowItWorks/HowItWorks.jsx:75:  font-size: 48px;
+--
+src/pages/HowItWorks/HowItWorks.jsx-80-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/HowItWorks/HowItWorks.jsx:81:  font-size: 28px;
+--
+src/pages/HowItWorks/HowItWorks.jsx-87-.hiw-step-description {
+src/pages/HowItWorks/HowItWorks.jsx:88:  font-size: 16px;
+--
+src/pages/HowItWorks/HowItWorks.jsx-105-  margin-bottom: 8px;
+src/pages/HowItWorks/HowItWorks.jsx:106:  font-size: 14px;
+--
+src/pages/HowItWorks/HowItWorks.jsx-120-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/HowItWorks/HowItWorks.jsx:121:  font-size: 18px;
+--
+src/pages/HowItWorks/HowItWorks.jsx-132-  .hiw-title {
+src/pages/HowItWorks/HowItWorks.jsx:133:    font-size: 36px;
+--
+src/pages/HowItWorks/HowItWorks.jsx-140-  .hiw-step::before {
+src/pages/HowItWorks/HowItWorks.jsx:141:    font-size: 80px;
+--
+src/pages/Landing/Landing.jsx-103-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Landing/Landing.jsx:104:  font-size: 28px;
+--
+src/pages/Landing/Landing.jsx-124-  justify-content: center;
+src/pages/Landing/Landing.jsx:125:  font-size: 20px;
+--
+src/pages/Landing/Landing.jsx-149-  color: var(--text-primary);
+src/pages/Landing/Landing.jsx:150:  font-size: 20px;
+--
+src/pages/Landing/Landing.jsx-165-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Landing/Landing.jsx:166:  font-size: 15px;
+--
+src/pages/Landing/Landing.jsx-188-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Landing/Landing.jsx:189:  font-size: 15px;
+--
+src/pages/Landing/Landing.jsx-232-  margin-bottom: 32px;
+src/pages/Landing/Landing.jsx:233:  font-size: 14px;
+--
+src/pages/Landing/Landing.jsx-250-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Landing/Landing.jsx:251:  font-size: 72px;
+--
+src/pages/Landing/Landing.jsx-261-.hero-subtitle {
+src/pages/Landing/Landing.jsx:262:  font-size: 22px;
+--
+src/pages/Landing/Landing.jsx-285-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Landing/Landing.jsx:286:  font-size: 18px;
+--
+src/pages/Landing/Landing.jsx-308-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Landing/Landing.jsx:309:  font-size: 18px;
+--
+src/pages/Landing/Landing.jsx-349-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Landing/Landing.jsx:350:  font-size: 48px;
+--
+src/pages/Landing/Landing.jsx-357-  color: var(--text-secondary);
+src/pages/Landing/Landing.jsx:358:  font-size: 14px;
+--
+src/pages/Landing/Landing.jsx-372-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Landing/Landing.jsx:373:  font-size: 48px;
+--
+src/pages/Landing/Landing.jsx-410-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Landing/Landing.jsx:411:  font-size: 32px;
+--
+src/pages/Landing/Landing.jsx-418-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Landing/Landing.jsx:419:  font-size: 24px;
+--
+src/pages/Landing/Landing.jsx-427-  line-height: 1.6;
+src/pages/Landing/Landing.jsx:428:  font-size: 15px;
+--
+src/pages/Landing/Landing.jsx-466-  justify-content: center;
+src/pages/Landing/Landing.jsx:467:  font-size: 32px;
+--
+src/pages/Landing/Landing.jsx-472-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Landing/Landing.jsx:473:  font-size: 24px;
+--
+src/pages/Landing/Landing.jsx-481-  line-height: 1.6;
+src/pages/Landing/Landing.jsx:482:  font-size: 15px;
+--
+src/pages/Landing/Landing.jsx-493-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Landing/Landing.jsx:494:  font-size: 40px;
+--
+src/pages/Landing/Landing.jsx-502-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Landing/Landing.jsx:503:  font-size: 28px;
+--
+src/pages/Landing/Landing.jsx-509-.seo-section p {
+src/pages/Landing/Landing.jsx:510:  font-size: 16px;
+--
+src/pages/Landing/Landing.jsx-529-  position: relative;
+src/pages/Landing/Landing.jsx:530:  font-size: 16px;
+--
+src/pages/Landing/Landing.jsx-569-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Landing/Landing.jsx:570:  font-size: 22px;
+--
+src/pages/Landing/Landing.jsx-576-.faq-answer {
+src/pages/Landing/Landing.jsx:577:  font-size: 16px;
+--
+src/pages/Landing/Landing.jsx-594-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Landing/Landing.jsx:595:  font-size: 42px;
+--
+src/pages/Landing/Landing.jsx-601-.cta-subtitle {
+src/pages/Landing/Landing.jsx:602:  font-size: 18px;
+--
+src/pages/Landing/Landing.jsx-614-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Landing/Landing.jsx:615:  font-size: 18px;
+--
+src/pages/Landing/Landing.jsx-638-  color: var(--text-muted);
+src/pages/Landing/Landing.jsx:639:  font-size: 14px;
+--
+src/pages/Landing/Landing.jsx-673-  .nav-logo {
+src/pages/Landing/Landing.jsx:674:    font-size: 18px;
+--
+src/pages/Landing/Landing.jsx-680-    height: 32px;
+src/pages/Landing/Landing.jsx:681:    font-size: 16px;
+--
+src/pages/Landing/Landing.jsx-690-    height: 36px;
+src/pages/Landing/Landing.jsx:691:    font-size: 16px;
+--
+src/pages/Landing/Landing.jsx-695-    padding: 8px 12px;
+src/pages/Landing/Landing.jsx:696:    font-size: 11px;
+--
+src/pages/Landing/Landing.jsx-701-    padding: 8px 12px;
+src/pages/Landing/Landing.jsx:702:    font-size: 11px;
+--
+src/pages/Landing/Landing.jsx-710-  .hero-title {
+src/pages/Landing/Landing.jsx:711:    font-size: 36px;
+--
+src/pages/Landing/Landing.jsx-714-  .hero-subtitle {
+src/pages/Landing/Landing.jsx:715:    font-size: 16px;
+--
+src/pages/Landing/Landing.jsx-719-  .hero-badge {
+src/pages/Landing/Landing.jsx:720:    font-size: 12px;
+--
+src/pages/Landing/Landing.jsx-735-    padding: 14px 24px;
+src/pages/Landing/Landing.jsx:736:    font-size: 16px;
+--
+src/pages/Landing/Landing.jsx-739-  .section-title {
+src/pages/Landing/Landing.jsx:740:    font-size: 32px;
+--
+src/pages/Landing/Landing.jsx-754-  .cta-title {
+src/pages/Landing/Landing.jsx:755:    font-size: 28px;
+--
+src/pages/Landing/Landing.jsx-758-  .cta-subtitle {
+src/pages/Landing/Landing.jsx:759:    font-size: 15px;
+--
+src/pages/Landing/Landing.jsx-762-  .seo-section h2 {
+src/pages/Landing/Landing.jsx:763:    font-size: 28px;
+--
+src/pages/Landing/Landing.jsx-766-  .seo-section h3 {
+src/pages/Landing/Landing.jsx:767:    font-size: 22px;
+--
+src/pages/Landing/Landing.jsx-774-  .faq-question {
+src/pages/Landing/Landing.jsx:775:    font-size: 18px;
+--
+src/pages/Legal/PrivacyPolicy.jsx-12-  background: transparent; border: none; color: var(--red);
+src/pages/Legal/PrivacyPolicy.jsx:13:  cursor: pointer; font-size: 14px; font-weight: 600;
+--
+src/pages/Legal/PrivacyPolicy.jsx-19-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Legal/PrivacyPolicy.jsx:20:  font-size: 36px; font-weight: 900; color: var(--white); margin-bottom: 4px;
+src/pages/Legal/PrivacyPolicy.jsx-21-}
+src/pages/Legal/PrivacyPolicy.jsx:22:.legal-updated { font-size: 13px; color: var(--muted); }
+--
+src/pages/Legal/PrivacyPolicy.jsx-24-.legal-lang-btn {
+src/pages/Legal/PrivacyPolicy.jsx:25:  padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 700;
+--
+src/pages/Legal/PrivacyPolicy.jsx-31-.legal-section h2 {
+src/pages/Legal/PrivacyPolicy.jsx:32:  font-family: 'Barlow Condensed', sans-serif; font-size: 20px; font-weight: 800;
+--
+src/pages/Legal/PrivacyPolicy.jsx-34-}
+src/pages/Legal/PrivacyPolicy.jsx:35:.legal-section p, .legal-section li { font-size: 14px; color: var(--muted); margin-bottom: 8px; }
+--
+src/pages/Legal/PrivacyPolicy.jsx-40-  background: var(--bg2); border: 1px solid var(--border);
+src/pages/Legal/PrivacyPolicy.jsx:41:  border-radius: 10px; padding: 16px; margin: 16px 0; font-size: 13px; color: var(--muted);
+src/pages/Legal/PrivacyPolicy.jsx-42-}
+src/pages/Legal/PrivacyPolicy.jsx:43:@media (max-width: 768px) { .legal-page { padding: 20px 16px; } .legal-title { font-size: 28px; } }
+--
+src/pages/Legal/SupportPage.jsx-24-.support-container { max-width: 640px; margin: 0 auto; }
+src/pages/Legal/SupportPage.jsx:25:.support-back { display: inline-flex; align-items: center; gap: 8px; color: var(--red); text-decoration: none; font-size: 14px; font-weight: 600; margin-bottom: 24px; }
+src/pages/Legal/SupportPage.jsx-26-.support-back:hover { opacity: 0.7; }
+src/pages/Legal/SupportPage.jsx:27:.support-title { font-family: 'Barlow Condensed', sans-serif; font-size: 36px; font-weight: 900; color: var(--white); margin-bottom: 8px; }
+src/pages/Legal/SupportPage.jsx:28:.support-subtitle { color: var(--muted); font-size: 15px; margin-bottom: 32px; }
+src/pages/Legal/SupportPage.jsx-29-.support-contact-card { background: var(--bg2); border: 1px solid var(--gold); border-radius: 14px; padding: 24px; margin-bottom: 32px; text-align: center; }
+src/pages/Legal/SupportPage.jsx:30:.support-contact-label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+src/pages/Legal/SupportPage.jsx:31:.support-contact-email { font-family: 'Barlow Condensed', sans-serif; font-size: 22px; font-weight: 800; color: var(--gold); text-decoration: none; }
+src/pages/Legal/SupportPage.jsx-32-.support-contact-email:hover { opacity: 0.85; }
+src/pages/Legal/SupportPage.jsx:33:.faq-section-title { font-family: 'Barlow Condensed', sans-serif; font-size: 18px; font-weight: 800; color: var(--white); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 1px; }
+src/pages/Legal/SupportPage.jsx-34-.faq-item { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; margin-bottom: 12px; }
+src/pages/Legal/SupportPage.jsx:35:.faq-question { font-weight: 700; color: var(--white); font-size: 15px; margin-bottom: 6px; }
+src/pages/Legal/SupportPage.jsx:36:.faq-answer { color: var(--muted); font-size: 14px; line-height: 1.6; }
+--
+src/pages/Legal/SupportPage.jsx-39-  .support-page { padding: 24px 16px; }
+src/pages/Legal/SupportPage.jsx:40:  .support-title { font-size: 28px; }
+--
+src/pages/Legal/TermsOfService.jsx-12-  background: transparent; border: none; color: var(--red);
+src/pages/Legal/TermsOfService.jsx:13:  cursor: pointer; font-size: 14px; font-weight: 600;
+--
+src/pages/Legal/TermsOfService.jsx-19-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Legal/TermsOfService.jsx:20:  font-size: 36px; font-weight: 900; color: var(--white); margin-bottom: 4px;
+src/pages/Legal/TermsOfService.jsx-21-}
+src/pages/Legal/TermsOfService.jsx:22:.legal-updated { font-size: 13px; color: var(--muted); }
+--
+src/pages/Legal/TermsOfService.jsx-24-.legal-lang-btn {
+src/pages/Legal/TermsOfService.jsx:25:  padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 700;
+--
+src/pages/Legal/TermsOfService.jsx-31-.legal-section h2 {
+src/pages/Legal/TermsOfService.jsx:32:  font-family: 'Barlow Condensed', sans-serif; font-size: 20px; font-weight: 800;
+--
+src/pages/Legal/TermsOfService.jsx-34-}
+src/pages/Legal/TermsOfService.jsx:35:.legal-section p, .legal-section li { font-size: 14px; color: var(--muted); margin-bottom: 8px; }
+--
+src/pages/Legal/TermsOfService.jsx-40-  background: var(--bg2); border: 1px solid var(--border);
+src/pages/Legal/TermsOfService.jsx:41:  border-radius: 10px; padding: 16px; margin: 16px 0; font-size: 13px; color: var(--muted);
+src/pages/Legal/TermsOfService.jsx-42-}
+src/pages/Legal/TermsOfService.jsx:43:@media (max-width: 768px) { .legal-page { padding: 20px 16px; } .legal-title { font-size: 28px; } }
+--
+src/pages/Predictions/PredictionPage.jsx-69-  cursor: pointer;
+src/pages/Predictions/PredictionPage.jsx:70:  font-size: 14px;
+--
+src/pages/Predictions/PredictionPage.jsx-92-  cursor: pointer;
+src/pages/Predictions/PredictionPage.jsx:93:  font-size: 15px;
+--
+src/pages/Predictions/PredictionPage.jsx-107-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Predictions/PredictionPage.jsx:108:  font-size: 32px;
+--
+src/pages/Predictions/PredictionPage.jsx-115-  color: var(--muted);
+src/pages/Predictions/PredictionPage.jsx:116:  font-size: 16px;
+--
+src/pages/Predictions/PredictionPage.jsx-140-.deadline-text {
+src/pages/Predictions/PredictionPage.jsx:141:  font-size: 14px;
+--
+src/pages/Predictions/PredictionPage.jsx-155-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Predictions/PredictionPage.jsx:156:  font-size: 18px;
+--
+src/pages/Predictions/PredictionPage.jsx-163-  color: var(--muted);
+src/pages/Predictions/PredictionPage.jsx:164:  font-size: 14px;
+--
+src/pages/Predictions/PredictionPage.jsx-183-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Predictions/PredictionPage.jsx:184:  font-size: 14px;
+--
+src/pages/Predictions/PredictionPage.jsx-230-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Predictions/PredictionPage.jsx:231:  font-size: 20px;
+--
+src/pages/Predictions/PredictionPage.jsx-254-  color: var(--white);
+src/pages/Predictions/PredictionPage.jsx:255:  font-size: 15px;
+--
+src/pages/Predictions/PredictionPage.jsx-259-.driver-team {
+src/pages/Predictions/PredictionPage.jsx:260:  font-size: 12px;
+--
+src/pages/Predictions/PredictionPage.jsx-265-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Predictions/PredictionPage.jsx:266:  font-size: 18px;
+--
+src/pages/Predictions/PredictionPage.jsx-274-  color: var(--muted);
+src/pages/Predictions/PredictionPage.jsx:275:  font-size: 18px;
+--
+src/pages/Predictions/PredictionPage.jsx-283-  padding: 4px 8px;
+src/pages/Predictions/PredictionPage.jsx:284:  font-size: 12px;
+--
+src/pages/Predictions/PredictionPage.jsx-315-.bonus-label {
+src/pages/Predictions/PredictionPage.jsx:316:  font-size: 12px;
+--
+src/pages/Predictions/PredictionPage.jsx-329-  color: var(--white);
+src/pages/Predictions/PredictionPage.jsx:330:  font-size: 14px;
+--
+src/pages/Predictions/PredictionPage.jsx-347-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Predictions/PredictionPage.jsx:348:  font-size: 18px;
+--
+src/pages/Predictions/PredictionPage.jsx-374-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Predictions/PredictionPage.jsx:375:  font-size: 18px;
+--
+src/pages/Predictions/PredictionPage.jsx-395-.locked-icon {
+src/pages/Predictions/PredictionPage.jsx:396:  font-size: 64px;
+--
+src/pages/Predictions/PredictionPage.jsx-443-.success-icon {
+src/pages/Predictions/PredictionPage.jsx:444:  font-size: 64px;
+--
+src/pages/Predictions/PredictionPage.jsx-449-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Predictions/PredictionPage.jsx:450:  font-size: 28px;
+--
+src/pages/Predictions/PredictionPage.jsx-458-.success-message {
+src/pages/Predictions/PredictionPage.jsx:459:  font-size: 16px;
+--
+src/pages/Predictions/PredictionPage.jsx-475-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Predictions/PredictionPage.jsx:476:  font-size: 16px;
+--
+src/pages/Predictions/PredictionPage.jsx-516-  margin-bottom: 16px;
+src/pages/Predictions/PredictionPage.jsx:517:  font-size: 16px;
+--
+src/pages/Predictions/PredictionPage.jsx-529-.sprint-points-title {
+src/pages/Predictions/PredictionPage.jsx:530:  font-size: 14px;
+--
+src/pages/Predictions/PredictionPage.jsx-538-.sprint-points-list {
+src/pages/Predictions/PredictionPage.jsx:539:  font-size: 13px;
+--
+src/pages/Predictions/RacePredictionsComparison.jsx-53-  cursor: pointer;
+src/pages/Predictions/RacePredictionsComparison.jsx:54:  font-size: 14px;
+--
+src/pages/Predictions/RacePredictionsComparison.jsx-75-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Predictions/RacePredictionsComparison.jsx:76:  font-size: 36px;
+--
+src/pages/Predictions/RacePredictionsComparison.jsx-82-.race-subtitle {
+src/pages/Predictions/RacePredictionsComparison.jsx:83:  font-size: 16px;
+--
+src/pages/Predictions/RacePredictionsComparison.jsx-96-  color: var(--green);
+src/pages/Predictions/RacePredictionsComparison.jsx:97:  font-size: 13px;
+--
+src/pages/Predictions/RacePredictionsComparison.jsx-121-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Predictions/RacePredictionsComparison.jsx:122:  font-size: 16px;
+--
+src/pages/Predictions/RacePredictionsComparison.jsx-155-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Predictions/RacePredictionsComparison.jsx:156:  font-size: 24px;
+--
+src/pages/Predictions/RacePredictionsComparison.jsx-186-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Predictions/RacePredictionsComparison.jsx:187:  font-size: 14px;
+--
+src/pages/Predictions/RacePredictionsComparison.jsx-196-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Predictions/RacePredictionsComparison.jsx:197:  font-size: 22px;
+--
+src/pages/Predictions/RacePredictionsComparison.jsx-206-  gap: 12px;
+src/pages/Predictions/RacePredictionsComparison.jsx:207:  font-size: 13px;
+--
+src/pages/Predictions/RacePredictionsComparison.jsx-259-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Predictions/RacePredictionsComparison.jsx:260:  font-size: 28px;
+--
+src/pages/Predictions/RacePredictionsComparison.jsx-275-.ranking-user-name {
+src/pages/Predictions/RacePredictionsComparison.jsx:276:  font-size: 18px;
+--
+src/pages/Predictions/RacePredictionsComparison.jsx-282-.ranking-user-stats {
+src/pages/Predictions/RacePredictionsComparison.jsx:283:  font-size: 12px;
+--
+src/pages/Predictions/RacePredictionsComparison.jsx-290-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Predictions/RacePredictionsComparison.jsx:291:  font-size: 32px;
+--
+src/pages/Predictions/RacePredictionsComparison.jsx-297-.ranking-points-label {
+src/pages/Predictions/RacePredictionsComparison.jsx:298:  font-size: 11px;
+--
+src/pages/Predictions/RacePredictionsComparison.jsx-335-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Predictions/RacePredictionsComparison.jsx:336:  font-size: 24px;
+--
+src/pages/Predictions/RacePredictionsComparison.jsx-342-.driver-name {
+src/pages/Predictions/RacePredictionsComparison.jsx:343:  font-size: 14px;
+--
+src/pages/Predictions/RacePredictionsComparison.jsx-349-  margin-left: auto;
+src/pages/Predictions/RacePredictionsComparison.jsx:350:  font-size: 16px;
+--
+src/pages/Predictions/RacePredictionsComparison.jsx-419-  justify-content: center;
+src/pages/Predictions/RacePredictionsComparison.jsx:420:  font-size: 16px;
+--
+src/pages/Predictions/RacePredictionsComparison.jsx-425-.user-name {
+src/pages/Predictions/RacePredictionsComparison.jsx:426:  font-size: 16px;
+--
+src/pages/Predictions/RacePredictionsComparison.jsx-433-  border-radius: 12px;
+src/pages/Predictions/RacePredictionsComparison.jsx:434:  font-size: 10px;
+--
+src/pages/Predictions/RacePredictionsComparison.jsx-455-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Predictions/RacePredictionsComparison.jsx:456:  font-size: 32px;
+--
+src/pages/Predictions/RacePredictionsComparison.jsx-462-.score-label {
+src/pages/Predictions/RacePredictionsComparison.jsx:463:  font-size: 11px;
+--
+src/pages/Predictions/RacePredictionsComparison.jsx-477-.accuracy-label {
+src/pages/Predictions/RacePredictionsComparison.jsx:478:  font-size: 12px;
+--
+src/pages/Predictions/RacePredictionsComparison.jsx-500-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Predictions/RacePredictionsComparison.jsx:501:  font-size: 16px;
+--
+src/pages/Predictions/RacePredictionsComparison.jsx-536-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Predictions/RacePredictionsComparison.jsx:537:  font-size: 18px;
+--
+src/pages/Predictions/RacePredictionsComparison.jsx-550-.predicted-driver {
+src/pages/Predictions/RacePredictionsComparison.jsx:551:  font-size: 13px;
+--
+src/pages/Predictions/RacePredictionsComparison.jsx-557-.prediction-icon {
+src/pages/Predictions/RacePredictionsComparison.jsx:558:  font-size: 14px;
+--
+src/pages/Predictions/RacePredictionsComparison.jsx-569-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Predictions/RacePredictionsComparison.jsx:570:  font-size: 16px;
+--
+src/pages/Predictions/RacePredictionsComparison.jsx-592-.empty-icon {
+src/pages/Predictions/RacePredictionsComparison.jsx:593:  font-size: 64px;
+--
+src/pages/Predictions/RacePredictionsComparison.jsx-599-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Predictions/RacePredictionsComparison.jsx:600:  font-size: 24px;
+--
+src/pages/Predictions/RacePredictionsComparison.jsx-606-.empty-message {
+src/pages/Predictions/RacePredictionsComparison.jsx:607:  font-size: 14px;
+--
+src/pages/Predictions/RacePredictionsComparison.jsx-634-  color: var(--muted);
+src/pages/Predictions/RacePredictionsComparison.jsx:635:  font-size: 14px;
+--
+src/pages/Predictions/RacePredictionsComparison.jsx-647-  .race-title {
+src/pages/Predictions/RacePredictionsComparison.jsx:648:    font-size: 28px;
+--
+src/pages/Profile/Profile.jsx-29-.profile-card { padding: 16px 12px; }
+src/pages/Profile/Profile.jsx:30:.form-input, .form-select { font-size: 16px; padding: 10px 12px; }
+src/pages/Profile/Profile.jsx-31-.profile-page { padding: 24px 28px; max-width: 900px; margin: 0 auto; min-height: 100vh; }
+src/pages/Profile/Profile.jsx:32:.profile-back { background: transparent; border: none; color: var(--red); cursor: pointer; font-size: 14px; font-weight: 600; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; padding: 0; transition: opacity 0.2s; }
+src/pages/Profile/Profile.jsx-33-.profile-back:hover { opacity: 0.7; }
+src/pages/Profile/Profile.jsx:34:.profile-page-title { font-family: 'Barlow Condensed', sans-serif; font-size: 36px; font-weight: 900; color: var(--white); margin-bottom: 28px; letter-spacing: 1px; }
+src/pages/Profile/Profile.jsx:35:.profile-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 28px; margin-bottom: 24px; overflow: hidden; }.profile-card-title { font-family: 'Barlow Condensed', sans-serif; font-size: 18px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--white); margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+src/pages/Profile/Profile.jsx:36:.profile-card-title-sub { font-size: 12px; font-weight: 500; color: var(--muted); text-transform: none; letter-spacing: 0; }
+src/pages/Profile/Profile.jsx-37-.profile-avatar-row { display: flex; align-items: center; gap: 20px; margin-bottom: 28px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
+src/pages/Profile/Profile.jsx:38:.profile-avatar-circle { width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, #E8002D, #FF6B35); display: flex; align-items: center; justify-content: center; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 28px; color: white; flex-shrink: 0; }
+src/pages/Profile/Profile.jsx-39-.profile-avatar-info { flex: 1; }
+src/pages/Profile/Profile.jsx:40:.profile-avatar-name { font-family: 'Barlow Condensed', sans-serif; font-size: 22px; font-weight: 800; color: var(--white); margin-bottom: 2px; }
+src/pages/Profile/Profile.jsx:41:.profile-avatar-email { color: var(--muted); font-size: 13px; }
+src/pages/Profile/Profile.jsx-42-.profile-avatar-badges-count { display: flex; gap: 16px; margin-top: 6px; }
+src/pages/Profile/Profile.jsx:43:.profile-avatar-stat { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 4px; }
+src/pages/Profile/Profile.jsx:44:.profile-avatar-stat strong { color: var(--white); font-family: 'Barlow Condensed', sans-serif; font-size: 16px; font-weight: 800; }
+--
+src/pages/Profile/Profile.jsx-46-.form-group { margin-bottom: 20px; }
+src/pages/Profile/Profile.jsx:47:.form-label { display: block; font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+src/pages/Profile/Profile.jsx:48:.form-input, .form-select { width: 100%; padding: 12px 16px; background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; color: var(--white); font-size: 14px; font-family: 'Barlow', sans-serif; transition: border-color 0.2s; box-sizing: border-box; }
+--
+src/pages/Profile/Profile.jsx-51-.form-select option { background: var(--bg2); color: var(--white); }
+src/pages/Profile/Profile.jsx:52:.btn-save { padding: 12px 28px; background: linear-gradient(135deg, var(--red), #FF3355); border: none; border-radius: 10px; color: white; font-family: 'Barlow Condensed', sans-serif; font-size: 14px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: opacity 0.2s; }
+--
+src/pages/Profile/Profile.jsx-54-.btn-save:disabled { opacity: 0.5; cursor: not-allowed; }
+src/pages/Profile/Profile.jsx:55:.msg-error { background: var(--red-dim); border: 1px solid rgba(232,0,45,0.3); border-radius: 8px; padding: 12px; color: var(--red); font-size: 13px; margin-bottom: 16px; }
+src/pages/Profile/Profile.jsx:56:.msg-success { background: rgba(0,212,160,0.1); border: 1px solid rgba(0,212,160,0.3); border-radius: 8px; padding: 12px; color: #00D4A0; font-size: 13px; margin-bottom: 16px; }
+--
+src/pages/Profile/Profile.jsx-59-.badges-filter { display: flex; gap: 6px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 4px; -webkit-overflow-scrolling: touch; }
+src/pages/Profile/Profile.jsx:60:.badges-filter-btn { padding: 6px 14px; background: var(--bg3); border: 1px solid var(--border); border-radius: 20px; color: var(--muted); font-size: 12px; font-weight: 600; cursor: pointer; font-family: 'Barlow', sans-serif; transition: all 0.2s; white-space: nowrap; }
+--
+src/pages/Profile/Profile.jsx-67-.badge-card.locked .badge-icon { filter: grayscale(1); }
+src/pages/Profile/Profile.jsx:68:.badge-icon { font-size: 36px; margin-bottom: 8px; display: block; line-height: 1; }
+src/pages/Profile/Profile.jsx:69:.badge-name { font-family: 'Barlow Condensed', sans-serif; font-size: 13px; font-weight: 700; color: var(--white); margin-bottom: 4px; letter-spacing: 0.3px; }
+src/pages/Profile/Profile.jsx:70:.badge-desc { font-size: 10px; color: var(--muted); line-height: 1.4; }
+src/pages/Profile/Profile.jsx:71:.badge-date { font-size: 9px; color: var(--gold); margin-top: 6px; font-family: 'Share Tech Mono', monospace; }
+src/pages/Profile/Profile.jsx:72:.badge-locked-label { font-size: 9px; color: var(--muted); margin-top: 6px; font-style: italic; }
+src/pages/Profile/Profile.jsx:73:.badge-category-tag { position: absolute; top: 8px; right: 8px; font-size: 8px; padding: 2px 6px; border-radius: 4px; background: var(--bg2); color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+--
+src/pages/Profile/Profile.jsx-81-  .profile-page { padding: 16px; }
+src/pages/Profile/Profile.jsx:82:  .profile-page-title { font-size: 28px; }
+--
+src/pages/Profile/Profile.jsx-85-  .badge-card { padding: 14px 10px; }
+src/pages/Profile/Profile.jsx:86:  .badge-icon { font-size: 30px; }
+src/pages/Profile/Profile.jsx-87-  .form-row { grid-template-columns: 1fr; }
+src/pages/Profile/Profile.jsx:88:  .form-input, .form-select { font-size: 16px; }
+--
+src/pages/Profile/Profile.jsx-93-  .badge-card { padding: 12px 8px; }
+src/pages/Profile/Profile.jsx:94:  .badge-icon { font-size: 26px; }
+src/pages/Profile/Profile.jsx:95:  .badge-name { font-size: 11px; }
+src/pages/Profile/Profile.jsx:96:  .badge-desc { font-size: 9px; }
+src/pages/Profile/Profile.jsx-97-  .profile-card { padding: 16px 12px; }
+src/pages/Profile/Profile.jsx:98:  .form-input, .form-select { font-size: 16px; padding: 10px 12px; }
+--
+src/pages/Races/RaceDetailPage.jsx-59-  cursor: pointer;
+src/pages/Races/RaceDetailPage.jsx:60:  font-size: 24px;
+--
+src/pages/Races/RaceDetailPage.jsx-67-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Races/RaceDetailPage.jsx:68:  font-size: 32px;
+--
+src/pages/Races/RaceDetailPage.jsx-74-  color: var(--muted);
+src/pages/Races/RaceDetailPage.jsx:75:  font-size: 14px;
+--
+src/pages/Races/RaceDetailPage.jsx-94-  bottom: -20px;
+src/pages/Races/RaceDetailPage.jsx:95:  font-size: 200px;
+--
+src/pages/Races/RaceDetailPage.jsx-104-.race-round-big {
+src/pages/Races/RaceDetailPage.jsx:105:  font-size: 12px;
+--
+src/pages/Races/RaceDetailPage.jsx-113-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Races/RaceDetailPage.jsx:114:  font-size: 48px;
+--
+src/pages/Races/RaceDetailPage.jsx-135-.race-info-label {
+src/pages/Races/RaceDetailPage.jsx:136:  font-size: 11px;
+--
+src/pages/Races/RaceDetailPage.jsx-144-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Races/RaceDetailPage.jsx:145:  font-size: 20px;
+--
+src/pages/Races/RaceDetailPage.jsx-163-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Races/RaceDetailPage.jsx:164:  font-size: 16px;
+--
+src/pages/Races/RaceDetailPage.jsx-184-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Races/RaceDetailPage.jsx:185:  font-size: 16px;
+--
+src/pages/Races/RaceDetailPage.jsx-211-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Races/RaceDetailPage.jsx:212:  font-size: 16px;
+--
+src/pages/Races/RaceDetailPage.jsx-239-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Races/RaceDetailPage.jsx:240:  font-size: 20px;
+--
+src/pages/Races/RaceDetailPage.jsx-262-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Races/RaceDetailPage.jsx:263:  font-size: 16px;
+--
+src/pages/Races/RaceDetailPage.jsx-298-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Races/RaceDetailPage.jsx:299:  font-size: 24px;
+--
+src/pages/Races/RaceDetailPage.jsx-306-  flex: 1;
+src/pages/Races/RaceDetailPage.jsx:307:  font-size: 15px;
+--
+src/pages/Races/RaceDetailPage.jsx-313-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Races/RaceDetailPage.jsx:314:  font-size: 16px;
+--
+src/pages/Races/RaceDetailPage.jsx-319-.result-check {
+src/pages/Races/RaceDetailPage.jsx:320:  font-size: 20px;
+--
+src/pages/Races/RaceDetailPage.jsx-338-  text-align: left;
+src/pages/Races/RaceDetailPage.jsx:339:  font-size: 11px;
+--
+src/pages/Races/RaceDetailPage.jsx-357-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Races/RaceDetailPage.jsx:358:  font-size: 20px;
+--
+src/pages/Races/RaceDetailPage.jsx-361-
+src/pages/Races/RaceDetailPage.jsx:362:.medal { font-size: 20px; }
+--
+src/pages/Races/RaceDetailPage.jsx-373-.points-label-big {
+src/pages/Races/RaceDetailPage.jsx:374:  font-size: 14px;
+--
+src/pages/Races/RaceDetailPage.jsx-383-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Races/RaceDetailPage.jsx:384:  font-size: 72px;
+--
+src/pages/Races/RaceDetailPage.jsx-396-.no-prediction-icon {
+src/pages/Races/RaceDetailPage.jsx:397:  font-size: 64px;
+--
+src/pages/Races/RaceDetailPage.jsx-433-  margin-bottom: 16px;
+src/pages/Races/RaceDetailPage.jsx:434:  font-size: 14px;
+--
+src/pages/Races/RacesPage.jsx-59-  cursor: pointer;
+src/pages/Races/RacesPage.jsx:60:  font-size: 24px;
+--
+src/pages/Races/RacesPage.jsx-67-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Races/RacesPage.jsx:68:  font-size: 32px;
+--
+src/pages/Races/RacesPage.jsx-74-  color: var(--muted);
+src/pages/Races/RacesPage.jsx:75:  font-size: 14px;
+--
+src/pages/Races/RacesPage.jsx-116-.race-round {
+src/pages/Races/RacesPage.jsx:117:  font-size: 11px;
+--
+src/pages/Races/RacesPage.jsx-125-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Races/RacesPage.jsx:126:  font-size: 24px;
+--
+src/pages/Races/RacesPage.jsx-135-  color: var(--muted);
+src/pages/Races/RacesPage.jsx:136:  font-size: 14px;
+--
+src/pages/Races/RacesPage.jsx-152-.race-badge {
+src/pages/Races/RacesPage.jsx:153:  font-size: 11px;
+--
+src/pages/Races/RacesPage.jsx-187-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Races/RacesPage.jsx:188:  font-size: 14px;
+--
+src/pages/Races/RacesPage.jsx-212-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Races/RacesPage.jsx:213:  font-size: 14px;
+--
+src/pages/Races/RacesPage.jsx-231-.countdown-small {
+src/pages/Races/RacesPage.jsx:232:  font-size: 12px;
+--
+src/pages/Races/RacesPage.jsx-244-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Races/RacesPage.jsx:245:  font-size: 16px;
+--
+src/pages/Races/RacesPage.jsx-266-.result-column-title {
+src/pages/Races/RacesPage.jsx:267:  font-size: 12px;
+--
+src/pages/Races/RacesPage.jsx-301-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Races/RacesPage.jsx:302:  font-size: 20px;
+--
+src/pages/Races/RacesPage.jsx-309-  flex: 1;
+src/pages/Races/RacesPage.jsx:310:  font-size: 14px;
+--
+src/pages/Races/RacesPage.jsx-315-.result-check {
+src/pages/Races/RacesPage.jsx:316:  font-size: 16px;
+--
+src/pages/Races/RacesPage.jsx-328-.points-label {
+src/pages/Races/RacesPage.jsx:329:  font-size: 12px;
+--
+src/pages/Races/RacesPage.jsx-337-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Races/RacesPage.jsx:338:  font-size: 48px;
+--
+src/pages/Races/RacesPage.jsx-354-.empty-icon {
+src/pages/Races/RacesPage.jsx:355:  font-size: 64px;
+--
+src/pages/Races/RacesPage.jsx-361-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Races/RacesPage.jsx:362:  font-size: 24px;
+--
+src/pages/Races/RacesPage.jsx-369-  color: var(--muted);
+src/pages/Races/RacesPage.jsx:370:  font-size: 14px;
+--
+src/pages/Settings/DeleteAccount.jsx-17-  background: transparent; border: none; color: var(--red);
+src/pages/Settings/DeleteAccount.jsx:18:  cursor: pointer; font-size: 14px; font-weight: 600;
+--
+src/pages/Settings/DeleteAccount.jsx-22-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Settings/DeleteAccount.jsx:23:  font-size: 32px; font-weight: 900; color: var(--white);
+--
+src/pages/Settings/DeleteAccount.jsx-26-.delete-subtitle {
+src/pages/Settings/DeleteAccount.jsx:27:  font-size: 14px; color: var(--muted); margin-bottom: 32px; line-height: 1.6;
+--
+src/pages/Settings/DeleteAccount.jsx-34-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Settings/DeleteAccount.jsx:35:  font-size: 18px; font-weight: 800; color: var(--red);
+--
+src/pages/Settings/DeleteAccount.jsx-38-.delete-warning-list {
+src/pages/Settings/DeleteAccount.jsx:39:  padding-left: 20px; font-size: 14px; color: var(--muted); line-height: 1.8;
+--
+src/pages/Settings/DeleteAccount.jsx-47-  border: 2px solid var(--border); border-radius: 10px;
+src/pages/Settings/DeleteAccount.jsx:48:  color: var(--white); font-size: 16px; font-family: 'Barlow', sans-serif;
+--
+src/pages/Settings/DeleteAccount.jsx-53-  width: 100%; padding: 16px; border: none; border-radius: 10px;
+src/pages/Settings/DeleteAccount.jsx:54:  font-family: 'Barlow Condensed', sans-serif; font-size: 16px;
+--
+src/pages/Settings/DeleteAccount.jsx-71-}
+src/pages/Settings/DeleteAccount.jsx:72:.delete-success-icon { font-size: 64px; margin-bottom: 20px; }
+--
+src/pages/Settings/DeleteAccount.jsx-74-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Settings/DeleteAccount.jsx:75:  font-size: 28px; font-weight: 900; color: var(--white);
+--
+src/pages/Settings/DeleteAccount.jsx-77-}
+src/pages/Settings/DeleteAccount.jsx:78:.delete-success-text { font-size: 14px; color: var(--muted); line-height: 1.6; }
+--
+src/pages/Settings/DeleteAccount.jsx-80-  .delete-page { padding: 20px 16px; }
+src/pages/Settings/DeleteAccount.jsx:81:  .delete-title { font-size: 26px; }
+--
+src/pages/Settings/Settings.jsx-47-  cursor: pointer;
+src/pages/Settings/Settings.jsx:48:  font-size: 24px;
+--
+src/pages/Settings/Settings.jsx-55-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Settings/Settings.jsx:56:  font-size: 32px;
+--
+src/pages/Settings/Settings.jsx-70-  font-family: 'Barlow Condensed', sans-serif;
+src/pages/Settings/Settings.jsx:71:  font-size: 18px;
+--
+src/pages/Settings/Settings.jsx-99-.setting-description {
+src/pages/Settings/Settings.jsx:100:  font-size: 13px;
+--
+src/pages/Settings/Settings.jsx-116-  transition: all 0.2s;
+src/pages/Settings/Settings.jsx:117:  font-size: 14px;
+--
+src/pages/Stats/DeepAnalytics.jsx-29-.deep-page { padding: 24px 28px; max-width: 1400px; margin: 0 auto; background: var(--bg); min-height: calc(100vh - 120px); }
+src/pages/Stats/DeepAnalytics.jsx:30:.deep-back-btn { background: transparent; border: none; color: var(--red); cursor: pointer; font-size: 14px; font-weight: 600; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; padding: 0; transition: opacity 0.2s; }
+--
+src/pages/Stats/DeepAnalytics.jsx-33-.deep-header-left { flex: 1; }
+src/pages/Stats/DeepAnalytics.jsx:34:.deep-title { font-family: 'Barlow Condensed', sans-serif; font-size: 36px; font-weight: 900; color: var(--white); margin-bottom: 6px; letter-spacing: 1px; }
+src/pages/Stats/DeepAnalytics.jsx:35:.deep-subtitle { color: var(--muted); font-size: 15px; }
+src/pages/Stats/DeepAnalytics.jsx-36-.deep-panel { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 24px; margin-bottom: 24px; }
+src/pages/Stats/DeepAnalytics.jsx:37:.deep-panel-title { font-family: 'Barlow Condensed', sans-serif; font-size: 18px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--white); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+src/pages/Stats/DeepAnalytics.jsx:38:.deep-panel-title-sub { font-size: 12px; font-weight: 500; color: var(--muted); text-transform: none; letter-spacing: 0; }
+src/pages/Stats/DeepAnalytics.jsx:39:.deep-export-btn { padding: 10px 16px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; color: var(--muted); font-size: 13px; cursor: pointer; font-family: 'Barlow', sans-serif; transition: all 0.2s; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+--
+src/pages/Stats/DeepAnalytics.jsx-46-.race-winner-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+src/pages/Stats/DeepAnalytics.jsx:47:.race-winner-card-name { font-family: 'Barlow Condensed', sans-serif; font-size: 16px; font-weight: 800; color: var(--white); text-transform: uppercase; letter-spacing: 0.5px; }
+src/pages/Stats/DeepAnalytics.jsx:48:.race-winner-card-type { font-size: 10px; padding: 2px 8px; border-radius: 4px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+src/pages/Stats/DeepAnalytics.jsx-49-.race-winner-podium { display: flex; flex-direction: column; gap: 6px; }
+src/pages/Stats/DeepAnalytics.jsx:50:.podium-row { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+src/pages/Stats/DeepAnalytics.jsx:51:.podium-medal { font-size: 16px; width: 24px; text-align: center; }
+src/pages/Stats/DeepAnalytics.jsx-52-.podium-name { flex: 1; color: var(--white); font-weight: 600; }
+src/pages/Stats/DeepAnalytics.jsx:53:.podium-pts { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 15px; }
+src/pages/Stats/DeepAnalytics.jsx-54-
+src/pages/Stats/DeepAnalytics.jsx:55:.prerace-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+src/pages/Stats/DeepAnalytics.jsx:56:.prerace-table th { background: var(--bg3); padding: 12px 16px; text-align: left; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+--
+src/pages/Stats/DeepAnalytics.jsx-61-.pilot-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; }
+src/pages/Stats/DeepAnalytics.jsx:62:.pilot-name { font-size: 14px; font-weight: 700; color: var(--white); }
+src/pages/Stats/DeepAnalytics.jsx:63:.pilot-stat { font-size: 12px; color: var(--muted); }
+src/pages/Stats/DeepAnalytics.jsx:64:.pilot-variation { font-family: 'Barlow Condensed', sans-serif; font-size: 20px; font-weight: 900; }
+--
+src/pages/Stats/DeepAnalytics.jsx-67-.user-stat-card { background: var(--bg3); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+src/pages/Stats/DeepAnalytics.jsx:68:.user-stat-card-name { font-size: 15px; font-weight: 700; color: var(--white); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+src/pages/Stats/DeepAnalytics.jsx:69:.user-stat-row { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; font-size: 12px; }
+src/pages/Stats/DeepAnalytics.jsx-70-.user-stat-label { color: var(--muted); }
+src/pages/Stats/DeepAnalytics.jsx:71:.user-stat-value { font-weight: 700; color: var(--white); font-family: 'Barlow Condensed', sans-serif; font-size: 14px; }
+--
+src/pages/Stats/DeepAnalytics.jsx-73-.section-toggle { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+src/pages/Stats/DeepAnalytics.jsx:74:.section-toggle-btn { padding: 8px 16px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; color: var(--muted); font-size: 13px; cursor: pointer; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; transition: all 0.2s; white-space: nowrap; }
+--
+src/pages/Stats/DeepAnalytics.jsx-78-  .deep-page { padding: 16px; }
+src/pages/Stats/DeepAnalytics.jsx:79:  .deep-title { font-size: 28px; }
+--
+src/pages/Stats/PointsHistogram.jsx-35-.stats-page { padding: 24px 28px; max-width: 1400px; margin: 0 auto; background: var(--bg); min-height: calc(100vh - 120px); }
+src/pages/Stats/PointsHistogram.jsx:36:.stats-back-btn { background: transparent; border: none; color: var(--red); cursor: pointer; font-size: 14px; font-weight: 600; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; padding: 0; transition: opacity 0.2s; }
+--
+src/pages/Stats/PointsHistogram.jsx-39-.stats-header-left { flex: 1; }
+src/pages/Stats/PointsHistogram.jsx:40:.stats-title { font-family: 'Barlow Condensed', sans-serif; font-size: 36px; font-weight: 900; color: var(--white); margin-bottom: 6px; letter-spacing: 1px; }
+src/pages/Stats/PointsHistogram.jsx:41:.stats-subtitle { color: var(--muted); font-size: 15px; }
+src/pages/Stats/PointsHistogram.jsx-42-.stats-controls { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; align-items: flex-end; }
+src/pages/Stats/PointsHistogram.jsx:43:.stats-control-group label { display: block; font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+src/pages/Stats/PointsHistogram.jsx-44-.stats-filter-bar { display: flex; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+src/pages/Stats/PointsHistogram.jsx:45:.stats-filter-btn { padding: 10px 16px; background: transparent; border: none; color: var(--muted); font-size: 13px; font-weight: 400; cursor: pointer; font-family: 'Barlow', sans-serif; transition: all 0.2s; white-space: nowrap; }
+src/pages/Stats/PointsHistogram.jsx-46-.stats-filter-btn.active { background: var(--red); color: white; font-weight: 700; }
+src/pages/Stats/PointsHistogram.jsx:47:.stats-toggle-btn { padding: 10px 16px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; color: var(--muted); font-size: 13px; cursor: pointer; font-family: 'Barlow', sans-serif; transition: all 0.2s; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+src/pages/Stats/PointsHistogram.jsx-48-.stats-toggle-btn.active { background: var(--green-dim); border-color: var(--green); color: var(--green); font-weight: 600; }
+src/pages/Stats/PointsHistogram.jsx:49:.stats-export-btn { padding: 10px 16px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; color: var(--muted); font-size: 13px; cursor: pointer; font-family: 'Barlow', sans-serif; transition: all 0.2s; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+--
+src/pages/Stats/PointsHistogram.jsx-51-.stats-panel { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 24px; margin-bottom: 24px; transition: all 0.3s; }
+src/pages/Stats/PointsHistogram.jsx:52:.stats-panel-title { font-family: 'Barlow Condensed', sans-serif; font-size: 18px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--white); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+src/pages/Stats/PointsHistogram.jsx:53:.stats-panel-title-sub { font-size: 12px; font-weight: 500; color: var(--muted); text-transform: none; letter-spacing: 0; }
+--
+src/pages/Stats/PointsHistogram.jsx-55-.user-chips-header { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+src/pages/Stats/PointsHistogram.jsx:56:.user-chips-label { font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
+src/pages/Stats/PointsHistogram.jsx-57-.user-chips-actions { display: flex; gap: 6px; }
+src/pages/Stats/PointsHistogram.jsx:58:.user-chips-action-btn { background: transparent; border: 1px solid var(--border); border-radius: 6px; padding: 3px 10px; font-size: 11px; color: var(--muted); cursor: pointer; font-family: 'Barlow', sans-serif; transition: all 0.2s; }
+--
+src/pages/Stats/PointsHistogram.jsx-60-.user-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+src/pages/Stats/PointsHistogram.jsx:61:.user-chip { display: flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; border: 2px solid transparent; font-family: 'Barlow', sans-serif; user-select: none; }
+--
+src/pages/Stats/PointsHistogram.jsx-69-.ranking-info { flex: 1; min-width: 0; }
+src/pages/Stats/PointsHistogram.jsx:70:.ranking-name { font-size: 14px; font-weight: 700; color: var(--white); margin-bottom: 4px; }
+--
+src/pages/Stats/PointsHistogram.jsx-72-.ranking-bar-fill { height: 100%; border-radius: 2px; transition: width 0.5s ease; }
+src/pages/Stats/PointsHistogram.jsx:73:.ranking-details { display: flex; gap: 12px; font-size: 11px; color: var(--muted); flex-wrap: wrap; }
+src/pages/Stats/PointsHistogram.jsx-74-.ranking-points { text-align: right; flex-shrink: 0; }
+src/pages/Stats/PointsHistogram.jsx:75:.ranking-points-value { font-family: 'Barlow Condensed', sans-serif; font-size: 24px; font-weight: 900; color: var(--white); }
+src/pages/Stats/PointsHistogram.jsx:76:.ranking-points-label { font-size: 10px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+src/pages/Stats/PointsHistogram.jsx:77:.forecast-legend { display: flex; align-items: center; gap: 16px; padding: 12px 16px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 16px; font-size: 12px; color: var(--muted); flex-wrap: wrap; }
+--
+src/pages/Stats/PointsHistogram.jsx-80-.stats-empty { height: 300px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--muted); gap: 12px; }
+src/pages/Stats/PointsHistogram.jsx:81:.stats-empty-icon { font-size: 48px; opacity: 0.3; }
+--
+src/pages/Stats/PointsHistogram.jsx-86-  .stats-page { padding: 16px; }
+src/pages/Stats/PointsHistogram.jsx:87:  .stats-title { font-size: 28px; }
+--
+src/pages/Stats/PointsHistogram.jsx-93-  .user-chips { gap: 6px; }
+src/pages/Stats/PointsHistogram.jsx:94:  .user-chip { padding: 5px 10px; font-size: 12px; }
+--
+src/pages/Stats/PredictionAnalysis.jsx-29-.analysis-page { padding: 24px 28px; max-width: 1400px; margin: 0 auto; background: var(--bg); min-height: calc(100vh - 120px); }
+src/pages/Stats/PredictionAnalysis.jsx:30:.analysis-back-btn { background: transparent; border: none; color: var(--red); cursor: pointer; font-size: 14px; font-weight: 600; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; padding: 0; transition: opacity 0.2s; }
+--
+src/pages/Stats/PredictionAnalysis.jsx-33-.analysis-header-left { flex: 1; }
+src/pages/Stats/PredictionAnalysis.jsx:34:.analysis-title { font-family: 'Barlow Condensed', sans-serif; font-size: 36px; font-weight: 900; color: var(--white); margin-bottom: 6px; letter-spacing: 1px; }
+src/pages/Stats/PredictionAnalysis.jsx:35:.analysis-subtitle { color: var(--muted); font-size: 15px; }
+src/pages/Stats/PredictionAnalysis.jsx-36-.analysis-panel { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 24px; margin-bottom: 24px; }
+src/pages/Stats/PredictionAnalysis.jsx:37:.analysis-panel-title { font-family: 'Barlow Condensed', sans-serif; font-size: 18px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--white); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+src/pages/Stats/PredictionAnalysis.jsx:38:.analysis-panel-title-sub { font-size: 12px; font-weight: 500; color: var(--muted); text-transform: none; letter-spacing: 0; }
+src/pages/Stats/PredictionAnalysis.jsx-39-.analysis-controls { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; align-items: flex-end; }
+src/pages/Stats/PredictionAnalysis.jsx:40:.analysis-control-group label { display: block; font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+src/pages/Stats/PredictionAnalysis.jsx:41:.analysis-select { padding: 10px 14px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; color: var(--white); font-size: 13px; font-family: 'Barlow', sans-serif; cursor: pointer; min-width: 200px; }
+src/pages/Stats/PredictionAnalysis.jsx:42:.analysis-export-btn { padding: 10px 16px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; color: var(--muted); font-size: 13px; cursor: pointer; font-family: 'Barlow', sans-serif; transition: all 0.2s; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+--
+src/pages/Stats/PredictionAnalysis.jsx-47-.insight-card { background: var(--bg3); border: 1px solid var(--border); border-radius: 12px; padding: 16px; transition: all 0.2s; }
+src/pages/Stats/PredictionAnalysis.jsx:48:.insight-card-name { font-size: 15px; font-weight: 700; color: var(--white); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+src/pages/Stats/PredictionAnalysis.jsx:49:.insight-row { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; font-size: 12px; }
+src/pages/Stats/PredictionAnalysis.jsx-50-.insight-label { color: var(--muted); }
+src/pages/Stats/PredictionAnalysis.jsx:51:.insight-value { font-weight: 700; color: var(--white); font-family: 'Barlow Condensed', sans-serif; font-size: 14px; }
+--
+src/pages/Stats/PredictionAnalysis.jsx-53-.race-block-header { background: var(--bg3); border: 1px solid var(--border); border-radius: 12px 12px 0 0; padding: 16px 20px; }
+src/pages/Stats/PredictionAnalysis.jsx:54:.race-block-title { font-family: 'Barlow Condensed', sans-serif; font-size: 20px; font-weight: 900; color: var(--white); margin-bottom: 4px; }
+src/pages/Stats/PredictionAnalysis.jsx:55:.race-block-subtitle { font-size: 12px; color: var(--muted); }
+src/pages/Stats/PredictionAnalysis.jsx-56-.race-official { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+src/pages/Stats/PredictionAnalysis.jsx:57:.race-official-pill { padding: 4px 10px; background: var(--bg2); border: 1px solid var(--border); border-radius: 6px; font-size: 11px; color: var(--muted); font-family: 'Barlow Condensed', sans-serif; font-weight: 600; white-space: nowrap; }
+--
+src/pages/Stats/PredictionAnalysis.jsx-61-.user-pred-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 8px; }
+src/pages/Stats/PredictionAnalysis.jsx:62:.user-pred-name { font-weight: 700; font-size: 14px; color: var(--white); }
+src/pages/Stats/PredictionAnalysis.jsx:63:.user-pred-score { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 18px; }
+src/pages/Stats/PredictionAnalysis.jsx-64-.user-pred-grid { display: flex; flex-wrap: wrap; gap: 6px; }
+src/pages/Stats/PredictionAnalysis.jsx:65:.pred-pill { padding: 4px 10px; border-radius: 6px; font-size: 11px; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; display: flex; align-items: center; gap: 4px; white-space: nowrap; }
+--
+src/pages/Stats/PredictionAnalysis.jsx-68-.pred-pill.miss { background: var(--bg3); border: 1px solid var(--border); color: var(--muted); }
+src/pages/Stats/PredictionAnalysis.jsx:69:.legend-bar { display: flex; flex-wrap: wrap; gap: 16px; padding: 14px 18px; background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 24px; font-size: 12px; color: var(--muted); align-items: center; }
+src/pages/Stats/PredictionAnalysis.jsx-70-.legend-item { display: flex; align-items: center; gap: 6px; }
+src/pages/Stats/PredictionAnalysis.jsx:71:.scoring-mini { display: flex; flex-wrap: wrap; gap: 8px; font-size: 11px; color: var(--muted); }
+--
+src/pages/Stats/PredictionAnalysis.jsx-74-  .analysis-page { padding: 16px; }
+src/pages/Stats/PredictionAnalysis.jsx:75:  .analysis-title { font-size: 28px; }
+--
+src/pages/Upgrade/UpgradePage.jsx-13-const CSS = `
+src/pages/Upgrade/UpgradePage.jsx:14:.back-btn { background: transparent; border: none; color: var(--red); cursor: pointer; font-size: 14px; font-weight: 600; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; padding: 0; transition: opacity 0.2s; }

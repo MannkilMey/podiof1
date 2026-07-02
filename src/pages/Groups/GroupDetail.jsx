@@ -52,7 +52,7 @@ html, body {
   border: none;
   color: var(--red);
   cursor: pointer;
-  font-size: 14px;
+  font-size: var(--fs-body);
   font-weight: 600;
   margin-bottom: 20px;
   display: flex;
@@ -74,7 +74,7 @@ html, body {
 
 .group-title {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 36px;
+  font-size: var(--fs-display);
   font-weight: 900;
   color: var(--white);
   margin-bottom: 8px;
@@ -84,7 +84,7 @@ html, body {
   display: flex;
   gap: 24px;
   flex-wrap: wrap;
-  font-size: 14px;
+  font-size: var(--fs-body);
   color: var(--muted);
   margin-bottom: 20px;
 }
@@ -107,7 +107,7 @@ html, body {
   border-radius: 10px;
   font-family: 'Barlow Condensed', sans-serif;
   font-weight: 700;
-  font-size: 14px;
+  font-size: var(--fs-body);
   letter-spacing: 1px;
   text-transform: uppercase;
   cursor: pointer;
@@ -155,7 +155,7 @@ html, body {
 }
 
 .info-label {
-  font-size: 11px;
+  font-size: var(--fs-label);
   color: var(--muted);
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -164,7 +164,7 @@ html, body {
 
 .info-value {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 24px;
+  font-size: var(--fs-section-title);
   font-weight: 700;
   color: var(--white);
 }
@@ -185,7 +185,7 @@ html, body {
 
 .section-title {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 24px;
+  font-size: var(--fs-section-title);
   font-weight: 800;
   color: var(--white);
   text-transform: uppercase;
@@ -235,7 +235,7 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
+  font-size: var(--fs-section-title);
   font-weight: 700;
   color: white;
 }
@@ -245,14 +245,14 @@ html, body {
 }
 
 .member-name {
-  font-size: 16px;
+  font-size: var(--fs-subtitle);
   font-weight: 700;
   color: var(--white);
   margin-bottom: 2px;
 }
 
 .member-email {
-  font-size: 13px;
+  font-size: var(--fs-small);
   color: var(--muted);
 }
 
@@ -266,7 +266,7 @@ html, body {
 .badge {
   padding: 4px 12px;
   border-radius: 12px;
-  font-size: 11px;
+  font-size: var(--fs-label);
   font-weight: 700;
   letter-spacing: 0.5px;
   text-transform: uppercase;
@@ -298,13 +298,13 @@ html, body {
 
 .stat-value {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 20px;
+  font-size: var(--fs-section-title);
   font-weight: 900;
   color: var(--white);
 }
 
 .stat-label {
-  font-size: 10px;
+  font-size: var(--fs-label);
   color: var(--muted);
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -367,7 +367,7 @@ html, body {
 .loading-text {
   margin-top: 16px;
   color: var(--muted);
-  font-size: 14px;
+  font-size: var(--fs-body);
 }
 
 .empty-state {
@@ -382,14 +382,14 @@ html, body {
 }
 
 .empty-title {
-  font-size: 18px;
+  font-size: var(--fs-subtitle);
   font-weight: 700;
   color: var(--white);
   margin-bottom: 8px;
 }
 
 .empty-message {
-  font-size: 14px;
+  font-size: var(--fs-body);
   color: var(--muted);
   margin-bottom: 24px;
 }
@@ -426,14 +426,14 @@ html, body {
 
 .modal-title {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 28px;
+  font-size: var(--fs-stat-secondary);
   font-weight: 900;
   color: var(--white);
   margin-bottom: 8px;
 }
 
 .modal-subtitle {
-  font-size: 14px;
+  font-size: var(--fs-body);
   color: var(--muted);
 }
 
@@ -464,19 +464,19 @@ html, body {
 }
 
 .race-item-name {
-  font-size: 16px;
+  font-size: var(--fs-subtitle);
   font-weight: 700;
   color: var(--white);
   margin-bottom: 4px;
 }
 
 .race-item-date {
-  font-size: 13px;
+  font-size: var(--fs-small);
   color: var(--muted);
 }
 
 .race-item-status {
-  font-size: 12px;
+  font-size: var(--fs-small);
   padding: 4px 10px;
   border-radius: 12px;
   font-weight: 700;
@@ -567,10 +567,7 @@ input:disabled + .toggle-slider {
     padding: 20px;
   }
 
-  .group-title {
-    font-size: 28px;
-  }
-
+  
   .group-actions {
     flex-direction: column;
   }
@@ -1059,7 +1056,7 @@ export default function GroupDetail() {
 
           <div className="info-card">
             <div className="info-label">{t('admin.inviteCode')}</div>
-            <div className="info-value" style={{ fontSize: 18 }}>
+            <div className="info-value" style={{ fontSize: 'var(--fs-subtitle)' }}>
               {group.codigo_invitacion}
             </div>
           </div>
@@ -1191,7 +1188,7 @@ export default function GroupDetail() {
                               {stats && (
                                 <span style={{ 
                                   marginLeft: 12, 
-                                  fontSize: 13, 
+                                  fontSize: 'var(--fs-small)', 
                                   color: 'var(--green)',
                                   fontWeight: 600
                                 }}>
@@ -1272,7 +1269,7 @@ export default function GroupDetail() {
                                 {stats.hasPredicted.length > 0 && (
                                   <div style={{ marginBottom: 20 }}>
                                     <div style={{
-                                      fontSize: 13,
+                                      fontSize: 'var(--fs-small)',
                                       fontWeight: 700,
                                       color: 'var(--green)',
                                       marginBottom: 12,
@@ -1291,7 +1288,7 @@ export default function GroupDetail() {
                                           display: 'flex',
                                           justifyContent: 'space-between',
                                           alignItems: 'center',
-                                          fontSize: 13
+                                          fontSize: 'var(--fs-small)'
                                         }}>
                                           <span style={{ color: 'var(--white)', fontWeight: 600 }}>
                                             {user.name}
@@ -1317,7 +1314,7 @@ export default function GroupDetail() {
                                 {stats.missing.length > 0 && (
                                   <div>
                                     <div style={{
-                                      fontSize: 13,
+                                      fontSize: 'var(--fs-small)',
                                       fontWeight: 700,
                                       color: 'var(--red)',
                                       marginBottom: 12,
@@ -1333,7 +1330,7 @@ export default function GroupDetail() {
                                           border: '1px solid var(--border)',
                                           borderRadius: 8,
                                           padding: '10px 14px',
-                                          fontSize: 13,
+                                          fontSize: 'var(--fs-small)',
                                           color: 'var(--muted)'
                                         }}>
                                           {user.name}

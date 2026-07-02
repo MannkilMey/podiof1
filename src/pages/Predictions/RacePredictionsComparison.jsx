@@ -51,7 +51,7 @@ html, body {
   border: none;
   color: var(--red);
   cursor: pointer;
-  font-size: 14px;
+  font-size: var(--fs-body);
   font-weight: 600;
   margin-bottom: 20px;
   display: flex;
@@ -73,14 +73,14 @@ html, body {
 
 .race-title {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 36px;
+  font-size: var(--fs-display);
   font-weight: 900;
   color: var(--white);
   margin-bottom: 8px;
 }
 
 .race-subtitle {
-  font-size: 16px;
+  font-size: var(--fs-subtitle);
   color: var(--muted);
   margin-bottom: 20px;
 }
@@ -94,7 +94,7 @@ html, body {
   border: 1px solid rgba(0,212,160,0.3);
   border-radius: 20px;
   color: var(--green);
-  font-size: 13px;
+  font-size: var(--fs-small);
   font-weight: 700;
   letter-spacing: 0.5px;
 }
@@ -119,7 +119,7 @@ html, body {
   background: var(--bg2);
   color: var(--white);
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 16px;
+  font-size: var(--fs-subtitle);
   font-weight: 700;
   cursor: pointer;
   transition: all 0.2s;
@@ -153,7 +153,7 @@ html, body {
 
 .section-title {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 24px;
+  font-size: var(--fs-section-title);
   font-weight: 800;
   color: var(--white);
   margin-bottom: 16px;
@@ -184,7 +184,7 @@ html, body {
 
 .position-label {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 14px;
+  font-size: var(--fs-body);
   font-weight: 600;
   color: var(--muted);
   text-transform: uppercase;
@@ -194,7 +194,7 @@ html, body {
 
 .voted-driver-name {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 22px;
+  font-size: var(--fs-stat-secondary);
   font-weight: 900;
   color: var(--white);
   margin-bottom: 8px;
@@ -204,7 +204,7 @@ html, body {
   display: flex;
   align-items: center;
   gap: 12px;
-  font-size: 13px;
+  font-size: var(--fs-small);
   color: var(--muted);
 }
 
@@ -257,7 +257,7 @@ html, body {
 
 .ranking-position {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 28px;
+  font-size: var(--fs-stat-secondary);
   font-weight: 900;
   min-width: 50px;
   text-align: center;
@@ -273,14 +273,14 @@ html, body {
 }
 
 .ranking-user-name {
-  font-size: 18px;
+  font-size: var(--fs-subtitle);
   font-weight: 700;
   color: var(--white);
   margin-bottom: 4px;
 }
 
 .ranking-user-stats {
-  font-size: 12px;
+  font-size: var(--fs-small);
   color: var(--muted);
   display: flex;
   gap: 12px;
@@ -288,14 +288,14 @@ html, body {
 
 .ranking-points {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 32px;
+  font-size: var(--fs-page-title);
   font-weight: 900;
   color: var(--white);
   text-align: right;
 }
 
 .ranking-points-label {
-  font-size: 11px;
+  font-size: var(--fs-label);
   color: var(--muted);
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -333,14 +333,14 @@ html, body {
 
 .position-number {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 24px;
+  font-size: var(--fs-section-title);
   font-weight: 900;
   color: var(--gold);
   min-width: 30px;
 }
 
 .driver-name {
-  font-size: 14px;
+  font-size: var(--fs-body);
   font-weight: 600;
   color: var(--white);
 }
@@ -417,13 +417,13 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
+  font-size: var(--fs-subtitle);
   font-weight: 700;
   color: white;
 }
 
 .user-name {
-  font-size: 16px;
+  font-size: var(--fs-subtitle);
   font-weight: 700;
   color: var(--white);
 }
@@ -431,7 +431,7 @@ html, body {
 .user-badge {
   padding: 4px 10px;
   border-radius: 12px;
-  font-size: 10px;
+  font-size: var(--fs-label);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -453,14 +453,14 @@ html, body {
 
 .score-value {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 32px;
+  font-size: var(--fs-page-title);
   font-weight: 900;
   color: var(--white);
   line-height: 1;
 }
 
 .score-label {
-  font-size: 11px;
+  font-size: var(--fs-label);
   color: var(--muted);
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -475,7 +475,7 @@ html, body {
 }
 
 .accuracy-label {
-  font-size: 12px;
+  font-size: var(--fs-small);
   color: var(--muted);
   min-width: 80px;
 }
@@ -498,7 +498,7 @@ html, body {
 
 .accuracy-value {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 16px;
+  font-size: var(--fs-subtitle);
   font-weight: 700;
   color: var(--white);
   min-width: 50px;
@@ -534,7 +534,7 @@ html, body {
 
 .predicted-number {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 18px;
+  font-size: var(--fs-subtitle);
   font-weight: 900;
   min-width: 24px;
 }
@@ -548,7 +548,7 @@ html, body {
 }
 
 .predicted-driver {
-  font-size: 13px;
+  font-size: var(--fs-small);
   font-weight: 600;
   color: var(--white);
   flex: 1;
@@ -567,7 +567,7 @@ html, body {
   border-radius: 10px;
   color: white;
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 16px;
+  font-size: var(--fs-subtitle);
   font-weight: 800;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -597,14 +597,14 @@ html, body {
 
 .empty-title {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 24px;
+  font-size: var(--fs-section-title);
   font-weight: 800;
   color: var(--white);
   margin-bottom: 8px;
 }
 
 .empty-message {
-  font-size: 14px;
+  font-size: var(--fs-body);
   color: var(--muted);
 }
 
@@ -632,7 +632,7 @@ html, body {
 .loading-text {
   margin-top: 16px;
   color: var(--muted);
-  font-size: 14px;
+  font-size: var(--fs-body);
 }
 
 @media (max-width: 768px) {
@@ -644,10 +644,7 @@ html, body {
     padding: 20px;
   }
 
-  .race-title {
-    font-size: 28px;
-  }
-
+  
   .result-grid {
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   }
@@ -680,6 +677,7 @@ export default function RacePredictionsComparison() {
   const [userRanking, setUserRanking] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showPredictions, setShowPredictions] = useState(false);
+  const [lockReason, setLockReason] = useState(null); 
 
   const [showShareModal, setShowShareModal] = useState(false);
   const [shareData, setShareData] = useState(null);
@@ -718,15 +716,34 @@ export default function RacePredictionsComparison() {
       const { data: statusData } = await supabase
         .rpc('get_prediction_status', { p_grupo_id: groupId, p_carrera_id: raceId });
       const canStillPredict = statusData?.[0]?.can_predict || false;
-      setShowPredictions(!canStillPredict);
       setIsForcedOpen(statusData?.[0]?.is_forced_open || false);
 
-      // 🔒 Si las predicciones siguen abiertas (deadline normal o override de grupo),
-      // no pedimos nada sensible — ni siquiera llega por la red.
       if (canStillPredict) {
+        setLockReason('time');
+        setShowPredictions(false);
         setLoading(false);
         return;
       }
+
+      // 🔒 Predicciones ya cerradas — ahora exigimos que YO también haya predicho,
+      // para que nadie pueda espiar sin haber arriesgado su propia predicción.
+      const { data: miPrediccion } = await supabase
+        .from('predictions')
+        .select('id')
+        .eq('grupo_id', groupId)
+        .eq('carrera_id', raceId)
+        .eq('usuario_id', user.id)
+        .maybeSingle();
+
+      if (!miPrediccion) {
+        setLockReason('no_prediction');
+        setShowPredictions(false);
+        setLoading(false);
+        return;
+      }
+
+      setLockReason(null);
+      setShowPredictions(true);
 
       // Cargar pilotos
       const { data: driversData } = await supabase
@@ -1080,14 +1097,16 @@ const sistemaPuntos = isSprint
           ← {t('common.back')}
         </BackButton>
           <div className="empty-state">
-            <div className="empty-icon">🔒</div>
-            <div className="empty-title">{t('racePredictions.notAvailableTitle')}</div>
-            <div className="empty-message">
-              {t('racePredictions.notAvailableMsg')}
-              {isForcedOpen && (
-                <><br/>{t('racePredictions.adminKeepsOpen')}</>
-              )}
-            </div>
+            <div className="empty-icon">{lockReason === 'no_prediction' ? '📝' : '🔒'}</div>
+              <div className="empty-title">
+                {lockReason === 'no_prediction' ? t('racePredictions.noPredictionLockTitle') : t('racePredictions.notAvailableTitle')}
+              </div>
+              <div className="empty-message">
+                {lockReason === 'no_prediction' ? t('racePredictions.noPredictionLockMsg') : t('racePredictions.notAvailableMsg')}
+                {isForcedOpen && (
+                  <><br/>{t('racePredictions.adminKeepsOpen')}</>
+                )}
+              </div>
           </div>
         </div>
       </>
@@ -1170,7 +1189,7 @@ const sistemaPuntos = isSprint
                   <div className="ranking-user-info">
                     <div className="ranking-user-name">
                       {rankUser.userName}
-                      {rankUser.isCurrentUser && <span style={{marginLeft: 8, fontSize: 12, color: 'var(--green)'}}>✓ {t('racePredictions.youTag')}</span>}
+                      {rankUser.isCurrentUser && <span style={{marginLeft: 8, fontSize: 'var(--fs-small)', color: 'var(--green)'}}>✓ {t('racePredictions.youTag')}</span>}
                     </div>
                     <div className="ranking-user-stats">
                       <span>✓ {t('common.exactCount', { count: rankUser.aciertos_exactos })}</span>
@@ -1206,7 +1225,7 @@ const sistemaPuntos = isSprint
         {/* SECCIÓN 3B: VUELTA RÁPIDA */}
         {officialResult.length > 0 && (
           <div className="official-result" style={{marginTop: 16}}>
-            <h3 className="section-title" style={{fontSize: 18, marginBottom: 12}}>
+            <h3 className="section-title" style={{fontSize: 'var(--fs-subtitle)', marginBottom: 12}}>
               🏎️ {t('racePredictions.fastestLapTitle')}
             </h3>
             <div style={{display: 'flex', gap: 16, flexWrap: 'wrap'}}>
@@ -1216,7 +1235,7 @@ const sistemaPuntos = isSprint
                   <div className="position-card" style={{flex: 1, minWidth: 200}}>
                     <div style={{fontSize: 24}}>🏎️</div>
                     <div>
-                      <div style={{fontSize: 12, color: 'var(--muted)', marginBottom: 4}}>
+                      <div style={{fontSize: 'var(--fs-small)', color: 'var(--muted)', marginBottom: 4}}>
                         {t('racePredictions.driverLabelCaps')}
                       </div>
                       <div className="driver-name">
@@ -1225,7 +1244,7 @@ const sistemaPuntos = isSprint
                     </div>
                   </div>
                 ) : (
-                  <div style={{color: 'var(--muted)', fontSize: 14}}>
+                  <div style={{color: 'var(--muted)', fontSize: 'var(--fs-body)'}}>
                     {t('racePredictions.noFastestLapInfo')}
                   </div>
                 );
@@ -1237,7 +1256,7 @@ const sistemaPuntos = isSprint
                   background: 'var(--green-dim)',
                   border: '1px solid var(--green)',
                   borderRadius: 10,
-                  fontSize: 13,
+                  fontSize: 'var(--fs-small)',
                   color: 'var(--green)',
                   fontWeight: 600
                 }}>
@@ -1309,7 +1328,7 @@ const sistemaPuntos = isSprint
                     </div>
 
                     <div style={{ 
-                      fontSize: 12, 
+                      fontSize: 'var(--fs-small)', 
                       color: 'var(--muted)', 
                       marginBottom: 12,
                       display: 'flex',
@@ -1326,13 +1345,13 @@ const sistemaPuntos = isSprint
                       borderRadius: 10,
                       padding: 12,
                       marginBottom: 12,
-                      fontSize: 13
+                      fontSize: 'var(--fs-small)'
                     }}>
                       <div style={{
                         fontWeight: 700,
                         color: 'var(--white)',
                         marginBottom: 8,
-                        fontSize: 12,
+                        fontSize: 'var(--fs-small)',
                         textTransform: 'uppercase',
                         letterSpacing: 1
                       }}>
@@ -1394,7 +1413,7 @@ const sistemaPuntos = isSprint
                           justifyContent: 'space-between',
                           fontWeight: 700,
                           color: 'var(--white)',
-                          fontSize: 15
+                          fontSize: 'var(--fs-subtitle)'
                         }}>
                           <span>{t('racePredictions.totalColumnCaps')}</span>
                           <span>{Math.round(prediction.puntos || 0)}</span>
@@ -1410,13 +1429,13 @@ const sistemaPuntos = isSprint
                         borderRadius: 10,
                         padding: 12,
                         marginBottom: 12,
-                        fontSize: 13
+                        fontSize: 'var(--fs-small)'
                       }}>
                         <div style={{
                           fontWeight: 700,
                           color: 'var(--white)',
                           marginBottom: 8,
-                          fontSize: 12,
+                          fontSize: 'var(--fs-small)',
                           textTransform: 'uppercase',
                           letterSpacing: 1
                         }}>
@@ -1453,7 +1472,7 @@ const sistemaPuntos = isSprint
                                 borderRadius: 8,
                                 color: acerto ? 'var(--green)' : 'var(--red)',
                                 fontWeight: 700,
-                                fontSize: 12
+                                fontSize: 'var(--fs-small)'
                               }}>
                                 {acerto ? `✓ ${t('racePredictions.hitCaps')}` : `✗ ${t('racePredictions.missCaps')}`}
                               </span>
@@ -1529,7 +1548,7 @@ const sistemaPuntos = isSprint
           }} onClick={(e) => e.stopPropagation()}>
             <h2 style={{
               fontFamily: 'Barlow Condensed',
-              fontSize: 28,
+              fontSize: 'var(--fs-stat-secondary)',
               fontWeight: 900,
               color: 'var(--white)',
               marginBottom: 20
@@ -1540,7 +1559,7 @@ const sistemaPuntos = isSprint
             {/* Sistema base */}
             <div style={{marginBottom: 20}}>
               <h3 style={{
-                fontSize: 16,
+                fontSize: 'var(--fs-subtitle)',
                 fontWeight: 700,
                 color: 'var(--white)',
                 marginBottom: 12
@@ -1560,10 +1579,10 @@ const sistemaPuntos = isSprint
                     padding: 10,
                     textAlign: 'center'
                   }}>
-                    <div style={{fontSize: 12, color: 'var(--muted)', marginBottom: 4}}>
+                    <div style={{fontSize: 'var(--fs-small)', color: 'var(--muted)', marginBottom: 4}}>
                       P{pos}
                     </div>
-                    <div style={{fontSize: 20, fontWeight: 900, color: 'var(--gold)'}}>
+                    <div style={{fontSize: 'var(--fs-section-title)', fontWeight: 900, color: 'var(--gold)'}}>
                       {pts}
                     </div>
                   </div>
@@ -1573,7 +1592,7 @@ const sistemaPuntos = isSprint
 
             {/* Bonus exacto */}
             <div style={{marginBottom: 20}}>
-              <h3 style={{fontSize: 16, fontWeight: 700, color: 'var(--white)', marginBottom: 8}}>
+              <h3 style={{fontSize: 'var(--fs-subtitle)', fontWeight: 700, color: 'var(--white)', marginBottom: 8}}>
                 🎯 {t('scoringModal.exactPositionBonus')}
               </h3>
               <div style={{
@@ -1591,7 +1610,7 @@ const sistemaPuntos = isSprint
             {/* Piloto correcto */}
             {group?.usa_sistema_dual && (
               <div style={{marginBottom: 20}}>
-                <h3 style={{fontSize: 16, fontWeight: 700, color: 'var(--white)', marginBottom: 8}}>
+                <h3 style={{fontSize: 'var(--fs-subtitle)', fontWeight: 700, color: 'var(--white)', marginBottom: 8}}>
                   ✓ {t('scoringModal.correctDriverNoExact')}
                 </h3>
                 <div style={{
@@ -1609,7 +1628,7 @@ const sistemaPuntos = isSprint
             {/* Vuelta rápida */}
             {group?.bonus_vuelta_rapida_piloto && (
               <div style={{marginBottom: 20}}>
-                <h3 style={{fontSize: 16, fontWeight: 700, color: 'var(--white)', marginBottom: 8}}>
+                <h3 style={{fontSize: 'var(--fs-subtitle)', fontWeight: 700, color: 'var(--white)', marginBottom: 8}}>
                   🏎️ {t('scoringModal.fastestLapDriver')}
                 </h3>
                 <div style={{
@@ -1633,7 +1652,7 @@ const sistemaPuntos = isSprint
               marginBottom: 20
             }}>
               <h3 style={{
-                fontSize: 14,
+                fontSize: 'var(--fs-body)',
                 fontWeight: 700,
                 color: 'var(--white)',
                 marginBottom: 8,
@@ -1642,7 +1661,7 @@ const sistemaPuntos = isSprint
               }}>
                 📝 {t('scoringModal.exampleRaceTitle')}
               </h3>
-              <div style={{fontSize: 13, color: 'var(--muted)', lineHeight: 1.6}}>
+              <div style={{fontSize: 'var(--fs-small)', color: 'var(--muted)', lineHeight: 1.6}}>
                 • {t('scoringModal.exampleExactP1', { base: group?.sistema_puntos?.['1'] || 0, bonus: group?.bonus_posicion_exacta || 0, total: (group?.sistema_puntos?.['1'] || 0) + (group?.bonus_posicion_exacta || 0) })}<br/>
                 • {t('scoringModal.exampleDriverOnly', { points: group?.puntos_piloto_correcto || 0 })}<br/>
                 • {t('scoringModal.exampleFastestLap', { points: group?.puntos_vuelta_rapida_piloto || 0 })}
@@ -1658,7 +1677,7 @@ const sistemaPuntos = isSprint
               borderRadius: 10,
               color: 'white',
               fontFamily: 'Barlow Condensed',
-              fontSize: 16,
+              fontSize: 'var(--fs-subtitle)',
               fontWeight: 800,
               cursor: 'pointer',
               marginTop: 20

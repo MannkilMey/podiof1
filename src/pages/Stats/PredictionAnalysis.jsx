@@ -27,52 +27,51 @@ const CSS = `
   --gold: #9C6F10; --green: #007F5F; --green-dim: rgba(0,127,95,0.15);
 }
 .analysis-page { padding: 24px 28px; max-width: 1400px; margin: 0 auto; background: var(--bg); min-height: calc(100vh - 120px); }
-.analysis-back-btn { background: transparent; border: none; color: var(--red); cursor: pointer; font-size: 14px; font-weight: 600; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; padding: 0; transition: opacity 0.2s; }
+.analysis-back-btn { background: transparent; border: none; color: var(--red); cursor: pointer; font-size: var(--fs-body); font-weight: 600; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; padding: 0; transition: opacity 0.2s; }
 .analysis-back-btn:hover { opacity: 0.7; }
 .analysis-header { margin-bottom: 28px; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; }
 .analysis-header-left { flex: 1; }
-.analysis-title { font-family: 'Barlow Condensed', sans-serif; font-size: 36px; font-weight: 900; color: var(--white); margin-bottom: 6px; letter-spacing: 1px; }
-.analysis-subtitle { color: var(--muted); font-size: 15px; }
+.analysis-title { font-family: 'Barlow Condensed', sans-serif; font-size: var(--fs-display); font-weight: 900; color: var(--white); margin-bottom: 6px; letter-spacing: 1px; }
+.analysis-subtitle { color: var(--muted); font-size: var(--fs-subtitle); }
 .analysis-panel { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 24px; margin-bottom: 24px; }
-.analysis-panel-title { font-family: 'Barlow Condensed', sans-serif; font-size: 18px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--white); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.analysis-panel-title-sub { font-size: 12px; font-weight: 500; color: var(--muted); text-transform: none; letter-spacing: 0; }
+.analysis-panel-title { font-family: 'Barlow Condensed', sans-serif; font-size: var(--fs-subtitle); font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--white); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.analysis-panel-title-sub { font-size: var(--fs-small); font-weight: 500; color: var(--muted); text-transform: none; letter-spacing: 0; }
 .analysis-controls { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; align-items: flex-end; }
-.analysis-control-group label { display: block; font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
-.analysis-select { padding: 10px 14px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; color: var(--white); font-size: 13px; font-family: 'Barlow', sans-serif; cursor: pointer; min-width: 200px; }
-.analysis-export-btn { padding: 10px 16px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; color: var(--muted); font-size: 13px; cursor: pointer; font-family: 'Barlow', sans-serif; transition: all 0.2s; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+.analysis-control-group label { display: block; font-size: var(--fs-label); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.analysis-select { padding: 10px 14px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; color: var(--white); font-size: 16px; font-family: 'Barlow', sans-serif; cursor: pointer; min-width: 200px; }
+.analysis-export-btn { padding: 10px 16px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; color: var(--muted); font-size: var(--fs-small); cursor: pointer; font-family: 'Barlow', sans-serif; transition: all 0.2s; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
 .analysis-export-btn:hover { border-color: var(--green); color: var(--green); background: var(--green-dim); }
 .analysis-skeleton { height: 300px; background: var(--bg3); border-radius: 12px; animation: pulse 1.5s ease-in-out infinite; }
 @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
 .insight-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; margin-bottom: 24px; }
 .insight-card { background: var(--bg3); border: 1px solid var(--border); border-radius: 12px; padding: 16px; transition: all 0.2s; }
-.insight-card-name { font-size: 15px; font-weight: 700; color: var(--white); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
-.insight-row { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; font-size: 12px; }
+.insight-card-name { font-size: var(--fs-subtitle); font-weight: 700; color: var(--white); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.insight-row { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; font-size: var(--fs-small); }
 .insight-label { color: var(--muted); }
-.insight-value { font-weight: 700; color: var(--white); font-family: 'Barlow Condensed', sans-serif; font-size: 14px; }
+.insight-value { font-weight: 700; color: var(--white); font-family: 'Barlow Condensed', sans-serif; font-size: var(--fs-body); }
 .race-block { margin-bottom: 24px; }
 .race-block-header { background: var(--bg3); border: 1px solid var(--border); border-radius: 12px 12px 0 0; padding: 16px 20px; }
-.race-block-title { font-family: 'Barlow Condensed', sans-serif; font-size: 20px; font-weight: 900; color: var(--white); margin-bottom: 4px; }
-.race-block-subtitle { font-size: 12px; color: var(--muted); }
+.race-block-title { font-family: 'Barlow Condensed', sans-serif; font-size: var(--fs-section-title); font-weight: 900; color: var(--white); margin-bottom: 4px; }
+.race-block-subtitle { font-size: var(--fs-small); color: var(--muted); }
 .race-official { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
-.race-official-pill { padding: 4px 10px; background: var(--bg2); border: 1px solid var(--border); border-radius: 6px; font-size: 11px; color: var(--muted); font-family: 'Barlow Condensed', sans-serif; font-weight: 600; white-space: nowrap; }
+.race-official-pill { padding: 4px 10px; background: var(--bg2); border: 1px solid var(--border); border-radius: 6px; font-size: var(--fs-label); color: var(--muted); font-family: 'Barlow Condensed', sans-serif; font-weight: 600; white-space: nowrap; }
 .race-official-pill.vr { border-color: rgba(128,0,255,0.4); color: #A855F7; }
 .user-prediction { border: 1px solid var(--border); border-top: none; padding: 16px 20px; background: var(--bg2); }
 .user-prediction:last-child { border-radius: 0 0 12px 12px; }
 .user-pred-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 8px; }
-.user-pred-name { font-weight: 700; font-size: 14px; color: var(--white); }
-.user-pred-score { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 18px; }
+.user-pred-name { font-weight: 700; font-size: var(--fs-body); color: var(--white); }
+.user-pred-score { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: var(--fs-subtitle); }
 .user-pred-grid { display: flex; flex-wrap: wrap; gap: 6px; }
-.pred-pill { padding: 4px 10px; border-radius: 6px; font-size: 11px; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; display: flex; align-items: center; gap: 4px; white-space: nowrap; }
+.pred-pill { padding: 4px 10px; border-radius: 6px; font-size: var(--fs-label); font-family: 'Barlow Condensed', sans-serif; font-weight: 600; display: flex; align-items: center; gap: 4px; white-space: nowrap; }
 .pred-pill.exact { background: rgba(0,212,160,0.15); border: 1px solid rgba(0,212,160,0.3); color: var(--green); }
 .pred-pill.pilot-ok { background: rgba(201,168,76,0.15); border: 1px solid rgba(201,168,76,0.3); color: var(--gold); }
 .pred-pill.miss { background: var(--bg3); border: 1px solid var(--border); color: var(--muted); }
-.legend-bar { display: flex; flex-wrap: wrap; gap: 16px; padding: 14px 18px; background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 24px; font-size: 12px; color: var(--muted); align-items: center; }
+.legend-bar { display: flex; flex-wrap: wrap; gap: 16px; padding: 14px 18px; background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 24px; font-size: var(--fs-small); color: var(--muted); align-items: center; }
 .legend-item { display: flex; align-items: center; gap: 6px; }
-.scoring-mini { display: flex; flex-wrap: wrap; gap: 8px; font-size: 11px; color: var(--muted); }
+.scoring-mini { display: flex; flex-wrap: wrap; gap: 8px; font-size: var(--fs-label); color: var(--muted); }
 .scoring-pill { padding: 2px 8px; background: var(--bg2); border: 1px solid var(--border); border-radius: 4px; font-family: 'Share Tech Mono', monospace; }
 @media (max-width: 900px) {
   .analysis-page { padding: 16px; }
-  .analysis-title { font-size: 28px; }
   .analysis-controls { flex-direction: column; align-items: stretch; }
   .insight-grid { grid-template-columns: 1fr; }
   .analysis-header { flex-direction: column; }
@@ -401,7 +400,7 @@ export default function PredictionAnalysis() {
       ws3['!cols'] = [{ wch: 35 }, { wch: 60 }];
       XLSX.utils.book_append_sheet(wb, ws3, t('scoringModal.title'));
 
-      XLSX.writeFile(wb, `PodioF1_Analisis_${groupInfo?.nombre || t('pointsHistogram.groupFallback')}_${new Date().toISOString().slice(0, 10)}.xlsx`);
+      XLSX.writeFile(wb, `Podio_Analisis_${groupInfo?.nombre || t('pointsHistogram.groupFallback')}_${new Date().toISOString().slice(0, 10)}.xlsx`);
     } catch (err) {
       console.error('Export error:', err);
     } finally {
@@ -448,19 +447,19 @@ export default function PredictionAnalysis() {
         {/* LEGEND WITH COLOR SAMPLES */}
         <div className="legend-bar">
           <div className="legend-item">
-            <span className="pred-pill exact" style={{ padding: '2px 8px', fontSize: 10 }}>✅ {t('predictionAnalysis.legendExamplePos1')}</span>
+            <span className="pred-pill exact" style={{ padding: '2px 8px', fontSize: 'var(--fs-label)' }}>✅ {t('predictionAnalysis.legendExamplePos1')}</span>
             <span>{t('predictionAnalysis.legendExact')}</span>
           </div>
           <div className="legend-item">
-            <span className="pred-pill pilot-ok" style={{ padding: '2px 8px', fontSize: 10 }}>🟡 {t('predictionAnalysis.legendExamplePos3')}</span>
+            <span className="pred-pill pilot-ok" style={{ padding: '2px 8px', fontSize: 'var(--fs-label)' }}>🟡 {t('predictionAnalysis.legendExamplePos3')}</span>
             <span>{t('predictionAnalysis.legendPilotOk')}</span>
           </div>
           <div className="legend-item">
-            <span className="pred-pill miss" style={{ padding: '2px 8px', fontSize: 10 }}>❌ {t('predictionAnalysis.legendExamplePos5')}</span>
+            <span className="pred-pill miss" style={{ padding: '2px 8px', fontSize: 'var(--fs-label)' }}>❌ {t('predictionAnalysis.legendExamplePos5')}</span>
             <span>{t('predictionAnalysis.legendMiss')}</span>
           </div>
           <div className="legend-item">
-            <span className="race-official-pill vr" style={{ padding: '2px 8px', fontSize: 10 }}>🟣 {t('predictionAnalysis.legendFastestLap')}</span>
+            <span className="race-official-pill vr" style={{ padding: '2px 8px', fontSize: 'var(--fs-label)' }}>🟣 {t('predictionAnalysis.legendFastestLap')}</span>
             <span>{t('predictionAnalysis.legendFastestLapDesc')}</span>
           </div>
         </div>
@@ -469,21 +468,21 @@ export default function PredictionAnalysis() {
         <div className="analysis-panel">
           <div className="analysis-panel-title">🏆 {t('scoringModal.title')}</div>
           <div style={{ marginBottom: 12 }}>
-            <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 }}>{t('predictionAnalysis.raceLabel')}</div>
+            <div style={{ fontSize: 'var(--fs-label)', fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 }}>{t('predictionAnalysis.raceLabel')}</div>
             <div className="scoring-mini">
               {scoringInfo.race.map(s => <span key={s.pos} className="scoring-pill">{s.pos}° = {s.pts} {t('common.pts')}</span>)}
             </div>
           </div>
           {scoringInfo.sprint.length > 0 && (
             <div style={{ marginBottom: 12 }}>
-              <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 }}>⚡ Sprint</div>
+              <div style={{ fontSize: 'var(--fs-label)', fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 }}>⚡ Sprint</div>
               <div className="scoring-mini">
                 {scoringInfo.sprint.map(s => <span key={s.pos} className="scoring-pill">{s.pos}° = {s.pts} {t('common.pts')}</span>)}
               </div>
             </div>
           )}
           {groupInfo?.usa_sistema_dual && (
-            <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 8, padding: '8px 12px', background: 'var(--bg3)', borderRadius: 8, border: '1px solid var(--border)' }}>
+            <div style={{ fontSize: 'var(--fs-small)', color: 'var(--muted)', marginTop: 8, padding: '8px 12px', background: 'var(--bg3)', borderRadius: 8, border: '1px solid var(--border)' }}>
               <strong style={{ color: 'var(--white)' }}>{t('predictionAnalysis.dualSystemLabel')}:</strong> {t('predictionAnalysis.dualSystemDetail', { driverPts: groupInfo.puntos_piloto_correcto, bonusPts: groupInfo.bonus_posicion_exacta })}
             </div>
           )}
@@ -545,17 +544,17 @@ export default function PredictionAnalysis() {
 
                     {/* TOP 3 PILOTOS ACERTADOS */}
                     <div style={{ marginTop: 8, paddingTop: 8, borderTop: '1px solid var(--border)' }}>
-                      <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 6 }}>🏎 {t('predictionAnalysis.topDriversTitle')}</div>
+                      <div style={{ fontSize: 'var(--fs-label)', fontWeight: 600, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 6 }}>🏎 {t('predictionAnalysis.topDriversTitle')}</div>
                       {ins.topDrivers.length > 0 ? ins.topDrivers.map((d, di) => (
-                        <div key={di} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '3px 0', fontSize: 12 }}>
+                        <div key={di} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '3px 0', fontSize: 'var(--fs-small)' }}>
                           <span style={{ color: 'var(--white)', fontWeight: 600 }}>{di + 1}. {d.name}</span>
                           <div style={{ display: 'flex', gap: 6 }}>
                             <span style={{ color: 'var(--green)', fontWeight: 700 }}>✅{d.exact}</span>
                             <span style={{ color: 'var(--gold)', fontWeight: 700 }}>🟡{d.pilotOk}</span>
-                            <span style={{ color: 'var(--muted)', fontSize: 11 }}>= {d.exact + d.pilotOk}</span>
+                            <span style={{ color: 'var(--muted)', fontSize: 'var(--fs-label)' }}>= {d.exact + d.pilotOk}</span>
                           </div>
                         </div>
-                      )) : <span style={{ color: 'var(--muted)', fontSize: 12 }}>-</span>}
+                      )) : <span style={{ color: 'var(--muted)', fontSize: 'var(--fs-small)' }}>-</span>}
                     </div>
 
                     <div className="insight-row" style={{ marginTop: 8 }}>
@@ -573,7 +572,7 @@ export default function PredictionAnalysis() {
         {filteredData.length === 0 ? (
           <div className="analysis-panel" style={{ textAlign: 'center', padding: '60px 20px' }}>
             <div style={{ fontSize: 48, opacity: 0.3, marginBottom: 16 }}>📋</div>
-            <div style={{ color: 'var(--muted)', fontSize: 15 }}>{t('predictionAnalysis.noDataForFilters')}</div>
+            <div style={{ color: 'var(--muted)', fontSize: 'var(--fs-subtitle)' }}>{t('predictionAnalysis.noDataForFilters')}</div>
           </div>
         ) : (
           filteredData.map(({ race, official, userResults }) => (
@@ -581,7 +580,7 @@ export default function PredictionAnalysis() {
               <div className="race-block-header">
                 <div className="race-block-title">
                   {race.tipo === 'sprint' ? '⚡ ' : '🏁 '}{getRaceName(race, t)}
-                  <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--muted)', marginLeft: 8 }}>{t('predictionAnalysis.roundLabel', { round: race.ronda })}</span>
+                  <span style={{ fontSize: 'var(--fs-body)', fontWeight: 500, color: 'var(--muted)', marginLeft: 8 }}>{t('predictionAnalysis.roundLabel', { round: race.ronda })}</span>
                 </div>
                 <div className="race-block-subtitle">{t('lastRace.officialResult')}</div>
                 <div className="race-official">
@@ -598,7 +597,7 @@ export default function PredictionAnalysis() {
                   <div className="user-pred-header">
                     <div>
                       <span className="user-pred-name">{ur.userName}</span>
-                      <span style={{ fontSize: 11, color: 'var(--muted)', marginLeft: 12 }}>
+                      <span style={{ fontSize: 'var(--fs-label)', color: 'var(--muted)', marginLeft: 12 }}>
                         ✅{ur.exactCount} 🟡{ur.pilotOkCount} ❌{ur.missCount}
                       </span>
                     </div>

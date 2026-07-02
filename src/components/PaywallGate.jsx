@@ -75,7 +75,7 @@ export default function PaywallGate({ feature, children, fallback, blur = true, 
           border: '1px solid var(--gold)',
           borderRadius: 8,
           color: 'var(--gold)',
-          fontSize: 13,
+          fontSize: 'var(--fs-small)',
           fontWeight: 700,
           cursor: 'pointer',
           fontFamily: "'Barlow Condensed', sans-serif",
@@ -140,13 +140,13 @@ export default function PaywallGate({ feature, children, fallback, blur = true, 
           <div style={{ fontSize: 48, marginBottom: 12 }}>{info.icon}</div>
           <div style={{
             fontFamily: "'Barlow Condensed', sans-serif",
-            fontSize: 22, fontWeight: 900, color: 'var(--white)',
+            fontSize: 'var(--fs-stat-secondary)', fontWeight: 900, color: 'var(--white)',
             marginBottom: 8, letterSpacing: 0.5
           }}>
             {info.title}
           </div>
           <div style={{
-            fontSize: 13, color: 'var(--muted)', lineHeight: 1.6,
+            fontSize: 'var(--fs-stat-secondary)', color: 'var(--muted)', lineHeight: 1.6,
             marginBottom: 20
           }}>
             {info.description}
@@ -159,7 +159,7 @@ export default function PaywallGate({ feature, children, fallback, blur = true, 
               background: 'linear-gradient(135deg, #C9A84C, #A67C00)',
               border: 'none', borderRadius: 10, color: 'white',
               fontFamily: "'Barlow Condensed', sans-serif",
-              fontSize: 16, fontWeight: 800, letterSpacing: 1,
+              fontSize: 'var(--fs-subtitle)', fontWeight: 800, letterSpacing: 1,
               textTransform: 'uppercase', cursor: 'pointer',
               transition: 'all 0.2s'
             }}
@@ -169,7 +169,7 @@ export default function PaywallGate({ feature, children, fallback, blur = true, 
             👑 {t('premium.getPremium')}
           </button>
 
-          <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 10 }}>
+          <div style={{ fontSize: 'var(--fs-label)', color: 'var(--muted)', marginTop: 10 }}>
             {t('paywallGate.fromPrice', { price: prices.monthly })}
           </div>
         </div>
@@ -217,12 +217,12 @@ export function UpgradeModal({ onClose, prices, theme, asPage = false }) {
           <div style={{ fontSize: 40, marginBottom: 8 }}>👑</div>
           <div style={{
             fontFamily: "'Barlow Condensed', sans-serif",
-            fontSize: 28, fontWeight: 900, color: 'white',
+            fontSize: 'var(--fs-stat-secondary)', fontWeight: 900, color: 'white',
             letterSpacing: 1, textTransform: 'uppercase'
           }}>
             {t('premium.title')}
           </div>
-          <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.8)', marginTop: 4 }}>
+          <div style={{ fontSize: 'var(--fs-small)', color: 'rgba(255,255,255,0.8)', marginTop: 4 }}>
             {t('premium.subtitle')}
           </div>
         </div>
@@ -233,13 +233,13 @@ export function UpgradeModal({ onClose, prices, theme, asPage = false }) {
             {Array.isArray(benefits) && benefits.map((benefit, i) => (
               <div key={i} style={{
                 display: 'flex', alignItems: 'center', gap: 10,
-                fontSize: 14, color: 'var(--white)'
+                fontSize: 'var(--fs-body)', color: 'var(--white)'
               }}>
                 <span style={{
                   width: 20, height: 20, borderRadius: '50%',
                   background: 'rgba(201,168,76,0.15)', border: '1px solid rgba(201,168,76,0.3)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: 10, color: 'var(--gold)', flexShrink: 0
+                  fontSize: 12, color: 'var(--gold)', flexShrink: 0
                 }}>✓</span>
                 {benefit}
               </div>
@@ -255,19 +255,19 @@ export function UpgradeModal({ onClose, prices, theme, asPage = false }) {
             }}>
               <div style={{
                 position: 'absolute', top: -10, left: '50%', transform: 'translateX(-50%)',
-                background: 'var(--gold)', color: 'white', fontSize: 9,
+                background: 'var(--gold)', color: 'white', fontSize: 'var(--fs-label)',
                 fontWeight: 800, padding: '2px 10px', borderRadius: 10,
                 textTransform: 'uppercase', letterSpacing: 1
               }}>
                 {t('premium.popular')}
               </div>
-              <div style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>{t('premium.monthly')}</div>
+              <div style={{ fontSize: 'var(--fs-label)', color: 'var(--muted)', marginBottom: 4 }}>{t('premium.monthly')}</div>
               <div style={{
-                fontFamily: "'Nunito'", fontSize: 28, fontWeight: 900, color: 'var(--gold)'
+                fontFamily: "'Nunito'", fontSize: 'var(--fs-stat-secondary)', fontWeight: 900, color: 'var(--gold)'
               }}>
                 ${prices.monthly}
               </div>
-              <div style={{ fontSize: 10, color: 'var(--muted)' }}>{t('premium.perMonth')}</div>
+              <div style={{ fontSize: 'var(--fs-label)', color: 'var(--muted)' }}>{t('premium.perMonth')}</div>
             </div>
 
             <div style={{
@@ -275,13 +275,13 @@ export function UpgradeModal({ onClose, prices, theme, asPage = false }) {
               border: '1px solid var(--border)', borderRadius: 12,
               textAlign: 'center'
             }}>
-              <div style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>{t('premium.seasonal')}</div>
+              <div style={{ fontSize: 'var(--fs-label)', color: 'var(--muted)', marginBottom: 4 }}>{t('premium.seasonal')}</div>
               <div style={{
-                fontFamily: "'Nunito'", fontSize: 28, fontWeight: 900, color: 'var(--white)'
+                fontFamily: "'Nunito'", fontSize: 'var(--fs-stat-secondary)', fontWeight: 900, color: 'var(--white)'
               }}>
                 ${prices.seasonal}
               </div>
-              <div style={{ fontSize: 10, color: 'var(--green)' }}>
+              <div style={{ fontSize: 'var(--fs-label)', color: 'var(--green)' }}>
                 {t('premium.savings', { pct: Math.round((1 - prices.seasonal / (prices.monthly * 10)) * 100) })}
               </div>
             </div>
@@ -299,7 +299,7 @@ export function UpgradeModal({ onClose, prices, theme, asPage = false }) {
               background: 'linear-gradient(135deg, #C9A84C, #A67C00)',
               border: 'none', borderRadius: 12, color: 'white',
               fontFamily: "'Barlow Condensed', sans-serif",
-              fontSize: 18, fontWeight: 900, letterSpacing: 1,
+              fontSize: 'var(--fs-subtitle)', fontWeight: 900, letterSpacing: 1,
               textTransform: 'uppercase', cursor: 'pointer',
               transition: 'all 0.2s'
             }}
@@ -310,7 +310,7 @@ export function UpgradeModal({ onClose, prices, theme, asPage = false }) {
           </button>
 
           <div style={{
-            textAlign: 'center', fontSize: 11, color: 'var(--muted)',
+            textAlign: 'center', fontSize: 'var(--fs-label)', color: 'var(--muted)',
             marginTop: 12, lineHeight: 1.5
           }}>
             {t('premium.cancelAnytime')}
@@ -341,7 +341,7 @@ export function PremiumBadge({ feature = 'stats_advanced' }) {
   
   return (
     <span style={{
-      fontSize: 9, fontWeight: 800, color: 'var(--gold)',
+      fontSize: 'var(--fs-label)', fontWeight: 800, color: 'var(--gold)',
       background: 'rgba(201,168,76,0.15)',
       border: '1px solid rgba(201,168,76,0.3)',
       padding: '1px 6px', borderRadius: 6,

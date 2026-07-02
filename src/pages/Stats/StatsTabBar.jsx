@@ -50,7 +50,7 @@ export default function StatsTabBar({ active, groupId }) {
               borderBottom: `3px solid ${isActive ? 'var(--red)' : 'transparent'}`,
               color: isActive ? 'var(--red)' : 'var(--muted)',
               fontFamily: "'Barlow Condensed', sans-serif",
-              fontSize: 16,
+              fontSize: 'var(--fs-subtitle)',
               fontWeight: 700,
               letterSpacing: 1,
               textTransform: 'uppercase',

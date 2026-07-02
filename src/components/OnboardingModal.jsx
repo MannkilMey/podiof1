@@ -8,14 +8,7 @@ import { useTranslation } from '../i18n';
 // CONFIGURACIÓN DE PREGUNTAS
 // ============================================
 const getProfileQuestions = (t) => [
-  {
-    key: 'fecha_nacimiento',
-    title: t('onboarding.birthday'),
-    subtitle: t('onboarding.birthdaySub'),
-    type: 'date',
-    table: 'users',
-    field: 'fecha_nacimiento'
-  },
+  
   {
     key: 'escuderia_favorita_id',
     title: t('onboarding.favoriteTeam'),
@@ -34,34 +27,9 @@ const getProfileQuestions = (t) => [
   }
 ];
 
-const getSurveyQuestions = (t) => [
-  {
-    key: 'como_ve_carreras',
-    title: t('onboarding.howWatch'),
-    subtitle: t('onboarding.howWatchSub'),
-    type: 'multi_select',
-    options: t('onboarding.howWatchOptions'),
-    table: 'survey'
-  },
-  {
-    key: 'anios_siguiendo_f1',
-    title: t('onboarding.sinceWhen'),
-    subtitle: t('onboarding.sinceWhenSub'),
-    type: 'single_select',
-    options: t('onboarding.sinceWhenOptions'),
-    table: 'survey'
-  },
-  {
-    key: 'tiene_vehiculo',
-    title: t('onboarding.hasVehicle'),
-    subtitle: t('onboarding.hasVehicleSub'),
-    type: 'single_select',
-    options: t('onboarding.hasVehicleOptions'),
-    table: 'survey'
-  }
-];
 
-const getAllQuestions = (t) => [...getProfileQuestions(t), ...getSurveyQuestions(t)];
+
+const getAllQuestions = (t) => [...getProfileQuestions(t)];
 
 // ============================================
 // COMPONENTE PRINCIPAL
@@ -101,7 +69,7 @@ export default function OnboardingModal() {
   async function checkPending() {
     try {
       const [profileRes, surveysRes, teamsRes, driversRes] = await Promise.all([
-        supabase.from('users').select('fecha_nacimiento, escuderia_favorita_id, piloto_favorito_id').eq('id', user.id).single(),
+        supabase.from('users').select('escuderia_favorita_id, piloto_favorito_id').eq('id', user.id).single(),
         supabase.from('user_surveys').select('pregunta_key, respuesta, skipped').eq('usuario_id', user.id),
         supabase.from('teams').select('id, nombre').order('nombre'),
         supabase.from('drivers').select('id, nombre_completo').order('nombre_completo')
@@ -177,22 +145,10 @@ export default function OnboardingModal() {
   // ============================================
   // SKIP
   // ============================================
-  const handleSkip = useCallback(async () => {
-    const q = pendingQuestions[currentIndex];
-    if (q.table === 'survey') {
-      try {
-        await supabase.from('user_surveys').upsert({
-          usuario_id: user.id,
-          pregunta_key: q.key,
-          respuesta: null,
-          skipped: true
-        }, { onConflict: 'usuario_id, pregunta_key' });
-      } catch (err) {
-        console.error('Skip error:', err);
-      }
-    }
+  const handleSkip = useCallback(() => {
     goNext();
-  }, [currentIndex, pendingQuestions, user]);
+  }, [goNext]);
+
 
   function goNext() {
     setDirection('exit');
@@ -260,7 +216,7 @@ export default function OnboardingModal() {
           <div style={{
             display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4
           }}>
-            <span style={{ fontSize: 11, color: 'var(--muted)', fontWeight: 600, letterSpacing: 1, textTransform: 'uppercase' }}>
+            <span style={{ fontSize: 'var(--fs-label)', color: 'var(--muted)', fontWeight: 600, letterSpacing: 1, textTransform: 'uppercase' }}>
                {currentIndex + 1} {t('onboarding.of')} {pendingQuestions.length}
             </span>
             <button onClick={handleClose} style={{
@@ -274,12 +230,12 @@ export default function OnboardingModal() {
           </div>
 
           <h2 style={{
-            fontFamily: "'Barlow Condensed', sans-serif", fontSize: 24,
+            fontFamily: "'Barlow Condensed', sans-serif", fontSize: 'var(--fs-section-title)',
             fontWeight: 900, color: 'var(--white)', marginBottom: 6, letterSpacing: 0.5
           }}>
             {q.title}
           </h2>
-          <p style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 24 }}>
+          <p style={{ fontSize: 'var(--fs-small)', color: 'var(--muted)', marginBottom: 24 }}>
             {q.subtitle}
           </p>
         </div>
@@ -287,21 +243,7 @@ export default function OnboardingModal() {
         {/* Content */}
         <div style={{ padding: '0 28px 24px' }}>
 
-          {/* DATE */}
-          {q.type === 'date' && (
-            <input type="date" value={answer}
-              onChange={e => setAnswer(e.target.value)}
-              max={new Date().toISOString().split('T')[0]}
-              style={{
-                width: '100%', padding: '16px', background: 'var(--bg3)',
-                border: '2px solid var(--border)', borderRadius: 12,
-                color: 'var(--white)', fontSize: 16, fontFamily: "'Barlow', sans-serif",
-                textAlign: 'center', boxSizing: 'border-box'
-              }}
-            />
-          )}
-
-          {/* SELECT TEAMS */}
+                   {/* SELECT TEAMS */}
           {q.type === 'select_teams' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8, maxHeight: 280, overflowY: 'auto' }}>
               {teams.map(t => (
@@ -309,7 +251,7 @@ export default function OnboardingModal() {
                   padding: '14px 16px', background: answer === t.id ? 'var(--red-dim)' : 'var(--bg3)',
                   border: `2px solid ${answer === t.id ? 'var(--red)' : 'var(--border)'}`,
                   borderRadius: 10, color: answer === t.id ? 'var(--red)' : 'var(--white)',
-                  fontSize: 15, fontWeight: answer === t.id ? 700 : 500,
+                  fontSize: 'var(--fs-subtitle)', fontWeight: answer === t.id ? 700 : 500,
                   cursor: 'pointer', transition: 'all 0.2s', textAlign: 'left',
                   fontFamily: "'Barlow', sans-serif"
                 }}>
@@ -327,7 +269,7 @@ export default function OnboardingModal() {
                   padding: '14px 16px', background: answer === d.id ? 'var(--red-dim)' : 'var(--bg3)',
                   border: `2px solid ${answer === d.id ? 'var(--red)' : 'var(--border)'}`,
                   borderRadius: 10, color: answer === d.id ? 'var(--red)' : 'var(--white)',
-                  fontSize: 15, fontWeight: answer === d.id ? 700 : 500,
+                  fontSize: 'var(--fs-subtitle)', fontWeight: answer === d.id ? 700 : 500,
                   cursor: 'pointer', transition: 'all 0.2s', textAlign: 'left',
                   fontFamily: "'Barlow', sans-serif"
                 }}>
@@ -345,7 +287,7 @@ export default function OnboardingModal() {
                   padding: '14px 16px', background: answer === opt ? 'var(--red-dim)' : 'var(--bg3)',
                   border: `2px solid ${answer === opt ? 'var(--red)' : 'var(--border)'}`,
                   borderRadius: 10, color: answer === opt ? 'var(--red)' : 'var(--white)',
-                  fontSize: 15, fontWeight: answer === opt ? 700 : 500,
+                  fontSize: 'var(--fs-subtitle)', fontWeight: answer === opt ? 700 : 500,
                   cursor: 'pointer', transition: 'all 0.2s', textAlign: 'left',
                   fontFamily: "'Barlow', sans-serif"
                 }}>
@@ -365,7 +307,7 @@ export default function OnboardingModal() {
                     padding: '14px 16px', background: selected ? 'var(--green-dim)' : 'var(--bg3)',
                     border: `2px solid ${selected ? 'var(--green)' : 'var(--border)'}`,
                     borderRadius: 10, color: selected ? 'var(--green)' : 'var(--white)',
-                    fontSize: 15, fontWeight: selected ? 700 : 500,
+                    fontSize: 'var(--fs-subtitle)', fontWeight: selected ? 700 : 500,
                     cursor: 'pointer', transition: 'all 0.2s', textAlign: 'left',
                     fontFamily: "'Barlow', sans-serif"
                   }}>
@@ -382,10 +324,10 @@ export default function OnboardingModal() {
           padding: '16px 28px 24px', display: 'flex', gap: 12,
           borderTop: '1px solid var(--border)'
         }}>
-          <button onClick={handleSkip} style={{
+          <button onClick={goNext} style={{
             flex: 1, padding: '14px', background: 'transparent',
             border: '2px solid var(--border)', borderRadius: 10,
-            color: 'var(--muted)', fontSize: 14, fontWeight: 700,
+            color: 'var(--muted)', fontSize: 'var(--fs-body)', fontWeight: 700,
             fontFamily: "'Barlow Condensed', sans-serif", letterSpacing: 1,
             textTransform: 'uppercase', cursor: 'pointer', transition: 'all 0.2s'
           }}
@@ -397,7 +339,7 @@ export default function OnboardingModal() {
             flex: 2, padding: '14px',
             background: canSave ? 'linear-gradient(135deg, var(--red), #FF3355)' : 'var(--bg3)',
             border: 'none', borderRadius: 10,
-            color: canSave ? 'white' : 'var(--muted)', fontSize: 14, fontWeight: 800,
+            color: canSave ? 'white' : 'var(--muted)', fontSize: 'var(--fs-body)', fontWeight: 800,
             fontFamily: "'Barlow Condensed', sans-serif", letterSpacing: 1,
             textTransform: 'uppercase', cursor: canSave ? 'pointer' : 'not-allowed',
             transition: 'all 0.2s', opacity: saving ? 0.6 : 1

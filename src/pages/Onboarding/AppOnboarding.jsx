@@ -81,7 +81,7 @@ export default function AppOnboarding() {
           style={{
             position: 'absolute', top: 16, right: 16, zIndex: 10,
             background: 'transparent', border: 'none',
-            color: 'var(--muted)', fontSize: 14, fontWeight: 600,
+            color: 'var(--muted)', fontSize: 'var(--fs-body)', fontWeight: 600,
             cursor: 'pointer', padding: '8px 16px',
             fontFamily: "'Barlow', sans-serif"
           }}
@@ -114,7 +114,7 @@ export default function AppOnboarding() {
         {/* Title */}
         <h1 style={{
           fontFamily: "'Barlow Condensed', sans-serif",
-          fontSize: 36, fontWeight: 900, color: 'var(--white)',
+          fontSize: 'var(--fs-display)', fontWeight: 900, color: 'var(--white)',
           letterSpacing: 1, textTransform: 'uppercase',
           marginBottom: 16, lineHeight: 1.1
         }}>
@@ -123,7 +123,7 @@ export default function AppOnboarding() {
 
         {/* Subtitle */}
         <p style={{
-          fontSize: 16, color: 'var(--muted)', lineHeight: 1.6,
+          fontSize: 'var(--fs-subtitle)', color: 'var(--muted)', lineHeight: 1.6,
           maxWidth: 320, marginBottom: 40
         }}>
           {slide.subtitle}
@@ -142,7 +142,7 @@ export default function AppOnboarding() {
                 background: 'linear-gradient(135deg, #E8002D, #FF3355)',
                 border: 'none', borderRadius: 12, color: 'white',
                 fontFamily: "'Barlow Condensed', sans-serif",
-                fontSize: 18, fontWeight: 900, letterSpacing: 2,
+                fontSize: 'var(--fs-subtitle)', fontWeight: 900, letterSpacing: 2,
                 textTransform: 'uppercase', cursor: 'pointer',
                 transition: 'all 0.2s',
                 boxShadow: '0 4px 20px rgba(232,0,45,0.3)'
@@ -158,7 +158,7 @@ export default function AppOnboarding() {
                 border: '2px solid var(--border2)',
                 borderRadius: 12, color: 'var(--white)',
                 fontFamily: "'Barlow Condensed', sans-serif",
-                fontSize: 16, fontWeight: 700, letterSpacing: 1,
+                fontSize: 'var(--fs-subtitle)', fontWeight: 700, letterSpacing: 1,
                 textTransform: 'uppercase', cursor: 'pointer',
                 transition: 'all 0.2s'
               }}
@@ -199,7 +199,7 @@ export default function AppOnboarding() {
               background: `${slide.accent}`,
               border: 'none', borderRadius: 10, color: 'white',
               fontFamily: "'Barlow Condensed', sans-serif",
-              fontSize: 15, fontWeight: 800, letterSpacing: 1,
+              fontSize: 'var(--fs-subtitle)', fontWeight: 800, letterSpacing: 1,
               textTransform: 'uppercase', cursor: 'pointer',
               transition: 'all 0.2s',
               display: 'flex', alignItems: 'center', gap: 6

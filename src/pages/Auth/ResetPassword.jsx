@@ -54,7 +54,7 @@ body {
 
 .logo-text {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 32px;
+  font-size: var(--fs-page-title);
   font-weight: 900;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -67,7 +67,7 @@ body {
 
 .reset-title {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 28px;
+  font-size: var(--fs-stat-secondary);
   font-weight: 800;
   color: #F0F0F0;
   text-align: center;
@@ -78,7 +78,7 @@ body {
   color: rgba(240, 240, 240, 0.6);
   text-align: center;
   margin-bottom: 32px;
-  font-size: 15px;
+  font-size: var(--fs-subtitle);
 }
 
 .form-group {
@@ -87,7 +87,7 @@ body {
 
 .form-label {
   display: block;
-  font-size: 13px;
+  font-size: var(--fs-small);
   font-weight: 600;
   color: rgba(240, 240, 240, 0.8);
   margin-bottom: 8px;
@@ -102,7 +102,7 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 10px;
   color: #F0F0F0;
-  font-size: 15px;
+  font-size: 16px;
   transition: all 0.3s;
 }
 
@@ -113,7 +113,7 @@ body {
 }
 
 .password-hint {
-  font-size: 12px;
+  font-size: var(--fs-small);
   color: rgba(240, 240, 240, 0.5);
   margin-top: 6px;
 }
@@ -154,7 +154,7 @@ body {
   border-radius: 10px;
   color: white;
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 16px;
+  font-size: var(--fs-subtitle);
   font-weight: 800;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -181,7 +181,7 @@ body {
   color: #E8002D;
   margin-bottom: 24px;
   text-align: center;
-  font-size: 14px;
+  font-size: var(--fs-body);
 }
 
 @media (max-width: 600px) {
@@ -272,8 +272,8 @@ export default function ResetPassword() {
       <div className="reset-container">
         <div className="reset-box">
           <div className="logo">
-            <img src="/logo.png" alt="PodioF1" style={{width: 56, height: 56, borderRadius: 12, objectFit: 'cover'}} />
-            <div className="logo-text">Podio<span>F1</span></div>
+            <img src="/logo.png" alt="Podio" style={{width: 56, height: 56, borderRadius: 12, objectFit: 'cover'}} />
+            <div className="logo-text">Podio</div>
           </div>
 
           <h1 className="reset-title">Nueva Contraseña</h1>

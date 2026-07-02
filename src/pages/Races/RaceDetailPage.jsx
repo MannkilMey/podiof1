@@ -57,7 +57,7 @@ html, body {
   border: none;
   color: var(--red);
   cursor: pointer;
-  font-size: 24px;
+  font-size: var(--fs-section-title);
   transition: opacity 0.2s;
 }
 
@@ -65,14 +65,14 @@ html, body {
 
 .race-detail-title {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 32px;
+  font-size: var(--fs-page-title);
   font-weight: 900;
   color: var(--white);
 }
 
 .race-detail-subtitle {
   color: var(--muted);
-  font-size: 14px;
+  font-size: var(--fs-body);
   margin-top: -24px;
   margin-bottom: 24px;
 }
@@ -102,7 +102,7 @@ html, body {
 }
 
 .race-round-big {
-  font-size: 12px;
+  font-size: var(--fs-small);
   color: var(--muted);
   text-transform: uppercase;
   letter-spacing: 2px;
@@ -111,7 +111,7 @@ html, body {
 
 .race-name-big {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 48px;
+  font-size: var(--fs-display);
   font-weight: 900;
   color: var(--white);
   margin-bottom: 16px;
@@ -133,7 +133,7 @@ html, body {
 }
 
 .race-info-label {
-  font-size: 11px;
+  font-size: var(--fs-label);
   color: var(--muted);
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -142,7 +142,7 @@ html, body {
 
 .race-info-value {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 20px;
+  font-size: var(--fs-section-title);
   font-weight: 800;
   color: var(--white);
 }
@@ -161,7 +161,7 @@ html, body {
   border-radius: 10px;
   color: white;
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 16px;
+  font-size: var(--fs-subtitle);
   font-weight: 800;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -182,7 +182,7 @@ html, body {
   border-radius: 10px;
   color: var(--white);
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 16px;
+  font-size: var(--fs-subtitle);
   font-weight: 800;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -209,7 +209,7 @@ html, body {
   padding: 12px 20px;
   color: var(--muted);
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 16px;
+  font-size: var(--fs-subtitle);
   font-weight: 700;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -237,7 +237,7 @@ html, body {
 
 .section-title {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 20px;
+  font-size: var(--fs-section-title);
   font-weight: 800;
   color: var(--white);
   margin-bottom: 16px;
@@ -260,7 +260,7 @@ html, body {
 
 .result-column-title {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 16px;
+  font-size: var(--fs-subtitle);
   font-weight: 800;
   color: var(--white);
   margin-bottom: 16px;
@@ -296,7 +296,7 @@ html, body {
 
 .result-position {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 24px;
+  font-size: var(--fs-section-title);
   font-weight: 900;
   color: var(--white);
   min-width: 40px;
@@ -304,14 +304,14 @@ html, body {
 
 .result-driver {
   flex: 1;
-  font-size: 15px;
+  font-size: var(--fs-subtitle);
   color: var(--white);
   font-weight: 600;
 }
 
 .result-points {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 16px;
+  font-size: var(--fs-subtitle);
   font-weight: 700;
   color: var(--muted);
 }
@@ -336,7 +336,7 @@ html, body {
   background: var(--bg3);
   padding: 16px;
   text-align: left;
-  font-size: 11px;
+  font-size: var(--fs-label);
   color: var(--muted);
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -355,7 +355,7 @@ html, body {
 
 .position-cell {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 20px;
+  font-size: var(--fs-section-title);
   font-weight: 900;
 }
 
@@ -371,7 +371,7 @@ html, body {
 }
 
 .points-label-big {
-  font-size: 14px;
+  font-size: var(--fs-body);
   color: var(--muted);
   text-transform: uppercase;
   letter-spacing: 2px;
@@ -381,7 +381,7 @@ html, body {
 
 .points-value-big {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 72px;
+  font-size: var(--fs-display);
   font-weight: 900;
   color: var(--green);
   line-height: 1;
@@ -431,7 +431,7 @@ html, body {
   border-radius: 10px;
   display: inline-block;
   margin-bottom: 16px;
-  font-size: 14px;
+  font-size: var(--fs-body);
   letter-spacing: 1px;
 }
 `;
@@ -772,7 +772,7 @@ export default function RaceDetailPage() {
             ) : !userPrediction ? (
               <div className="no-prediction">
                 <div className="no-prediction-icon">📝</div>
-                <div style={{ fontSize: 18, marginBottom: 8 }}>{t('raceDetailPage.noPredictionMade')}</div>
+                <div style={{ fontSize: 'var(--fs-subtitle)', marginBottom: 8 }}>{t('raceDetailPage.noPredictionMade')}</div>
                 {status.canPredict && (
                   <button 
                     className="btn-predict"
@@ -786,7 +786,7 @@ export default function RaceDetailPage() {
             ) : (
               <div className="no-prediction">
                 <div className="no-prediction-icon">⏳</div>
-                <div style={{ fontSize: 18 }}>{t('raceDetailPage.resultsAvailableWhenFinished')}</div>
+                <div style={{ fontSize: 'var(--fs-subtitle)' }}>{t('raceDetailPage.resultsAvailableWhenFinished')}</div>
               </div>
             )}
           </>
@@ -819,7 +819,7 @@ export default function RaceDetailPage() {
             ) : (
               <div className="no-prediction">
                 <div className="no-prediction-icon">📊</div>
-                <div style={{ fontSize: 18 }}>
+                <div style={{ fontSize: 'var(--fs-subtitle)' }}>
                   {status.isCompleted 
                       ? t('raceDetailPage.noOneParticipated') 
                       : t('raceDetailPage.standingsAvailableWhenFinished')}

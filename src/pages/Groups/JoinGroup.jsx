@@ -63,7 +63,7 @@ const CSS = `
 
 .join-title {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 36px;
+  font-size: var(--fs-display);
   font-weight: 900;
   color: var(--white);
   margin-bottom: 12px;
@@ -71,7 +71,7 @@ const CSS = `
 
 .join-subtitle {
   color: var(--muted);
-  font-size: 16px;
+  font-size: var(--fs-subtitle);
   margin-bottom: 24px;
 }
 
@@ -98,7 +98,7 @@ const CSS = `
 
 .info-label {
   color: var(--muted);
-  font-size: 13px;
+  font-size: var(--fs-small);
   text-transform: uppercase;
   letter-spacing: 1px;
 }
@@ -106,7 +106,7 @@ const CSS = `
 .info-value {
   color: var(--white);
   font-weight: 600;
-  font-size: 15px;
+  font-size: var(--fs-subtitle);
 }
 
 .btn-join {
@@ -117,7 +117,7 @@ const CSS = `
   border-radius: 12px;
   color: white;
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 18px;
+  font-size: var(--fs-subtitle);
   font-weight: 800;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -145,7 +145,7 @@ const CSS = `
   border-radius: 12px;
   color: var(--white);
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 18px;
+  font-size: var(--fs-subtitle);
   font-weight: 800;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -160,7 +160,7 @@ const CSS = `
 
 .error-message {
   color: var(--red);
-  font-size: 14px;
+  font-size: var(--fs-body);
   margin-top: 12px;
 }
 `;

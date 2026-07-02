@@ -98,14 +98,14 @@ export default function InstallPrompt() {
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{
             fontFamily: "'Barlow Condensed', sans-serif",
-            fontSize: 15, fontWeight: 800,
+            fontSize: 'var(--fs-subtitle)', fontWeight: 800,
             color: 'var(--white, #F0F0F0)',
             letterSpacing: 0.5
           }}>
              {t('pwa.installTitle')}
           </div>
           <div style={{
-            fontSize: 12,
+            fontSize: 'var(--fs-small)',
             color: 'var(--muted, rgba(240,240,240,0.4))',
             lineHeight: 1.4
           }}>
@@ -122,7 +122,7 @@ export default function InstallPrompt() {
             padding: '8px 14px', background: 'transparent',
             border: '1px solid var(--border, rgba(255,255,255,0.07))',
             borderRadius: 8, color: 'var(--muted, rgba(240,240,240,0.4))',
-            fontSize: 12, fontWeight: 700, cursor: 'pointer',
+            fontSize: 'var(--fs-small)', fontWeight: 700, cursor: 'pointer',
             fontFamily: "'Barlow Condensed', sans-serif",
             textTransform: 'uppercase', letterSpacing: 0.5
           }}>
@@ -133,7 +133,7 @@ export default function InstallPrompt() {
             <button onClick={handleDismiss} style={{
               padding: '8px 12px', background: 'transparent',
               border: 'none', color: 'var(--muted, rgba(240,240,240,0.4))',
-              fontSize: 12, cursor: 'pointer',
+              fontSize: 'var(--fs-small)', cursor: 'pointer',
               fontFamily: "'Barlow Condensed', sans-serif",
               textTransform: 'uppercase', letterSpacing: 0.5
             }}>
@@ -143,7 +143,7 @@ export default function InstallPrompt() {
               padding: '8px 16px',
               background: 'linear-gradient(135deg, #E8002D, #FF3355)',
               border: 'none', borderRadius: 8, color: 'white',
-              fontSize: 13, fontWeight: 800, cursor: 'pointer',
+              fontSize: 'var(--fs-small)', fontWeight: 800, cursor: 'pointer',
               fontFamily: "'Barlow Condensed', sans-serif",
               textTransform: 'uppercase', letterSpacing: 0.5
             }}>

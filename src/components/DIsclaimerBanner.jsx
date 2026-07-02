@@ -1,4 +1,5 @@
 import { useThemeStore } from '../stores/themeStore';
+import { useTranslation } from '../i18n';
 
 const CSS = `
 .disclaimer-banner {
@@ -18,7 +19,7 @@ const CSS = `
 
 .disclaimer-title {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 18px;
+  font-size: var(--fs-subtitle);
   font-weight: 800;
   color: #856404;
   margin-bottom: 8px;
@@ -33,7 +34,7 @@ const CSS = `
 }
 
 .disclaimer-content {
-  font-size: 14px;
+  font-size: var(--fs-body);
   color: #856404;
   line-height: 1.6;
 }
@@ -54,7 +55,7 @@ const CSS = `
   align-items: center;
   justify-content: center;
   gap: 6px;
-  font-size: 13px;
+  font-size: var(--fs-small);
   font-weight: 600;
 }
 
@@ -82,7 +83,7 @@ const CSS = `
   margin: 16px auto;
   max-width: 800px;
   text-align: center;
-  font-size: 13px;
+  font-size: var(--fs-small);
   color: #856404;
 }
 
@@ -97,13 +98,7 @@ const CSS = `
     margin: 16px;
   }
   
-  .disclaimer-title {
-    font-size: 16px;
-  }
   
-  .disclaimer-content {
-    font-size: 13px;
-  }
   
   .disclaimer-grid {
     grid-template-columns: 1fr;
@@ -118,13 +113,14 @@ const CSS = `
  */
 export default function DisclaimerBanner({ variant = 'full' }) {
   const theme = useThemeStore((state) => state.theme);
+  const { t } = useTranslation();
 
   if (variant === 'compact') {
     return (
       <>
         <style>{CSS}</style>
         <div data-theme={theme} className="disclaimer-compact">
-          ⚠️ <strong>PodioF1 es GRATIS</strong>  Solo diversión deportiva entre amigos
+          ⚠️ <strong>{t('disclaimer.titleCompact')}</strong>  {t('disclaimer.compactText')}
         </div>
       </>
     );
@@ -135,32 +131,20 @@ export default function DisclaimerBanner({ variant = 'full' }) {
       <style>{CSS}</style>
       <div data-theme={theme} className="disclaimer-banner">
         <div className="disclaimer-title">
-          ⚠️ Aviso Importante: PodioF1 es un sitio para Diversión entre amigos
+          {t('disclaimer.titleFull')}
         </div>
         <div className="disclaimer-content">
           <p style={{ marginBottom: 12, fontWeight: 600 }}>
-            PodioF1 es una plataforma <strong>100% GRATUITA</strong> de predicciones deportivas de Formula 1 para competir con amigos.
+            {t('disclaimer.intro')}
           </p>
           
           <div className="disclaimer-grid">
-            <div className="disclaimer-item no">
-              ❌ NO hay dinero
-            </div>
-            <div className="disclaimer-item no">
-              ❌ NO hay premios en efectivo
-            </div>
-            <div className="disclaimer-item no">
-              ❌ NO hay pagos requeridos
-            </div>
-            <div className="disclaimer-item yes">
-              ✅ 100% Gratis
-            </div>
-            <div className="disclaimer-item yes">
-              ✅ Solo diversión entre amigos
-            </div>
-            <div className="disclaimer-item yes">
-              ✅ Predicciones deportivas
-            </div>
+            <div className="disclaimer-item no">❌ {t('disclaimer.noMoney')}</div>
+            <div className="disclaimer-item no">❌ {t('disclaimer.noCashPrizes')}</div>
+            <div className="disclaimer-item no">❌ {t('disclaimer.noPaymentRequired')}</div>
+            <div className="disclaimer-item yes">✅ {t('disclaimer.free')}</div>
+            <div className="disclaimer-item yes">✅ {t('disclaimer.funOnly')}</div>
+            <div className="disclaimer-item yes">✅ {t('disclaimer.sportsPredictions')}</div>
           </div>
         </div>
       </div>

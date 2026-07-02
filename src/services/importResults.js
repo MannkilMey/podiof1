@@ -152,6 +152,9 @@ export async function importRaceResults(raceId, sessionKey) {
           p_prediccion_id: pred.id
         });
       }
+
+      await supabase.rpc('evaluate_badges_for_race', { p_carrera_id: raceId })
+
       
       console.log('✅ Puntos calculados');
     }

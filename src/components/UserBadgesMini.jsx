@@ -19,13 +19,13 @@ const CSS = `
   background: var(--bg2); border: 1px solid var(--border2); border-radius: 8px;
   padding: 8px 12px; white-space: nowrap; pointer-events: none; opacity: 0;
   transition: opacity 0.2s; z-index: 10; box-shadow: 0 4px 16px rgba(0,0,0,0.3);
-  font-size: 11px; color: var(--white); text-align: center;
+  font-size: var(--fs-label); color: var(--white); text-align: center;
 }
 .badge-mini-item.unlocked:hover .badge-mini-tooltip { opacity: 1; }
-.badge-mini-tooltip-name { font-weight: 700; font-family: 'Barlow Condensed', sans-serif; font-size: 12px; margin-bottom: 2px; }
-.badge-mini-tooltip-desc { color: var(--muted); font-size: 10px; }
-.badges-mini-summary { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--muted); margin-bottom: 8px; }
-.badges-mini-summary strong { color: var(--white); font-family: 'Barlow Condensed', sans-serif; font-size: 14px; }
+.badge-mini-tooltip-name { font-weight: 700; font-family: 'Barlow Condensed', sans-serif; font-size: var(--fs-small); margin-bottom: 2px; }
+.badge-mini-tooltip-desc { color: var(--muted); font-size: var(--fs-label); }
+.badges-mini-summary { display: flex; align-items: center; gap: 8px; font-size: var(--fs-label); color: var(--muted); margin-bottom: 8px; }
+.badges-mini-summary strong { color: var(--white); font-family: 'Barlow Condensed', sans-serif; font-size: var(--fs-body); }
 .badges-mini-bar { flex: 1; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; max-width: 100px; }
 .badges-mini-bar-fill { height: 100%; background: linear-gradient(90deg, var(--red), var(--gold)); border-radius: 2px; transition: width 0.4s ease; }
 `;
@@ -83,7 +83,7 @@ export default function UserBadgesMini({ userId, grupoId, showAll = false, compa
   if (!loaded) return null;
   if (!compact && unlockedCount === 0) {
     return (
-      <div style={{ fontSize: 11, color: 'var(--muted)', padding: '8px 0' }}>
+      <div style={{ fontSize: 'var(--fs-label)', color: 'var(--muted)', padding: '8px 0' }}>
         🔒 {t('badges.noneUnlocked')}
       </div>
     );
@@ -121,7 +121,7 @@ export default function UserBadgesMini({ userId, grupoId, showAll = false, compa
             );
           })}
           {remaining > 0 && (
-            <div className="badge-mini-item unlocked" style={{ fontSize: 10, color: 'var(--muted)', fontWeight: 700, fontFamily: "'Barlow Condensed'" }}>
+            <div className="badge-mini-item unlocked" style={{ fontSize: 'var(--fs-label)', color: 'var(--muted)', fontWeight: 700, fontFamily: "'Barlow Condensed'" }}>
               +{remaining}
             </div>
           )}

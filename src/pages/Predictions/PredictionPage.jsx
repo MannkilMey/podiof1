@@ -67,7 +67,7 @@ const CSS_STYLES = `
   border: none;
   color: var(--red);
   cursor: pointer;
-  font-size: 14px;
+  font-size: var(--fs-body);
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -90,7 +90,7 @@ const CSS_STYLES = `
 .theme-opt {
   padding: 6px 10px;
   cursor: pointer;
-  font-size: 15px;
+  font-size: var(--fs-subtitle);
   transition: background 0.2s;
   color: var(--muted);
   border: none;
@@ -105,7 +105,7 @@ const CSS_STYLES = `
 
 .prediction-title {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 32px;
+  font-size: var(--fs-page-title);
   font-weight: 900;
   color: var(--white);
   margin-bottom: 8px;
@@ -113,7 +113,7 @@ const CSS_STYLES = `
 
 .prediction-subtitle {
   color: var(--muted);
-  font-size: 16px;
+  font-size: var(--fs-subtitle);
   margin-bottom: 16px;
 }
 
@@ -138,7 +138,7 @@ const CSS_STYLES = `
 }
 
 .deadline-text {
-  font-size: 14px;
+  font-size: var(--fs-body);
   color: var(--white);
   font-weight: 600;
 }
@@ -153,7 +153,7 @@ const CSS_STYLES = `
 
 .instruction-title {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 18px;
+  font-size: var(--fs-subtitle);
   font-weight: 800;
   color: var(--white);
   margin-bottom: 12px;
@@ -161,7 +161,7 @@ const CSS_STYLES = `
 
 .instruction-text {
   color: var(--muted);
-  font-size: 14px;
+  font-size: var(--fs-body);
   line-height: 1.6;
 }
 
@@ -181,7 +181,7 @@ const CSS_STYLES = `
 
 .list-title {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 14px;
+  font-size: var(--fs-body);
   font-weight: 700;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -228,7 +228,7 @@ const CSS_STYLES = `
 
 .position-number {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 20px;
+  font-size: var(--fs-section-title);
   font-weight: 900;
   color: var(--white);
   min-width: 32px;
@@ -252,18 +252,18 @@ const CSS_STYLES = `
 .driver-name {
   font-weight: 600;
   color: var(--white);
-  font-size: 15px;
+  font-size: var(--fs-subtitle);
   margin-bottom: 2px;
 }
 
 .driver-team {
-  font-size: 12px;
+  font-size: var(--fs-small);
   color: var(--muted);
 }
 
 .driver-number {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 18px;
+  font-size: var(--fs-subtitle);
   font-weight: 700;
   color: var(--muted);
   min-width: 36px;
@@ -313,7 +313,7 @@ const CSS_STYLES = `
 }
 
 .bonus-label {
-  font-size: 12px;
+  font-size: var(--fs-small);
   font-weight: 600;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -327,7 +327,7 @@ const CSS_STYLES = `
   border: 1px solid var(--border);
   border-radius: 10px;
   color: var(--white);
-  font-size: 14px;
+  font-size: 16px;
   cursor: pointer;
   font-family: 'Barlow', sans-serif;
 }
@@ -345,7 +345,7 @@ const CSS_STYLES = `
   border-radius: 12px;
   color: white;
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 18px;
+  font-size: var(--fs-subtitle);
   font-weight: 800;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -372,7 +372,7 @@ const CSS_STYLES = `
   border-radius: 12px;
   color: var(--white);
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 18px;
+  font-size: var(--fs-subtitle);
   font-weight: 800;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -447,7 +447,7 @@ const CSS_STYLES = `
 
 .success-title {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 28px;
+  font-size: var(--fs-stat-secondary);
   font-weight: 900;
   color: var(--white);
   margin-bottom: 12px;
@@ -456,7 +456,7 @@ const CSS_STYLES = `
 }
 
 .success-message {
-  font-size: 16px;
+  font-size: var(--fs-subtitle);
   color: var(--muted);
   margin-bottom: 24px;
   line-height: 1.5;
@@ -473,7 +473,7 @@ const CSS_STYLES = `
   border: none;
   border-radius: 10px;
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 16px;
+  font-size: var(--fs-subtitle);
   font-weight: 800;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -514,7 +514,7 @@ const CSS_STYLES = `
   border-radius: 12px;
   display: inline-block;
   margin-bottom: 16px;
-  font-size: 16px;
+  font-size: var(--fs-subtitle);
   letter-spacing: 1px;
 }
 
@@ -527,7 +527,7 @@ const CSS_STYLES = `
 }
 
 .sprint-points-title {
-  font-size: 14px;
+  font-size: var(--fs-body);
   font-weight: 700;
   color: var(--muted);
   margin-bottom: 8px;
@@ -536,7 +536,7 @@ const CSS_STYLES = `
 }
 
 .sprint-points-list {
-  font-size: 13px;
+  font-size: var(--fs-small);
   color: var(--white);
   line-height: 1.8;
 }

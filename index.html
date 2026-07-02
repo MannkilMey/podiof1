@@ -3,10 +3,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   
   <!-- SEO -->
-  <title>PodioF1 - Predicciones de Formula 1 con Amigos</title>
-  <meta name="description" content="Compite con tus amigos prediciendo Formula 1. Crea tu grupo, invita amigos y gana puntos. 100% gratis." />
-  <meta name="keywords" content="formula 1, predicciones, fantasy f1, sports, racing, friends, competition" />
-  <meta name="author" content="PodioF1" />
+   <title>Podio — Liga de Predicciones Deportivas</title>
+  <meta name="description" content="Compite con tus amigos prediciendo carreras. Crea tu liga, invita amigos y ganà puntos. 100% gratis." />
+  <meta name="keywords" content="predicciones, liga, deportes, carreras, amigos, competencia, fantasy" />
+  <meta name="author" content="Podio" />
   <meta name="robots" content="index, follow" />
   <link rel="alternate" hreflang="es" href="https://podiof1.com/" />
   <link rel="canonical" href="https://podiof1.com/" />
@@ -14,8 +14,8 @@
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://podiof1.com/" />
-  <meta property="og:title" content="PodioF1 - Formula 1 con Amigos" />
-  <meta property="og:description" content="Compite con amigos prediciendo F1. Gratis." />
+   <meta property="og:title" content="Podio — Liga de Predicciones Deportivas" />
+  <meta property="og:description" content="Compite con amigos prediciendo carreras. Gratis." />
   <meta property="og:image" content="https://podiof1.com/og-image.png" />
   
   <!-- PWA -->
@@ -23,7 +23,7 @@
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="PodioF1" />
+  <meta name="apple-mobile-web-app-title" content="Podio" />
   <link rel="manifest" href="/manifest.json" />
   
    <!-- Lee el tema guardado ANTES de que cargue React, para que el primer pintado ya sea correcto -->
@@ -50,6 +50,21 @@
     html[data-theme="light"], html[data-theme="light"] body, html[data-theme="light"] #root {
       background: #F5F6F8;
     }
+    
+  :root {
+    /* Tipografía dinámica — escala fluida entre móvil, tablet y desktop */
+    --fs-display:       clamp(36px, 5vw,   56px);
+    --fs-page-title:    clamp(28px, 3.5vw, 40px);
+    --fs-stat-secondary:clamp(22px, 2.8vw, 32px);
+    --fs-section-title: clamp(18px, 2vw,   24px);
+    --fs-subtitle:      clamp(15px, 1.6vw, 18px);
+    --fs-body:          clamp(14px, 1.4vw, 16px);
+    --fs-small:         clamp(13px, 1.2vw, 15px);
+    --fs-label:         clamp(12px, 1.1vw, 13px);
+  }
+
+  
+
   </style>
 
   
@@ -57,6 +72,7 @@
   <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96.png" />
   <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-72.png" />
   <link rel="shortcut icon" href="/icons/icon-96.png" />
+  
 </head>
 <body>
   <div id="root"></div>

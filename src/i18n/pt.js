@@ -86,9 +86,9 @@ export default {
     accountCreated: 'Conta criada! Já pode fazer login 🏁',
     errorCreating: 'Erro ao criar conta',
     errorLogin: 'Erro ao fazer login',
-    subtitle: 'Compita com amigos prevendo F1',
+    subtitle: 'Compita com amigos fazendo previsões esportivas',
     createSubtitle: 'Crie sua conta para competir',
-    seasonSubtitle: 'Previsões F1 · Temporada 2026',
+    seasonSubtitle: 'Previsões Esportivas · Temporada 2026',
     welcomeBack: 'Bem-vindo de volta! 🏁',
     loginLoading: 'Entrando...',
     loginErrorDetail: 'Erro ao fazer login. Verifique suas credenciais.',
@@ -124,8 +124,8 @@ export default {
   // LANDING
   // ============================================
   landing: {
-    hero: 'Previsões de Fórmula 1 Grátis com Amigos',
-    heroSub: 'Crie seu grupo de previsões F1, convide amigos e compita prevendo os resultados de cada Grande Prêmio.',
+    hero: 'Previsões Esportivas Grátis com Amigos',
+    heroSub: 'Crie seu grupo de previsões, convide amigos e compita prevendo os resultados de cada corrida.',
     freeTag: '100% Grátis · Previsões ao Vivo',
     startFree: 'Começar Grátis',
     haveAccount: 'Já Tenho Conta'
@@ -135,7 +135,7 @@ export default {
   // APP ONBOARDING
   // ============================================
   appOnboarding: {
-    slide1Title: 'Preveja a F1',
+    slide1Title: 'Faça suas Previsões',
     slide1Sub: 'Monte seu top 10 antes de cada corrida e prove que sabe mais que seus amigos',
     slide2Title: 'Compita em Grupo',
     slide2Sub: 'Crie grupos privados, convide amigos e acompanhe o ranking em tempo real',
@@ -160,14 +160,13 @@ export default {
     active: 'ativos',
     admin: 'Admin',
     creator: 'Criador',
-    groupTypeOfficial: 'Oficial F1',
     groupTypeFixedPoints: 'Pontuação Fixa',
     groupTypeCustom: 'Personalizado',
     themeDark: 'Escuro',
     themeLight: 'Claro',
     myAccount: 'Minha conta',
     defaultUserName: 'Usuário',
-    groupTypeOfficial: 'Oficial F1',
+    groupTypeOfficial: 'Sistema Oficial',
     groupTypeFixedPoints: 'Pontuação Fixa',
     groupTypeCustom: 'Personalizado'
   },
@@ -278,8 +277,75 @@ prediction: {
     seasonProgress: 'Progresso da Temporada {{year}}',
     racesCount: '{{completed}} / {{total}} corridas',
     racesRemaining: '{{count}} corridas restantes',
-    seasonComplete: '✅ Temporada concluída'
+    seasonComplete: '✅ Temporada concluída',
+    myInsurance: 'Meu Seguro',
+    dangerZone: 'Zona de perigo',
+    deleteAccountDesc: 'Ao excluir sua conta, todos os seus dados serão removidos permanentemente. Esta ação não pode ser desfeita.',
+    deleteAccountBtn: 'Excluir minha conta'
   },
+  disclaimer: {
+  titleFull: '⚠️ Aviso Importante: Podio é um site para diversão entre amigos',
+  titleCompact: 'Podio é GRATUITO',
+  intro: 'Podio é uma plataforma {{bold_start}}100% GRATUITA{{bold_end}} de previsões esportivas para competir com amigos.',
+  compactText: 'Apenas diversão esportiva entre amigos',
+  noMoney: 'NÃO há dinheiro',
+  noCashPrizes: 'NÃO há premiações em dinheiro',
+  noPaymentRequired: 'NÃO há pagamentos exigidos',
+  free: '100% Gratuito',
+  funOnly: 'Apenas diversão entre amigos',
+  sportsPredictions: 'Previsões esportivas'
+},
+howItWorks: {
+  title: 'Como Funciona o Podio',
+  subtitle: 'Aprenda a criar seu grupo de previsões, convidar seus amigos e começar a competir em 5 passos simples.',
+  step1Title: 'Crie sua Conta Gratuita',
+  step1Desc1: 'Cadastre-se no Podio em menos de 1 minuto. Você só precisa do seu email e uma senha. Sem cartão de crédito, sem custos ocultos e sem aplicativo para baixar.',
+  step1Desc2: 'Depois de se cadastrar, confirme seu email e você já estará pronto para criar seu primeiro grupo de previsões.',
+  step1TipLabel: '💡 Dica:',
+  step1Tip: 'Use um email que você verifique com frequência. O Podio enviará lembretes antes de cada corrida para você não esquecer de fazer sua previsão.',
+  step2Title: 'Crie seu Grupo de Previsões',
+  step2Desc1: 'Clique em "Criar Grupo" e personalize sua liga. Dê um nome criativo ao seu grupo (por exemplo: "Turma do Café"). Escolha a temporada e selecione o sistema de pontos que preferir.',
+  step2Desc2Label: 'Sistemas de pontos disponíveis:',
+  step2SystemAccuracyLabel: 'Precisão:',
+  step2SystemAccuracy: 'Mais pontos por previsões exatas de posição',
+  step2SystemBalancedLabel: 'Equilibrado:',
+  step2SystemBalanced: 'Mistura entre precisão e acertos de participante',
+  step2SystemLiberalLabel: 'Liberal:',
+  step2SystemLiberal: 'Mais pontos por acertar participantes, menos por posição exata',
+  step2TipLabel: '💡 Dica:',
+  step2Tip: 'Se for seu primeiro grupo, use o sistema "Equilibrado". É o mais justo para principiantes e especialistas. Você pode criar vários grupos com sistemas diferentes para testar qual prefere.',
+  step3Title: 'Convide seus Amigos',
+  step3Desc1: 'Depois de criar seu grupo, você receberá um código de convite único. Compartilhe com seus amigos via WhatsApp, email ou redes sociais. Eles só precisam clicar no link, criar uma conta (se ainda não tiverem) e entrarão automaticamente no seu grupo.',
+  step3Desc2: 'Não há limite de membros. Convide 5 amigos ou 50, você decide. Quanto mais participantes, mais emocionante a competição.',
+  step3TipLabel: '💡 Dica:',
+  step3Tip: 'Convide pessoas que realmente acompanhem o esporte. A competição é mais divertida quando todos estão engajados. Você pode criar grupos separados: um para especialistas e outro para novatos.',
+  step4Title: 'Faça sua Previsão Antes de Cada Corrida',
+  step4Desc1: 'Antes de cada corrida, entre no Podio e preveja quem vai terminar no top 10. Arraste e solte os participantes na ordem que você acha correta. Pense estrategicamente: quem vai dominar? Haverá surpresas?',
+  step4Desc2: 'Você tem até 2 horas antes da corrida para fazer sua previsão (esse tempo pode ser personalizado pelo administrador). Você pode editar sua previsão quantas vezes quiser antes do prazo.',
+  step4TipLabel: '💡 Dica:',
+  step4Tip: 'Nem sempre aposte nos favoritos. Às vezes um "azarão" pode surpreender e te dar muitos pontos se ninguém mais previu. Confira os treinos e a classificação antes de decidir.',
+  step5Title: 'Ganhe Pontos e Suba na Classificação',
+  step5Desc1: 'Depois de cada corrida, o Podio calcula automaticamente seus pontos comparando sua previsão com o resultado oficial. Você receberá um email com sua pontuação e verá sua posição na classificação do grupo.',
+  step5Desc2Label: 'Como os pontos são atribuídos:',
+  step5Point1: 'Previsão exata de posição: Pontos máximos (ex: 10 pts)',
+  step5Point2: 'Participante correto, posição errada: Pontos parciais (ex: 5 pts)',
+  step5Point3: 'Participante errado: 0 pontos',
+  step5Desc3: 'A competição continua durante toda a temporada. Quem será o campeão do seu grupo no final do ano? Quem terá a sequência mais longa de acertos? Quem fará a virada mais épica?',
+  step5TipLabel: '💡 Dica:',
+  step5Tip: 'Não desanime se começar mal. Tudo pode acontecer. Uma boa sequência de 3-4 corridas pode te colocar entre os primeiros. A consistência ganha campeonatos.',
+  ctaTitle: 'Pronto para Começar?',
+  ctaSubtitle: 'Crie sua conta gratuita agora e forme seu grupo de previsões. A próxima corrida está chegando.',
+  ctaButton: '🏁 Criar Conta Gratuita',
+  faqTitle: 'Perguntas Frequentes',
+  faq1Q: 'Posso mudar o sistema de pontos depois de criar o grupo?',
+  faq1A: 'Só o administrador pode mudar o sistema de pontos, e apenas antes do início da temporada ou se ainda não houver previsões registradas.',
+  faq2Q: 'O que acontece se eu esquecer de fazer minha previsão?',
+  faq2A: 'Você simplesmente não ganha pontos naquela corrida, mas continua na competição. O Podio envia lembretes 24 horas e 2 horas antes de cada corrida para ajudar você a não esquecer.',
+  faq3Q: 'Posso ver as previsões de outras pessoas antes de fazer a minha?',
+  faq3A: 'Não. As previsões ficam ocultas até o prazo se encerrar. Isso garante que cada pessoa faça sua previsão de forma independente e honesta.',
+  faq4Q: 'Como os empates são resolvidos?',
+  faq4A: 'Se duas ou mais pessoas tiverem a mesma pontuação no final da temporada, ganha quem tiver mais acertos exatos (previsões de posição perfeita). Se ainda houver empate, ganha quem tiver mais acertos de participante.'
+},
 
   // ============================================
   // TABS
@@ -362,7 +428,7 @@ prediction: {
     amountPerPerson: 'Valor por pessoa',
     referenceUnit: 'Unidade de referência',
     distribution: 'Divisão PodioPoints',
-    disclaimer: 'O PodioF1 não gerencia nem transfere dinheiro real.',
+    disclaimer: 'O Podio não gerencia nem transfere dinheiro real.',
     estimatedTotal: 'Total estimado',
     saveConfig: 'Salvar configuração',
     configSaved: 'Configuração de PodioPoints salva',
@@ -372,7 +438,7 @@ prediction: {
     currentProjection: 'Projeção Atual',
     live: 'EM TEMPO REAL',
     webOnlyConfig: 'Esta configuração está disponível na versão web.',
-    onfigDescription: 'Configure o sistema de pontos informativo do grupo. O PodioF1 não gerencia dinheiro, apenas exibe a informação.',
+    onfigDescription: 'Configure o sistema de pontos informativo do grupo. O Podio não gerencia dinheiro, apenas exibe a informação.',
     errorSavingPot: 'Erro ao salvar a configuração do PodioPoints'
   },
 
@@ -381,7 +447,7 @@ prediction: {
   // ============================================
   createGroup: {
     title: 'Criar Novo Grupo',
-    subtitle: 'Configure seu grupo de previsões F1',
+    subtitle: 'Configure seu grupo de previsões',
     name: 'Nome do Grupo',
     season: 'Temporada',
     positions: 'Posições para prever',
@@ -396,7 +462,7 @@ prediction: {
     includeSprintsSub: 'A temporada 2026 terá 6 corridas Sprint com formato e pontuação especiais',
     sprintPositions: 'Posições Sprint',
     sprintPoints: 'Sistema de Pontos Sprint',
-    scoringSystem: 'Sistema de Pontuação F1 Oficial',
+    scoringSystem: 'Sistema de Pontuação Oficial',
     dualScoring: 'Pontos por piloto sem posição exata',
     dualScoringSub: 'Concede pontos quando você acerta o piloto mesmo que não esteja na posição exata, e dá um bônus extra quando você acerta os dois.',
     bonusOptions: 'Bônus Opcionais (Apenas Corridas)',
@@ -409,18 +475,18 @@ prediction: {
     top3: 'Top 3',
     top5: 'Top 5',
     top10: 'Top 10',
-    top8Official: 'Top 8 (oficial F1)',
+    top8Official: 'Top 8 (sistema oficial)',
     distAllToWinner: '(tudo para o vencedor)',
     dualExampleLabel: 'Exemplo:',
     dualExampleText: 'Prever {{driver}} em {{position}}° lugar',
-    namePlaceholder: 'Meu Grupo F1',
+    namePlaceholder: 'Meu Grupo de Previsões',
     dualExampleCase1: 'Se chegar em 2° → 5 pontos (piloto correto)',
     dualExampleCase2: 'Se chegar em 1° → 25 + 10 = 35 pontos (exato + bônus)',
     dist602515: '🥇 60% · 🥈 25% · 🥉 15%',
     dist503020: '🥇 50% · 🥈 30% · 🥉 20%',
     dist702010: '🥇 70% · 🥈 20% · 🥉 10%',
     dist100: '🥇 100%',
-    officialScoringTitle: 'Sistema de Pontuação F1 Oficial',
+    officialScoringTitle: 'Sistema de Pontuação Oficial',
     groupLimitReachedToast: 'Você atingiu o limite de 1 grupo criado no plano gratuito.',
   },
 
@@ -550,8 +616,6 @@ prediction: {
     favoriteDriverSub: 'Torça por ele em cada corrida!',
     howWatch: '📺 Como você assiste às corridas?',
     howWatchSub: 'Você pode selecionar várias opções',
-    howWatchOptions: ['TV aberta', 'TV a cabo/satélite', 'F1 TV Pro', 'Streaming pirata', 'No circuito', 'Resumos depois'],
-    sinceWhen: '📅 Há quanto tempo acompanha a F1?',
     sinceWhenSub: 'Queremos te conhecer melhor',
     sinceWhenOptions: ['Menos de 1 ano', '1-3 anos', '3-5 anos', '5-10 anos', 'Mais de 10 anos', 'Minha vida toda'],
     hasVehicle: '🚗 Você tem veículo próprio?',
@@ -563,6 +627,23 @@ prediction: {
     savingBtn: 'Salvando...',
     of: 'de'
   },
+  support: {
+  backToHome: '← Voltar ao início',
+  title: 'Suporte',
+  subtitle: 'Tem um problema ou uma dúvida? Estamos aqui para ajudar.',
+  contactLabel: 'Escreva para nós diretamente',
+  faqSectionTitle: 'Perguntas Frequentes',
+  faq1Q: 'Como crio um grupo de previsões?',
+  faq1A: 'Entre no app, toque em "Criar grupo" na tela principal, e escolha o nome, a quantidade de posições a prever e o sistema de pontos. É gerado um código de convite que você pode compartilhar com seus amigos.',
+  faq2Q: 'Como convido outras pessoas para o meu grupo?',
+  faq2A: 'No painel de administração do seu grupo, toque em "Compartilhar grupo" para copiar o link de convite, ou compartilhe diretamente o código que aparece na tela do grupo.',
+  faq3Q: 'Esqueci minha senha, o que faço?',
+  faq3A: 'Na tela de login, toque em "Esqueceu sua senha?" e digite seu e-mail. Você receberá um link para criar uma nova senha.',
+  faq4Q: 'O que acontece se eu não enviar minha previsão a tempo?',
+  faq4A: 'Cada grupo tem um horário limite antes de cada corrida. Se você não enviar sua previsão antes desse horário, não vai somar pontos naquela corrida, mas pode continuar participando das seguintes.',
+  faq5Q: 'O app processa pagamentos ou dinheiro real?',
+  faq5A: 'Não. O Podio não processa pagamentos. O recurso "PodioPoints" é apenas um acordo informal entre os membros de um grupo, registrado no app como referência — o dinheiro é tratado por fora, entre vocês.'
+},
 
   // ============================================
   // NOTIFICATIONS
@@ -660,7 +741,7 @@ prediction: {
     fastestLapInPredictions: 'nas previsões que o incluíram.',
     clearBtn: 'Limpar',
     currentFastestLabel: 'Volta mais rápida',
-    pozoConfigInfo: 'Configure o pozo informativo do grupo. O PodioF1 não gerencia dinheiro, apenas exibe a informação.',
+    pozoConfigInfo: 'Configure o pozo informativo do grupo. O Podio não gerencia dinheiro, apenas exibe a informação.',
     potVisibleNote: 'Os membros verão o valor e a distribuição no painel',
     potMembersBreakdown: '({{count}} membros × {{amount}})',
     savingPot: 'Salvando...',
@@ -668,7 +749,7 @@ prediction: {
     loadingRaces: 'Carregando corridas...',
     noRacesScheduled: 'Não há corridas programadas ou finalizadas',
     enablePot: 'Habilitar Pozo',
-    manageResultsSubLong: 'Insira os resultados das corridas manualmente (ideal para Sprints ou quando o OpenF1 não tem dados).',
+    manageResultsSubLong: 'Insira os resultados das corridas manualmente (ideal para Sprints ou quando o OpenF não tem dados).',
     transferOwnership: 'Transferir Titularidade',
     confirmTransferTitle: 'Transferir a titularidade do grupo?',
     confirmTransferMsg: '{{name}} se tornará o novo titular do grupo e continuará como administrador. Esta ação não pode ser desfeita diretamente.',
@@ -910,13 +991,13 @@ settings: {
   themeDescription: 'Escolha entre tema claro ou escuro',
   information: 'Informações',
   versionLabel: 'Versão',
-  f1Season: 'Fórmula 1 {{year}}',
+  f1Season: 'Temporada {{year}}',
   languageLabel: 'Idioma',
   languageDescription: 'Escolha o idioma do aplicativo',
 },
 deleteAccount: {
   confirmWord: 'EXCLUIR',
-  deleteError: 'Erro ao excluir a conta. Tente novamente ou contate privacy@podiof1.com',
+  deleteError: 'Erro ao excluir a conta. Tente novamente ou contate privacy@podio.lat',
   title: 'Excluir Minha Conta',
   subtitle: 'Antes de continuar, leia com atenção o que significa excluir sua conta.',
   irreversibleWarning: 'Esta ação é irreversível',
@@ -942,7 +1023,7 @@ deleteAccount: {
 },
 racePredictions: {
   errorLoading: 'Erro ao carregar as previsões',
-  f1PointsColumn: 'Pontos F1',
+  f1PointsColumn: 'Pontos Oficiais',
   fastestLapColumn: 'Volta Mais Rápida',
   correctDriverColumn: 'Piloto Correto',
   userRankingSheet: 'Classificação de Usuários',
@@ -975,7 +1056,7 @@ racePredictions: {
   userRankingTitle: 'Classificação de Usuários',
   youTag: 'Você',
   correctDriversCount: '{{count}} pilotos corretos',
-  officialResultF1: 'Resultado Oficial F1',
+  officialResultF1: 'Resultado Oficial',
   fastestLapTitle: 'Volta Mais Rápida',
   driverLabelCaps: 'PILOTO',
   noFastestLapInfo: 'Não há informação de volta mais rápida',
@@ -993,6 +1074,30 @@ racePredictions: {
   shareMyResultBtn: 'Compartilhar meu Resultado',
   exactBonusValueAlt: '+{{points}} pontos adicionais por acertar a posição exata',
   fastestLapBonusValueAlt: '+{{points}} pontos por acertar o piloto com a volta mais rápida',
+  noPredictionLockTitle: 'Você precisa ter enviado sua previsão', 
+  noPredictionLockMsg: 'Para ver as previsões dos outros, você precisa ter enviado a sua para esta corrida primeiro.'
+},
+seguroCard: {
+  tituloActivo: '🛡️ Seguro de Previsão ativo neste grupo',
+  subtituloActivo: 'Configure sua previsão de backup no seu perfil.',
+  cta: 'Configurar'
+},
+seguro: {
+  pageTitle: 'Seguro de Previsão', loading: 'Carregando...', loadError: 'Erro ao carregar',
+  statusActive: '🛡️ Seguro ativo', statusActiveSub: 'Será usado automaticamente se você não enviar sua previsão a tempo',
+  statusInactive: 'Seguro inativo', statusInactiveSub: 'Configure sua previsão de backup e ative-o',
+  creditsWord: 'créditos', costPerUse: 'Custo: {{cost}} créditos por uso',
+  activateBtn: 'Ativar Seguro', deactivateBtn: 'Desativar',
+  instructionsTitle: 'Sua previsão de backup', instructionsText: 'Configure seu Top {{max}} ideal. Se você não enviar sua previsão real a tempo em alguma corrida, esta será usada automaticamente.',
+  yourBackup: 'Seu backup ({{current}}/{{max}})', selectFromList: 'Escolha pilotos na lista à direita',
+  availableDrivers: 'Pilotos disponíveis', fastestLapBonus: 'Volta mais rápida', selectDriverPlaceholder: 'Escolha um piloto',
+  saveBtn: 'Salvar backup', saving: 'Salvando...', savedSuccess: 'Backup salvo',
+  activatedSuccess: 'Seguro ativado', deactivatedSuccess: 'Seguro desativado',
+  exactDriversError: 'Você precisa escolher exatamente {{max}} pilotos', selectFastestDriverError: 'Escolha um piloto para volta mais rápida',
+  needsPremiumError: 'Você precisa de um PolePass ativo para usar o Seguro', saveError: 'Erro ao salvar',
+  notEnabledForGroup: 'O Seguro de Previsão ainda não está habilitado neste grupo',
+  consentTitle: 'Ativar seu Seguro?', consentText: 'Se você não enviar sua previsão a tempo em alguma corrida, usaremos este backup automaticamente e descontaremos {{cost}} créditos do seu saldo.',
+  consentConfirm: 'Sim, ativar'
 },
 groupDetail: {
   errorLoadingGroup: 'Erro ao carregar o grupo',
@@ -1021,7 +1126,7 @@ groupDetail: {
   administratorWord: 'Administrador',
   managePredictionsLabel: 'Gerenciar Previsões',
   leaveGroupBtn: 'Sair do Grupo',
-  f1OfficialValue: 'F1 Oficial',
+  f1OfficialValue: 'Sistema Oficial',
   hoursBefore: '{{hours}}h antes',
   noMembersTitle: 'Nenhum membro',
   noMembersMessage: 'Compartilhe o link de convite para que outros entrem',
@@ -1057,7 +1162,7 @@ paywallGate: {
     unlimited_groups: { title: 'Grupos Ilimitados', description: 'Crie e entre em quantos grupos quiser, sem limite.'},
     no_ads: { title: 'Sem Publicidade', description: 'Aproveite o app sem banners ou interrupções.' },
     custom_profile: { title: 'Perfil Personalizado', description: 'Personalize seu perfil com cores e estilos exclusivos.' },
-    badge_supporter: { title: 'Badge Supporter', description: 'Badge exclusivo que mostra seu apoio ao PodioF1.' }
+    badge_supporter: { title: 'Badge Supporter', description: 'Badge exclusivo que mostra seu apoio ao Podio.' }
   }
 },
 superAdmin: {
@@ -1065,7 +1170,7 @@ superAdmin: {
   errorLoadingData: 'Erro ao carregar dados',
   loadingPanel: 'Carregando painel...',
   panelTitle: 'Painel de Super Admin',
-  panelSubtitle: 'Administração geral do PodioF1',
+  panelSubtitle: 'Administração geral do Podio',
   statUsers: 'Usuários',
   statGroups: 'Grupos',
   statPredictions: 'Previsões',
@@ -1092,8 +1197,8 @@ superAdmin: {
 sharePrediction: {
   errorGeneratingImage: 'Erro ao gerar imagem',
   imageDownloaded: 'Imagem baixada!',
-  shareTitlePrediction: 'Minha previsão no PodioF1',
-  shareTitleResult: 'Meu resultado no PodioF1',
+  shareTitlePrediction: 'Minha previsão no Podio',
+  shareTitleResult: 'Meu resultado no Podio',
   shareTextGeneral: 'Veja os resultados de {{race}}!',
   shareTextPrediction: 'Veja minha previsão para {{race}}!',
   shareTextResult: 'Veja meu resultado de {{race}}!',
@@ -1124,7 +1229,7 @@ sharePrediction: {
   // PWA
   // ============================================
   pwa: {
-    installTitle: 'Instale o PodioF1',
+    installTitle: 'Instale o Podio',
     installSubAndroid: 'Acesso rápido pela tela inicial',
     installSubIOS: 'Toque no ícone de compartilhar e depois "Adicionar à Tela Inicial"',
     installBtn: 'Instalar',
@@ -1136,7 +1241,7 @@ sharePrediction: {
   // PREMIUM
   // ============================================
   premium: {
-    title: 'PodioF1 PolePass',
+    title: 'Podio PolePass',
     subtitle: 'Leve sua experiência para o próximo nível',
     subscribe: 'Assinar Agora',
     monthly: 'Mensal',

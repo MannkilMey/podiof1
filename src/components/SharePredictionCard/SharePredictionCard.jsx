@@ -89,7 +89,7 @@ html, body {
 
 .share-modal-title {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 24px;
+  font-size: var(--fs-section-title);
   font-weight: 900;
   color: var(--white);
   text-transform: uppercase;
@@ -384,7 +384,7 @@ html, body {
 
 .watermark-url {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 16px;
+  font-size: var(--fs-subtitle);
   font-weight: 700;
   color: #E8002D;
   letter-spacing: 1px;
@@ -402,7 +402,7 @@ html, body {
   border: none;
   border-radius: 10px;
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 16px;
+  font-size: var(--fs-subtitle);
   font-weight: 800;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -599,7 +599,7 @@ export default function SharePredictionCard({ type, data, raceName, user, onClos
 
           {/* Card que se convertirá en imagen - SIEMPRE DARK */}
           <div ref={cardRef} className="share-card">
-            <div className="card-logo">PODIOF1</div>
+            <div className="card-logo">PODIO</div>
 
             <div className="card-header">
               <div className="card-title">{getCardTitle()}</div>

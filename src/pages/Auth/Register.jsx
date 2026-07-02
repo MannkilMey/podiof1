@@ -56,7 +56,7 @@ const CSS = `
   border-radius: 8px;
   padding: 8px 16px;
   color: var(--white);
-  font-size: 14px;
+  font-size: var(--fs-body);
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
@@ -129,7 +129,7 @@ const CSS = `
 
 .logo-text {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 28px;
+  font-size: var(--fs-stat-secondary);
   font-weight: 900;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -141,7 +141,7 @@ const CSS = `
 }
 
 .logo-subtitle {
-  font-size: 13px;
+  font-size: var(--fs-small);
   color: var(--muted);
   margin-top: 6px;
 }
@@ -152,7 +152,7 @@ const CSS = `
   border-radius: 8px;
   padding: 12px;
   color: var(--red);
-  font-size: 13px;
+  font-size: var(--fs-small);
   margin-bottom: 18px;
 }
 
@@ -169,7 +169,7 @@ const CSS = `
 
 .form-label {
   display: block;
-  font-size: 12px;
+  font-size: var(--fs-small);
   font-weight: 600;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -184,7 +184,7 @@ const CSS = `
   border: 1px solid var(--border);
   border-radius: 9px;
   color: var(--white);
-  font-size: 14px;
+  font-size: 16px;
   font-family: 'Barlow', sans-serif;
   transition: border-color 0.2s;
 }
@@ -205,7 +205,7 @@ const CSS = `
   border: 1px solid var(--border);
   border-radius: 9px;
   color: var(--white);
-  font-size: 14px;
+  font-size: 16px;
   font-family: 'Barlow', sans-serif;
   cursor: pointer;
   transition: border-color 0.2s;
@@ -229,7 +229,7 @@ const CSS = `
   border-radius: 10px;
   color: white;
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 16px;
+  font-size: var(--fs-subtitle);
   font-weight: 800;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -256,7 +256,7 @@ const CSS = `
   text-align: center;
   margin: 20px 0;
   color: var(--muted);
-  font-size: 13px;
+  font-size: var(--fs-small);
   position: relative;
 }
 
@@ -279,7 +279,7 @@ const CSS = `
 
 .login-link {
   text-align: center;
-  font-size: 14px;
+  font-size: var(--fs-body);
   color: var(--muted);
 }
 
@@ -307,7 +307,6 @@ const CSS = `
   .back-btn-top {
     top: 12px;
     left: 12px;
-    font-size: 12px;
     padding: 6px 12px;
   }
   
@@ -326,8 +325,6 @@ export default function Register() {
     nombre: '',
     apellido: '',
     pais: '',
-    fecha_nacimiento: '',
-    sexo: '',
     termsAccepted: false
   })
   const [loading, setLoading] = useState(false)
@@ -386,8 +383,6 @@ export default function Register() {
         nombre: formData.nombre,
         apellido: formData.apellido,
         pais: formData.pais,
-        fecha_nacimiento: formData.fecha_nacimiento || null,
-        sexo: formData.sexo || null,
         terms_accepted_at: new Date().toISOString(),
         terms_version: '1.0',
       })
@@ -438,9 +433,9 @@ export default function Register() {
         <div className="register-box">
           {/* Logo Area */}
           <div className="logo-area">
-            <img src="/logo.png" alt="PodioF1" style={{width: 56, height: 56, borderRadius: 12, objectFit: 'cover'}} />
+            <img src="/logo.png" alt="Podio" style={{width: 56, height: 56, borderRadius: 12, objectFit: 'cover'}} />
             <div className="logo-text">
-              Podio<span className="accent">F1</span>
+              Podio
             </div>
             <div className="logo-subtitle">
               {t('auth.registerSubtitle')}
@@ -537,41 +532,12 @@ export default function Register() {
               </select>
             </div>
 
-            <div className="form-group-row">
-             <div>
-                <label className="form-label">{t('auth.birthDate')}</label>
-                <input
-                  type="date"
-                  name="fecha_nacimiento"
-                  value={formData.fecha_nacimiento}
-                  onChange={handleChange}
-                  required
-                  className="form-input"
-                  max={new Date().toISOString().split('T')[0]}
-                  style={{ boxSizing: 'border-box' }}
-                />
-              </div>
-              <div>
-                <label className="form-label">{t('auth.gender')}</label>
-                <select
-                  name="sexo"
-                  value={formData.sexo}
-                  onChange={handleChange}
-                  className="form-select"
-                >
-                  <option value="">{t('auth.genderPreferNotSay')}</option>
-                  <option value="M">{t('auth.genderMale')}</option>
-                  <option value="F">{t('auth.genderFemale')}</option>
-                  <option value="Otro">{t('auth.genderOther')}</option>
-                </select>
-              </div>
-            </div>
             <label style={{
               display: 'flex',
               alignItems: 'flex-start',
               gap: 10,
               cursor: 'pointer',
-              fontSize: 13,
+              fontSize: 'var(--fs-small)',
               color: 'var(--muted)',
               marginBottom: 16,
               lineHeight: 1.5

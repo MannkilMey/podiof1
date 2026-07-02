@@ -99,13 +99,13 @@ export default function PozoCard({ groupId, leaderboard }) {
       }}>
         <div>
           <div style={{
-            fontFamily: "'Barlow Condensed', sans-serif", fontSize: 18,
+            fontFamily: "'Barlow Condensed', sans-serif", fontSize: 'var(--fs-subtitle)',
             fontWeight: 800, color: 'var(--white)', textTransform: 'uppercase',
             letterSpacing: 1, display: 'flex', alignItems: 'center', gap: 8
           }}>
             🏁 {t('podioPoints.title')}
           </div>
-          <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 4 }}>
+          <div style={{ fontSize: 'var(--fs-small)', color: 'var(--muted)', marginTop: 4 }}>
              {t('podioPoints.participants', { count: members })}
              {!isNative && ` · ${t('podioPoints.perPerson', { amount: formatMoney(montoPersona, moneda, getDateLocale(locale)) })}`}
           </div>
@@ -135,7 +135,7 @@ export default function PozoCard({ groupId, leaderboard }) {
 
           return (
             <div key={pos} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <span style={{ fontSize: 20, width: 32, textAlign: 'center', flexShrink: 0 }}>
+              <span style={{ fontSize: 'var(--fs-section-title)', width: 32, textAlign: 'center', flexShrink: 0 }}>
                 {medal}
               </span>
               <div style={{ flex: 1 }}>
@@ -144,14 +144,14 @@ export default function PozoCard({ groupId, leaderboard }) {
                   marginBottom: 4
                 }}>
                   <span style={{
-                    fontFamily: "'Barlow Condensed', sans-serif", fontSize: 14,
+                    fontFamily: "'Barlow Condensed', sans-serif", fontSize: 'var(--fs-body)',
                     fontWeight: 700, color: 'var(--white)'
                   }}>
                     {t('podioPoints.place', { pos })} — {pct}%
                   </span>
                   {!isNative && (
                   <span style={{
-                    fontFamily: "'Barlow Condensed', sans-serif", fontSize: 16,
+                    fontFamily: "'Barlow Condensed', sans-serif", fontSize: 'var(--fs-subtitle)',
                     fontWeight: 900, color: barColor
                   }}>
                     {formatMoney(amount, moneda, getDateLocale(locale))}
@@ -175,13 +175,13 @@ export default function PozoCard({ groupId, leaderboard }) {
       {leaderboard && leaderboard.length > 0 && (
         <div style={{ marginBottom: 16 }}>
           <div style={{
-            fontSize: 11, fontWeight: 700, letterSpacing: 1,
+            fontSize: 'var(--fs-label)', fontWeight: 700, letterSpacing: 1,
             textTransform: 'uppercase', color: 'var(--muted)',
             marginBottom: 10, display: 'flex', alignItems: 'center', gap: 6
           }}>
             🏆 {t('podioPoints.currentProjection')}
             <span style={{
-              fontSize: 9, padding: '2px 6px', borderRadius: 4,
+              fontSize: 'var(--fs-label)', padding: '2px 6px', borderRadius: 4,
               background: 'var(--bg3)', color: 'var(--muted)',
               fontWeight: 600, letterSpacing: 0
             }}>
@@ -205,22 +205,22 @@ export default function PozoCard({ groupId, leaderboard }) {
                   borderRadius: 8, border: `1px solid ${posNum === 1 ? 'rgba(201,168,76,0.3)' : 'var(--border)'}`,
                   transition: 'all 0.2s'
                 }}>
-                  <span style={{ fontSize: 20, flexShrink: 0 }}>{medal}</span>
+                  <span style={{ fontSize: 'var(--fs-section-title)', flexShrink: 0 }}>{medal}</span>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{
-                      fontSize: 14, fontWeight: 700, color: 'var(--white)',
+                      fontSize: 'var(--fs-body)', fontWeight: 700, color: 'var(--white)',
                       overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'
                     }}>
                       {user.nombre}
                     </div>
-                    <div style={{ fontSize: 11, color: 'var(--muted)' }}>
+                    <div style={{ fontSize: 'var(--fs-label)', color: 'var(--muted)' }}>
                       {t('common.pointsCount', { count: Math.round(user.puntos) })} · {t('common.exactCount', { count: user.exactos })}
                     </div>
                   </div>
                   {!isNative && (
                   <div style={{
                     fontFamily: "'Barlow Condensed', sans-serif",
-                    fontSize: 16, fontWeight: 900, color: barColor,
+                    fontSize: 'var(--fs-subtitle)', fontWeight: 900, color: barColor,
                     flexShrink: 0
                   }}>
                     {formatMoney(amount, moneda, getDateLocale(locale))}
@@ -235,7 +235,7 @@ export default function PozoCard({ groupId, leaderboard }) {
       {/* Disclaimer */}
       <div style={{
         background: 'var(--bg3)', border: '1px solid var(--border)',
-        borderRadius: 8, padding: '10px 14px', fontSize: 10,
+        borderRadius: 8, padding: '10px 14px', fontSize: 'var(--fs-label)',
         color: 'var(--muted)', lineHeight: 1.5, textAlign: 'center'
       }}>
         ⚠️{t('podioPoints.disclaimer')}
