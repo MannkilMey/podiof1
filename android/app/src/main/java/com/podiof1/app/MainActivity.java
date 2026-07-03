@@ -1,4 +1,4 @@
-package com.podiof1.app;
+package com.podio.app;
 
 import com.getcapacitor.BridgeActivity;
 

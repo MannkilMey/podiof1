@@ -6,7 +6,7 @@
 
   <!-- Página principal -->
   <url>
-    <loc>https://podiof1.com/</loc>
+    <loc>https://podio.lat/</loc>
     <lastmod>2024-12-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
@@ -14,7 +14,7 @@
   
   <!-- Landing -->
   <url>
-    <loc>https://podiof1.com/landing</loc>
+    <loc>https://podio.lat/landing</loc>
     <lastmod>2024-12-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
@@ -22,7 +22,7 @@
   
   <!-- Login -->
   <url>
-    <loc>https://podiof1.com/login</loc>
+    <loc>https://podio.lat/login</loc>
     <lastmod>2024-12-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -30,13 +30,13 @@
   
   <!-- Register -->
   <url>
-    <loc>https://podiof1.com/register</loc>
+    <loc>https://podio.lat/register</loc>
     <lastmod>2024-12-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
     <url>
-    <loc>https://podiof1.com/como-funciona</loc>
+    <loc>https://podio.lat/como-funciona</loc>
     <lastmod>2024-12-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
@@ -44,7 +44,7 @@
   
   <!-- Forgot Password -->
   <url>
-    <loc>https://podiof1.com/forgot-password</loc>
+    <loc>https://podio.lat/forgot-password</loc>
     <lastmod>2024-12-01</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>

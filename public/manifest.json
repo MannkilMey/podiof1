@@ -1,8 +1,8 @@
 {
   "id": "/",
-  "name": "PodioF1 - Predicciones de Formula 1",
-  "short_name": "PodioF1",
-  "description": "Compite con tus amigos prediciendo Formula 1. Crea tu grupo, invita amigos y gana puntos.",
+  "name": "Podio - Predicciones de carreras con amigos",
+  "short_name": "Podio",
+  "description": "Compite con tus amigos prediciendo carreras deportivas. Crea tu grupo, invita amigos y gana puntos.",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",

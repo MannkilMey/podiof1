@@ -1,11 +1,11 @@
-# 🏎️ PodioF1
+# 🏎️ Podio
 
-Sistema de predicciones para Formula 1.
+Sistema de predicciones para carreras.
 
 ## 🚀 Features
 
 - Crear y unirse a grupos de predicciones
-- Sistema de puntuación F1 oficial
+- Sistema de puntuación oficial
 - Predicciones de carreras con drag & drop
 - Tabla de posiciones en tiempo real
 - Panel de administración

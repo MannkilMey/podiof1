@@ -533,7 +533,7 @@ export default function SharePredictionCard({ type, data, raceName, user, onClos
     if (!imageData) return;
 
     const link = document.createElement('a');
-    link.download = `podiof1-${normalizedType}-${raceName.replace(/\s+/g, '-').toLowerCase()}.png`;
+    link.download = `podio-${normalizedType}-${raceName.replace(/\s+/g, '-').toLowerCase()}.png`;
     link.href = imageData;
     link.click();
 
@@ -546,7 +546,7 @@ export default function SharePredictionCard({ type, data, raceName, user, onClos
 
     const response = await fetch(imageData);
     const blob = await response.blob();
-    const file = new File([blob], `podiof1-${normalizedType}.png`, { type: 'image/png' });
+    const file = new File([blob], `podio-${normalizedType}.png`, { type: 'image/png' });
 
     if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
       try {
@@ -704,7 +704,7 @@ export default function SharePredictionCard({ type, data, raceName, user, onClos
                   ? t('sharePrediction.watermarkGeneral')
                   : t('sharePrediction.watermarkDefault')}
               </div>
-              <div className="watermark-url">www.podiof1.com</div>
+              <div className="watermark-url">www.podio.lat</div>
             </div>
           </div>
 

@@ -222,8 +222,8 @@ export default function DeleteAccount() {
               {t('deleteAccount.accountDeletedText')}
               <br/><br/>
               {t('deleteAccount.contactPrefix')}{' '}
-              <a href="mailto:privacy@podiof1.com" style={{ color: 'var(--red)' }}>
-                privacy@podiof1.com
+              <a href="mailto:privacy@podio.lat" style={{ color: 'var(--red)' }}>
+                privacy@podio.lat
               </a>
             </div>
           </div>

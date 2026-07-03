@@ -1,15 +1,15 @@
 {
   "project_info": {
     "project_number": "501533970409",
-    "project_id": "podiof1",
-    "storage_bucket": "podiof1.firebasestorage.app"
+    "project_id": "podio",
+    "storage_bucket": "podio.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
         "mobilesdk_app_id": "1:501533970409:android:6a54109ee99834dc9d0578",
         "android_client_info": {
-          "package_name": "com.podiof1.app"
+          "package_name": "com.podio.app"
         }
       },
       "oauth_client": [],
