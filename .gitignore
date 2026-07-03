@@ -30,6 +30,7 @@ dist-ssr
 *.ntvs*
 *.njsproj
 *.sln
-*.sw?android/app/google-services.json
+*.sw?
+android/app/google-services.json
 android/app/google-services.json
 ios/App/App/GoogleService-Info.plist
