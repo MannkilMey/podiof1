@@ -959,7 +959,7 @@ function LeaderboardTab({ leaderboard, userId, groupId, type = 'total' }) {
 
                 {isExpanded && (
                   <tr>
-                    <td colSpan={5} style={{ padding: 0, background: 'var(--bg3)' }}>
+                    <td colSpan={5} style={{ padding: 0, background: 'var(--bg3)', overflow: 'hidden', maxWidth: 0 }}>
                       {detailsLoading ? (
                         <div style={{ padding: 20, textAlign: 'center', color: 'var(--muted)' }}>
                           {t('leaderboard.loadingDetails')}
