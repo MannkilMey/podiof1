@@ -250,7 +250,9 @@ prediction: {
   successTitle: 'Prediction Saved!',
   successMessage: 'Your prediction for {{race}} has been saved successfully. You can share it with your friends or go back to the dashboard.',
   shareBtn: 'Share my Prediction',
-  goToDashboardBtn: 'Go to Dashboard'
+  goToDashboardBtn: 'Go to Dashboard',
+  deadlinePassed: 'The prediction deadline has passed',
+  backupReplacedCreditsReturned: '✅ Prediction saved. 3 credits were returned to your balance.'
 },
   // ============================================
   // GROUP DASHBOARD
@@ -652,6 +654,10 @@ howItWorks: {
         titulo: 'Wildcard interest',
         positivo: '{{nombre}} is interested in activating wildcards in "{{grupo}}"',
         negativo: '{{nombre}} is not interested in wildcards in "{{grupo}}"'
+      },
+       seguroRespaldoIncompleto: {
+        titulo: "Your Prediction Insurance couldn't activate",
+        mensaje: "Your backup prediction doesn't have enough drivers. Update your backup before the next race."
       }
     }
   },
@@ -1088,7 +1094,7 @@ seguro: {
   statusInactive: 'Insurance inactive', statusInactiveSub: 'Set up your backup prediction and activate it',
   creditsWord: 'credits', costPerUse: 'Cost: {{cost}} credits per use',
   activateBtn: 'Activate Insurance', deactivateBtn: 'Deactivate',
-  instructionsTitle: 'Your backup prediction', instructionsText: "Set up your ideal Top {{max}}. If you don't submit your real prediction in time for a race, this one will be used automatically.",
+  instructionsTitle: 'Your backup prediction', instructionsText:'Set up your ideal Top {{max}} covering the maximum positions in your group (including sprints). If you don\'t submit your real prediction in time for a race, this one will be used automatically.',
   yourBackup: 'Your backup ({{current}}/{{max}})', selectFromList: 'Pick drivers from the list on the right',
   availableDrivers: 'Available drivers', fastestLapBonus: 'Fastest lap', selectDriverPlaceholder: 'Pick a driver',
   saveBtn: 'Save backup', saving: 'Saving...', savedSuccess: 'Backup saved',

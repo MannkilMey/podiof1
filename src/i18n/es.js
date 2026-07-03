@@ -253,7 +253,9 @@ prediction: {
   successTitle: '¡Predicción Guardada!',
   successMessage: 'Tu predicción para {{race}} ha sido guardada exitosamente. Puedes compartirla con tus amigos o volver al dashboard.',
   shareBtn: 'Compartir mi Predicción',
-  goToDashboardBtn: 'Ir al Dashboard'
+  goToDashboardBtn: 'Ir al Dashboard',
+  deadlinePassed: 'El plazo de predicción ya cerró',
+  backupReplacedCreditsReturned: '✅ Predicción guardada. Se devolvieron 3 créditos a tu saldo.'
 },
   // ============================================
   // GROUP DASHBOARD
@@ -660,7 +662,11 @@ howItWorks: {
       titulo: 'Interés en comodines',
       positivo: '{{nombre}} está interesado en activar los comodines en "{{grupo}}"',
       negativo: '{{nombre}} no está interesado en los comodines en "{{grupo}}"'
-    }
+    },
+     seguroRespaldoIncompleto: {
+        titulo: 'Tu Seguro de Predicción no pudo activarse',
+        mensaje: 'Tu predicción de respaldo no tiene suficientes pilotos. Actualizá tu respaldo antes de la próxima carrera.'
+      }
   }
     
   },
@@ -1160,7 +1166,7 @@ seguro: {
   statusInactive: 'Seguro inactivo', statusInactiveSub: 'Armá tu predicción de respaldo y activalo',
   creditsWord: 'créditos', costPerUse: 'Costo: {{cost}} créditos por uso',
   activateBtn: 'Activar Seguro', deactivateBtn: 'Desactivar',
-  instructionsTitle: 'Tu predicción de respaldo', instructionsText: 'Armá tu Top {{max}} ideal. Si no enviás tu predicción real a tiempo en alguna carrera, esta se usará automáticamente.',
+  instructionsTitle: 'Tu predicción de respaldo', instructionsText: 'Armá tu Top {{max}} ideal cubriendo el máximo de posiciones de tu grupo (incluyendo sprints). Si no enviás tu predicción real a tiempo para alguna carrera, esta se usará automáticamente.',
   yourBackup: 'Tu respaldo ({{current}}/{{max}})', selectFromList: 'Elegí pilotos de la lista de la derecha',
   availableDrivers: 'Pilotos disponibles', fastestLapBonus: 'Vuelta rápida', selectDriverPlaceholder: 'Elegí un piloto',
   saveBtn: 'Guardar respaldo', saving: 'Guardando...', savedSuccess: 'Respaldo guardado',

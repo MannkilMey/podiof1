@@ -150,6 +150,34 @@ export default function NotificationsBell() {
           mensaje: t('notifications.types.badgeDesbloqueado.mensaje', { badge: badgeNombre })
         };
       }
+
+      case 'seguro_usado':
+        return {
+          titulo: t('notifications.types.seguroUsado.titulo'),
+          mensaje: t('notifications.types.seguroUsado.mensaje', { 
+            grupo: m.grupo_nombre, 
+            carrera: m.carrera_nombre, 
+            costo: m.costo 
+          })
+        };
+      case 'seguro_sin_saldo':
+        return {
+          titulo: t('notifications.types.seguroSinSaldo.titulo'),
+          mensaje: t('notifications.types.seguroSinSaldo.mensaje', { grupo: m.grupo_nombre })
+        };
+      case 'recordatorio_seguro':
+        return {
+          titulo: t('notifications.types.recordatorioSeguro.titulo'),
+          mensaje: m.tiene_respaldo
+            ? t('notifications.types.recordatorioSeguro.mensajeSaldoBajo', { grupo: m.grupo_nombre })
+            : t('notifications.types.recordatorioSeguro.mensajeSinConfigurar', { grupo: m.grupo_nombre })
+        };
+      case 'seguro_respaldo_incompleto':
+        return {
+          titulo: t('notifications.types.seguroRespaldoIncompleto.titulo'),
+          mensaje: t('notifications.types.seguroRespaldoIncompleto.mensaje')
+        };
+
       case 'override_activado':
         return {
           titulo: t('notifications.types.overrideActivado.titulo'),
@@ -199,13 +227,17 @@ export default function NotificationsBell() {
                   className={`notif-item ${!notif.leido ? 'unread' : ''}`}
                   onClick={() => handleNotificationClick(notif)}
                 >
-                  <span className="notif-icon">
+                   <span className="notif-icon">
                     {{
                       solicitud_grupo: '🙋',
                       grupo_aprobado: '✅',
                       grupo_rechazado: '❌',
                       badge_desbloqueado: '🏅',
-                      override_activado: '🔓'
+                      override_activado: '🔓',
+                      seguro_usado: '🛡️',
+                      seguro_sin_saldo: '⚠️',
+                      recordatorio_seguro: '⏰',
+                      seguro_respaldo_incompleto: '⚠️'
                     }[notif.tipo] || '🔔'}
                   </span>
                   <div className="notif-content">

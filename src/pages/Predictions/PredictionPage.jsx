@@ -730,25 +730,28 @@ export default function PredictionPage() {
         predictionData.vuelta_rapida_escuderia_id = fastestLapTeam;
       }
 
-      if (existingPrediction) {
-        const { error: updateError } = await supabase
-          .from('predictions')
-          .update(predictionData)
-          .eq('id', existingPrediction.id);
+     const { data: resultado, error: saveError } = await supabase
+        .rpc('guardar_prediccion_usuario', {
+          p_grupo_id: groupId,
+          p_carrera_id: raceId,
+          p_posiciones: predictionData.posiciones,
+          p_vuelta_rapida_piloto_id: predictionData.vuelta_rapida_piloto_id || null,
+          p_vuelta_rapida_escuderia_id: predictionData.vuelta_rapida_escuderia_id || null
+        });
 
-        if (updateError) throw updateError;
-          toast.success(t('prediction.updatedSuccess'));
+      if (saveError) {
+        if (saveError.message?.includes('PLAZO_CERRADO')) {
+          toast.error(t('prediction.deadlinePassed'));
+          return;
+        }
+        throw saveError;
+      }
+
+      if (resultado?.creditos_devueltos) {
+        toast.success(t('prediction.backupReplacedCreditsReturned'));
+      } else if (existingPrediction) {
+        toast.success(t('prediction.updatedSuccess'));
       } else {
-        const { error: insertError } = await supabase
-          .from('predictions')
-          .insert({
-            grupo_id: groupId,
-            carrera_id: raceId,
-            usuario_id: user.id,
-            ...predictionData
-          });
-
-        if (insertError) throw insertError;
         toast.success(t('prediction.savedSuccess'));
       }
 

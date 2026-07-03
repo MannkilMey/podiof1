@@ -222,7 +222,10 @@ export default function SeguroPredictionPage() {
     }
   }
 
-  const maxPositions = group?.cantidad_posiciones || 10;
+  const maxPositions = Math.max(
+  group?.cantidad_posiciones || 10,
+  group?.cantidad_posiciones_sprint || 8
+  );
   const needsMore = selectedDrivers.length < maxPositions;
   const hasFastestLapBonus = group?.bonus_vuelta_rapida_piloto || false;
   const isComplete = selectedDrivers.length === maxPositions && (!hasFastestLapBonus || fastestLapDriver);

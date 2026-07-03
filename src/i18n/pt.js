@@ -252,8 +252,11 @@ prediction: {
   successTitle: 'Previsão Salva!',
   successMessage: 'Sua previsão para {{race}} foi salva com sucesso. Você pode compartilhá-la com seus amigos ou voltar ao painel.',
   shareBtn: 'Compartilhar minha Previsão',
-  goToDashboardBtn: 'Ir para o Painel'
+  goToDashboardBtn: 'Ir para o Painel',
+  deadlinePassed: 'O prazo de previsão já encerrou',
+  backupReplacedCreditsReturned: '✅ Previsão salva. 3 créditos foram devolvidos ao seu saldo.'
 },
+
 
   // ============================================
   // GROUP DASHBOARD
@@ -670,6 +673,10 @@ howItWorks: {
         titulo: 'Interesse em comodins',
         positivo: '{{nombre}} está interessado em ativar os comodins em "{{grupo}}"',
         negativo: '{{nombre}} não está interessado nos comodins em "{{grupo}}"'
+      },
+       seguroRespaldoIncompleto: {
+        titulo: 'Seu Seguro de Previsão não pôde ser ativado',
+        mensaje: 'Sua previsão de backup não tem pilotos suficientes. Atualize seu backup antes da próxima corrida.'
       }
     }
   },
@@ -1088,7 +1095,7 @@ seguro: {
   statusInactive: 'Seguro inativo', statusInactiveSub: 'Configure sua previsão de backup e ative-o',
   creditsWord: 'créditos', costPerUse: 'Custo: {{cost}} créditos por uso',
   activateBtn: 'Ativar Seguro', deactivateBtn: 'Desativar',
-  instructionsTitle: 'Sua previsão de backup', instructionsText: 'Configure seu Top {{max}} ideal. Se você não enviar sua previsão real a tempo em alguma corrida, esta será usada automaticamente.',
+  instructionsTitle: 'Sua previsão de backup', instructionsText: 'Monte seu Top {{max}} ideal cobrindo o máximo de posições do seu grupo (incluindo sprints). Se você não enviar sua previsão real a tempo para alguma corrida, esta será usada automaticamente.',
   yourBackup: 'Seu backup ({{current}}/{{max}})', selectFromList: 'Escolha pilotos na lista à direita',
   availableDrivers: 'Pilotos disponíveis', fastestLapBonus: 'Volta mais rápida', selectDriverPlaceholder: 'Escolha um piloto',
   saveBtn: 'Salvar backup', saving: 'Salvando...', savedSuccess: 'Backup salvo',
