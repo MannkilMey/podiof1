@@ -1027,7 +1027,7 @@ function LeaderboardTab({ leaderboard, userId, groupId, type = 'total' }) {
                             ))}
                           </div>
                           {/* Badges del usuario */}
-                          <div style={{ marginTop: 16, paddingTop: 16, borderTop: '1px solid var(--border)' }}>
+                          <div style={{ marginTop: 16, paddingTop: 16, borderTop: '1px solid var(--border)', overflow: 'hidden', maxWidth: '100%' }}>
                             <div style={{
                               fontFamily: 'Barlow Condensed', fontSize: 'var(--fs-body)', fontWeight: 700,
                               color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8
