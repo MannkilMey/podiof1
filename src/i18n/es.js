@@ -280,10 +280,7 @@ prediction: {
     racesCount: '{{completed}} / {{total}} carreras',
     racesRemaining: '{{count}} carreras pendientes',
     seasonComplete: '✅ Temporada completada',
-    myInsurance: 'Mi Seguro',
-    dangerZone: 'Zona de peligro',
-    deleteAccountDesc: 'Una vez que eliminés tu cuenta, todos tus datos serán borrados permanentemente. Esta acción no puede deshacerse.',
-  deleteAccountBtn: 'Eliminar mi cuenta'
+    myInsurance: 'Mi Seguro'
   },
   disclaimer: {
   titleFull: '⚠️ Aviso Importante: Podio es un sitio para diversión entre amigos',
@@ -543,7 +540,10 @@ howItWorks: {
     lastNamePlaceholder: 'Tu apellido',
     unlockedTooltip: 'Desbloqueado',
     badgesWord: 'badges',
-    secretsWord: 'secretos'
+    secretsWord: 'secretos',
+    dangerZone: 'Zona de peligro',
+    deleteAccountDesc: 'Una vez que eliminés tu cuenta, todos tus datos serán borrados permanentemente. Esta acción no puede deshacerse.',
+    deleteAccountBtn: 'Eliminar mi cuenta'
   },
 
   // ============================================
