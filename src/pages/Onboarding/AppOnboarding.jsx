@@ -59,6 +59,23 @@ export default function AppOnboarding() {
 
   const slide = SLIDES[current];
 
+  const CSS_VARS = `
+    [data-theme="dark"] {
+      --bg: #0A0A0C; --bg2: #111114; --bg3: #18181D;
+      --border: rgba(255,255,255,0.07); --border2: rgba(255,255,255,0.13);
+      --red: #E8002D; --red-dim: rgba(232,0,45,0.13);
+      --white: #F0F0F0; --muted: rgba(240,240,240,0.40);
+      --gold: #C9A84C; --green: #00D4A0;
+    }
+    [data-theme="light"] {
+      --bg: #F5F6F8; --bg2: #FFFFFF; --bg3: #E8EAEE;
+      --border: rgba(0,0,0,0.10); --border2: rgba(0,0,0,0.18);
+      --red: #D40029; --red-dim: rgba(212,0,41,0.08);
+      --white: #1A1B1E; --muted: rgba(26,27,30,0.55);
+      --gold: #9C6F10; --green: #007F5F;
+    }
+  `;
+
   return (
     <div
       data-theme={theme}
@@ -210,7 +227,7 @@ export default function AppOnboarding() {
         )}
       </div>
 
-      <style>{`
+      <style>{CSS_VARS + `
         @keyframes onbFadeIn {
           from { opacity: 0; transform: translateX(30px); }
           to { opacity: 1; transform: translateX(0); }
