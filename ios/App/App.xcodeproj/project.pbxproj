@@ -18,6 +18,7 @@
 		8D6F73802FFA04F9004CCCF2 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 8D6F737F2FFA04F9004CCCF2 /* FirebaseCore */; };
 		8D6F73822FFA05D7004CCCF2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8D6F73812FFA05D7004CCCF2 /* GoogleService-Info.plist */; };
 		8D6F73842FFA07D3004CCCF2 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 8D6F73832FFA07D3004CCCF2 /* FirebaseMessaging */; };
+		8D6F73862FFB3E16004CCCF2 /* GesturesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D6F73852FFB3E16004CCCF2 /* GesturesViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		50B271D01FEDC1A000F3C39B /* public */ = {isa = PBXFileReference; lastKnownFileType = folder; path = public; sourceTree = "<group>"; };
 		8D6F737C2FF89AB9004CCCF2 /* App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = App.entitlements; sourceTree = "<group>"; };
 		8D6F73812FFA05D7004CCCF2 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		8D6F73852FFB3E16004CCCF2 /* GesturesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GesturesViewController.swift; sourceTree = "<group>"; };
 		958DCC722DB07C7200EA8C5F /* debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = debug.xcconfig; path = ../debug.xcconfig; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -71,6 +73,7 @@
 			isa = PBXGroup;
 			children = (
 				8D6F737C2FF89AB9004CCCF2 /* App.entitlements */,
+				8D6F73852FFB3E16004CCCF2 /* GesturesViewController.swift */,
 				50379B222058CBB4000EE86E /* capacitor.config.json */,
 				504EC3071FED79650016851F /* AppDelegate.swift */,
 				504EC30B1FED79650016851F /* Main.storyboard */,
@@ -176,6 +179,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8D6F73862FFB3E16004CCCF2 /* GesturesViewController.swift in Sources */,
 				504EC3081FED79650016851F /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -24,11 +24,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         print("FCM token: \(fcmToken ?? "nil")")
         guard let token = fcmToken else { return }
-           
-           // Guardar en UserDefaults para que el hook de JS lo lea cuando esté listo
-           UserDefaults.standard.set(token, forKey: "FCMToken")
-           UserDefaults.standard.synchronize()
-        
+
+        // IMPORTANTE: Capacitor Preferences lee las keys con el prefijo "CapacitorStorage."
+        // Si guardamos con "FCMToken" a secas, Preferences.get nunca lo encuentra.
+        UserDefaults.standard.set(token, forKey: "CapacitorStorage.FCMToken")
+        UserDefaults.standard.synchronize()
     }
 
     func applicationWillResignActive(_ application: UIApplication) {}

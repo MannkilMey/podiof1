@@ -13,10 +13,9 @@ export function usePushNotifications() {
     if (!user || !isNative || pushInitialized) return;
     pushInitialized = true;
     initPush();
-  }, [user?.id]); // depende de user.id, no del objeto completo
+  }, [user?.id]);
 }
 
-// En usePushNotifications.js — reemplazar initPush completo
 async function initPush() {
   try {
     const { PushNotifications } = await import('@capacitor/push-notifications');
@@ -30,18 +29,16 @@ async function initPush() {
 
     await PushNotifications.register();
 
-    // Esperar 3 segundos para que Firebase entregue el token a UserDefaults
-    setTimeout(async () => {
-      const { value: fcmToken } = await Preferences.get({ key: 'FCMToken' });
-      if (fcmToken) {
-        console.log('Push token from Preferences:', fcmToken);
-        await saveToken(fcmToken);
-      }
-    }, 3000);
+    // El FCM token lo entrega Firebase (lado Swift) y queda persistido en
+    // UserDefaults con la key "CapacitorStorage.FCMToken". Como es persistente,
+    // no dependemos de timing: reintentamos unas pocas veces hasta encontrarlo.
+    readFcmTokenWithRetry(Preferences);
 
-    PushNotifications.addListener('registration', async (token) => {
-      console.log('Push token (Capacitor):', token.value);
-      await saveToken(token.value);
+    // NOTA: en iOS, el evento 'registration' de Capacitor devuelve el token de
+    // APNs, NO el FCM token. Solo lo logueamos para confirmar que el registro
+    // APNs funcionó; NO lo guardamos porque nuestro envío es vía FCM.
+    PushNotifications.addListener('registration', (token) => {
+      console.log('APNs registration OK (Capacitor):', token.value);
     });
 
     PushNotifications.addListener('registrationError', (err) => {
@@ -63,10 +60,35 @@ async function initPush() {
   }
 }
 
+// Lee el FCM token de Preferences reintentando hasta ~10s.
+// En el primer arranque, Firebase puede tardar un instante en entregar el token;
+// en arranques siguientes ya está persistido y se resuelve en el primer intento.
+async function readFcmTokenWithRetry(Preferences, attempt = 0) {
+  const MAX_ATTEMPTS = 10;
+  const DELAY_MS = 1000;
+
+  const { value: fcmToken } = await Preferences.get({ key: 'FCMToken' });
+
+  if (fcmToken) {
+    console.log('FCM token leído desde Preferences:', fcmToken);
+    await saveToken(fcmToken);
+    return;
+  }
+
+  if (attempt < MAX_ATTEMPTS) {
+    setTimeout(() => readFcmTokenWithRetry(Preferences, attempt + 1), DELAY_MS);
+  } else {
+    console.warn('No se encontró el FCM token tras varios intentos. Se reintentará en el próximo arranque.');
+  }
+}
+
 async function saveToken(token) {
   try {
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
+    if (!user) {
+      console.warn('saveToken: no hay usuario autenticado');
+      return;
+    }
 
     const { error } = await supabase
       .from('device_tokens')
