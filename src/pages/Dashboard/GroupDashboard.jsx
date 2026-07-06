@@ -852,7 +852,7 @@ function SeasonProgressBar({ temporada }) {
         </div>
         <div style={{
           fontFamily: 'Barlow Condensed',
-          fontSize: 'var(--fs-body)',
+          fontSize: 'var(--fs-stat-secondary)',
           fontWeight: 900,
           color: 'var(--red)'
         }}>
@@ -1856,7 +1856,7 @@ export default function GroupDashboard() {
       <>
         <style>{FONTS + CSS}</style>
         <div data-theme={theme} className="group-dashboard">
-            <BackButton className="back-btn" onClick={() => navigate('/')}>{t('nav.backToGroups')}</BackButton>
+            {!isNative && <BackButton className="back-btn" onClick={() => navigate('/')}>{t('nav.backToGroups')}</BackButton>}
             <div style={{ textAlign: 'center', padding: '80px 20px', color: 'var(--red)' }}>
             <div style={{ fontSize: 48, marginBottom: 16 }}>⚠️</div>
             <div>{t('errors.loadingDashboard')}</div>
@@ -1871,7 +1871,7 @@ export default function GroupDashboard() {
     <>
       <style>{FONTS + CSS}</style>
       <div data-theme={theme} className="group-dashboard">
-          <BackButton className="back-btn" onClick={() => navigate('/')}>{t('nav.backToGroups')}</BackButton>
+          {!isNative && <BackButton className="back-btn" onClick={() => navigate('/')}>{t('nav.backToGroups')}</BackButton>}
         <HeroBanner 
           group={group} 
           nextRace={nextRace} 

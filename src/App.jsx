@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { usePushNotifications } from './hooks/usePushNotifications';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'sonner';
 import { useAuthStore } from './stores/authStore';
@@ -7,6 +8,7 @@ import AppOnboarding from './pages/Onboarding/AppOnboarding';
 import { isNative } from './hooks/usePlatform';
 import { useTranslation } from './i18n';
 import { StatusBar, Style } from '@capacitor/status-bar';
+import { App as CapApp } from '@capacitor/app';
 
 // Public Pages
 import Landing from './pages/Landing/Landing';
@@ -116,16 +118,28 @@ function PublicRoute({ children }) {
 
 export default function App() {
   const initialize = useAuthStore((state) => state.initialize);
+  usePushNotifications();
 
   useEffect(() => {
     initialize();
   }, [initialize]);
 
-  
-   useEffect(() => {
+  useEffect(() => {
     if (!isNative) return;
     StatusBar.setOverlaysWebView({ overlay: false });
-    StatusBar.setStyle({ style: Style.Dark }); // texto blanco de la hora/batería, combina con tu tema oscuro
+    StatusBar.setStyle({ style: Style.Dark });
+  }, []);
+
+  useEffect(() => {
+    if (!isNative) return;
+    const backHandler = CapApp.addListener('backButton', ({ canGoBack }) => {
+      if (canGoBack) {
+        window.history.back();
+      }
+    });
+    return () => {
+      backHandler.then(h => h.remove());
+    };
   }, []);
 
   return (

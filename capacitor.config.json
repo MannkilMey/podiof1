@@ -1,5 +1,10 @@
 {
   "appId": "com.podiof1.app",
   "appName": "Podio",
-  "webDir": "dist"
+  "webDir": "dist",
+  "ios": {
+    "allowsLinkPreview": false,
+    "scrollEnabled": true,
+    "limitsNavigationsToAppBoundDomains": true
+  }
 }
