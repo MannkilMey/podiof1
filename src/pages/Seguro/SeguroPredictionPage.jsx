@@ -283,8 +283,14 @@ export default function SeguroPredictionPage() {
         .from('predicciones_respaldo')
         .upsert(payload, { onConflict: 'usuario_id,grupo_id' });
 
-      if (error) throw error;
-
+      if (error) {
+        if (error.message?.includes('RESPALDO_BLOQUEADO')) {
+          toast.error(t('seguro.backupLockedError'));
+          setShowActivationModal(false);
+          return;
+        }
+        throw error;
+      }
       setIsActive(activar || isActive);
       toast.success(activar ? t('seguro.activatedSuccess') : t('seguro.savedSuccess'));
       setShowActivationModal(false);

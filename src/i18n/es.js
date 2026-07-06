@@ -1175,7 +1175,8 @@ seguro: {
   needsPremiumError: 'Necesitás PolePass activo para usar el Seguro', saveError: 'Error al guardar',
   notEnabledForGroup: 'El Seguro de Predicción no está habilitado en este grupo todavía',
   consentTitle: '¿Activar tu Seguro?', consentText: 'Si no enviás tu predicción a tiempo en alguna carrera, usaremos este respaldo automáticamente y se descontarán {{cost}} créditos de tu saldo.',
-  consentConfirm: 'Sí, activar'
+  consentConfirm: 'Sí, activar',
+  backupLockedError: 'No podés cambiar tu respaldo mientras haya una carrera en curso. Esperá a que se publiquen los resultados.'
 },
 seguroCard: {
   tituloActivo: '🛡️ Seguro de Predicción activo en este grupo',

@@ -1103,7 +1103,8 @@ seguro: {
   needsPremiumError: 'You need an active PolePass to use Insurance', saveError: 'Error saving',
   notEnabledForGroup: "Prediction Insurance isn't enabled for this group yet",
   consentTitle: 'Activate your Insurance?', consentText: "If you don't submit your prediction in time for a race, we'll use this backup automatically and deduct {{cost}} credits from your balance.",
-  consentConfirm: 'Yes, activate'
+  consentConfirm: 'Yes, activate',
+ backupLockedError: "You can't change your backup while a race is in progress. Wait for the results to be published."
 },
 groupDetail: {
   errorLoadingGroup: 'Error loading the group',

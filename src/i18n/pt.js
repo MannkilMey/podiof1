@@ -1104,7 +1104,8 @@ seguro: {
   needsPremiumError: 'Você precisa de um PolePass ativo para usar o Seguro', saveError: 'Erro ao salvar',
   notEnabledForGroup: 'O Seguro de Previsão ainda não está habilitado neste grupo',
   consentTitle: 'Ativar seu Seguro?', consentText: 'Se você não enviar sua previsão a tempo em alguma corrida, usaremos este backup automaticamente e descontaremos {{cost}} créditos do seu saldo.',
-  consentConfirm: 'Sim, ativar'
+  consentConfirm: 'Sim, ativar',
+  backupLockedError: 'Você não pode alterar seu backup enquanto houver uma corrida em andamento. Aguarde a publicação dos resultados.'
 },
 groupDetail: {
   errorLoadingGroup: 'Erro ao carregar o grupo',
