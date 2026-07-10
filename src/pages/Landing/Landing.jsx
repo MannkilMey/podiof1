@@ -880,7 +880,11 @@ export default function Landing() {
               onMouseEnter={e => e.currentTarget.style.opacity = '0.85'}
               onMouseLeave={e => e.currentTarget.style.opacity = '1'}
             >
-              🍎 {t('landing.download.iosBtn')}
+              <img 
+              src="/badges/app-store-badge.svg" 
+              alt="Download on the App Store"
+              style={{ height: 44 }}
+            />
             </a>
             </section>
           
@@ -891,44 +895,41 @@ export default function Landing() {
           <section className="stats-section">
             <div className="stat-item">
               <div className="stat-number">24</div>
-              <div className="stat-label">Carreras por año</div>
+              <div className="stat-label">{t('landing.stats.races')}</div>
             </div>
             <div className="stat-item">
               <div className="stat-number">100%</div>
-              <div className="stat-label">Gratis</div>
+              <div className="stat-label">{t('landing.stats.free')}</div>
             </div>
             <div className="stat-item">
               <div className="stat-number">∞</div>
-              <div className="stat-label">Grupos ilimitados</div>
+              <div className="stat-label">{t('landing.stats.groups')}</div>
             </div>
           </section>
 
           {/* How It Works Section */}
           <section className="how-it-works">
-            <h2 className="section-title">Cómo Funciona</h2>
+            <h2 className="section-title">{t('landing.howItWorks.title')}</h2>
             <div className="steps-container">
               <div className="step-card">
                 <div className="step-number">1</div>
-                <h3 className="step-title">Crea tu Grupo</h3>
+                <h3 className="step-title">{t('landing.howItWorks.step1Title')}</h3>
                 <p className="step-description">
-                  Regístrate gratis y crea un grupo privado de predicciones. 
-                  Personaliza el sistema de puntos y las reglas según tus preferencias.
+                  {t('landing.howItWorks.step1Desc')}
                 </p>
               </div>
               <div className="step-card">
                 <div className="step-number">2</div>
-                <h3 className="step-title">Invita a tus Amigos</h3>
+                <h3 className="step-title">{t('landing.howItWorks.step2Title')}</h3>
                 <p className="step-description">
-                  Comparte el código de invitación con tus amigos.
-                  Ellos se registran e ingresan automáticamente al grupo.
+                 {t('landing.howItWorks.step2Desc')}
                 </p>
               </div>
               <div className="step-card">
                 <div className="step-number">3</div>
-                <h3 className="step-title">Predice y Compite</h3>
+                <h3 className="step-title">{t('landing.howItWorks.step3Title')}</h3>
                 <p className="step-description">
-                  Haz tu predicción antes de cada carrera. Los puntos se calculan 
-                  automáticamente y la clasificación se actualiza en tiempo real.
+                  {t('landing.howItWorks.step3Desc')}
                 </p>
               </div>
             </div>
@@ -936,58 +937,53 @@ export default function Landing() {
 
           {/* Features Section */}
           <section className="features">
-            <h2 className="section-title">Características</h2>
+            <h2 className="section-title">{t('landing.features.title')}</h2>
             <div className="features-grid">
               <div className="feature-card">
                 <div className="feature-icon">👥</div>
-                <h3 className="feature-title">Grupos Privados</h3>
+                <h3 className="feature-title">{t('landing.features.f1Title')}</h3>
                 <p className="feature-description">
-                  Crea tu propio grupo de predicciones con amigos, familia o colegas. 
-                  Configura reglas personalizadas y sistemas de puntuación.
+                  {t('landing.features.f1Desc')}
                 </p>
               </div>
 
               <div className="feature-card">
                 <div className="feature-icon">🎯</div>
-                <h3 className="feature-title">Predicciones Inteligentes</h3>
+                <h3 className="feature-title">{t('landing.features.f2Title')}</h3>
                 <p className="feature-description">
-                  Sistema de puntuación dual: acumula puntos por pilotos correctos 
-                  y bonos extra por posiciones exactas y vueltas rápidas.
+                  {t('landing.features.f2Desc')}
                 </p>
               </div>
 
               <div className="feature-card">
                 <div className="feature-icon">📊</div>
-                <h3 className="feature-title">Tablas en Tiempo Real</h3>
+                <h3 className="feature-title">{t('landing.features.f3Title')}</h3>
                 <p className="feature-description">
-                  Sigue el rendimiento de todos los participantes con tablas 
-                  actualizadas automáticamente después de cada carrera.
+                  {t('landing.features.f3Desc')}
                 </p>
               </div>
 
               <div className="feature-card">
                 <div className="feature-icon">⚡</div>
-                <h3 className="feature-title">Resultados Automáticos</h3>
+                <h3 className="feature-title">{t('landing.features.f4Title')}</h3>
                 <p className="feature-description">
-                  Los puntos se calculan y actualizan instantáneamente.
+                  {t('landing.features.f4Desc')}
                 </p>
               </div>
 
               <div className="feature-card">
                 <div className="feature-icon">📧</div>
-                <h3 className="feature-title">Notificaciones Email</h3>
+                <h3 className="feature-title">{t('landing.features.f5Title')}</h3>
                 <p className="feature-description">
-                  Recibe recordatorios 24h antes de cada carrera, notificaciones 
-                  de resultados y resúmenes semanales automáticos.
+                  {t('landing.features.f5Desc')}
                 </p>
               </div>
 
               <div className="feature-card">
                 <div className="feature-icon">🌙</div>
-                <h3 className="feature-title">Modo Oscuro/Claro</h3>
+                <h3 className="feature-title">{t('landing.features.f6Title')}</h3>
                 <p className="feature-description">
-                  Interfaz moderna con tema oscuro y claro. Diseño inspirado 
-                  en la velocidad y elegancia del automovilismo.
+                  {t('landing.features.f6Desc')}
                 </p>
               </div>
             </div>
@@ -1105,23 +1101,23 @@ export default function Landing() {
 
           {/* CTA Section */}
           <section className="cta-section">
-            <h2 className="cta-title">¿Listo para subir al podio?</h2>
+            <h2 className="cta-title">{t('landing.cta.title')}</h2>
             <p className="cta-subtitle">
-              Únete gratis y empieza a competir con tus amigos en la próxima carrera
+              {t('landing.cta.subtitle')}
             </p>
             <Link to="/register" className="btn-cta">
-              Crear mi Cuenta Gratis →
+              {t('landing.cta.btn')}
             </Link>
           </section>
 
           {/* Footer */}
           <footer className="footer">
             <p className="footer-text" style={{ marginTop: 12, display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Link to="/privacy" className="footer-link">Política de Privacidad</Link>
+            <Link to="/privacy" className="footer-link">{t('landing.footer.privacy')}</Link>
             <span style={{ color: 'var(--text-muted)' }}>·</span>
-            <Link to="/terms" className="footer-link">Términos y Condiciones</Link>
+            <Link to="/terms" className="footer-link">{t('landing.footer.terms')}</Link>
             <span style={{ color: 'var(--text-muted)' }}>·</span>
-            <Link to="/support" className="footer-link">Soporte</Link>
+            <Link to="/support" className="footer-link">{t('landing.footer.support')}</Link>
           </p>
             
           </footer>

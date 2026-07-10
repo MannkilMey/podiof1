@@ -1016,9 +1016,47 @@ landing: {
       title: 'Available on iOS',
       androidSoon: 'Android coming soon',
       iosBtn: 'Download on App Store'
+    },
+    stats: {
+      races: 'Races per year',
+      free: 'Free',
+      groups: 'Unlimited groups'
+    },
+    howItWorks: {
+    title: 'How It Works',
+    step1Title: 'Create your Group',
+    step1Desc: 'Sign up for free and create a private prediction group. Customize the scoring system and rules to your preferences.',
+    step2Title: 'Invite your Friends',
+    step2Desc: 'Share the invite code with your friends. They sign up and automatically join the group.',
+    step3Title: 'Predict and Compete',
+    step3Desc: 'Make your prediction before each race. Points are calculated automatically and standings update in real time.'
+    },
+    features: {
+      title: 'Features',
+      f1Title: 'Private Groups',
+      f1Desc: 'Create your own prediction group with friends, family or colleagues. Set custom rules and scoring systems.',
+      f2Title: 'Smart Predictions',
+      f2Desc: 'Dual scoring system: earn points for correct drivers and bonus points for exact positions and fastest laps.',
+      f3Title: 'Real-Time Standings',
+      f3Desc: 'Track all participants performance with standings updated automatically after each race.',
+      f4Title: 'Automatic Results',
+      f4Desc: 'Points are calculated and updated instantly.',
+      f5Title: 'Notifications',
+      f5Desc: 'Get reminders before each race, result notifications and automatic weekly summaries.',
+      f6Title: 'Dark/Light Mode',
+      f6Desc: 'Modern interface with dark and light theme. Design inspired by the speed and elegance of motorsport.'
+    },
+    cta: {
+      title: 'Ready to climb the podium?',
+      subtitle: 'Join for free and start competing with your friends in the next race',
+      btn: 'Create my Free Account →'
+    },
+    footer: {
+      privacy: 'Privacy Policy',
+      terms: 'Terms and Conditions',
+      support: 'Support'
     }
   },
-
 deleteAccount: {
   confirmWord: 'DELETE',
   deleteError: 'Error deleting your account. Please try again or contact privacy@podio.lat',

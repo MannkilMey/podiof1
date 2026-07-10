@@ -1017,9 +1017,47 @@ landing: {
       title: 'Disponível no iOS',
       androidSoon: 'Android em breve',
       iosBtn: 'Baixar na App Store'
-    }
+    },
+    stats: {
+    races: 'Corridas por ano',
+    free: 'Grátis',
+    groups: 'Grupos ilimitados'
+    },
+    howItWorks: {
+      title: 'Como Funciona',
+      step1Title: 'Crie seu Grupo',
+      step1Desc: 'Registre-se gratuitamente e crie um grupo privado de previsões. Personalize o sistema de pontuação e as regras conforme sua preferência.',
+      step2Title: 'Convide seus Amigos',
+      step2Desc: 'Compartilhe o código de convite com seus amigos. Eles se cadastram e entram automaticamente no grupo.',
+      step3Title: 'Preveja e Compita',
+      step3Desc: 'Faça sua previsão antes de cada corrida. Os pontos são calculados automaticamente e a classificação é atualizada em tempo real.'
+    },
+    features: {
+    title: 'Funcionalidades',
+    f1Title: 'Grupos Privados',
+    f1Desc: 'Crie seu próprio grupo de previsões com amigos, família ou colegas. Configure regras personalizadas e sistemas de pontuação.',
+    f2Title: 'Previsões Inteligentes',
+    f2Desc: 'Sistema de pontuação duplo: acumule pontos por pilotos corretos e bônus extras por posições exatas e voltas mais rápidas.',
+    f3Title: 'Classificação em Tempo Real',
+    f3Desc: 'Acompanhe o desempenho de todos os participantes com classificações atualizadas automaticamente após cada corrida.',
+    f4Title: 'Resultados Automáticos',
+    f4Desc: 'Os pontos são calculados e atualizados instantaneamente.',
+    f5Title: 'Notificações',
+    f5Desc: 'Receba lembretes antes de cada corrida, notificações de resultados e resumos semanais automáticos.',
+    f6Title: 'Modo Escuro/Claro',
+    f6Desc: 'Interface moderna com tema escuro e claro. Design inspirado na velocidade e elegância do automobilismo.'
+  },
+  cta: {
+    title: 'Pronto para subir ao pódio?',
+    subtitle: 'Junte-se gratuitamente e comece a competir com seus amigos na próxima corrida',
+    btn: 'Criar minha Conta Grátis →'
+  },
+  footer: {
+    privacy: 'Política de Privacidade',
+    terms: 'Termos e Condições',
+    support: 'Suporte'
+}
 },
-
 deleteAccount: {
   confirmWord: 'EXCLUIR',
   deleteError: 'Erro ao excluir a conta. Tente novamente ou contate privacy@podio.lat',

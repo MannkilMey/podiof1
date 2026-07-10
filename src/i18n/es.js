@@ -994,6 +994,7 @@ settings: {
   pushNotificationsDesc: 'Recibir avisos de carreras, resultados y badges'
 
 },
+
 landing: {
   nav: {
     login: 'Iniciar Sesión',
@@ -1012,7 +1013,46 @@ landing: {
     title: 'Disponible en iOS',
     androidSoon: 'Android próximamente',
     iosBtn: 'Descargar en App Store'
-  }
+  },
+  stats: {
+    races: 'Carreras por año',
+    free: 'Gratis',
+    groups: 'Grupos ilimitados'
+  },
+    howItWorks: {
+    title: 'Cómo Funciona',
+    step1Title: 'Crea tu Grupo',
+    step1Desc: 'Regístrate gratis y crea un grupo privado de predicciones. Personaliza el sistema de puntos y las reglas según tus preferencias.',
+    step2Title: 'Invita a tus Amigos',
+    step2Desc: 'Comparte el código de invitación con tus amigos. Ellos se registran e ingresan automáticamente al grupo.',
+    step3Title: 'Predice y Compite',
+    step3Desc: 'Haz tu predicción antes de cada carrera. Los puntos se calculan automáticamente y la clasificación se actualiza en tiempo real.'
+  },
+  features: {
+  title: 'Características',
+  f1Title: 'Grupos Privados',
+  f1Desc: 'Crea tu propio grupo de predicciones con amigos, familia o colegas. Configura reglas personalizadas y sistemas de puntuación.',
+  f2Title: 'Predicciones Inteligentes',
+  f2Desc: 'Sistema de puntuación dual: acumula puntos por pilotos correctos y bonos extra por posiciones exactas y vueltas rápidas.',
+  f3Title: 'Tablas en Tiempo Real',
+  f3Desc: 'Sigue el rendimiento de todos los participantes con tablas actualizadas automáticamente después de cada carrera.',
+  f4Title: 'Resultados Automáticos',
+  f4Desc: 'Los puntos se calculan y actualizan instantáneamente.',
+  f5Title: 'Notificaciones',
+  f5Desc: 'Recibe recordatorios antes de cada carrera, notificaciones de resultados y resúmenes semanales automáticos.',
+  f6Title: 'Modo Oscuro/Claro',
+  f6Desc: 'Interfaz moderna con tema oscuro y claro. Diseño inspirado en la velocidad y elegancia del automovilismo.'
+},
+cta: {
+  title: '¿Listo para subir al podio?',
+  subtitle: 'Únete gratis y empieza a competir con tus amigos en la próxima carrera',
+  btn: 'Crear mi Cuenta Gratis →'
+},
+footer: {
+  privacy: 'Política de Privacidad',
+  terms: 'Términos y Condiciones',
+  support: 'Soporte'
+}
 },
 deleteAccount: {
   confirmWord: 'ELIMINAR',
