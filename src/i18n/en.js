@@ -123,13 +123,7 @@ export default {
   // ============================================
   // LANDING
   // ============================================
-  landing: {
-    hero: 'Free Sports Predictions with Friends',
-    heroSub: 'Create your prediction group, invite friends and compete by predicting each race result.',
-    freeTag: '100% Free · Live Predictions',
-    startFree: 'Start Free',
-    haveAccount: 'I Have an Account'
-  },
+  
 
   // ============================================
   // APP ONBOARDING
@@ -1017,7 +1011,13 @@ landing: {
     ctaSecondary: 'I already have an account',
     titleLine1: 'Sports Predictions',
     titleLine2: 'Free with Friends',
+  },
+  download: {
+  title: 'Available on iOS',
+  androidSoon: 'Android coming soon',
+  iosBtn: 'Download on App Store'
   }
+   
   }
 },
 deleteAccount: {

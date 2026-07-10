@@ -124,13 +124,7 @@ export default {
   // ============================================
   // LANDING
   // ============================================
-  landing: {
-    hero: 'Predicciones Deportivas Gratis con Amigos',
-    heroSub: 'Crea tu grupo de predicciones, invita a tus amigos y compite prediciendo los resultados de cada carrera.',
-    freeTag: 'Gratis · Predicciones en Vivo',
-    startFree: 'Comenzar Gratis',
-    haveAccount: 'Ya Tengo Cuenta'
-  },
+  
 
   // ============================================
   // APP ONBOARDING
@@ -1012,7 +1006,12 @@ landing: {
     ctaSecondary: 'Ya tengo cuenta',
     titleLine1: 'Predicciones Deportivas',
     titleLine2: 'Gratis con Amigos',
-  }
+    },
+    download: {
+      title: 'Disponible en iOS',
+      androidSoon: 'Android próximamente',
+      iosBtn: 'Descargar en App Store'
+    }
   }
 },
 deleteAccount: {

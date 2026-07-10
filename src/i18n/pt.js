@@ -123,13 +123,7 @@ export default {
   // ============================================
   // LANDING
   // ============================================
-  landing: {
-    hero: 'Previsões Esportivas Grátis com Amigos',
-    heroSub: 'Crie seu grupo de previsões, convide amigos e compita prevendo os resultados de cada corrida.',
-    freeTag: '100% Grátis · Previsões ao Vivo',
-    startFree: 'Começar Grátis',
-    haveAccount: 'Já Tenho Conta'
-  },
+  
 
   // ============================================
   // APP ONBOARDING
@@ -1018,7 +1012,12 @@ landing: {
     ctaSecondary: 'Já tenho uma conta',
     titleLine1: 'Previsões Esportivas',
     titleLine2: 'Grátis com Amigos',
-    }
+    },
+    download: {
+    title: 'Disponível no iOS',
+    androidSoon: 'Android em breve',
+    iosBtn: 'Baixar na App Store'
+  }
   }
 },
 deleteAccount: {
