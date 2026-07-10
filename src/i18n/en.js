@@ -1000,6 +1000,25 @@ settings: {
   f1Season: 'Season {{year}}',
   languageLabel: 'Language',
   languageDescription: 'Choose the app language',
+  language: 'Language',
+  notifications: 'Notifications',
+  pushNotifications: 'Push notifications',
+  pushNotificationsDesc: 'Receive alerts for races, results and badges'
+},
+landing: {
+  nav: {
+    login: 'Log In',
+    register: 'Sign Up',
+    hero: {
+    badge: 'Live Predictions',
+    title: 'Sports Predictions\nFree with Friends',
+    subtitle: 'Create your prediction group, invite your friends and compete by predicting race results. Customizable scoring system, real-time standings.',
+    ctaPrimary: 'Start for Free',
+    ctaSecondary: 'I already have an account',
+    titleLine1: 'Sports Predictions',
+    titleLine2: 'Free with Friends',
+  }
+  }
 },
 deleteAccount: {
   confirmWord: 'DELETE',

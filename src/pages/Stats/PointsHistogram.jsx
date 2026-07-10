@@ -5,6 +5,7 @@ import { useThemeStore } from '../../stores/themeStore';
 import { supabase } from '../../lib/supabase';
 import StatsTabBar from './StatsTabBar';  
 import * as XLSX from 'xlsx';
+import { exportToExcel } from '../../utils/exportExcel';
 import { useTranslation } from '../../i18n';
 import BackButton from '../../components/BackButton'; 
 import PaywallGate from '../../components/PaywallGate';
@@ -382,7 +383,7 @@ export default function PointsHistogram() {
   // ============================================
   // EXPORT TO EXCEL
   // ============================================
-  const handleExport = useCallback(() => {
+  const handleExport = useCallback(async () => {
     if (!chartData.length || !stats) return;
     setExporting(true);
 
@@ -423,7 +424,7 @@ export default function PointsHistogram() {
       XLSX.utils.book_append_sheet(wb, ws3, t('pointsHistogram.cumulativePoints'));
 
       const fileName = `Podio_Stats_${groupInfo?.nombre || t('pointsHistogram.groupFallback')}_${new Date().toISOString().slice(0, 10)}.xlsx`;
-      XLSX.writeFile(wb, fileName);
+      await exportToExcel(wb, fileName);
     } catch (err) {
       console.error('Error exporting:', err);
     } finally {

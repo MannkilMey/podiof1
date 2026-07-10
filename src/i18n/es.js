@@ -994,6 +994,26 @@ settings: {
   f1Season: 'Temporada {{year}}',
   languageLabel: 'Idioma',
   languageDescription: 'Elige el idioma de la aplicación',
+  language: 'Idioma',
+  notifications: 'Notificaciones',
+  pushNotifications: 'Notificaciones push',
+  pushNotificationsDesc: 'Recibir avisos de carreras, resultados y badges'
+
+},
+landing: {
+  nav: {
+    login: 'Iniciar Sesión',
+    register: 'Crear Cuenta',
+    hero: {
+    badge: 'Predicciones en Vivo',
+    title: 'Predicciones Deportivas\nGratis con Amigos',
+    subtitle: 'Crea tu grupo de predicciones, invita a tus amigos y compite prediciendo los resultados de cada carrera. Sistema de puntos personalizable, clasificación en tiempo real.',
+    ctaPrimary: 'Comenzar Gratis',
+    ctaSecondary: 'Ya tengo cuenta',
+    titleLine1: 'Predicciones Deportivas',
+    titleLine2: 'Gratis con Amigos',
+  }
+  }
 },
 deleteAccount: {
   confirmWord: 'ELIMINAR',

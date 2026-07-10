@@ -4,6 +4,7 @@ import { useAuthStore } from '../../stores/authStore';
 import { useThemeStore } from '../../stores/themeStore';
 import { supabase } from '../../lib/supabase';
 import * as XLSX from 'xlsx';
+import { exportToExcel } from '../../utils/exportExcel';
 import StatsTabBar from './StatsTabBar';
 import { useTranslation, getRaceName } from '../../i18n';
 import BackButton from '../../components/BackButton';
@@ -377,7 +378,7 @@ export default function DeepAnalytics() {
   // ============================================
   // EXPORT EXCEL
   // ============================================
-  const handleExport = useCallback(() => {
+  const handleExport = useCallback(async () => {
     if (!raceWinners.length) return;
     setExporting(true);
     try {
@@ -443,7 +444,7 @@ export default function DeepAnalytics() {
       ws4['!cols'] = usHeaders.map(() => ({ wch: 18 }));
       XLSX.utils.book_append_sheet(wb, ws4, t('deepAnalytics.statsByPlayer'));
 
-      XLSX.writeFile(wb, `Podio_DeepAnalytics_${groupInfo?.nombre || t('pointsHistogram.groupFallback')}_${new Date().toISOString().slice(0, 10)}.xlsx`);    } catch (err) {
+      await exportToExcel(wb, `Podio_DeepAnalytics_${groupInfo?.nombre || t('pointsHistogram.groupFallback')}_${new Date().toISOString().slice(0, 10)}.xlsx`);
       console.error('Export error:', err);
     } finally {
       setExporting(false);

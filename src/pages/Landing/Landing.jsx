@@ -2,6 +2,9 @@ import { Link } from 'react-router-dom';
 import { useAuthStore } from '../../stores/authStore';
 import { useThemeStore } from '../../stores/themeStore';
 import DisclaimerBanner from '../../components/DIsclaimerBanner';
+import LanguageSelector from '../../components/LanguageSelector';
+import { useTranslation } from '../../i18n';
+
 
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap');`;
 
@@ -772,6 +775,7 @@ body {
 export default function Landing() {
   const user = useAuthStore((state) => state.user);
   const { theme, toggleTheme } = useThemeStore();
+  const { t } = useTranslation();
 
   // Si ya está autenticado, redirigir al dashboard
   if (user) {
@@ -793,6 +797,7 @@ export default function Landing() {
               </Link>
             </div>
             <div className="nav-right">
+              <LanguageSelector compact />
               <button 
                 onClick={toggleTheme} 
                 className="theme-toggle"
@@ -800,36 +805,88 @@ export default function Landing() {
               >
                 {theme === 'dark' ? '☀️' : '🌙'}
               </button>
-              <Link to="/login" className="btn-login">Iniciar Sesión</Link>
-              <Link to="/register" className="btn-register">Crear Cuenta</Link>
+              <Link to="/login" className="btn-login">{t('landing.nav.login')}</Link>
+              <Link to="/register" className="btn-register">{t('landing.nav.register')}</Link>
             </div>
+
           </nav>
 
           {/* Hero Section - Optimizado para SEO */}
           <section className="hero">
             <div className="hero-badge">
               <span>🏁</span>
-              Predicciones en Vivo
+              {t('landing.hero.badge')}
             </div>
             <h1 className="hero-title">
-              Predicciones Deportivas<br/>
-              Gratis con Amigos
+              {t('landing.hero.titleLine1')}<br/>
+              {t('landing.hero.titleLine2')}
             </h1>
             <p className="hero-subtitle">
-              Crea tu grupo de predicciones, invita a tus amigos y compite 
-              prediciendo los resultados de cada carrera. Sistema de puntos 
-              personalizable, clasificación en tiempo real.
+             {t('landing.hero.subtitle')}
             </p>
             <div className="hero-cta">
               <Link to="/register" className="btn-hero-primary">
-                Comenzar Gratis
+                {t('landing.hero.ctaPrimary')}
               </Link>
               <Link to="/login" className="btn-hero-secondary">
-                Ya tengo cuenta
+                {t('landing.hero.ctaSecondary')}
               </Link>
             </div>
+            
           </section>
-
+          {/* Download Section */}
+          <section style={{
+            textAlign: 'center',
+            padding: '32px 20px',
+            background: 'var(--bg2)',
+            borderTop: '1px solid var(--border)',
+            borderBottom: '1px solid var(--border)'
+          }}>
+            <div style={{
+              fontFamily: "'Barlow Condensed', sans-serif",
+              fontSize: 'var(--fs-section-title)',
+              fontWeight: 800,
+              color: 'var(--white)',
+              marginBottom: 8
+            }}>
+              📱 {t('landing.download.title')}
+            </div>
+            <div style={{
+              fontSize: 'var(--fs-small)',
+              color: 'var(--muted)',
+              marginBottom: 20
+            }}>
+              {t('landing.download.androidSoon')}
+            </div>
+            
+              href="https://apps.apple.com/app/podio/id6784865719"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 12,
+                padding: '14px 28px',
+                background: 'var(--red)',
+                color: 'white',
+                borderRadius: 14,
+                textDecoration: 'none',
+                fontFamily: "'Barlow Condensed', sans-serif",
+                fontWeight: 800,
+                fontSize: 'var(--fs-subtitle)',
+                letterSpacing: 1,
+                transition: 'opacity 0.2s',
+              }}
+              onMouseEnter={e => e.currentTarget.style.opacity = '0.85'}
+              onMouseLeave={e => e.currentTarget.style.opacity = '1'}
+              <a>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                  <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+                </svg>
+                {t('landing.download.iosBtn')}
+              </a>
+            </section>
+          
           {/* Disclaimer Anti */}
           <DisclaimerBanner variant="compact" />
 

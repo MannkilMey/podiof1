@@ -4,6 +4,7 @@ import { useAuthStore } from '../../stores/authStore';
 import { useThemeStore } from '../../stores/themeStore';
 import { supabase } from '../../lib/supabase';
 import * as XLSX from 'xlsx';
+import { exportToExcel } from '../../utils/exportExcel';
 import StatsTabBar from './StatsTabBar';
 import { useTranslation, getRaceName } from '../../i18n';
 import BackButton from '../../components/BackButton';
@@ -329,7 +330,7 @@ export default function PredictionAnalysis() {
     return { race, sprint };
   }, [groupInfo]);
 
-  const handleExport = useCallback(() => {
+  const handleExport = useCallback(async () => {
     if (!analysisData.length) return;
     setExporting(true);
     try {
@@ -400,7 +401,7 @@ export default function PredictionAnalysis() {
       ws3['!cols'] = [{ wch: 35 }, { wch: 60 }];
       XLSX.utils.book_append_sheet(wb, ws3, t('scoringModal.title'));
 
-      XLSX.writeFile(wb, `Podio_Analisis_${groupInfo?.nombre || t('pointsHistogram.groupFallback')}_${new Date().toISOString().slice(0, 10)}.xlsx`);
+      await exportToExcel(wb, `Podio_Analisis_${groupInfo?.nombre || t('pointsHistogram.groupFallback')}_${new Date().toISOString().slice(0, 10)}.xlsx`);
     } catch (err) {
       console.error('Export error:', err);
     } finally {

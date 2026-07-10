@@ -6,6 +6,7 @@ import { useToastStore } from '../../stores/toastStore';
 import { supabase } from '../../lib/supabase';
 import SharePredictionCard from '../../components/SharePredictionCard/SharePredictionCard';
 import * as XLSX from 'xlsx';
+import { exportToExcel } from '../../utils/exportExcel';
 import { useTranslation, getDateLocale, getRaceName } from '../../i18n';
 import BackButton from '../../components/BackButton';
 import PaywallGate from '../../components/PaywallGate';
@@ -855,7 +856,7 @@ export default function RacePredictionsComparison() {
     }
   };
 
-  const exportToExcel = () => {
+  const handleExportExcel = async () => {
     try {
       const wb = XLSX.utils.book_new();
 
@@ -957,7 +958,7 @@ export default function RacePredictionsComparison() {
       // ✅ NOMBRE DE ARCHIVO CON TIPO
       const tipoCarrera = isSprint ? t('racePredictions.sprintWord') : t('racePredictions.raceWord');
       const fileName = `${tipoCarrera}_${getRaceName(race, t).replace(/\s+/g, '_')}.xlsx`;
-      XLSX.writeFile(wb, fileName);
+      await exportToExcel(wb, fileName);
 
       toast.success(t('racePredictions.excelExported'));
     } catch (error) {
@@ -1142,7 +1143,7 @@ const sistemaPuntos = isSprint
 
         <div className="action-buttons">
           <PaywallGate feature="export_excel" compact>
-            <button className="action-btn primary" onClick={exportToExcel}>
+            <button className="action-btn primary" onClick={handleExportExcel}>
               📥 {t('pointsHistogram.exportExcel')}
             </button>
           </PaywallGate>
