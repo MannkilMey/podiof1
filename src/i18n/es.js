@@ -998,7 +998,8 @@ landing: {
   nav: {
     login: 'Iniciar Sesión',
     register: 'Crear Cuenta',
-    hero: {
+  },
+  hero: {
     badge: 'Predicciones en Vivo',
     title: 'Predicciones Deportivas\nGratis con Amigos',
     subtitle: 'Crea tu grupo de predicciones, invita a tus amigos y compite prediciendo los resultados de cada carrera. Sistema de puntos personalizable, clasificación en tiempo real.',
@@ -1008,10 +1009,9 @@ landing: {
     titleLine2: 'Gratis con Amigos',
     },
     download: {
-      title: 'Disponible en iOS',
-      androidSoon: 'Android próximamente',
-      iosBtn: 'Descargar en App Store'
-    }
+    title: 'Disponible en iOS',
+    androidSoon: 'Android próximamente',
+    iosBtn: 'Descargar en App Store'
   }
 },
 deleteAccount: {

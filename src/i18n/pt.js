@@ -1003,8 +1003,9 @@ settings: {
 landing: {
   nav: {
     login: 'Entrar',
-    register: 'Criar Conta',
-    hero: {
+    register: 'Criar Conta'
+  },
+  hero: {
     badge: 'Previsões ao Vivo',
     title: 'Previsões Esportivas\nGrátis com Amigos',
     subtitle: 'Crie seu grupo de previsões, convide seus amigos e compita prevendo os resultados de cada corrida. Sistema de pontuação personalizável, classificação em tempo real.',
@@ -1017,7 +1018,6 @@ landing: {
     title: 'Disponível no iOS',
     androidSoon: 'Android em breve',
     iosBtn: 'Baixar na App Store'
-  }
   }
 },
 deleteAccount: {

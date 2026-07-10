@@ -1003,7 +1003,8 @@ landing: {
   nav: {
     login: 'Log In',
     register: 'Sign Up',
-    hero: {
+  },
+   hero: {
     badge: 'Live Predictions',
     title: 'Sports Predictions\nFree with Friends',
     subtitle: 'Create your prediction group, invite your friends and compete by predicting race results. Customizable scoring system, real-time standings.',
@@ -1016,8 +1017,6 @@ landing: {
   title: 'Available on iOS',
   androidSoon: 'Android coming soon',
   iosBtn: 'Download on App Store'
-  }
-   
   }
 },
 deleteAccount: {

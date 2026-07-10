@@ -21,10 +21,10 @@ export default function LanguageSelector({ compact = false }) {
             onClick={() => setLocale(lang)}
             style={{
               padding: '6px 12px',
-              background: locale === lang ? 'var(--red)' : 'var(--bg3)',
-              border: `1px solid ${locale === lang ? 'var(--red)' : 'var(--border)'}`,
+              background: locale === lang ? 'var(--red)' : 'transparent',
+              border: `1px solid ${locale === lang ? 'var(--red)' : 'var(--border2)'}`,
+              color: locale === lang ? 'white' : 'var(--white)',
               borderRadius: 8,
-              color: locale === lang ? 'white' : 'var(--muted)',
               fontSize: 13,
               fontWeight: locale === lang ? 700 : 400,
               cursor: 'pointer',
