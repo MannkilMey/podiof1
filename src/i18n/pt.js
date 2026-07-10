@@ -1001,25 +1001,25 @@ settings: {
   pushNotificationsDesc: 'Receber avisos de corridas, resultados e badges'
 },
 landing: {
-  nav: {
-    login: 'Entrar',
-    register: 'Criar Conta'
-  },
-  hero: {
-    badge: 'Previsões ao Vivo',
-    title: 'Previsões Esportivas\nGrátis com Amigos',
-    subtitle: 'Crie seu grupo de previsões, convide seus amigos e compita prevendo os resultados de cada corrida. Sistema de pontuação personalizável, classificação em tempo real.',
-    ctaPrimary: 'Começar Grátis',
-    ctaSecondary: 'Já tenho uma conta',
-    titleLine1: 'Previsões Esportivas',
-    titleLine2: 'Grátis com Amigos',
+    nav: {
+      login: 'Entrar',
+      register: 'Criar Conta'
+    },
+    hero: {
+      badge: 'Previsões ao Vivo',
+      titleLine1: 'Previsões Esportivas',
+      titleLine2: 'Grátis com Amigos',
+      subtitle: 'Crie seu grupo de previsões, convide seus amigos e compita prevendo os resultados de cada corrida. Sistema de pontuação personalizável, classificação em tempo real.',
+      ctaPrimary: 'Começar Grátis',
+      ctaSecondary: 'Já tenho uma conta'
     },
     download: {
-    title: 'Disponível no iOS',
-    androidSoon: 'Android em breve',
-    iosBtn: 'Baixar na App Store'
-  }
+      title: 'Disponível no iOS',
+      androidSoon: 'Android em breve',
+      iosBtn: 'Baixar na App Store'
+    }
 },
+
 deleteAccount: {
   confirmWord: 'EXCLUIR',
   deleteError: 'Erro ao excluir a conta. Tente novamente ou contate privacy@podio.lat',

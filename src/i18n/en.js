@@ -1000,25 +1000,25 @@ settings: {
   pushNotificationsDesc: 'Receive alerts for races, results and badges'
 },
 landing: {
-  nav: {
-    login: 'Log In',
-    register: 'Sign Up',
+    nav: {
+      login: 'Log In',
+      register: 'Sign Up'
+    },
+    hero: {
+      badge: 'Live Predictions',
+      titleLine1: 'Sports Predictions',
+      titleLine2: 'Free with Friends',
+      subtitle: 'Create your prediction group, invite your friends and compete by predicting race results. Customizable scoring system, real-time standings.',
+      ctaPrimary: 'Start for Free',
+      ctaSecondary: 'I already have an account'
+    },
+    download: {
+      title: 'Available on iOS',
+      androidSoon: 'Android coming soon',
+      iosBtn: 'Download on App Store'
+    }
   },
-   hero: {
-    badge: 'Live Predictions',
-    title: 'Sports Predictions\nFree with Friends',
-    subtitle: 'Create your prediction group, invite your friends and compete by predicting race results. Customizable scoring system, real-time standings.',
-    ctaPrimary: 'Start for Free',
-    ctaSecondary: 'I already have an account',
-    titleLine1: 'Sports Predictions',
-    titleLine2: 'Free with Friends',
-  },
-  download: {
-  title: 'Available on iOS',
-  androidSoon: 'Android coming soon',
-  iosBtn: 'Download on App Store'
-  }
-},
+
 deleteAccount: {
   confirmWord: 'DELETE',
   deleteError: 'Error deleting your account. Please try again or contact privacy@podio.lat',
