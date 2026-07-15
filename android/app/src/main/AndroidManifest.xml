@@ -34,6 +34,12 @@
                 android:resource="@xml/file_paths"></meta-data>
         </provider>
     </application>
+    
+     <!-- ===== AdMob ===== -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-XXXXXXXXXXXXXXXX~YYYYYYYYYY" /> <!-- ⚠️ REEMPLAZAR con tu App ID de Android de AdMob -->
+        <!-- ===== /AdMob ===== -->
 
     <!-- Permissions -->
 
