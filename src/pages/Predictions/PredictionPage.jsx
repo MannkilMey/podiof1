@@ -8,6 +8,7 @@ import { supabase } from '../../lib/supabase';
 import SharePredictionCard from '../../components/SharePredictionCard/SharePredictionCard';
 import { useTranslation, getDateLocale, getRaceName } from '../../i18n';
 import BackButton from '../../components/BackButton';
+import { useInterstitial } from '../../hooks/useInterstitial';
 import {
   DndContext,
   closestCenter,
@@ -595,6 +596,7 @@ export default function PredictionPage() {
   const setTheme = useThemeStore((state) => state.setTheme);
   const toast = useToastStore();
   const { t, locale } = useTranslation();
+  const { showIfReady } = useInterstitial('prediction');
   
   const { drivers, group, race, existingPrediction, canPredict, loading, error } = usePrediction(
     groupId,
@@ -770,8 +772,8 @@ export default function PredictionPage() {
     navigate(`/group/${groupId}`);
   };
 
-  // 🆕 Handlers para modales
-  const handleGoToDashboard = () => {
+  const handleGoToDashboard = async () => {
+    await showIfReady();          
     navigate(`/group/${groupId}`);
   };
 

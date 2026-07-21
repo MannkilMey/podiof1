@@ -117,7 +117,8 @@ export default {
     passwordTooShort: 'Password must be at least 6 characters',
     accountCreated: 'Account created! You can now sign in 🏁',
     accountCreationError: 'Error creating account. Please try again.',
-    accountCreationErrorShort: 'Error creating account'
+    accountCreationErrorShort: 'Error creating account',
+    continueWithGoogle: 'Continue with Google',
   },
 
   // ============================================

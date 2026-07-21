@@ -118,7 +118,8 @@ export default {
     passwordTooShort: 'La contraseña debe tener al menos 6 caracteres',
     accountCreated: '¡Cuenta creada! Ya puedes iniciar sesión 🏁',
     accountCreationError: 'Error al crear cuenta. Intenta de nuevo.',
-    accountCreationErrorShort: 'Error al crear cuenta'
+    accountCreationErrorShort: 'Error al crear cuenta',
+    continueWithGoogle: 'Continuar con Google',
   },
 
   // ============================================

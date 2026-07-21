@@ -9,6 +9,8 @@ import { isNative } from './hooks/usePlatform';
 import { useTranslation } from './i18n';
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { App as CapApp } from '@capacitor/app';
+import { AdMob } from '@capacitor-community/admob';
+import PersistentAdBanner from './components/PersistentAdBanner';
 
 // Public Pages
 import Landing from './pages/Landing/Landing';
@@ -140,6 +142,13 @@ export default function App() {
     return () => {
       backHandler.then(h => h.remove());
     };
+  }, []);
+  
+  useEffect(() => {
+    if (!isNative) return;
+    AdMob.initialize({ requestTrackingAuthorization: false })
+      .then(() => console.log('[AdMob] initialized ✅'))
+      .catch((e) => console.error('[AdMob] init error', e));
   }, []);
 
   return (
@@ -345,6 +354,7 @@ export default function App() {
           {/* Catch all - redirect to landing */}
           <Route path="*" element={<Navigate to="/landing" replace />} />
         </Routes>
+        <PersistentAdBanner />
       </BrowserRouter>
     </>
   );
