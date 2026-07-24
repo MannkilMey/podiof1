@@ -1,6 +1,7 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useSyncExternalStore } from 'react';
 import { usePremium } from './usePremium';
 import { isNative } from './usePlatform';
+import { subscribeConsent, getCanRequestAds } from './consent';
 
 /* ============================================================================
  *  ADS_CONFIG — EL ÚNICO LUGAR PARA AJUSTAR LOS ANUNCIOS
@@ -10,12 +11,14 @@ import { isNative } from './usePlatform';
  *
  *    masterEnabled ............ interruptor global. false = CERO ads para todos
  *                               (útil como "kill switch" si algo sale mal).
+ *    bannerExcludedPaths ...... rutas donde NO se muestra el banner.
  *    interstitialMaxPerSessionPerScreen .. cuántos interstitials como máximo
  *                               por pantalla en una misma sesión de la app.
  *    screens[key] ............. qué formatos habilitar en cada pantalla.
  * ========================================================================== */
 export const ADS_CONFIG = {
   masterEnabled: true,
+  bannerExcludedPaths: ['/upgrade'],
   interstitialMaxPerSessionPerScreen: 1,
   screens: {
     prediction:     { banner: false, interstitial: true  },
@@ -24,68 +27,60 @@ export const ADS_CONFIG = {
     statsDeep:      { banner: true,  interstitial: false },
     statsAnalysis:  { banner: true,  interstitial: false },
     statsHistogram: { banner: true,  interstitial: false },
-    bannerExcludedPaths: ['/upgrade'],
   },
 };
 
 /* Poné en false para silenciar los logs de diagnóstico en consola. */
-const DEBUG_ADS = true;
+const DEBUG_ADS = false;
 
 /* ----------------------------------------------------------------------------
  *  decideShowAds — decisión PURA, sin React ni AdMob.
- *  Separada a propósito: es trivial de leer, testear y diagnosticar.
  *
- *  Regla: se muestran ads SOLO si...
+ *  Se muestran ads SOLO si...
  *    - la config global está encendida (masterEnabled), y
  *    - estamos en la app nativa (nunca en la web), y
  *    - ya terminó de cargar el estado premium (nunca durante loading), y
- *    - el usuario NO es premium.
+ *    - el usuario NO es premium, y
+ *    - el consentimiento ya se resolvió y permite pedir anuncios.
  *
  *  Usamos isPremium (no canAccess): un usuario free debe ver ads tenga el
- *  paywall encendido o apagado. canAccess devuelve true con el paywall off,
- *  lo que ocultaría los ads a los free — exactamente lo que NO queremos.
+ *  paywall encendido o apagado.
  * -------------------------------------------------------------------------- */
-export function decideShowAds({ masterEnabled, isNative, loading, isPremium }) {
-  return Boolean(masterEnabled && isNative && !loading && !isPremium);
+export function decideShowAds({ masterEnabled, isNative, loading, isPremium, canRequestAds }) {
+  return Boolean(masterEnabled && isNative && !loading && !isPremium && canRequestAds);
 }
 
-/* Registro EN MEMORIA de interstitials ya mostrados en esta sesión.
- * Vive a nivel de módulo: dura mientras la app está abierta y se resetea
- * solo al cerrar/reabrir la app. Eso es justamente "1 por sesión". */
+/* Registro EN MEMORIA de interstitials ya mostrados en esta sesión. */
 const interstitialCounts = new Map(); // screenKey -> veces mostrado esta sesión
 
 /* ----------------------------------------------------------------------------
  *  useAds — única fuente de verdad para decidir CUÁNDO mostrar anuncios.
- *  (En esta fase solo DECIDE; todavía no llama a AdMob. Eso llega en Fase 3/4.)
- *
- *  Devuelve:
- *    showAds ......................... boolean global de "mostrar ads o no"
- *    isBannerEnabled(screenKey) ...... si corresponde banner en esa pantalla
- *    canShowInterstitial(screenKey) .. si se puede mostrar un interstitial ahí
- *                                       (respeta el tope por sesión)
- *    markInterstitialShown(screenKey)  registrar que se mostró uno
  * -------------------------------------------------------------------------- */
 export function useAds() {
-  // Reusamos usePremium(): una sola fuente de verdad para el estado premium.
-  // Tomamos solo los dos primitivos que necesitamos para minimizar renders.
   const { isPremium, loading } = usePremium();
+
+  // Estado del consentimiento (se actualiza solo cuando initConsent resuelve).
+  const canRequestAds = useSyncExternalStore(
+    subscribeConsent,
+    getCanRequestAds,
+    () => false // valor en SSR / web: sin anuncios
+  );
 
   const showAds = decideShowAds({
     masterEnabled: ADS_CONFIG.masterEnabled,
     isNative,
     loading,
     isPremium,
+    canRequestAds,
   });
 
-  // Log de diagnóstico: se dispara solo cuando cambian las entradas de la
-  // decisión (no en cada render), así se ven las transiciones sin spam.
   useEffect(() => {
     if (!DEBUG_ADS) return;
     console.log(
       `[useAds] masterEnabled=${ADS_CONFIG.masterEnabled} isNative=${isNative} ` +
-      `loading=${loading} isPremium=${isPremium} -> showAds=${showAds}`
+      `loading=${loading} isPremium=${isPremium} canRequestAds=${canRequestAds} -> showAds=${showAds}`
     );
-  }, [loading, isPremium, showAds]);
+  }, [loading, isPremium, canRequestAds, showAds]);
 
   const isBannerEnabled = useCallback(
     (screenKey) => showAds && Boolean(ADS_CONFIG.screens[screenKey]?.banner),

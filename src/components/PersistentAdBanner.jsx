@@ -13,7 +13,7 @@ import { isAndroid } from '../hooks/usePlatform';
 /* Test ad unit IDs de Google — SOLO desarrollo. Reemplazar en Fase 6. */
 const TEST_BANNER_AD_ID = isAndroid
   ? 'ca-app-pub-3940256099942544/6300978111' // Android test banner
-  : 'ca-app-pub-3940256099942544/2934735716'; // iOS test banner
+  : 'ca-app-pub-4756489814914646/2309857736'; // iOS PRODUCCION
 
 /* Alto del banner (BannerAdSize.BANNER = 50px). Ajustá si hiciera falta. */
 const BANNER_HEIGHT = 50;

@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../stores/authStore';
 import { useThemeStore } from '../../stores/themeStore';
@@ -7,6 +6,8 @@ import { useTranslation } from '../../i18n';
 import { isNative } from '../../hooks/usePlatform';
 import BackButton from '../../components/BackButton';
 import LanguageSelector from '../../components/LanguageSelector';
+import { useState, useEffect, useSyncExternalStore } from 'react';
+import { subscribeConsent, getPrivacyOptionsRequired, openPrivacyOptions } from '../../hooks/consent';
 
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap');`;
 
@@ -66,6 +67,12 @@ export default function Settings() {
     setPushEnabled(newValue);
     await supabase.from('users').update({ push_enabled: newValue }).eq('id', user.id);
   };
+
+  const privacyOptionsRequired = useSyncExternalStore(
+    subscribeConsent,
+    getPrivacyOptionsRequired,
+    () => false
+  );
 
   return (
     <>
@@ -129,6 +136,24 @@ export default function Settings() {
                   }} />
                 </span>
               </label>
+            </div>
+          </div>
+        )}
+
+        {/* Privacidad — solo si el consentimiento lo requiere (UE/UK/Suiza) */}
+        {isNative && privacyOptionsRequired && (
+          <div className="settings-card">
+            <h2 className="settings-section-title">🔒 {t('settings.privacy', { defaultValue: 'Privacidad' })}</h2>
+            <div className="setting-item">
+              <div className="setting-info">
+                <div className="setting-label">Opciones de privacidad de anuncios</div>
+                <div className="setting-description">
+                  Cambiá o revocá tu consentimiento para anuncios personalizados.
+                </div>
+              </div>
+              <button className="theme-btn" onClick={openPrivacyOptions}>
+                Gestionar
+              </button>
             </div>
           </div>
         )}

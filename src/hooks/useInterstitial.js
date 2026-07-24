@@ -6,7 +6,7 @@ import { isAndroid } from './usePlatform';
 /* Test ad unit IDs de Google — SOLO desarrollo. Reemplazar en Fase 6. */
 const TEST_INTERSTITIAL_AD_ID = isAndroid
   ? 'ca-app-pub-3940256099942544/1033173712' // Android test interstitial
-  : 'ca-app-pub-3940256099942544/4411468910'; // iOS test interstitial
+  : 'ca-app-pub-4756489814914646/9996776064'; // iOS test interstitial
 
 /**
  * useInterstitial(screenKey)

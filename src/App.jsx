@@ -11,6 +11,7 @@ import { StatusBar, Style } from '@capacitor/status-bar';
 import { App as CapApp } from '@capacitor/app';
 import { AdMob } from '@capacitor-community/admob';
 import PersistentAdBanner from './components/PersistentAdBanner';
+import { initConsent } from './hooks/consent';
 
 // Public Pages
 import Landing from './pages/Landing/Landing';
@@ -147,8 +148,14 @@ export default function App() {
   useEffect(() => {
     if (!isNative) return;
     AdMob.initialize({ requestTrackingAuthorization: false })
-      .then(() => console.log('[AdMob] initialized ✅'))
-      .catch((e) => console.error('[AdMob] init error', e));
+      .then(() => {
+        console.log('[AdMob] initialized ✅');
+        return initConsent();          // ← consentimiento después del init
+      })
+      .then((canRequestAds) => {
+        console.log('[AdMob] canRequestAds =', canRequestAds);
+      })
+      .catch((e) => console.error('[AdMob] init/consent error', e));
   }, []);
 
   return (
