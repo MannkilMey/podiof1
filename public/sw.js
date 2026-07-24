@@ -1,4 +1,4 @@
-const CACHE_NAME = 'podio-v11';
+const CACHE_NAME = 'podio-v12';
 const STATIC_ASSETS = [
   '/',
   '/manifest.json'
