@@ -510,22 +510,22 @@ export default function RaceDetailPage() {
 
       const { data: scoresData } = await supabase
         .from('scores')
-        .select(`
-          usuario_id,
-          puntos,
-          users:usuario_id (
-            nombre,
-            apellido
-          )
-        `)
+        .select('usuario_id, puntos')
         .eq('grupo_id', groupId)
         .eq('carrera_id', raceId)
         .order('puntos', { ascending: false });
 
+      const scoreUserIds = [...new Set((scoresData || []).map(s => s.usuario_id).filter(Boolean))];
+      const { data: profiles } = await supabase.rpc('get_public_names', { p_user_ids: scoreUserIds });
+      const nameMap = {};
+      (profiles || []).forEach(p => {
+        nameMap[p.id] = `${p.nombre || ''} ${p.apellido || ''}`.trim();
+      });
+
       const leaderboard = scoresData?.map((s, idx) => ({
         position: idx + 1,
         userId: s.usuario_id,
-        nombre: `${s.users?.nombre || ''} ${s.users?.apellido || ''}`.trim() || t('dashboard.defaultUserName'),
+        nombre: nameMap[s.usuario_id] || t('dashboard.defaultUserName'),
         puntos: s.puntos,
         isCurrentUser: s.usuario_id === user.id
       })) || [];

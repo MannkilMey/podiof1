@@ -119,6 +119,7 @@ export default {
     accountCreationError: 'Error creating account. Please try again.',
     accountCreationErrorShort: 'Error creating account',
     continueWithGoogle: 'Continue with Google',
+    continueWithApple: "Continue with Apple",
   },
 
   // ============================================

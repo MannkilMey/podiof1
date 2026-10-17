@@ -53,7 +53,8 @@ export function usePrediction(groupId, raceId, userId) {
               nombre_completo,
               acronimo,
               numero,
-              nacionalidad
+              nacionalidad,
+              activo
             ),
             teams:escuderia_id (
               id,
@@ -75,7 +76,7 @@ export function usePrediction(groupId, raceId, userId) {
           .maybeSingle();
 
         // 6. Mapear datos (incluir equipoId para bonus de escudería)
-        const mappedDrivers = driversData.map(d => ({
+          const mappedDrivers = driversData.filter(d => d.drivers?.activo !== false).map(d => ({
           id: d.drivers.id,
           nombre: d.drivers.nombre_completo,
           numero: d.numero_auto || d.drivers.numero,
