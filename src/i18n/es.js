@@ -932,6 +932,10 @@ howItWorks: {
   yourPredictionColumn: 'Tu Predicción',
   pointsEarnedLabel: 'Puntos Obtenidos',
   subtitleLine: '{{name}} • {{count}} carreras',
+  filterAll: 'Todas',
+  filterUpcoming: 'Próximas',
+  filterCompleted: 'Finalizadas',
+  noRacesInFilter: 'No hay carreras en este filtro.',
 },
 raceDetailPage: {
   loadingDetails: 'Cargando detalles...',

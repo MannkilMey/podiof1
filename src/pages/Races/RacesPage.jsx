@@ -77,6 +77,47 @@ html, body {
   margin-bottom: 24px;
 }
 
+/* ✅ NUEVO - Filtros de carreras */
+.races-filters {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.race-filter-btn {
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg2);
+  color: var(--muted);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: var(--fs-body);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.race-filter-btn.active {
+  background: var(--red);
+  color: #fff;
+  border-color: var(--red);
+}
+
+.race-filter-btn:hover:not(.active) {
+  border-color: var(--border2);
+  color: var(--white);
+}
+
+.races-filter-empty {
+  text-align: center;
+  padding: 48px 20px;
+  color: var(--muted);
+  font-size: var(--fs-body);
+}
+
 .races-grid {
   display: flex;
   flex-direction: column;
@@ -416,6 +457,7 @@ export default function RacesPage() {
   const [drivers, setDrivers] = useState({});
   const [raceStatusMap, setRaceStatusMap] = useState({});
   const [loading, setLoading] = useState(true);
+  const [raceFilter, setRaceFilter] = useState('all'); // ✅ NUEVO: 'all' | 'upcoming' | 'completed'
 
   useEffect(() => {
     loadRacesData();
@@ -455,8 +497,9 @@ export default function RacesPage() {
         racesQuery = racesQuery.eq('tipo', 'carrera');
       }
 
+      // ✅ CAMBIO: orden descendente (más recientes / próximas primero)
       const { data: racesData, error: racesError } = await racesQuery
-        .order('fecha_programada', { ascending: true });
+        .order('fecha_programada', { ascending: false });
 
       if (racesError) throw racesError;
       setRaces(racesData || []);
@@ -593,6 +636,13 @@ export default function RacesPage() {
     })}`;
   };
 
+  // ✅ NUEVO: aplicar el filtro seleccionado sobre las carreras ya ordenadas
+  const filteredRaces = races.filter((race) => {
+    if (raceFilter === 'upcoming') return race.estado !== 'finalizada';
+    if (raceFilter === 'completed') return race.estado === 'finalizada';
+    return true; // 'all'
+  });
+
   if (loading) {
     return (
       <>
@@ -647,162 +697,192 @@ export default function RacesPage() {
             </div>
           </div>
         ) : (
-          <div className="races-grid">
-            {races.map((race) => {
-              const status = getRaceStatus(race);
-              const raceResults = results[race.id] || [];
-              const userPrediction = predictions[race.id];
-              const userScore = scores[race.id];
-              const hasResults = race.estado === 'finalizada' && raceResults.length > 0;
-              
-              return (
-                <div 
-                  key={race.id} 
-                  className={`race-card ${race.estado === 'finalizada' ? 'completed' : ''}`}
-                  onClick={() => navigate(`/group/${groupId}/race/${race.id}`)}
-                >
-                  {/* Header */}
-                  <div className="race-card-header">
-                    <div className="race-info">
-                      <div className="race-round">{t('predictionAnalysis.roundLabel', { round: race.ronda || '?' })}</div>                      <div className="race-name">{getRaceName(race, t)}</div>
-                      <div className="race-details">
-                        <div className="race-detail-item">
-                          <span>📍</span>
-                          <span>{race.circuito}</span>
-                        </div>
-                        <div className="race-detail-item">
-                          <span>📅</span>
-                          <span>{formatDate(race.fecha_programada)}</span>
-                        </div>
-                      </div>
-                      <div className="race-badges">
-                        {/* ✅ NUEVO: Badge Sprint */}
-                        {race.tipo === 'sprint' && (
-                          <span className="race-badge sprint">
-                            ⚡ SPRINT
-                          </span>
-                        )}
-                        
-                        {status.badge && (
-                          <span className={`race-badge ${status.badge}`}>
-                            {status.label}
-                          </span>
-                        )}
-                      </div>
-                      {status.canPredict && (
-                        <div className="countdown-small">
-                          {getDeadlineText(race)}
-                        </div>
-                      )}
-                    </div>
+          <>
+            {/* ✅ NUEVO: Botones de filtro */}
+            <div className="races-filters">
+              <button
+                className={`race-filter-btn ${raceFilter === 'all' ? 'active' : ''}`}
+                onClick={() => setRaceFilter('all')}
+              >
+                {t('racesPage.filterAll') || 'Todas'}
+              </button>
+              <button
+                className={`race-filter-btn ${raceFilter === 'upcoming' ? 'active' : ''}`}
+                onClick={() => setRaceFilter('upcoming')}
+              >
+                {t('racesPage.filterUpcoming') || 'Próximas'}
+              </button>
+              <button
+                className={`race-filter-btn ${raceFilter === 'completed' ? 'active' : ''}`}
+                onClick={() => setRaceFilter('completed')}
+              >
+                {t('racesPage.filterCompleted') || 'Finalizadas'}
+              </button>
+            </div>
 
-                    <div className="race-actions">
-                      {status.canPredict && (
-                        <button 
-                          className="btn-predict"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handlePredict(race.id);
-                          }}
-                        >
-                          {t('racesPage.predictBtn')}
-                        </button>
-                      )}
-                      
-                      {status.canEdit && (
-                        <button 
-                          className="btn-edit"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleEdit(race.id);
-                          }}
-                        >
-                          {t('racesPage.editPredictionBtn')}
-                        </button>
-                      )}
-
-                      {!status.canPredict && !status.canEdit && userPrediction && (
-                        <button 
-                          className="btn-edit"
-                          disabled
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          {t('racesPage.statusLocked')}
-                        </button>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Resultados - Solo si la carrera está completada */}
-                  {hasResults && userPrediction && (
-                    <div className="race-results">
-                      <div className="results-title">
-                        📊 {t('racesPage.resultsTitle')}
-                      </div>
-                      <div className="results-grid">
-                        {/* Resultado Real */}
-                        <div className="result-column">
-                          <div className="result-column-title">{t('racesPage.realResultColumn')}</div>
-                          <div className="result-list">
-                            {raceResults.slice(0, group.cantidad_posiciones || 10).map((result, idx) => {
-                              const driver = drivers[result.piloto_id];
-                              const predictedCorrectly = userPrediction.posiciones?.[idx] === result.piloto_id;
-                              
-                              return (
-                                <div 
-                                  key={result.id} 
-                                  className={`result-item ${predictedCorrectly ? 'correct' : ''}`}
-                                >
-                                  <div className="result-position">{idx + 1}°</div>
-                                  <div className="result-driver">
-                                    {driver?.nombre_completo || t('common.unknown')}
-                                  </div>
-                                  {predictedCorrectly && <span className="result-check">✓</span>}
-                                </div>
-                              );
-                            })}
+            {filteredRaces.length === 0 ? (
+              <div className="races-filter-empty">
+                {t('racesPage.noRacesInFilter') || 'No hay carreras en este filtro.'}
+              </div>
+            ) : (
+              <div className="races-grid">
+                {filteredRaces.map((race) => {
+                  const status = getRaceStatus(race);
+                  const raceResults = results[race.id] || [];
+                  const userPrediction = predictions[race.id];
+                  const userScore = scores[race.id];
+                  const hasResults = race.estado === 'finalizada' && raceResults.length > 0;
+                  
+                  return (
+                    <div 
+                      key={race.id} 
+                      className={`race-card ${race.estado === 'finalizada' ? 'completed' : ''}`}
+                      onClick={() => navigate(`/group/${groupId}/race/${race.id}`)}
+                    >
+                      {/* Header */}
+                      <div className="race-card-header">
+                        <div className="race-info">
+                          <div className="race-round">{t('predictionAnalysis.roundLabel', { round: race.ronda || '?' })}</div>                      <div className="race-name">{getRaceName(race, t)}</div>
+                          <div className="race-details">
+                            <div className="race-detail-item">
+                              <span>📍</span>
+                              <span>{race.circuito}</span>
+                            </div>
+                            <div className="race-detail-item">
+                              <span>📅</span>
+                              <span>{formatDate(race.fecha_programada)}</span>
+                            </div>
                           </div>
+                          <div className="race-badges">
+                            {/* ✅ NUEVO: Badge Sprint */}
+                            {race.tipo === 'sprint' && (
+                              <span className="race-badge sprint">
+                                ⚡ SPRINT
+                              </span>
+                            )}
+                            
+                            {status.badge && (
+                              <span className={`race-badge ${status.badge}`}>
+                                {status.label}
+                              </span>
+                            )}
+                          </div>
+                          {status.canPredict && (
+                            <div className="countdown-small">
+                              {getDeadlineText(race)}
+                            </div>
+                          )}
                         </div>
 
-                        {/* Tu Predicción */}
-                        <div className="result-column">
-                          <div className="result-column-title">{t('racesPage.yourPredictionColumn')}</div>
-                          <div className="result-list">
-                            {userPrediction.posiciones?.slice(0, group.cantidad_posiciones || 10).map((pilotoId, idx) => {
-                              const driver = drivers[pilotoId];
-                              const realPosition = raceResults.find(r => r.piloto_id === pilotoId);
-                              const isCorrect = realPosition?.posicion_final === idx + 1;
-                              
-                              return (
-                                <div 
-                                  key={idx} 
-                                  className={`result-item ${isCorrect ? 'correct' : 'wrong'}`}
-                                >
-                                  <div className="result-position">{idx + 1}°</div>
-                                  <div className="result-driver">
-                                    {driver?.nombre_completo || t('common.unknown')}
-                                  </div>
-                                  <span className="result-check">{isCorrect ? '✓' : '✗'}</span>
-                                </div>
-                              );
-                            })}
-                          </div>
+                        <div className="race-actions">
+                          {status.canPredict && (
+                            <button 
+                              className="btn-predict"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handlePredict(race.id);
+                              }}
+                            >
+                              {t('racesPage.predictBtn')}
+                            </button>
+                          )}
+                          
+                          {status.canEdit && (
+                            <button 
+                              className="btn-edit"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleEdit(race.id);
+                              }}
+                            >
+                              {t('racesPage.editPredictionBtn')}
+                            </button>
+                          )}
+
+                          {!status.canPredict && !status.canEdit && userPrediction && (
+                            <button 
+                              className="btn-edit"
+                              disabled
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              {t('racesPage.statusLocked')}
+                            </button>
+                          )}
                         </div>
                       </div>
 
-                      {/* Puntos Obtenidos */}
-                      {userScore !== undefined && (
-                        <div className="points-earned">
-                          <div className="points-label">{t('racesPage.pointsEarnedLabel')}</div>
-                          <div className="points-value">{Math.round(userScore)}</div>
+                      {/* Resultados - Solo si la carrera está completada */}
+                      {hasResults && userPrediction && (
+                        <div className="race-results">
+                          <div className="results-title">
+                            📊 {t('racesPage.resultsTitle')}
+                          </div>
+                          <div className="results-grid">
+                            {/* Resultado Real */}
+                            <div className="result-column">
+                              <div className="result-column-title">{t('racesPage.realResultColumn')}</div>
+                              <div className="result-list">
+                                {raceResults.slice(0, group.cantidad_posiciones || 10).map((result, idx) => {
+                                  const driver = drivers[result.piloto_id];
+                                  const predictedCorrectly = userPrediction.posiciones?.[idx] === result.piloto_id;
+                                  
+                                  return (
+                                    <div 
+                                      key={result.id} 
+                                      className={`result-item ${predictedCorrectly ? 'correct' : ''}`}
+                                    >
+                                      <div className="result-position">{idx + 1}°</div>
+                                      <div className="result-driver">
+                                        {driver?.nombre_completo || t('common.unknown')}
+                                      </div>
+                                      {predictedCorrectly && <span className="result-check">✓</span>}
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </div>
+
+                            {/* Tu Predicción */}
+                            <div className="result-column">
+                              <div className="result-column-title">{t('racesPage.yourPredictionColumn')}</div>
+                              <div className="result-list">
+                                {userPrediction.posiciones?.slice(0, group.cantidad_posiciones || 10).map((pilotoId, idx) => {
+                                  const driver = drivers[pilotoId];
+                                  const realPosition = raceResults.find(r => r.piloto_id === pilotoId);
+                                  const isCorrect = realPosition?.posicion_final === idx + 1;
+                                  
+                                  return (
+                                    <div 
+                                      key={idx} 
+                                      className={`result-item ${isCorrect ? 'correct' : 'wrong'}`}
+                                    >
+                                      <div className="result-position">{idx + 1}°</div>
+                                      <div className="result-driver">
+                                        {driver?.nombre_completo || t('common.unknown')}
+                                      </div>
+                                      <span className="result-check">{isCorrect ? '✓' : '✗'}</span>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Puntos Obtenidos */}
+                          {userScore !== undefined && (
+                            <div className="points-earned">
+                              <div className="points-label">{t('racesPage.pointsEarnedLabel')}</div>
+                              <div className="points-value">{Math.round(userScore)}</div>
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
+                  );
+                })}
+              </div>
+            )}
+          </>
         )}
       </div>
     </>

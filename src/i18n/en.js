@@ -938,6 +938,10 @@ racesPage: {
   yourPredictionColumn: 'Your Prediction',
   pointsEarnedLabel: 'Points Earned',
   subtitleLine: '{{name}} • {{count}} races',
+  filterAll: 'All',
+  filterUpcoming: 'Upcoming',
+  filterCompleted: 'Completed',
+  noRacesInFilter: 'No races match this filter.'
 },
 raceDetailPage: {
   loadingDetails: 'Loading details...',

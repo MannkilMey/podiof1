@@ -939,6 +939,10 @@ racesPage: {
   yourPredictionColumn: 'Sua Previsão',
   pointsEarnedLabel: 'Pontos Obtidos',
   subtitleLine: '{{name}} • {{count}} corridas',
+  filterAll: 'Todas',
+  filterUpcoming: 'Próximas',
+  filterCompleted: 'Finalizadas',
+  noRacesInFilter: 'Não há corridas neste filtro.',
 },
 raceDetailPage: {
   loadingDetails: 'Carregando detalhes...',
