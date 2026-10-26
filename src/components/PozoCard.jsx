@@ -75,6 +75,82 @@ export default function PozoCard({ groupId, leaderboard }) {
   const medals = { '1': '🥇', '2': '🥈', '3': '🥉' };
   const barColors = { '1': '#FFD700', '2': '#C0C0C0', '3': '#CD7F32' };
 
+  // ============================================================
+  // iOS: versión "Proyección del Podio" — solo ranking del grupo.
+  // Sin montos, sin %, sin "pozo/points", sin "EN VIVO", sin disclaimer de dinero.
+  // ============================================================
+  if (isNative) {
+    // Sin proyección de ranking no hay nada que mostrar en iOS.
+    if (!leaderboard || leaderboard.length === 0) return null;
+
+    const topTres = ['1', '2', '3'];
+
+    return (
+      <div style={{
+        background: 'var(--bg2)',
+        border: '1px solid var(--border)',
+        borderRadius: 14,
+        padding: 24,
+        marginBottom: 24,
+        position: 'relative',
+        overflow: 'hidden'
+      }}>
+        {/* Gold accent */}
+        <div style={{
+          position: 'absolute', top: 0, left: 0, right: 0, height: 3,
+          background: 'linear-gradient(90deg, #FFD700, #C9A84C, #FFD700)',
+          borderRadius: '14px 14px 0 0'
+        }} />
+
+        {/* Header */}
+        <div style={{
+          fontFamily: "'Barlow Condensed', sans-serif", fontSize: 'var(--fs-subtitle)',
+          fontWeight: 800, color: 'var(--white)', textTransform: 'uppercase',
+          letterSpacing: 1, display: 'flex', alignItems: 'center', gap: 8,
+          marginBottom: 16
+        }}>
+          🏆 {t('podiumProjection.title')}
+        </div>
+
+        {/* Ranking del grupo (sin montos ni %) */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          {topTres.map((pos) => {
+            const posNum = Number(pos);
+            const user = leaderboard[posNum - 1];
+            const medal = medals[pos];
+
+            if (!user) return null;
+
+            return (
+              <div key={`proj-${pos}`} style={{
+                display: 'flex', alignItems: 'center', gap: 12,
+                padding: '10px 14px', background: 'var(--bg3)',
+                borderRadius: 8,
+                border: `1px solid ${posNum === 1 ? 'rgba(201,168,76,0.3)' : 'var(--border)'}`
+              }}>
+                <span style={{ fontSize: 'var(--fs-section-title)', flexShrink: 0 }}>{medal}</span>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{
+                    fontSize: 'var(--fs-body)', fontWeight: 700, color: 'var(--white)',
+                    overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'
+                  }}>
+                    {user.nombre}
+                  </div>
+                  <div style={{ fontSize: 'var(--fs-label)', color: 'var(--muted)' }}>
+                    {t('common.pointsCount', { count: Math.round(user.puntos) })} · {t('common.exactCount', { count: user.exactos })}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
+  // ============================================================
+  // WEB / ANDROID: versión completa (sin cambios)
+  // ============================================================
   return (
     <div style={{
       background: 'var(--bg2)',
@@ -107,21 +183,19 @@ export default function PozoCard({ groupId, leaderboard }) {
           </div>
           <div style={{ fontSize: 'var(--fs-small)', color: 'var(--muted)', marginTop: 4 }}>
              {t('podioPoints.participants', { count: members })}
-             {!isNative && ` · ${t('podioPoints.perPerson', { amount: formatMoney(montoPersona, moneda, getDateLocale(locale)) })}`}
+             {` · ${t('podioPoints.perPerson', { amount: formatMoney(montoPersona, moneda, getDateLocale(locale)) })}`}
           </div>
         </div>
-        {!isNative && (
         <div style={{
             fontFamily: "'Barlow Condensed', sans-serif",
             fontSize: 'clamp(22px, 5vw, 36px)',
-            fontWeight: 900, color: '#C9A84C', 
+            fontWeight: 900, color: '#C9A84C',
             lineHeight: 1,
-            textAlign: 'right', 
+            textAlign: 'right',
             wordBreak: 'break-word'
         }}>
           {formatMoney(total, moneda, getDateLocale(locale))}
         </div>
-        )}
       </div>
 
       {/* Distribution */}
@@ -149,14 +223,12 @@ export default function PozoCard({ groupId, leaderboard }) {
                   }}>
                     {t('podioPoints.place', { pos })} — {pct}%
                   </span>
-                  {!isNative && (
                   <span style={{
                     fontFamily: "'Barlow Condensed', sans-serif", fontSize: 'var(--fs-subtitle)',
                     fontWeight: 900, color: barColor
                   }}>
                     {formatMoney(amount, moneda, getDateLocale(locale))}
                   </span>
-                  )}
                 </div>
                 <div style={{
                   height: 6, background: 'var(--bg3)', borderRadius: 3, overflow: 'hidden'
@@ -195,9 +267,9 @@ export default function PozoCard({ groupId, leaderboard }) {
               const amount = (total * Number(pct)) / 100;
               const medal = medals[pos] || `${pos}°`;
               const barColor = barColors[pos] || 'var(--muted)';
-              
+
               if (!user) return null;
-              
+
               return (
                 <div key={`winner-${pos}`} style={{
                   display: 'flex', alignItems: 'center', gap: 12,
@@ -217,7 +289,6 @@ export default function PozoCard({ groupId, leaderboard }) {
                       {t('common.pointsCount', { count: Math.round(user.puntos) })} · {t('common.exactCount', { count: user.exactos })}
                     </div>
                   </div>
-                  {!isNative && (
                   <div style={{
                     fontFamily: "'Barlow Condensed', sans-serif",
                     fontSize: 'var(--fs-subtitle)', fontWeight: 900, color: barColor,
@@ -225,7 +296,6 @@ export default function PozoCard({ groupId, leaderboard }) {
                   }}>
                     {formatMoney(amount, moneda, getDateLocale(locale))}
                   </div>
-                  )}
                 </div>
               );
             })}

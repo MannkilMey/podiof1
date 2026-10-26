@@ -964,6 +964,7 @@ const handleTransferOwnership = async (member) => {
        
 
         {/* 💰 CONFIGURACIÓN DEL POZO */}
+        {!isNative && (
         <div className="admin-section">
           <h2 className="section-title">🏁 {t('podioPoints.title')}</h2>
           <p style={{ color: 'var(--muted)', fontSize: 'var(--fs-body)', marginBottom: 20, lineHeight: 1.6 }}>
@@ -1078,6 +1079,7 @@ const handleTransferOwnership = async (member) => {
             </button>
           </div>
         </div>
+        )}
            
         {/* Modal de Confirmación */}
         {confirmModal && (

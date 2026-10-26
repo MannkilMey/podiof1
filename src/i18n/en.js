@@ -346,6 +346,10 @@ prediction: {
     analysis: 'Analysis',
     deepAnalytics: 'Deep Analytics'
   },
+  podiumProjection: {
+  title: 'Podium Projection',
+  },
+  
 
   // ============================================
   // POZO (PRIZE POOL)

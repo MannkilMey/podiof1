@@ -418,6 +418,9 @@ howItWorks: {
     analysis: 'Análisis',
     deepAnalytics: 'Deep Analytics'
   },
+  podiumProjection: {
+  title: 'Proyección del Podio',
+  },
 
   // ============================================
   // POZO (PRIZE POOL)
